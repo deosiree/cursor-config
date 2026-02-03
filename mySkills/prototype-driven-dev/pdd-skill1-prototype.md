@@ -59,7 +59,7 @@
   - 通过分析 `src/views` 下的代码风格来确定项目使用的 API 类型（Options API 或 Composition API）
   - 确保原型代码与业务代码风格一致，便于后续迁移和维护
   - 例如：若项目主要使用 Options API，则原型组件也应使用 Options API
-- **新建项目规则**：若为新建项目或项目中没有参考代码（`src/views` 为空或不存在），默认使用 Composition API (setup)
+- **新建项目规则**：若为新建项目或项目中没有参考代码（`src/views` 为空或不存在），默认使用 Options API (setup)
 - **用户指定规则**：若用户明确指定技术栈约定（如"使用 Composition API"或"使用 Options API"），则按用户要求执行
 - **实际案例说明**：
   - `PrototypePage.vue` 可以使用 Composition API 作为入口页（简化页面逻辑）

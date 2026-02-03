@@ -7,6 +7,7 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const iconv = require('iconv-lite');
 const { extractGlossaryData, generateTranslationRules } = require('./extractGlossary');
 
 // ==================== Prompt模板（外部markdown） ====================
@@ -340,22 +341,68 @@ function buildCommentRulesSectionMarkdown(commentValue, commentRuleMap) {
   return `## comment 场景规则（来自 comment对应场景及规则.xlsx）\n\n${blocks.join('\n\n')}\n`;
 }
 
-// ==================== 步骤3: 批量读取CSV ====================
+// ==================== 步骤3: 批量读取CSV/XLSX ====================
 
 /**
- * 读取CSV文件
+ * 检测文件编码（简单检测：尝试UTF-8，失败则尝试GBK）
+ * @param {Buffer} buffer - 文件内容Buffer
+ * @returns {string} 编码类型 'utf8' 或 'gbk'
+ */
+function detectEncoding(buffer) {
+  // 检查是否有UTF-8 BOM
+  if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+    return 'utf8';
+  }
+
+  // 尝试UTF-8解码，如果成功则可能是UTF-8
+  try {
+    const testStr = buffer.toString('utf8');
+    // 检查是否包含无效的UTF-8序列（替换字符）
+    if (!testStr.includes('\uFFFD')) {
+      return 'utf8';
+    }
+  } catch (e) {
+    // UTF-8解码失败
+  }
+
+  // 默认尝试GBK
+  return 'gbk';
+}
+
+/**
+ * 读取CSV文件（支持UTF-8和GBK编码）
  * @param {string} csvPath - CSV文件路径
- * @returns {Array} 词条数组
+ * @returns {Object} { headers, entries }
  */
 function readCsvFile(csvPath) {
   console.log(`正在读取CSV文件: ${csvPath}`);
 
   if (!fs.existsSync(csvPath)) {
-    throw new Error(`CSV文件不存在: ${csvPath}`);
+    throw new Error(`文件不存在: ${csvPath}`);
   }
 
-  const content = fs.readFileSync(csvPath, 'utf8');
-  const lines = content.split('\n').filter(line => line.trim());
+  // 读取文件Buffer
+  const buffer = fs.readFileSync(csvPath);
+  
+  // 检测编码
+  const encoding = detectEncoding(buffer);
+  console.log(`检测到文件编码: ${encoding}`);
+
+  // 根据编码解码文件内容
+  let content;
+  if (encoding === 'utf8') {
+    // 移除UTF-8 BOM（如果存在）
+    if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+      content = buffer.slice(3).toString('utf8');
+    } else {
+      content = buffer.toString('utf8');
+    }
+  } else {
+    // GBK编码
+    content = iconv.decode(buffer, 'gbk');
+  }
+
+  const lines = content.split(/\r?\n/).filter(line => line.trim());
 
   if (lines.length < 2) {
     throw new Error('CSV文件格式错误：至少需要标题行和一行数据');
@@ -380,6 +427,158 @@ function readCsvFile(csvPath) {
 
   console.log(`读取完成: ${entries.length} 条词条`);
   return { headers, entries };
+}
+
+/**
+ * 读取XLSX文件
+ * @param {string} xlsxPath - XLSX文件路径
+ * @returns {Object} { headers, entries }
+ */
+function readXlsxFile(xlsxPath) {
+  console.log(`正在读取XLSX文件: ${xlsxPath}`);
+
+  if (!fs.existsSync(xlsxPath)) {
+    throw new Error(`文件不存在: ${xlsxPath}`);
+  }
+
+  // 使用XLSX库读取文件
+  const workbook = XLSX.readFile(xlsxPath);
+  const sheetName = workbook.SheetNames[0]; // 读取第一个工作表
+  const worksheet = workbook.Sheets[sheetName];
+
+  // 方法1：尝试使用对象格式（第一行作为键）
+  let jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+    defval: '', // 空单元格默认值
+    raw: false, // 不保留原始值，进行格式化
+    blankrows: false // 跳过空行
+  });
+
+  // 如果对象格式读取成功且有数据
+  if (jsonData && jsonData.length > 0) {
+    // 从第一个对象提取表头
+    const firstRow = jsonData[0];
+    const headers = Object.keys(firstRow).map(key => String(key || '').trim());
+    
+    // 检查表头是否有效（不是__EMPTY等占位符，且包含常见的中文列名）
+    const commonHeaders = ['id', '词条', '英文翻译', 'comment', '俄文翻译', '备注', '翻译最大长度', '备注1'];
+    const hasValidHeader = headers.some(h => {
+      const lowerH = h.toLowerCase();
+      return commonHeaders.some(ch => lowerH.includes(ch.toLowerCase()) || ch.toLowerCase().includes(lowerH));
+    });
+    
+    // 如果表头看起来有效，或者没有__EMPTY占位符，使用这些表头
+    const hasEmptyPlaceholder = headers.some(h => h.startsWith('__EMPTY'));
+    const validHeaders = hasValidHeader || !hasEmptyPlaceholder 
+      ? headers.filter(h => h && !h.startsWith('__EMPTY'))
+      : [];
+    
+    if (validHeaders.length > 0) {
+      console.log(`XLSX列: ${validHeaders.join(', ')}`);
+      
+      // 转换为统一格式
+      const entries = jsonData.map(row => {
+        const entry = {};
+        validHeaders.forEach(header => {
+          entry[header] = row[header] !== undefined && row[header] !== null 
+            ? String(row[header]).trim() 
+            : '';
+        });
+        return entry;
+      }).filter(entry => {
+        // 过滤掉所有字段都为空的行
+        return validHeaders.some(header => entry[header] && entry[header].trim() !== '');
+      });
+
+      console.log(`读取完成: ${entries.length} 条词条`);
+      return { headers: validHeaders, entries };
+    }
+  }
+
+  // 方法2：如果对象格式失败，使用数组格式
+  console.log('尝试使用数组格式读取XLSX文件...');
+  const arrayData = XLSX.utils.sheet_to_json(worksheet, { 
+    header: 1, // 使用数组格式
+    defval: '', // 空单元格默认值
+    raw: false, // 不保留原始值，进行格式化
+    blankrows: false // 跳过空行
+  });
+
+  if (arrayData.length < 1) {
+    throw new Error('XLSX文件格式错误：文件为空');
+  }
+
+  // 第一行作为表头
+  const rawHeaders = arrayData[0] || [];
+  const headers = rawHeaders.map((h, index) => {
+    const str = String(h || '').trim();
+    // 如果表头为空，使用默认列名
+    return str || `列${index + 1}`;
+  });
+
+  // 过滤掉所有表头都为空的情况
+  const validHeaders = headers.filter((h, index) => {
+    // 保留非默认列名，或者至少保留前几列
+    return !h.startsWith('列') || index < 10;
+  });
+
+  if (validHeaders.length === 0) {
+    throw new Error('XLSX文件格式错误：无法识别表头');
+  }
+
+  console.log(`XLSX列: ${validHeaders.join(', ')}`);
+
+  // 解析数据行（从第二行开始）
+  const entries = [];
+  for (let i = 1; i < arrayData.length; i++) {
+    const row = arrayData[i] || [];
+    // 检查是否为空行
+    const isEmptyRow = row.every(cell => !cell || String(cell).trim() === '');
+    if (isEmptyRow) continue;
+
+    const entry = {};
+    validHeaders.forEach((header, index) => {
+      const cellValue = row[index];
+      entry[header] = cellValue !== undefined && cellValue !== null 
+        ? String(cellValue).trim() 
+        : '';
+    });
+    
+    // 只添加至少有一个非空字段的行
+    const hasData = validHeaders.some(header => entry[header] && entry[header].trim() !== '');
+    if (hasData) {
+      entries.push(entry);
+    }
+  }
+
+  console.log(`读取完成: ${entries.length} 条词条`);
+  return { headers: validHeaders, entries };
+}
+
+/**
+ * 读取CSV或XLSX文件（自动检测文件类型）
+ * @param {string} filePath - 文件路径
+ * @returns {Object} { headers, entries }
+ */
+function readCsvOrXlsxFile(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  
+  if (ext === '.xlsx' || ext === '.xls') {
+    return readXlsxFile(filePath);
+  } else if (ext === '.csv') {
+    return readCsvFile(filePath);
+  } else {
+    // 尝试根据文件内容自动检测
+    const buffer = fs.readFileSync(filePath);
+    // 检查是否是XLSX文件（XLSX文件以PK开头，是ZIP格式）
+    if (buffer.length >= 2 && buffer[0] === 0x50 && buffer[1] === 0x4B) {
+      console.log('检测到XLSX格式（通过文件头）');
+      return readXlsxFile(filePath);
+    } else {
+      // 默认按CSV处理
+      console.log('未指定扩展名，按CSV格式处理');
+      return readCsvFile(filePath);
+    }
+  }
 }
 
 /**
@@ -1750,8 +1949,8 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
     // 步骤2: 加载翻译规则
     const { abbreviationMap, fullTranslationMap, pseudoCodeRules, pseudoCodeRuleMap } = loadTranslationRules(rulesPath);
 
-    // 步骤3: 批量读取CSV
-    const { headers, entries } = readCsvFile(inputCsvPath);
+    // 步骤3: 批量读取CSV/XLSX
+    const { headers, entries } = readCsvOrXlsxFile(inputCsvPath);
 
     // comment 场景规则：仅当CSV包含comment列时加载
     const hasCommentColumn = headers.includes('comment');
@@ -2153,6 +2352,8 @@ module.exports = {
   ensureGlossaryExtracted,
   loadTranslationRules,
   readCsvFile,
+  readXlsxFile,
+  readCsvOrXlsxFile,
   translateEntry,
   translateBatch,
   extractPlaceholders,
