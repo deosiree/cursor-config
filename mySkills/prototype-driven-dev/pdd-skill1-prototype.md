@@ -70,11 +70,24 @@
 - **禁止修改**：任何被"参考/对照/拷贝来源"的现有业务页面（例如 `src/views/workbench/importModal.vue`）。
 - **必须新增**（推荐"原型目录自包含"）：
   - `prototype/<feature-key>/`：一个需求一个目录（所有相关文件都放这里）
-    - `PrototypePage.vue`：路由入口页（挂到 `/translate` 的 children）
-    - `Prototype.vue` 或 `ImportModalPrototype.vue` 等：核心原型组件（可选；页面简单可省略）
+    - `PrototypePage.vue`：路由入口页（挂到 `/translate` 的 children）；**仅负责布局与子组件编排**；**入口页引用的布局/功能组件一律来自 `views/` 或 `components/`**，不与入口页同层放置，与项目惯例一致
     - `原型设计需求.md`：原型设计需求文档（可选，但推荐）
     - `mock.js`：Mock 数据与模拟函数（可选，见下方 Mock 数据组织规则）
+    - `constants.js`：该原型目录下各组件的硬编码常量（可选，见下方「组件与逻辑解耦规范」）
+    - `http/`：接口约定、请求封装（可选）：如 `http/api.js`（Mock 或后续对接真实 API）
+    - `utils/`：通用纯函数（可选）：如 `utils/format.js`（格式化、校验、数据结构转换等）
+    - `views/`：视图级组件（入口页从这里引入的页面级/弹窗级组件）
+    - `components/`：该原型内复用的 UI 子组件（入口页从这里引入的表格/表单/区块等）
   - `prototype/router.js`：新增静态路由条目（挂载在 `/translate` 下，`component` 直接 import `prototype/**/PrototypePage.vue`）
+
+### 组件与逻辑解耦规范（提高解耦与原型转源码效率）
+
+- **弹窗与自定义组件单独封装**：若 template 中需要设计新的 `a-modal` 或用户自定义组件（如校验弹窗、确认弹窗、步骤表单等），**该组件及其相关业务逻辑必须单独封装成独立文件，且置于 `views/` 或 `components/` 下**，不得与入口页同层或把完整实现堆在 `PrototypePage.vue` 中。
+  - 入口页只从 `views/`、`components/` 引入子组件；主页面只负责：传递 props、监听事件、控制显隐等编排逻辑。
+  - 子组件文件命名建议：功能语义清晰，如 `WriteBackValidateModal.vue`、`ConfirmStepForm.vue`。
+- **硬编码集中管理**：若封装出的组件内存在硬编码（文案、枚举、默认配置、接口路径等），应整理到**该原型目录下**的 `constants.js` 中统一导出，组件内通过引用使用，便于后续替换为配置或环境变量。
+- **接口与请求放 http**：接口约定、请求封装（Mock 或后续对接真实 API）应放在**该原型目录下的 `http/`** 中（如 `http/api.js`），不放在 `utils/` 下。
+- **通用纯函数放 utils**：格式化、校验、数据结构转换等纯函数放在**该原型目录下的 `utils/`** 中（如 `utils/format.js`），便于原型转源码时整体迁移。
 
 ### Mock 数据组织规则
 
@@ -219,10 +232,21 @@ export default [
 
 ```
 prototype/importConfig/
-├── PrototypePage.vue          # 入口页（使用 Composition API，简化页面逻辑）
-├── ImportModalPrototype.vue   # 核心原型组件（使用 Options API，与业务代码保持一致）
-└── 原型设计需求.md            # 原型设计需求文档
+├── PrototypePage.vue          # 入口页（仅编排，所引组件均来自 views/ 或 components/）
+├── 原型设计需求.md            # 原型设计需求文档（可选，推荐）
+├── constants.js               # 可选：硬编码常量（文案、枚举、默认配置等）
+├── mock.js                    # 可选：Mock 数据与模拟函数（多组件复用时提取）
+├── http/                      # 可选：接口约定、请求封装
+│   └── api.js                 # Mock 或后续对接真实 API
+├── utils/                     # 可选：通用纯函数
+│   └── format.js              # 格式化、校验、数据结构转换等
+├── views/                     # 入口页引用的视图级组件（页面级/弹窗等）
+│   └── ImportModalPrototype.vue   # 核心原型组件（与业务代码 API 风格一致）
+└── components/                # 入口页引用的 UI 子组件（表格/表单/区块等）
+    └── SomeBlock.vue
 ```
+
+> 入口页不与布局/功能组件同层：项目惯例下布局组件不放在入口页同级，故**入口页调用的组件一律置于 `views/` 或 `components/`**。以上为完整可选结构，简单原型可按需创建。
 
 ### 实现要点
 
@@ -230,9 +254,9 @@ prototype/importConfig/
    - 使用 Composition API (setup)，作为原型页面的入口
    - 提供 Mock 任务上下文（`mockTask`、`mockClassifyLimit`）
    - 控制模态框的打开/关闭
-   - 引入核心原型组件 `ImportModalPrototype.vue`
+   - **仅从 `views/` 或 `components/` 引入组件**，例如 `views/ImportModalPrototype.vue`
 
-2. **ImportModalPrototype.vue（核心原型组件）**
+2. **views/ImportModalPrototype.vue（核心原型组件）**
    - 使用 Options API，与参考的业务组件 `src/views/workbench/importModal.vue` 保持一致
    - **整组件拷贝**：完整复制业务组件的结构和逻辑
    - **局部增强**：在 `dataType === 'config'` 的区块中新增 XML/JSON 子 Tab
@@ -270,6 +294,29 @@ export default [
 - **Mock 数据内联**：简单场景下 Mock 数据直接写在组件内，无需单独提取
 - **需求文档同步**：使用 `原型设计需求.md` 记录需求，便于后续维护和同步
 
+### 多弹窗/多组件场景下的目录示例（解耦）
+
+当原型包含多个弹窗或自定义组件时，按「组件与逻辑解耦规范」组织目录，例如：
+
+```
+prototype/<feature-key>/
+├── PrototypePage.vue           # 入口页：仅编排，所引组件均来自 views/ 或 components/
+├── constants.js                # 各组件硬编码（文案、枚举、默认配置等）
+├── http/                       # 接口约定、请求封装
+│   └── api.js
+├── utils/
+│   └── format.js               # 通用纯函数
+├── mock.js                     # 可选：共享 Mock 数据
+├── views/                      # 入口页引用的视图级/弹窗组件
+│   ├── WriteBackValidateModal.vue
+│   └── SomeConfirmModal.vue
+├── components/                 # 入口页引用的 UI 子组件（按需）
+│   └── SomeBlock.vue
+└── 原型设计需求.md
+```
+
+入口页只从 `views/`、`components/` 引入子组件并桥接事件，不把弹窗的 template/script 写在 `PrototypePage.vue` 内，与项目文件结构惯例一致，便于后续迁移到源码。
+
 ## Skill 内部 Prompt 模板（英文，可直接粘贴使用）
 
 > **Role**: Senior Frontend Prototyper  
@@ -281,22 +328,27 @@ export default [
 >    - **New Project Rule**: If this is a new project or `src/views` is empty/non-existent, default to Composition API (setup).  
 >    - **User Specified**: If the user explicitly specifies a tech stack (e.g., "use Composition API" or "use Options API"), follow the user's requirement.  
 >    - **Entry Page Exception**: `PrototypePage.vue` can use Composition API for simplicity, but core prototype components should match the business code style.  
+>    - **Entry page only imports from `views/` or `components/`**: Do not place layout/feature components next to the entry page; the project convention is that the entry page only references components under `views/` or `components/`.  
 >    - Create a single, self-contained file (no external CSS modules).  
-> 2. **Mock Data Organization**:  
+> 2. **Decoupling (modal & custom components)**:  
+>    - If the template needs **new a-modal or user-defined components** (e.g. validate modal, confirm dialog, step form), **encapsulate each in `views/` or `components/`** with its own logic; do **not** put full implementation inside the main prototype page or next to it.  
+>    - The main page only: import from `views/` or `components/`, pass props, handle events, control visibility.  
+>    - **Hardcoded values** → `constants.js` in the same prototype directory; **API/request layer** → `http/` (e.g. `http/api.js`); **shared pure helpers** → `utils/` (e.g. `utils/format.js`). This improves decoupling and prototype-to-source conversion.  
+> 3. **Mock Data Organization**:  
 >    - **Prefer Inline**: Mock data should be defined directly in the component (simple and intuitive).  
 >    - **Extract When Needed**: Only extract to `mock.js` when component code exceeds 3000 lines or mock data is complex.  
 >    - Define `const MOCK_DATA` (and other mock helpers if needed) at the top of the script.  
-> 3. **Visuals**: Prefer the project's existing component library (e.g. Ant Design Vue) and minimal inline styles. Do not introduce a new styling system unless the user asks.  
-> 4. **Data Isolation**:  
+> 4. **Visuals**: Prefer the project's existing component library (e.g. Ant Design Vue) and minimal inline styles. Do not introduce a new styling system unless the user asks.  
+> 5. **Data Isolation**:  
 >    - DO NOT write actual API calls (`axios`/`fetch`).  
 >    - Use mock data and `setTimeout` to simulate network requests.  
-> 5. **Interaction**:  
+> 6. **Interaction**:  
 >    - Implement full interactivity for the new module (clicks, form inputs, modal open/close, inline edit, etc.).  
 >    - It is acceptable (and encouraged) to **reuse / copy existing component logic** from the reference file, **but do NOT edit the reference file**.  
-> 6. **Simulation**:  
+> 7. **Simulation**:  
 >    - When a user action occurs (e.g., submit, save, confirm), use `setTimeout(..., 800)` to simulate network latency.  
 >    - Show a loading spinner or disabled state, then update the local state using `MOCK_DATA`.  
-> 7. **Context**:  
+> 8. **Context**:  
 >    - The user wants to test the *feel* of the data flow and user experience, **not** finalize the visual design.  
 >    - Ensure the mock data structure is realistic (include IDs, status enums, timestamps, etc.).  
 >    - When possible, align mock fields with similar existing components in this project.  
@@ -364,6 +416,13 @@ export default [
 - **详细描述**：需求文档应包含背景、改造位置、新增 UI、功能目标等
 - **同步更新**：代码变更时同步更新需求文档（使用 `@pdd-skill1_1-improve`）
 - **版本管理**：需求文档应与代码一起纳入版本管理
+
+### 解耦与原型转源码最佳实践
+
+- **弹窗/自定义组件进 views/ 或 components/**：新增的 `a-modal` 或自定义组件单独成文件并放在 `views/` 或 `components/` 下，入口页只从这两处引用，不与入口页同层，便于后续迁移到 `src/` 时按组件粒度替换。
+- **硬编码进 constants.js**：组件内文案、枚举、默认配置等抽到同目录 `constants.js`，减少散落，转源码时便于改为配置或环境变量。
+- **接口与请求进 http/**：接口约定、请求封装放入 `http/`（如 `http/api.js`），转源码时对接真实 API。
+- **通用纯函数进 utils/**：格式化、校验、数据结构转换等放入 `utils/`（如 `utils/format.js`），与页面/组件解耦。
 
 ## 强制约束（最重要）
 
