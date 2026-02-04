@@ -476,17 +476,18 @@ function readXlsxFile(xlsxPath) {
       console.log(`XLSX列: ${validHeaders.join(', ')}`);
       
       // 转换为统一格式
+      // 注意：不进行 trim，保持原始数据（特别是词条列的前后空格），避免修改输入数据导致更新失败
       const entries = jsonData.map(row => {
         const entry = {};
         validHeaders.forEach(header => {
           entry[header] = row[header] !== undefined && row[header] !== null 
-            ? String(row[header]).trim() 
+            ? String(row[header])
             : '';
         });
         return entry;
       }).filter(entry => {
-        // 过滤掉所有字段都为空的行
-        return validHeaders.some(header => entry[header] && entry[header].trim() !== '');
+        // 过滤掉所有字段都为空的行（使用 trim 仅用于判断是否为空，不修改数据）
+        return validHeaders.some(header => entry[header] && String(entry[header]).trim() !== '');
       });
 
       console.log(`读取完成: ${entries.length} 条词条`);
@@ -539,7 +540,8 @@ function readXlsxFile(xlsxPath) {
     validHeaders.forEach((header, index) => {
       const cellValue = row[index];
       entry[header] = cellValue !== undefined && cellValue !== null 
-        ? String(cellValue).trim() 
+        ? String(cellValue)
+        // ? String(cellValue).trim() // 不人为修改excel所有列的空格
         : '';
     });
     
@@ -1233,7 +1235,8 @@ function parseBatchTranslationResponse(responseText, expectedCount) {
     // 匹配序号开头的行
     const match = line.match(/^\d+[\.、]\s*(.+)$/);
     if (match) {
-      results.push(match[1].trim());
+      // results.push(match[1].trim());
+      results.push(match[1]);// 不trim，保留原始空格
     } else if (line && !line.match(/^##|^翻译|^要求|^词条|^相关/)) {
       // 如果不是标题行，也作为翻译结果
       results.push(line);
@@ -1519,7 +1522,8 @@ async function translateEntry(entryText, abbreviationMap, fullTranslationMap) {
  * @returns {{ forcedTranslation: string|null, note1Issues: string[] }}
  */
 function normalizeUnitTranslation(entryText) {
-  const text = String(entryText || '').trim();
+  // const text = String(entryText || '').trim();
+  const text = String(entryText || '');// 不trim，保留原始空格
   const note1Issues = [];
 
   // 标准写法：单位：xx
