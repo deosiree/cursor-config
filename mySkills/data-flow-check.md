@@ -278,3 +278,90 @@
 - 模态框切换流畅，无视觉闪烁
 - 所有测试用例通过
 - 代码逻辑清晰，方法职责明确
+
+### 案例：异步返回值丢失问题
+
+**问题描述**：
+- 异步函数内部有值，但调用方接收到 `undefined`
+- 在 `async` 函数中混用 `await` 和 `.then()`，导致返回值无法正确传递
+
+**问题类型**：
+- 异步控制流混用问题：`await` 和 `.then()` 混用导致返回值丢失
+- 数据流中断问题：异步操作的结果无法正确传递给调用方
+
+**典型错误代码**：
+```javascript
+// ❌ 错误：混用 await 和 .then()，返回值丢失
+async callPreTranslateAPI() {
+  const params = { taskID: this.currentTask.id, priority: this.formState.priority }
+  try {
+    await preTranslate(params, this.dataPreTranslate).then((res) => {
+      const result = res.data.list.map((item) => {
+        item.translate = item[this.language.value]
+        return item
+      })
+      return result  // ❌ 这个 return 只返回给 .then() 的 Promise，不会返回给 callPreTranslateAPI
+    })
+    // 隐式返回 undefined
+  } catch (err) {
+    return []
+  }
+}
+
+// 调用处接收到 undefined
+const translateResult = await this.callPreTranslateAPI()  // translateResult = undefined ❌
+```
+
+**根本原因**：
+- `await` 等待 Promise 完成，但不返回 `.then()` 回调的值
+- `.then()` 回调中的 `return` 只是返回给 Promise 链，不会自动成为函数的返回值
+- 混用两种异步风格导致控制流混乱
+
+**修复方案**：
+```javascript
+// ✅ 正确：使用纯 async/await（推荐）
+async callPreTranslateAPI() {
+  const params = { taskID: this.currentTask.id, priority: this.formState.priority }
+  try {
+    const res = await preTranslate(params, this.dataPreTranslate)
+    const result = res.data.list.map((item) => {
+      item.translate = item[this.language.value]
+      return item
+    })
+    return result  // ✅ 正确返回给调用方
+  } catch (err) {
+    return []
+  }
+}
+
+// 或者使用纯 Promise 链
+callPreTranslateAPI() {
+  const params = { taskID: this.currentTask.id, priority: this.formState.priority }
+  return preTranslate(params, this.dataPreTranslate)
+    .then((res) => {
+      return res.data.list.map((item) => {
+        item.translate = item[this.language.value]
+        return item
+      })
+    })
+    .catch(() => [])
+}
+```
+
+**检查清单**：
+- [ ] 检查是否同时使用了 `await` 和 `.then()`
+- [ ] 验证异步函数是否正确返回了 Promise 的结果
+- [ ] 确保父组件能正确接收子组件/函数的异步返回值
+- [ ] 使用单一的异步风格（全 async/await 或全 .then()）
+- [ ] 在 async 函数中，确保有明确的 `return` 语句
+
+**修复效果**：
+- 异步返回值正确传递给调用方
+- 数据流完整，无中断
+- 代码风格统一，易于维护
+
+**最佳实践**：
+- 优先选择 `async/await` 风格（更易读、更易维护）
+- 避免在 `await` 后混用 `.then()`
+- 显式返回异步操作的结果
+- 在代码审查中重点关注异步函数的返回值
