@@ -238,6 +238,75 @@ function loadTranslationRules(rulesPath) {
   };
 }
 
+// ==================== 翻译规则（从xlsx加载，用于prompt增强） ====================
+
+/**
+ * 从术语库Excel的 sheet「翻译规则」读取“额外翻译规则”，拼成 markdown 段落注入 prompt
+ * 设计目标：
+ * - 让规则更新只改 Excel，不改代码/markdown
+ * - 规则文本尽量原样保留，避免误解释
+ *
+ * 期望表格结构（宽松兼容）：
+ * - 每行至少 1 列：规则正文
+ * - 第 2 列可选：备注/原因/示例
+ *
+ * @param {string} excelPath
+ * @returns {string} markdown（可能为空字符串）
+ */
+function loadExcelTranslationRulesMarkdown(excelPath) {
+  if (!excelPath) return '';
+  if (!fs.existsSync(excelPath)) return '';
+
+  let wb;
+  try {
+    wb = XLSX.readFile(excelPath);
+  } catch (e) {
+    return '';
+  }
+
+  const sheetName = (wb.SheetNames || []).find(n => String(n || '').includes('翻译规则')) || '翻译规则';
+  const ws = wb.Sheets && wb.Sheets[sheetName];
+  if (!ws) return '';
+
+  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: '' });
+  if (!aoa || aoa.length === 0) return '';
+
+  // 过滤空行
+  const rows = aoa
+    .map((r) => (Array.isArray(r) ? r : []))
+    .map((r) => r.map((c) => String(c || '').trim()))
+    .filter((r) => r.some((c) => c));
+
+  if (rows.length === 0) return '';
+
+  // 若首行看起来像表头（例如：单元格内容就是“规则/备注/原因/说明/示例”这种），则跳过
+  // 注意：不要用“包含原因/说明”等做判断，否则像“……原因：xxx”这样的真实规则会被误判为表头
+  const headerSet = new Set(['规则', '备注', '原因', '说明', '示例']);
+  const firstRowCells = (rows[0] || []).filter(Boolean).map((c) => String(c).trim());
+  const headerLike = firstRowCells.length > 0 && firstRowCells.every((c) => {
+    const normalized = c.replace(/[：:]/g, '').trim();
+    return headerSet.has(normalized);
+  });
+  const dataRows = headerLike ? rows.slice(1) : rows;
+  if (dataRows.length === 0) return '';
+
+  const blocks = [];
+  for (const r of dataRows) {
+    const rule = String(r[0] || '').trim();
+    const note = String(r[1] || '').trim();
+    if (!rule) continue;
+    if (note) {
+      blocks.push(`- ${rule}\n  - 备注：${note}`);
+    } else {
+      blocks.push(`- ${rule}`);
+    }
+  }
+
+  if (blocks.length === 0) return '';
+
+  return `## 额外翻译规则（来自Excel：翻译规则 sheet）\n${blocks.join('\n')}\n`;
+}
+
 // ==================== comment场景规则（从xlsx加载） ====================
 
 /**
@@ -258,12 +327,16 @@ function loadCommentScenarioRules(excelPath) {
   const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false });
   if (!aoa || aoa.length < 2) return map;
 
-  // 期望表头：comment, 词条来源, 场景, 翻译补充要点
+  // 期望表头：comment, 词条来源, 场景, 翻译补充要点/规则
   const header = (aoa[0] || []).map(x => String(x || '').trim());
   const idxComment = header.findIndex(h => h === 'comment' || h.toLowerCase() === 'comment');
   const idxSource = header.findIndex(h => h === '词条来源');
   const idxScene = header.findIndex(h => h === '场景');
-  const idxTips = header.findIndex(h => h === '翻译补充要点');
+  // 兼容旧表头“翻译补充要点”和新表头“规则”
+  let idxTips = header.findIndex(h => h === '翻译补充要点');
+  if (idxTips === -1) {
+    idxTips = header.findIndex(h => h === '规则');
+  }
 
   for (let r = 1; r < aoa.length; r++) {
     const row = aoa[r] || [];
@@ -287,13 +360,34 @@ function formatCommentRuleToMarkdown(rule) {
   if (!rule) return '';
   const parts = [];
   parts.push(`- **comment**: \`${rule.comment}\``);
-  if (rule.source) parts.push(`  - **词条来源**: ${rule.source}`);
+  if (rule.source) {
+    parts.push(`  - **词条来源**: ${rule.source}`);
+  }
   if (rule.scene) {
-    parts.push(`  - **场景**:\n\n\`\`\`\n${rule.scene}\n\`\`\``);
+    const sceneLines = String(rule.scene)
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (sceneLines.length > 0) {
+      parts.push('  - **场景**:');
+      for (const line of sceneLines) {
+        // 保留行内原有的“1.”、“2.”等编号，仅作为列表展示
+        parts.push(`    - ${line}`);
+      }
+    }
   }
   if (rule.tips) {
-    // tips 可能已包含 markdown（加粗/列表），直接拼接
-    parts.push(`  - **翻译补充要点**:\n${rule.tips}`);
+    // tips 中通常是“1.xxx / 2.xxx”多行规则，这里统一整理成“规则”列表，提升可读性
+    const tipLines = String(rule.tips)
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (tipLines.length > 0) {
+      parts.push('  - **规则**:');
+      for (const line of tipLines) {
+        parts.push(`    - ${line}`);
+      }
+    }
   }
   return parts.join('\n');
 }
@@ -816,6 +910,17 @@ function postprocessTranslation(translatedText) {
     }
   }
 
+  // QT 兼容：翻译结果中若存在 “ & ”，需要替换为 “ && ”
+  // 原因：QT 会将单个 & 转义为 '_'（助记符/快捷键机制），导致显示异常
+  // 仅处理两侧带空格的场景，避免误改 HTML 实体（&amp;）或代码逻辑（&&）
+  if (text.includes(' & ')) {
+    const beforeAmp = text;
+    text = text.split(' & ').join(' && ');
+    if (text !== beforeAmp) {
+      issues.push('已将 “ & ” 替换为 “ && ”（QT 单个 & 会被转义为 "_"）');
+    }
+  }
+
   // 修正 *. ext → *.ext（仅处理星号点号后的空格）
   const before = text;
   text = text.replace(/\*\.\s+([A-Za-z0-9]+)/g, '*.$1');
@@ -909,6 +1014,9 @@ function buildTranslationPrompt(entryText, abbreviationMap, fullTranslationMap, 
   const commentRulesSection = options && options.commentRulesMarkdown
     ? String(options.commentRulesMarkdown)
     : '';
+  const excelTranslationRulesSection = options && options.excelTranslationRulesMarkdown
+    ? String(options.excelTranslationRulesMarkdown)
+    : '';
   const pseudoCodeTermsSection = matchedPseudoCodeRules.length > 0
     ? `## 伪代码术语说明\n\n以下术语为伪代码术语，必须严格按照指定翻译：\n\n${matchedPseudoCodeRules.join('\n')}\n`
     : '';
@@ -916,6 +1024,7 @@ function buildTranslationPrompt(entryText, abbreviationMap, fullTranslationMap, 
   return renderTemplate(template, {
     RELATED_TERMS_SECTION: relatedTermsSection,
     COMMENT_RULES_SECTION: commentRulesSection,
+    EXCEL_TRANSLATION_RULES_SECTION: excelTranslationRulesSection,
     PSEUDOCODE_TERMS_SECTION: pseudoCodeTermsSection,
     ENTRY_TEXT: String(entryText || '')
   });
@@ -1149,7 +1258,7 @@ async function translateProtectedEntryStrict(protectedEntryText, abbreviationMap
  * @param {Map} pseudoCodeRuleMap - 伪代码术语映射表
  * @returns {string} prompt
  */
-function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap) {
+function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options = {}) {
   // 收集所有相关术语（缩写优先，去重）
   const relatedTermsSet = new Set();
   const abbreviationTerms = new Set();
@@ -1190,31 +1299,63 @@ function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMa
   const pseudoCodeTermsSection = matchedPseudoCodeRules.size > 0
     ? `## 伪代码术语说明\n\n以下术语为伪代码术语，必须严格按照指定翻译：\n\n${Array.from(matchedPseudoCodeRules).join('\n')}\n`
     : '';
+  const excelTranslationRulesSection = options && options.excelTranslationRulesMarkdown
+    ? String(options.excelTranslationRulesMarkdown)
+    : '';
+  const commentRuleMap = options && options.commentRuleMap;
 
   const entryList = entries.map((e, idx) => `${idx + 1}. ${e.text}`).join('\n');
 
-  // comment 场景规则（按序号对照，避免污染"序号. 译文"输出格式）
-  const commentRuleBlocks = [];
+  // comment 场景规则（按 comment 分组，聚合所有使用相同 comment 的词条序号）
+  const commentGroups = new Map();
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i] || {};
-    const commentValue = e.comment;
-    const commentRulesMarkdown = e.commentRulesMarkdown;
-    if (!commentValue && !commentRulesMarkdown) continue;
-    const block = [
-      `- **序号**: ${i + 1}`,
-      commentValue ? `  - **comment**: \`${String(commentValue).trim()}\`` : null,
-      commentRulesMarkdown ? `  - **规则**:\n\n${String(commentRulesMarkdown).trim()}` : null
-    ].filter(Boolean).join('\n');
-    commentRuleBlocks.push(block);
+    const rawComment = e.comment;
+    const commentValue = rawComment !== undefined && rawComment !== null
+      ? String(rawComment).trim()
+      : '';
+    if (!commentValue) continue;
+
+    const key = commentValue;
+    let group = commentGroups.get(key);
+    if (!group) {
+      const rule = commentRuleMap && commentRuleMap.get(key);
+      group = {
+        comment: key,
+        rule,
+        indices: []
+      };
+      commentGroups.set(key, group);
+    }
+    group.indices.push(i + 1); // 使用本批次中的“序号. 词条”编号
   }
+
+  const commentRuleBlocks = [];
+  for (const group of commentGroups.values()) {
+    const rule = group.rule;
+    const lines = [];
+    // 复用单条规则的格式化逻辑，先输出 comment / 词条来源 / 场景 / 规则
+    if (rule) {
+      lines.push(formatCommentRuleToMarkdown(rule));
+    } else {
+      lines.push(`- **comment**: \`${group.comment}\`（未在 comment对应场景及规则.xlsx 中找到对应条目）`);
+    }
+    // 再追加本批次中命中的“序号”列表，便于与 ENTRY_LIST 对照
+    if (group.indices && group.indices.length > 0) {
+      lines.push(`  - **序号**: [${group.indices.join(', ')}]`);
+    }
+    commentRuleBlocks.push(lines.join('\n'));
+  }
+
   const commentRulesBatchSection = commentRuleBlocks.length > 0
-    ? `## comment 场景规则（仅对带 comment 的词条生效）\n\n${commentRuleBlocks.join('\n\n')}\n`
+    ? `## comment 场景规则（仅对带 comment 的词条生效，来自 comment对应场景及规则.xlsx）\n\n${commentRuleBlocks.join('\n\n')}\n`
     : '';
 
   return renderTemplate(template, {
     RELATED_TERMS_SECTION: relatedTermsSection,
     PSEUDOCODE_TERMS_SECTION: pseudoCodeTermsSection,
     COMMENT_RULES_BATCH_SECTION: commentRulesBatchSection,
+    EXCEL_TRANSLATION_RULES_SECTION: excelTranslationRulesSection,
     ENTRY_LIST: entryList
   });
 }
@@ -1438,13 +1579,13 @@ async function callZhipuAPIBatch(prompt, expectedCount) {
  * @param {Map} pseudoCodeRuleMap - 伪代码术语映射表
  * @returns {Promise<Array<string>>} 英文翻译数组
  */
-async function translateBatch(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap) {
+async function translateBatch(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options = {}) {
   if (entries.length === 0) {
     return [];
   }
 
   // 构建批量prompt
-  const prompt = buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+  const prompt = buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options);
 
   // 按优先级尝试不同的API（Claude优先级最高）
   const apis = [
@@ -1952,6 +2093,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
 
     // 步骤2: 加载翻译规则
     const { abbreviationMap, fullTranslationMap, pseudoCodeRules, pseudoCodeRuleMap } = loadTranslationRules(rulesPath);
+    const excelTranslationRulesMarkdown = loadExcelTranslationRulesMarkdown(glossaryPath);
 
     // 步骤3: 批量读取CSV/XLSX
     const { headers, entries } = readCsvOrXlsxFile(inputCsvPath);
@@ -2083,14 +2225,26 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         if (toTranslate.length > 0) {
           // 如果启用了 debugPrompt，记录本批次的 prompt
           if (debugPromptEnabled) {
-            const batchPrompt = buildBatchTranslationPrompt(toTranslate, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+            const batchPrompt = buildBatchTranslationPrompt(
+              toTranslate,
+              abbreviationMap,
+              fullTranslationMap,
+              pseudoCodeRuleMap,
+              { excelTranslationRulesMarkdown, commentRuleMap }
+            );
             debugPromptContent += `---\n\n## 批次 ${batchIndex + 1}/${totalBatches}\n\n`;
             debugPromptContent += `词条范围: 第 ${startIndex + 1}-${endIndex} 条\n`;
             debugPromptContent += `词条数量: ${toTranslate.length} 条（规则化 ${batchEntries.length - toTranslate.length} 条）\n\n`;
             debugPromptContent += `### Prompt 内容\n\n\`\`\`\n${batchPrompt}\n\`\`\`\n\n`;
           }
 
-          const modelTranslations = await translateBatch(toTranslate, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+          const modelTranslations = await translateBatch(
+            toTranslate,
+            abbreviationMap,
+            fullTranslationMap,
+            pseudoCodeRuleMap,
+            { excelTranslationRulesMarkdown, commentRuleMap }
+          );
           for (let k = 0; k < translateIndexMap.length; k++) {
             translations[translateIndexMap[k]] = modelTranslations[k] || '';
           }
@@ -2136,7 +2290,11 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
                 item.protectedText || item.text,
                 abbreviationMap,
                 fullTranslationMap,
-                { commentRulesMarkdown: item.commentRulesMarkdown || '', pseudoCodeRuleMap: pseudoCodeRuleMap }
+                {
+                  commentRulesMarkdown: item.commentRulesMarkdown || '',
+                  pseudoCodeRuleMap: pseudoCodeRuleMap,
+                  excelTranslationRulesMarkdown
+                }
               );
               const retryValidation = validateUndistinguishableTokenOrder(retryRaw, item.tokenOrder);
               if (retryValidation.isValid) {
@@ -2221,7 +2379,8 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         rawEntriesForPrompt,
         abbreviationMap,
         fullTranslationMap,
-        pseudoCodeRuleMap
+        pseudoCodeRuleMap,
+        { excelTranslationRulesMarkdown, commentRuleMap }
       );
       debugPromptContent += `---\n\n# 手工翻译用 Prompt（未保护占位符）\n\n\`\`\`\n${rawPrompt}\n\`\`\`\n\n`;
     }
@@ -2355,6 +2514,7 @@ if (require.main === module) {
 module.exports = {
   ensureGlossaryExtracted,
   loadTranslationRules,
+  loadExcelTranslationRulesMarkdown,
   readCsvFile,
   readXlsxFile,
   readCsvOrXlsxFile,

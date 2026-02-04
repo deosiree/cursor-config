@@ -6,12 +6,13 @@
 
 ## 触发方式
 
-```
+```text
 @trans-skill1-loader [输入csv文件的相对路径] [输出csv目录的相对路径] [excel术语库的相对路径]
 ```
 
 **示例**：
-```
+
+```text
 @trans-skill1-loader f:\DownLoads\词条导出_20260128111948.csv .cursor/skills/translate/output .cursor/skills/translate/glossary/常用注意要点清单.xlsx
 ```
 
@@ -28,41 +29,52 @@
 3. **Excel术语库文件路径**（相对路径或绝对路径，可选）
    - 默认：`.cursor/skills/translate/glossary/常用注意要点清单.xlsx`
    - 如果translation-rules.md不存在，将从此Excel提取术语库
+   - 同时会读取该 Excel 的 sheet **"翻译规则"**，将其中的规则文本注入到大模型 prompt（用于约束翻译输出）
 
 ## 处理流程
 
 ### 步骤1: 术语库提取（如果需要）
+
 - 检查`translation-rules.md`是否存在
 - 如果不存在，从Excel提取术语库并生成规则文档
 
 ### 步骤2: 加载翻译规则
+
 - 读取`translation-rules.md`文件
 - 解析markdown表格，构建两个映射表：
   - `abbreviationMap`: `{中文: 英文缩写}`
   - `fullTranslationMap`: `{中文: 完整英文}`
+- 读取 Excel 的 sheet **"翻译规则"**，将规则转为 markdown 段落，注入到 prompt（提升一致性与可维护性）
+  - 规则更新只需改 Excel（新增/追加行即可），脚本会自动生效
+  - 若 sheet 不存在或为空，则该部分不注入，不影响主流程
 
 ### 步骤3: 批量读取CSV文件
+
 - 使用CSV解析器读取文件
 - 识别列结构
 - 提取所有词条行（跳过空行和标题行）
 
 ### 步骤4: AI翻译每个词条
+
 - 对每个词条调用AI翻译
 - 识别并保护占位符（`{}`, `{:.3f}`, `%1`, `%2`等）
 - 优先使用术语库中的缩写
 
 ### 步骤5: 中文规范性检查
+
 - 检查中文词条是否规范
 - 如果发现不规范，在"备注1"列记录不规范现象
 - 格式：`[不规范类型]: [具体描述]`
 
 ### 步骤6: 翻译结果验证和后处理
+
 - 验证占位符是否被保护
 - 验证术语库使用情况
 - 修正标点符号（中文标点→英文标点）
 - 如果验证失败，在"备注1"列追加错误信息
 
 ### 步骤7: 写入输出CSV文件
+
 - 构建输出CSV结构（原有列 + 备注1列）
 - 保持原有列的值不变（除了"英文翻译"列）
 - 更新"英文翻译"列
@@ -70,6 +82,7 @@
 - 使用UTF-8 BOM编码
 
 ### 步骤8: 记录错误日志
+
 - 记录翻译失败的词条
 - 记录中文不规范的词条
 - 记录验证失败的词条
@@ -98,12 +111,14 @@
 ## 使用示例
 
 ### 示例1: 使用默认术语库
-```
+
+```text
 @trans-skill1-loader f:\DownLoads\词条导出_20260128111948.csv .cursor/skills/translate/output
 ```
 
 ### 示例2: 指定术语库路径
-```
+
+```text
 @trans-skill1-loader f:\DownLoads\词条导出_20260128111948.csv .cursor/skills/translate/output .cursor/skills/translate/glossary/常用注意要点清单.xlsx
 ```
 
