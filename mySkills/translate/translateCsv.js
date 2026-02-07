@@ -7,6 +7,7 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const iconv = require('iconv-lite');
 const { extractGlossaryData, generateTranslationRules } = require('./extractGlossary');
 
 // ==================== Prompt模板（外部markdown） ====================
@@ -237,12 +238,81 @@ function loadTranslationRules(rulesPath) {
   };
 }
 
+// ==================== 翻译规则（从xlsx加载，用于prompt增强） ====================
+
+/**
+ * 从术语库Excel的 sheet「翻译规则」读取“额外翻译规则”，拼成 markdown 段落注入 prompt
+ * 设计目标：
+ * - 让规则更新只改 Excel，不改代码/markdown
+ * - 规则文本尽量原样保留，避免误解释
+ *
+ * 期望表格结构（宽松兼容）：
+ * - 每行至少 1 列：规则正文
+ * - 第 2 列可选：备注/原因/示例
+ *
+ * @param {string} excelPath
+ * @returns {string} markdown（可能为空字符串）
+ */
+function loadExcelTranslationRulesMarkdown(excelPath) {
+  if (!excelPath) return '';
+  if (!fs.existsSync(excelPath)) return '';
+
+  let wb;
+  try {
+    wb = XLSX.readFile(excelPath);
+  } catch (e) {
+    return '';
+  }
+
+  const sheetName = (wb.SheetNames || []).find(n => String(n || '').includes('翻译规则')) || '翻译规则';
+  const ws = wb.Sheets && wb.Sheets[sheetName];
+  if (!ws) return '';
+
+  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: '' });
+  if (!aoa || aoa.length === 0) return '';
+
+  // 过滤空行
+  const rows = aoa
+    .map((r) => (Array.isArray(r) ? r : []))
+    .map((r) => r.map((c) => String(c || '').trim()))
+    .filter((r) => r.some((c) => c));
+
+  if (rows.length === 0) return '';
+
+  // 若首行看起来像表头（例如：单元格内容就是“规则/备注/原因/说明/示例”这种），则跳过
+  // 注意：不要用“包含原因/说明”等做判断，否则像“……原因：xxx”这样的真实规则会被误判为表头
+  const headerSet = new Set(['规则', '备注', '原因', '说明', '示例']);
+  const firstRowCells = (rows[0] || []).filter(Boolean).map((c) => String(c).trim());
+  const headerLike = firstRowCells.length > 0 && firstRowCells.every((c) => {
+    const normalized = c.replace(/[：:]/g, '').trim();
+    return headerSet.has(normalized);
+  });
+  const dataRows = headerLike ? rows.slice(1) : rows;
+  if (dataRows.length === 0) return '';
+
+  const blocks = [];
+  for (const r of dataRows) {
+    const rule = String(r[0] || '').trim();
+    const note = String(r[1] || '').trim();
+    if (!rule) continue;
+    if (note) {
+      blocks.push(`- ${rule}\n  - 备注：${note}`);
+    } else {
+      blocks.push(`- ${rule}`);
+    }
+  }
+
+  if (blocks.length === 0) return '';
+
+  return `## 额外翻译规则（来自Excel：翻译规则 sheet）\n${blocks.join('\n')}\n`;
+}
+
 // ==================== comment场景规则（从xlsx加载） ====================
 
 /**
  * 加载 comment 场景规则（comment对应场景及规则.xlsx）
  * @param {string} excelPath
- * @returns {Map<string, { comment: string, source: string, scene: string, tips: string }>}
+ * @returns {Map<string, { comment: string, source: string, scene: string, tips: string, caseType?: 'SentenceCase' | 'TitleCase' }>}
  */
 function loadCommentScenarioRules(excelPath) {
   const map = new Map();
@@ -257,12 +327,16 @@ function loadCommentScenarioRules(excelPath) {
   const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false });
   if (!aoa || aoa.length < 2) return map;
 
-  // 期望表头：comment, 词条来源, 场景, 翻译补充要点
+  // 期望表头：comment, 词条来源, 场景, 翻译补充要点/规则
   const header = (aoa[0] || []).map(x => String(x || '').trim());
   const idxComment = header.findIndex(h => h === 'comment' || h.toLowerCase() === 'comment');
   const idxSource = header.findIndex(h => h === '词条来源');
   const idxScene = header.findIndex(h => h === '场景');
-  const idxTips = header.findIndex(h => h === '翻译补充要点');
+  // 兼容旧表头“翻译补充要点”和新表头“规则”
+  let idxTips = header.findIndex(h => h === '翻译补充要点');
+  if (idxTips === -1) {
+    idxTips = header.findIndex(h => h === '规则');
+  }
 
   for (let r = 1; r < aoa.length; r++) {
     const row = aoa[r] || [];
@@ -271,7 +345,26 @@ function loadCommentScenarioRules(excelPath) {
     const scene = String(row[idxScene] || '').trim();
     const tips = String(row[idxTips] || '').trim();
     if (!comment) continue;
-    map.set(comment, { comment, source, scene, tips });
+    // 解析大小写规则类型（SentenceCase / TitleCase）
+    const mergedText = `${scene}\n${tips}`.toLowerCase();
+    let caseType;
+    const hasSentence =
+      mergedText.includes('sentence case') ||
+      mergedText.includes('第一个单词首字母大写') ||
+      mergedText.includes('首个单词首字母大写');
+    const hasTitle =
+      mergedText.includes('title case') ||
+      mergedText.includes('每个单词首字母都要大写') ||
+      mergedText.includes('每个单词首字母大写');
+    if (hasSentence && !hasTitle) {
+      caseType = 'SentenceCase';
+    } else if (hasTitle && !hasSentence) {
+      caseType = 'TitleCase';
+    } else {
+      caseType = undefined;
+    }
+
+    map.set(comment, { comment, source, scene, tips, caseType });
   }
 
   return map;
@@ -286,13 +379,34 @@ function formatCommentRuleToMarkdown(rule) {
   if (!rule) return '';
   const parts = [];
   parts.push(`- **comment**: \`${rule.comment}\``);
-  if (rule.source) parts.push(`  - **词条来源**: ${rule.source}`);
+  if (rule.source) {
+    parts.push(`  - **词条来源**: ${rule.source}`);
+  }
   if (rule.scene) {
-    parts.push(`  - **场景**:\n\n\`\`\`\n${rule.scene}\n\`\`\``);
+    const sceneLines = String(rule.scene)
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (sceneLines.length > 0) {
+      parts.push('  - **场景**:');
+      for (const line of sceneLines) {
+        // 保留行内原有的“1.”、“2.”等编号，仅作为列表展示
+        parts.push(`    - ${line}`);
+      }
+    }
   }
   if (rule.tips) {
-    // tips 可能已包含 markdown（加粗/列表），直接拼接
-    parts.push(`  - **翻译补充要点**:\n${rule.tips}`);
+    // tips 中通常是“1.xxx / 2.xxx”多行规则，这里统一整理成“规则”列表，提升可读性
+    const tipLines = String(rule.tips)
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (tipLines.length > 0) {
+      parts.push('  - **规则**:');
+      for (const line of tipLines) {
+        parts.push(`    - ${line}`);
+      }
+    }
   }
   return parts.join('\n');
 }
@@ -319,43 +433,403 @@ function parseCommentKeys(commentValue) {
 }
 
 /**
+ * 从 comment / tag 两个字段统一抽取 comment-like key
+ * @param {string} commentValue
+ * @param {string} tagValue
+ * @returns {{ keys: string[], meta: Map<string, { fromComment: boolean, fromTag: boolean }> }}
+ */
+function extractCommentLikeKeys(commentValue, tagValue) {
+  const commentKeys = parseCommentKeys(commentValue);
+  const tagKeys = parseCommentKeys(tagValue);
+
+  const keys = [];
+  const meta = new Map();
+
+  // 先处理 comment 字段中的 key，保序去重
+  for (const k of commentKeys) {
+    if (!meta.has(k)) {
+      keys.push(k);
+      meta.set(k, { fromComment: true, fromTag: false });
+    } else {
+      const info = meta.get(k);
+      info.fromComment = true;
+      meta.set(k, info);
+    }
+  }
+
+  // 再处理 tag 字段中的 key，同样去重，并记录来源
+  for (const k of tagKeys) {
+    if (!meta.has(k)) {
+      keys.push(k);
+      meta.set(k, { fromComment: false, fromTag: true });
+    } else {
+      const info = meta.get(k);
+      info.fromTag = true;
+      meta.set(k, info);
+    }
+  }
+
+  return { keys, meta };
+}
+
+/**
  * 为某个词条生成 comment 场景规则 markdown（可能为空）
  * @param {string} commentValue - CSV中的 comment 字段值
  * @param {Map<string, any>} commentRuleMap
  * @returns {string}
  */
-function buildCommentRulesSectionMarkdown(commentValue, commentRuleMap) {
-  const keys = parseCommentKeys(commentValue);
+function buildCommentRulesSectionMarkdown(commentValue, commentRuleMap, tagValue = '') {
+  const { keys, meta } = extractCommentLikeKeys(commentValue, tagValue);
   if (keys.length === 0) return '';
   const blocks = [];
   for (const key of keys) {
     const rule = commentRuleMap && commentRuleMap.get(key);
     if (rule) {
-      blocks.push(formatCommentRuleToMarkdown(rule));
+      let block = formatCommentRuleToMarkdown(rule);
+      const info = meta && meta.get(key);
+      if (info && (info.fromComment || info.fromTag)) {
+        const sources = [];
+        if (info.fromComment) sources.push('comment');
+        if (info.fromTag) sources.push('tag');
+        block += `\n  - **出现字段**: ${sources.join(' & ')}`;
+      }
+      blocks.push(block);
     } else {
-      blocks.push(`- **comment**: \`${key}\`（未在规则表中找到对应条目）`);
+      const info = meta && meta.get(key);
+      const sources = [];
+      if (info && info.fromComment) sources.push('comment');
+      if (info && info.fromTag) sources.push('tag');
+      const sourceLabel = sources.length > 0 ? `；来源: ${sources.join(' & ')}` : '';
+      blocks.push(`- **comment**: \`${key}\`（未在 comment对应场景及规则.xlsx 的 comment 列中找到对应条目${sourceLabel}）`);
     }
   }
   if (blocks.length === 0) return '';
   return `## comment 场景规则（来自 comment对应场景及规则.xlsx）\n\n${blocks.join('\n\n')}\n`;
 }
 
-// ==================== 步骤3: 批量读取CSV ====================
+/**
+ * 检查 comment/tag 字段中是否存在“trim 后才能命中规则”的可疑写法
+ * 仅在以下场景追加提示：
+ * - 原始片段包含首尾空格（segment !== segment.trim()）
+ * - 去掉首尾空格后的值能在 comment 规则表中命中
+ *
+ * @param {Object} entry - 原始CSV行对象
+ * @param {Map<string, any>} commentRuleMap
+ * @returns {{ note1Issues: string[] }}
+ */
+function detectCommentTagTrimMatchIssues(entry, commentRuleMap) {
+  const note1Issues = [];
+  if (!entry || !commentRuleMap || commentRuleMap.size === 0) {
+    return { note1Issues };
+  }
+
+  /**
+   * 针对单个字段执行检测
+   * @param {string} fieldName - 'comment' 或 'tag'
+   */
+  function checkField(fieldName) {
+    const rawVal = entry[fieldName];
+    if (rawVal === undefined || rawVal === null) return;
+    const raw = String(rawVal);
+    if (!raw) return;
+
+    // 按与 parseCommentKeys 相同的分隔符拆分，但不对片段做 trim
+    const segments = raw.split(/[;,，\n]+/g);
+    const seen = new Set();
+
+    for (const seg of segments) {
+      if (!seg) continue;
+      const trimmed = seg.trim();
+      if (!trimmed) continue;
+      if (seg === trimmed) continue; // 没有首尾空格，不属于本次关注范围
+
+      const dedupeKey = `${fieldName}::${seg}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+
+      if (!commentRuleMap.has(trimmed)) {
+        // trim 后也无法命中规则表：不提示，避免把“本来就没有规则的 key”当成问题
+        continue;
+      }
+
+      note1Issues.push(
+        `${fieldName} 值 '${seg}' 去掉首尾空格后可命中规则 '${trimmed}'，请检查是否多写了空格`
+      );
+    }
+  }
+
+  checkField('comment');
+  checkField('tag');
+
+  return { note1Issues };
+}
 
 /**
- * 读取CSV文件
+ * 为规则生成稳定的签名，用于比较“规则内容是否一致”
+ * @param {{ comment?: string, source?: string, scene?: string, tips?: string }} rule
+ * @returns {string}
+ */
+function buildCommentRuleSignature(rule) {
+  if (!rule) return '';
+  const norm = (v) => String(v || '').replace(/\r\n/g, '\n').trim();
+  // 注意：不包含 key 本身（rule.comment）也可以，但带上更利于排查
+  return JSON.stringify({
+    comment: norm(rule.comment),
+    source: norm(rule.source),
+    scene: norm(rule.scene),
+    tips: norm(rule.tips)
+  });
+}
+
+/**
+ * 检测：comment 与 tag 同时命中规则，且两边命中的规则内容不一致
+ * @param {Object} entry - 原始CSV行对象
+ * @param {Map<string, any>} commentRuleMap
+ * @returns {{ note1Issues: string[] }}
+ */
+function detectCommentTagRuleConflict(entry, commentRuleMap) {
+  const note1Issues = [];
+  if (!entry || !commentRuleMap || commentRuleMap.size === 0) {
+    return { note1Issues };
+  }
+
+  const rawComment = entry['comment'];
+  const rawTag = entry['tag'];
+  const commentValue = rawComment !== undefined && rawComment !== null ? String(rawComment) : '';
+  const tagValue = rawTag !== undefined && rawTag !== null ? String(rawTag) : '';
+
+  const { keys, meta } = extractCommentLikeKeys(commentValue, tagValue);
+  if (!keys || keys.length === 0) {
+    return { note1Issues };
+  }
+
+  const commentSigs = new Set();
+  const tagSigs = new Set();
+  const commentKeys = [];
+  const tagKeys = [];
+
+  for (const key of keys) {
+    if (!commentRuleMap.has(key)) continue;
+    const rule = commentRuleMap.get(key);
+    const sig = buildCommentRuleSignature(rule);
+    if (!sig) continue;
+
+    const info = meta && meta.get(key);
+    if (info && info.fromComment) {
+      commentSigs.add(sig);
+      commentKeys.push(key);
+    }
+    if (info && info.fromTag) {
+      tagSigs.add(sig);
+      tagKeys.push(key);
+    }
+  }
+
+  // 两边都没有命中规则 → 不冲突
+  if (commentSigs.size === 0 || tagSigs.size === 0) {
+    return { note1Issues };
+  }
+
+  // 集合相等判断：只要存在任意一边独有 signature 就视为冲突
+  let hasDiff = false;
+  for (const s of commentSigs) {
+    if (!tagSigs.has(s)) {
+      hasDiff = true;
+      break;
+    }
+  }
+  if (!hasDiff) {
+    for (const s of tagSigs) {
+      if (!commentSigs.has(s)) {
+        hasDiff = true;
+        break;
+      }
+    }
+  }
+
+  if (hasDiff) {
+    const cKeys = Array.from(new Set(commentKeys)).join(', ');
+    const tKeys = Array.from(new Set(tagKeys)).join(', ');
+    note1Issues.push(
+      `comment/tag 规则冲突：comment 与 tag 同时命中规则，但规则内容不一致；请检查配置是否正确（comment keys: ${cKeys || '-'}；tag keys: ${tKeys || '-'}）`
+    );
+  }
+
+  return { note1Issues };
+}
+
+/**
+ * 计算某条词条在 comment/tag 规则下的大小写约束类型
+ * @param {Object} entry - 原始CSV行对象
+ * @param {Map<string, any>} commentRuleMap
+ * @returns {{ caseType: 'SentenceCase' | 'TitleCase' | null, hasConflict: boolean }}
+ */
+function getCaseTypeForEntry(entry, commentRuleMap) {
+  if (!entry || !commentRuleMap || commentRuleMap.size === 0) {
+    return { caseType: null, hasConflict: false };
+  }
+
+  const rawComment = entry['comment'];
+  const rawTag = entry['tag'];
+  const commentValue = rawComment !== undefined && rawComment !== null ? String(rawComment) : '';
+  const tagValue = rawTag !== undefined && rawTag !== null ? String(rawTag) : '';
+
+  const { keys } = extractCommentLikeKeys(commentValue, tagValue);
+  if (!keys || keys.length === 0) {
+    return { caseType: null, hasConflict: false };
+  }
+
+  const caseTypeSet = new Set();
+  for (const key of keys) {
+    const rule = commentRuleMap.get(key);
+    if (!rule || !rule.caseType) continue;
+    caseTypeSet.add(rule.caseType);
+  }
+
+  if (caseTypeSet.size === 0) {
+    return { caseType: null, hasConflict: false };
+  }
+  if (caseTypeSet.size > 1) {
+    return { caseType: null, hasConflict: true };
+  }
+  return { caseType: Array.from(caseTypeSet)[0], hasConflict: false };
+}
+
+/**
+ * 对英文译文应用 Sentence case：只有第一个单词首字母大写，其余字母小写
+ * @param {string} text
+ * @returns {string}
+ */
+function enforceSentenceCase(text) {
+  const original = String(text || '');
+  if (!original) return original;
+  const lower = original.toLowerCase();
+  const chars = lower.split('');
+  for (let i = 0; i < chars.length; i++) {
+    if (/[a-z]/.test(chars[i])) {
+      chars[i] = chars[i].toUpperCase();
+      break;
+    }
+  }
+  return chars.join('');
+}
+
+/**
+ * 对英文译文应用 Title Case：每个单词首字母大写，其余字母小写
+ * @param {string} text
+ * @returns {string}
+ */
+function enforceTitleCase(text) {
+  const original = String(text || '');
+  if (!original) return original;
+  const lower = original.toLowerCase();
+  // \b[a-z][a-z]*\b 匹配英文字母单词
+  return lower.replace(/\b([a-z])([a-z]*)\b/g, (m, first, rest) => {
+    return first.toUpperCase() + rest;
+  });
+}
+
+/**
+ * 根据 comment/tag 中的 caseType 规则，自动纠正英文翻译的大小写
+ * @param {string} translatedText
+ * @param {Object} entry - 原始CSV行对象
+ * @param {Map<string, any>} commentRuleMap
+ * @returns {{ text: string, issues: string[] }}
+ */
+function applyCaseRuleForEntry(translatedText, entry, commentRuleMap) {
+  let text = String(translatedText || '');
+  const issues = [];
+
+  if (!text || !entry || !commentRuleMap || commentRuleMap.size === 0) {
+    return { text, issues };
+  }
+
+  const { caseType, hasConflict } = getCaseTypeForEntry(entry, commentRuleMap);
+  if (hasConflict) {
+    issues.push('comment/tag 大小写规则冲突：同时存在 Sentence case 和 Title Case，未自动纠正，请检查 comment对应场景及规则.xlsx 配置');
+    return { text, issues };
+  }
+  if (!caseType) {
+    return { text, issues };
+  }
+
+  let fixed = text;
+  if (caseType === 'SentenceCase') {
+    fixed = enforceSentenceCase(text);
+  } else if (caseType === 'TitleCase') {
+    fixed = enforceTitleCase(text);
+  }
+
+  if (fixed !== text) {
+    text = fixed;
+    issues.push(`已根据 comment/tag 中的大小写规则自动纠正英文大小写（应用 ${caseType === 'SentenceCase' ? 'Sentence case' : 'Title Case'}）`);
+  }
+
+  return { text, issues };
+}
+
+// ==================== 步骤3: 批量读取CSV/XLSX ====================
+
+/**
+ * 检测文件编码（简单检测：尝试UTF-8，失败则尝试GBK）
+ * @param {Buffer} buffer - 文件内容Buffer
+ * @returns {string} 编码类型 'utf8' 或 'gbk'
+ */
+function detectEncoding(buffer) {
+  // 检查是否有UTF-8 BOM
+  if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+    return 'utf8';
+  }
+
+  // 尝试UTF-8解码，如果成功则可能是UTF-8
+  try {
+    const testStr = buffer.toString('utf8');
+    // 检查是否包含无效的UTF-8序列（替换字符）
+    if (!testStr.includes('\uFFFD')) {
+      return 'utf8';
+    }
+  } catch (e) {
+    // UTF-8解码失败
+  }
+
+  // 默认尝试GBK
+  return 'gbk';
+}
+
+/**
+ * 读取CSV文件（支持UTF-8和GBK编码）
  * @param {string} csvPath - CSV文件路径
- * @returns {Array} 词条数组
+ * @returns {Object} { headers, entries }
  */
 function readCsvFile(csvPath) {
   console.log(`正在读取CSV文件: ${csvPath}`);
 
   if (!fs.existsSync(csvPath)) {
-    throw new Error(`CSV文件不存在: ${csvPath}`);
+    throw new Error(`文件不存在: ${csvPath}`);
   }
 
-  const content = fs.readFileSync(csvPath, 'utf8');
-  const lines = content.split('\n').filter(line => line.trim());
+  // 读取文件Buffer
+  const buffer = fs.readFileSync(csvPath);
+  
+  // 检测编码
+  const encoding = detectEncoding(buffer);
+  console.log(`检测到文件编码: ${encoding}`);
+
+  // 根据编码解码文件内容
+  let content;
+  if (encoding === 'utf8') {
+    // 移除UTF-8 BOM（如果存在）
+    if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+      content = buffer.slice(3).toString('utf8');
+    } else {
+      content = buffer.toString('utf8');
+    }
+  } else {
+    // GBK编码
+    content = iconv.decode(buffer, 'gbk');
+  }
+
+  const lines = content.split(/\r?\n/).filter(line => line.trim());
 
   if (lines.length < 2) {
     throw new Error('CSV文件格式错误：至少需要标题行和一行数据');
@@ -380,6 +854,160 @@ function readCsvFile(csvPath) {
 
   console.log(`读取完成: ${entries.length} 条词条`);
   return { headers, entries };
+}
+
+/**
+ * 读取XLSX文件
+ * @param {string} xlsxPath - XLSX文件路径
+ * @returns {Object} { headers, entries }
+ */
+function readXlsxFile(xlsxPath) {
+  console.log(`正在读取XLSX文件: ${xlsxPath}`);
+
+  if (!fs.existsSync(xlsxPath)) {
+    throw new Error(`文件不存在: ${xlsxPath}`);
+  }
+
+  // 使用XLSX库读取文件
+  const workbook = XLSX.readFile(xlsxPath);
+  const sheetName = workbook.SheetNames[0]; // 读取第一个工作表
+  const worksheet = workbook.Sheets[sheetName];
+
+  // 方法1：尝试使用对象格式（第一行作为键）
+  let jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+    defval: '', // 空单元格默认值
+    raw: false, // 不保留原始值，进行格式化
+    blankrows: false // 跳过空行
+  });
+
+  // 如果对象格式读取成功且有数据
+  if (jsonData && jsonData.length > 0) {
+    // 从第一个对象提取表头
+    const firstRow = jsonData[0];
+    const headers = Object.keys(firstRow).map(key => String(key || '').trim());
+    
+    // 检查表头是否有效（不是__EMPTY等占位符，且包含常见的中文列名）
+    const commonHeaders = ['id', '词条', '英文翻译', 'comment', '俄文翻译', '备注', '翻译最大长度', '备注1'];
+    const hasValidHeader = headers.some(h => {
+      const lowerH = h.toLowerCase();
+      return commonHeaders.some(ch => lowerH.includes(ch.toLowerCase()) || ch.toLowerCase().includes(lowerH));
+    });
+    
+    // 如果表头看起来有效，或者没有__EMPTY占位符，使用这些表头
+    const hasEmptyPlaceholder = headers.some(h => h.startsWith('__EMPTY'));
+    const validHeaders = hasValidHeader || !hasEmptyPlaceholder 
+      ? headers.filter(h => h && !h.startsWith('__EMPTY'))
+      : [];
+    
+    if (validHeaders.length > 0) {
+      console.log(`XLSX列: ${validHeaders.join(', ')}`);
+      
+      // 转换为统一格式
+      // 注意：不进行 trim，保持原始数据（特别是词条列的前后空格），避免修改输入数据导致更新失败
+      const entries = jsonData.map(row => {
+        const entry = {};
+        validHeaders.forEach(header => {
+          entry[header] = row[header] !== undefined && row[header] !== null 
+            ? String(row[header])
+            : '';
+        });
+        return entry;
+      }).filter(entry => {
+        // 过滤掉所有字段都为空的行（使用 trim 仅用于判断是否为空，不修改数据）
+        return validHeaders.some(header => entry[header] && String(entry[header]).trim() !== '');
+      });
+
+      console.log(`读取完成: ${entries.length} 条词条`);
+      return { headers: validHeaders, entries };
+    }
+  }
+
+  // 方法2：如果对象格式失败，使用数组格式
+  console.log('尝试使用数组格式读取XLSX文件...');
+  const arrayData = XLSX.utils.sheet_to_json(worksheet, { 
+    header: 1, // 使用数组格式
+    defval: '', // 空单元格默认值
+    raw: false, // 不保留原始值，进行格式化
+    blankrows: false // 跳过空行
+  });
+
+  if (arrayData.length < 1) {
+    throw new Error('XLSX文件格式错误：文件为空');
+  }
+
+  // 第一行作为表头
+  const rawHeaders = arrayData[0] || [];
+  const headers = rawHeaders.map((h, index) => {
+    const str = String(h || '').trim();
+    // 如果表头为空，使用默认列名
+    return str || `列${index + 1}`;
+  });
+
+  // 过滤掉所有表头都为空的情况
+  const validHeaders = headers.filter((h, index) => {
+    // 保留非默认列名，或者至少保留前几列
+    return !h.startsWith('列') || index < 10;
+  });
+
+  if (validHeaders.length === 0) {
+    throw new Error('XLSX文件格式错误：无法识别表头');
+  }
+
+  console.log(`XLSX列: ${validHeaders.join(', ')}`);
+
+  // 解析数据行（从第二行开始）
+  const entries = [];
+  for (let i = 1; i < arrayData.length; i++) {
+    const row = arrayData[i] || [];
+    // 检查是否为空行
+    const isEmptyRow = row.every(cell => !cell || String(cell).trim() === '');
+    if (isEmptyRow) continue;
+
+    const entry = {};
+    validHeaders.forEach((header, index) => {
+      const cellValue = row[index];
+      entry[header] = cellValue !== undefined && cellValue !== null 
+        ? String(cellValue)
+        // ? String(cellValue).trim() // 不人为修改excel所有列的空格
+        : '';
+    });
+    
+    // 只添加至少有一个非空字段的行
+    const hasData = validHeaders.some(header => entry[header] && entry[header].trim() !== '');
+    if (hasData) {
+      entries.push(entry);
+    }
+  }
+
+  console.log(`读取完成: ${entries.length} 条词条`);
+  return { headers: validHeaders, entries };
+}
+
+/**
+ * 读取CSV或XLSX文件（自动检测文件类型）
+ * @param {string} filePath - 文件路径
+ * @returns {Object} { headers, entries }
+ */
+function readCsvOrXlsxFile(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  
+  if (ext === '.xlsx' || ext === '.xls') {
+    return readXlsxFile(filePath);
+  } else if (ext === '.csv') {
+    return readCsvFile(filePath);
+  } else {
+    // 尝试根据文件内容自动检测
+    const buffer = fs.readFileSync(filePath);
+    // 检查是否是XLSX文件（XLSX文件以PK开头，是ZIP格式）
+    if (buffer.length >= 2 && buffer[0] === 0x50 && buffer[1] === 0x4B) {
+      console.log('检测到XLSX格式（通过文件头）');
+      return readXlsxFile(filePath);
+    } else {
+      // 默认按CSV处理
+      console.log('未指定扩展名，按CSV格式处理');
+      return readCsvFile(filePath);
+    }
+  }
 }
 
 /**
@@ -615,6 +1243,17 @@ function postprocessTranslation(translatedText) {
     }
   }
 
+  // QT 兼容：翻译结果中若存在 “ & ”，需要替换为 “ && ”
+  // 原因：QT 会将单个 & 转义为 '_'（助记符/快捷键机制），导致显示异常
+  // 仅处理两侧带空格的场景，避免误改 HTML 实体（&amp;）或代码逻辑（&&）
+  if (text.includes(' & ')) {
+    const beforeAmp = text;
+    text = text.split(' & ').join(' && ');
+    if (text !== beforeAmp) {
+      issues.push('已将 “ & ” 替换为 “ && ”（QT 单个 & 会被转义为 "_"）');
+    }
+  }
+
   // 修正 *. ext → *.ext（仅处理星号点号后的空格）
   const before = text;
   text = text.replace(/\*\.\s+([A-Za-z0-9]+)/g, '*.$1');
@@ -708,6 +1347,9 @@ function buildTranslationPrompt(entryText, abbreviationMap, fullTranslationMap, 
   const commentRulesSection = options && options.commentRulesMarkdown
     ? String(options.commentRulesMarkdown)
     : '';
+  const excelTranslationRulesSection = options && options.excelTranslationRulesMarkdown
+    ? String(options.excelTranslationRulesMarkdown)
+    : '';
   const pseudoCodeTermsSection = matchedPseudoCodeRules.length > 0
     ? `## 伪代码术语说明\n\n以下术语为伪代码术语，必须严格按照指定翻译：\n\n${matchedPseudoCodeRules.join('\n')}\n`
     : '';
@@ -715,6 +1357,7 @@ function buildTranslationPrompt(entryText, abbreviationMap, fullTranslationMap, 
   return renderTemplate(template, {
     RELATED_TERMS_SECTION: relatedTermsSection,
     COMMENT_RULES_SECTION: commentRulesSection,
+    EXCEL_TRANSLATION_RULES_SECTION: excelTranslationRulesSection,
     PSEUDOCODE_TERMS_SECTION: pseudoCodeTermsSection,
     ENTRY_TEXT: String(entryText || '')
   });
@@ -948,7 +1591,7 @@ async function translateProtectedEntryStrict(protectedEntryText, abbreviationMap
  * @param {Map} pseudoCodeRuleMap - 伪代码术语映射表
  * @returns {string} prompt
  */
-function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap) {
+function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options = {}) {
   // 收集所有相关术语（缩写优先，去重）
   const relatedTermsSet = new Set();
   const abbreviationTerms = new Set();
@@ -989,31 +1632,89 @@ function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMa
   const pseudoCodeTermsSection = matchedPseudoCodeRules.size > 0
     ? `## 伪代码术语说明\n\n以下术语为伪代码术语，必须严格按照指定翻译：\n\n${Array.from(matchedPseudoCodeRules).join('\n')}\n`
     : '';
+  const excelTranslationRulesSection = options && options.excelTranslationRulesMarkdown
+    ? String(options.excelTranslationRulesMarkdown)
+    : '';
+  const commentRuleMap = options && options.commentRuleMap;
 
   const entryList = entries.map((e, idx) => `${idx + 1}. ${e.text}`).join('\n');
 
-  // comment 场景规则（按序号对照，避免污染"序号. 译文"输出格式）
-  const commentRuleBlocks = [];
+  // comment 场景规则（按 comment/tag 分组，聚合所有使用相同 key 的词条序号）
+  const commentGroups = new Map();
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i] || {};
-    const commentValue = e.comment;
-    const commentRulesMarkdown = e.commentRulesMarkdown;
-    if (!commentValue && !commentRulesMarkdown) continue;
-    const block = [
-      `- **序号**: ${i + 1}`,
-      commentValue ? `  - **comment**: \`${String(commentValue).trim()}\`` : null,
-      commentRulesMarkdown ? `  - **规则**:\n\n${String(commentRulesMarkdown).trim()}` : null
-    ].filter(Boolean).join('\n');
-    commentRuleBlocks.push(block);
+    const rawComment = e.comment;
+    const rawTag = e.tag;
+    const commentValue = rawComment !== undefined && rawComment !== null
+      ? String(rawComment)
+      : '';
+    const tagValue = rawTag !== undefined && rawTag !== null
+      ? String(rawTag)
+      : '';
+
+    const { keys, meta } = extractCommentLikeKeys(commentValue, tagValue);
+    if (!keys || keys.length === 0) continue;
+
+    for (const key of keys) {
+      let group = commentGroups.get(key);
+      if (!group) {
+        const rule = commentRuleMap && commentRuleMap.get(key);
+        group = {
+          comment: key,
+          rule,
+          indices: [],
+          fromCommentIndices: [],
+          fromTagIndices: []
+        };
+        commentGroups.set(key, group);
+      }
+      const idx = i + 1; // 使用本批次中的“序号. 词条”编号
+      group.indices.push(idx);
+
+      const info = meta && meta.get(key);
+      if (info) {
+        if (info.fromComment) {
+          group.fromCommentIndices.push(idx);
+        }
+        if (info.fromTag) {
+          group.fromTagIndices.push(idx);
+        }
+      }
+    }
   }
+
+  const commentRuleBlocks = [];
+  for (const group of commentGroups.values()) {
+    const rule = group.rule;
+    const lines = [];
+    // 复用单条规则的格式化逻辑，先输出 comment / 词条来源 / 场景 / 规则
+    if (rule) {
+      lines.push(formatCommentRuleToMarkdown(rule));
+    } else {
+      lines.push(`- **comment**: \`${group.comment}\`（未在 comment对应场景及规则.xlsx 中找到对应条目）`);
+    }
+    // 再追加本批次中命中的“序号”列表，便于与 ENTRY_LIST 对照
+    if (group.indices && group.indices.length > 0) {
+      lines.push(`  - **序号**: [${group.indices.join(', ')}]`);
+    }
+    if (group.fromCommentIndices && group.fromCommentIndices.length > 0) {
+      lines.push(`  - **comment 字段行号**: [${group.fromCommentIndices.join(', ')}]`);
+    }
+    if (group.fromTagIndices && group.fromTagIndices.length > 0) {
+      lines.push(`  - **tag 字段行号**: [${group.fromTagIndices.join(', ')}]`);
+    }
+    commentRuleBlocks.push(lines.join('\n'));
+  }
+
   const commentRulesBatchSection = commentRuleBlocks.length > 0
-    ? `## comment 场景规则（仅对带 comment 的词条生效）\n\n${commentRuleBlocks.join('\n\n')}\n`
+    ? `## comment 场景规则（仅对带 comment/tag 的词条生效，来自 comment对应场景及规则.xlsx）\n\n${commentRuleBlocks.join('\n\n')}\n`
     : '';
 
   return renderTemplate(template, {
     RELATED_TERMS_SECTION: relatedTermsSection,
     PSEUDOCODE_TERMS_SECTION: pseudoCodeTermsSection,
     COMMENT_RULES_BATCH_SECTION: commentRulesBatchSection,
+    EXCEL_TRANSLATION_RULES_SECTION: excelTranslationRulesSection,
     ENTRY_LIST: entryList
   });
 }
@@ -1034,7 +1735,8 @@ function parseBatchTranslationResponse(responseText, expectedCount) {
     // 匹配序号开头的行
     const match = line.match(/^\d+[\.、]\s*(.+)$/);
     if (match) {
-      results.push(match[1].trim());
+      // results.push(match[1].trim());
+      results.push(match[1]);// 不trim，保留原始空格
     } else if (line && !line.match(/^##|^翻译|^要求|^词条|^相关/)) {
       // 如果不是标题行，也作为翻译结果
       results.push(line);
@@ -1236,13 +1938,13 @@ async function callZhipuAPIBatch(prompt, expectedCount) {
  * @param {Map} pseudoCodeRuleMap - 伪代码术语映射表
  * @returns {Promise<Array<string>>} 英文翻译数组
  */
-async function translateBatch(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap) {
+async function translateBatch(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options = {}) {
   if (entries.length === 0) {
     return [];
   }
 
   // 构建批量prompt
-  const prompt = buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+  const prompt = buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap, options);
 
   // 按优先级尝试不同的API（Claude优先级最高）
   const apis = [
@@ -1320,7 +2022,8 @@ async function translateEntry(entryText, abbreviationMap, fullTranslationMap) {
  * @returns {{ forcedTranslation: string|null, note1Issues: string[] }}
  */
 function normalizeUnitTranslation(entryText) {
-  const text = String(entryText || '').trim();
+  // const text = String(entryText || '').trim();
+  const text = String(entryText || '');// 不trim，保留原始空格
   const note1Issues = [];
 
   // 标准写法：单位：xx
@@ -1749,14 +2452,16 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
 
     // 步骤2: 加载翻译规则
     const { abbreviationMap, fullTranslationMap, pseudoCodeRules, pseudoCodeRuleMap } = loadTranslationRules(rulesPath);
+    const excelTranslationRulesMarkdown = loadExcelTranslationRulesMarkdown(glossaryPath);
 
-    // 步骤3: 批量读取CSV
-    const { headers, entries } = readCsvFile(inputCsvPath);
+    // 步骤3: 批量读取CSV/XLSX
+    const { headers, entries } = readCsvOrXlsxFile(inputCsvPath);
 
-    // comment 场景规则：仅当CSV包含comment列时加载
+    // comment 场景规则：当CSV包含 comment 或 tag 列时加载
     const hasCommentColumn = headers.includes('comment');
+    const hasTagColumn = headers.includes('tag');
     const commentRulesExcelPath = path.join(__dirname, 'glossary', 'comment对应场景及规则.xlsx');
-    const commentRuleMap = hasCommentColumn ? loadCommentScenarioRules(commentRulesExcelPath) : new Map();
+    const commentRuleMap = (hasCommentColumn || hasTagColumn) ? loadCommentScenarioRules(commentRulesExcelPath) : new Map();
 
     // 检查是否需要添加"备注1"列
     const hasNote1Column = headers.includes('备注1');
@@ -1776,7 +2481,10 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
       const entry = entries[i];
       const entryText = entry['词条'] || '';
       const commentValue = hasCommentColumn ? (entry['comment'] || '') : '';
-      const commentRulesMarkdown = hasCommentColumn ? buildCommentRulesSectionMarkdown(commentValue, commentRuleMap) : '';
+      const tagValue = hasTagColumn ? (entry['tag'] || '') : '';
+      const commentRulesMarkdown = (hasCommentColumn || hasTagColumn)
+        ? buildCommentRulesSectionMarkdown(commentValue, commentRuleMap, tagValue)
+        : '';
 
       if (!entryText) {
         // 空词条，直接添加到结果中
@@ -1791,6 +2499,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         ...protectUndistinguishablePlaceholders(entryText),
         placeholders: extractPlaceholders(entryText),
         comment: commentValue,
+        tag: tagValue,
         commentRulesMarkdown: commentRulesMarkdown
       });
       entryIndexMap.push(i);
@@ -1843,6 +2552,24 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
           note1Issues.push(...unitNormalization.note1Issues);
         }
 
+        // comment/tag 字段名 trim 后才能命中的轻量提示（不把“无规则”视为错误）
+        const { note1Issues: trimIssues } = detectCommentTagTrimMatchIssues(
+          item.entry,
+          commentRuleMap
+        );
+        if (trimIssues.length > 0) {
+          note1Issues.push(...trimIssues);
+        }
+
+        // comment/tag 同时命中规则但规则内容不一致 → 备注提示
+        const { note1Issues: conflictIssues } = detectCommentTagRuleConflict(
+          item.entry,
+          commentRuleMap
+        );
+        if (conflictIssues.length > 0) {
+          note1Issues.push(...conflictIssues);
+        }
+
         batchEntries.push({
           ...item,
           note1Issues: note1Issues,
@@ -1864,6 +2591,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
             text: item.protectedText || item.text,
             placeholders: item.placeholders,
             comment: item.comment || '',
+            tag: item.tag || '',
             commentRulesMarkdown: item.commentRulesMarkdown || ''
           });
           translateIndexMap.push(i);
@@ -1880,14 +2608,26 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         if (toTranslate.length > 0) {
           // 如果启用了 debugPrompt，记录本批次的 prompt
           if (debugPromptEnabled) {
-            const batchPrompt = buildBatchTranslationPrompt(toTranslate, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+            const batchPrompt = buildBatchTranslationPrompt(
+              toTranslate,
+              abbreviationMap,
+              fullTranslationMap,
+              pseudoCodeRuleMap,
+              { excelTranslationRulesMarkdown, commentRuleMap }
+            );
             debugPromptContent += `---\n\n## 批次 ${batchIndex + 1}/${totalBatches}\n\n`;
             debugPromptContent += `词条范围: 第 ${startIndex + 1}-${endIndex} 条\n`;
             debugPromptContent += `词条数量: ${toTranslate.length} 条（规则化 ${batchEntries.length - toTranslate.length} 条）\n\n`;
             debugPromptContent += `### Prompt 内容\n\n\`\`\`\n${batchPrompt}\n\`\`\`\n\n`;
           }
 
-          const modelTranslations = await translateBatch(toTranslate, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap);
+          const modelTranslations = await translateBatch(
+            toTranslate,
+            abbreviationMap,
+            fullTranslationMap,
+            pseudoCodeRuleMap,
+            { excelTranslationRulesMarkdown, commentRuleMap }
+          );
           for (let k = 0; k < translateIndexMap.length; k++) {
             translations[translateIndexMap[k]] = modelTranslations[k] || '';
           }
@@ -1933,7 +2673,11 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
                 item.protectedText || item.text,
                 abbreviationMap,
                 fullTranslationMap,
-                { commentRulesMarkdown: item.commentRulesMarkdown || '', pseudoCodeRuleMap: pseudoCodeRuleMap }
+                {
+                  commentRulesMarkdown: item.commentRulesMarkdown || '',
+                  pseudoCodeRuleMap: pseudoCodeRuleMap,
+                  excelTranslationRulesMarkdown
+                }
               );
               const retryValidation = validateUndistinguishableTokenOrder(retryRaw, item.tokenOrder);
               if (retryValidation.isValid) {
@@ -1977,6 +2721,15 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
           }
         }
 
+        // comment/tag 对大小写的强约束（Sentence case / Title Case），在此阶段自动纠正译文
+        if (translatedText) {
+          const caseResult = applyCaseRuleForEntry(translatedText, item.entry, commentRuleMap);
+          translatedText = caseResult.text;
+          if (caseResult.issues && caseResult.issues.length > 0) {
+            item.note1Issues.push(...caseResult.issues.map(msg => `后处理: ${msg}`));
+          }
+        }
+
         // 翻译结果验证
         if (translatedText) {
           const translationValidation = validateTranslation(item.text, translatedText, item.placeholders);
@@ -2012,13 +2765,15 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         index: idx,
         text: item.text, // 使用原始词条文本（未做占位符保护）
         comment: item.comment || '',
+        tag: item.tag || '',
         commentRulesMarkdown: item.commentRulesMarkdown || ''
       }));
       const rawPrompt = buildBatchTranslationPrompt(
         rawEntriesForPrompt,
         abbreviationMap,
         fullTranslationMap,
-        pseudoCodeRuleMap
+        pseudoCodeRuleMap,
+        { excelTranslationRulesMarkdown, commentRuleMap }
       );
       debugPromptContent += `---\n\n# 手工翻译用 Prompt（未保护占位符）\n\n\`\`\`\n${rawPrompt}\n\`\`\`\n\n`;
     }
@@ -2152,7 +2907,10 @@ if (require.main === module) {
 module.exports = {
   ensureGlossaryExtracted,
   loadTranslationRules,
+  loadExcelTranslationRulesMarkdown,
   readCsvFile,
+  readXlsxFile,
+  readCsvOrXlsxFile,
   translateEntry,
   translateBatch,
   extractPlaceholders,
