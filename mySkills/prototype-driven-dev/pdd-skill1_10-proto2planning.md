@@ -30,6 +30,7 @@ description: Use when you have atomic tasks document and need to generate a conc
   - `pdd-skill1_9-proto2planning`：基于原子任务生成详细的实现规划（包含技术细节）
 
 > **重要区别**：
+>
 > - `pdd-skill1_9`：详细的实现规划，包含技术细节、文件路径、验收标准（适合开发团队）
 > - `pdd-skill1_10`：精炼的设计文档，突出价值、架构、功能（适合汇报、评审）
 
@@ -87,6 +88,7 @@ description: Use when you have atomic tasks document and need to generate a conc
    - **业务规则**：关键业务规则（3-5 条）
 
 > **对话式提问**（如果需要澄清）：
+>
 > - "这个系统的核心价值是什么？解决了什么业务痛点？"
 > - "有哪些关键功能模块？优先级如何？"
 
@@ -94,13 +96,13 @@ description: Use when you have atomic tasks document and need to generate a conc
 
 **根据使用场景调整文档重点**：
 
-| 使用场景 | 重点内容 | 详细程度 |
-|---------|---------|---------|
-| 开会时的汇报 | 业务价值、架构、核心功能、实施计划 | 中等 |
-| 向产品经理汇报 | 业务价值、用户价值、功能列表、时间计划 | 较高 |
-| 向技术团队汇报 | 架构设计、技术方案、实施计划 | 较高 |
-| 向管理层汇报 | 业务价值、ROI、风险、时间计划 | 较低 |
-| 项目概览文档 | 全面但精炼，所有章节 | 中等 |
+| 使用场景       | 重点内容                               | 详细程度 |
+| -------------- | -------------------------------------- | -------- |
+| 开会时的汇报   | 业务价值、架构、核心功能、实施计划     | 中等     |
+| 向产品经理汇报 | 业务价值、用户价值、功能列表、时间计划 | 较高     |
+| 向技术团队汇报 | 架构设计、技术方案、实施计划           | 较高     |
+| 向管理层汇报   | 业务价值、ROI、风险、时间计划          | 较低     |
+| 项目概览文档   | 全面但精炼，所有章节                   | 中等     |
 
 **对话式确认**：
 > "文档主要用于什么场景？是技术评审、产品评审，还是管理层汇报？"
@@ -139,6 +141,7 @@ description: Use when you have atomic tasks document and need to generate a conc
    - 技术收益
 
 **内容要点**：
+
 - 定义：50-100 字，清晰说明系统/功能是什么
 - 问题：100-150 字，列出 2-3 个核心痛点
 - 解决：100-150 字，说明解决方案
@@ -149,6 +152,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 2：系统架构
 
 **内容要点**：
+
 - 核心组件（架构图或文字描述）
 - 数据流向（简化流程图）
 - 关键设计决策（2-3 条）
@@ -158,6 +162,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 3：核心功能
 
 **内容要点**：
+
 - 列出 3-7 个核心功能模块
 - 每个功能：功能描述（1 段）、关键规则（2-3 条）、典型场景（1 个）
 
@@ -166,6 +171,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 4：数据结构设计（可选）
 
 **内容要点**：
+
 - 核心数据表（简化版，只列出关键字段）
 - 表之间的关系
 
@@ -174,6 +180,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 5：关键业务规则（可选）
 
 **内容要点**：
+
 - 列出 3-5 条关键业务规则
 - 每条规则：规则名称、规则描述、典型场景
 
@@ -182,6 +189,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 6：用户界面设计（可选）
 
 **内容要点**：
+
 - 列出 2-3 个主要界面
 - 每个界面：位置、功能、关键交互
 
@@ -190,6 +198,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 7：实施计划
 
 **内容要点**：
+
 - 阶段划分（3-5 个阶段）
 - 每个阶段：阶段名称、时间估算、关键产出物
 - 技术栈（简要）
@@ -200,6 +209,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 8：验收标准（可选）
 
 **内容要点**：
+
 - 功能验收（3-5 条）
 - 性能验收（2-3 条）
 - 兼容性验收（2-3 条）
@@ -209,6 +219,7 @@ description: Use when you have atomic tasks document and need to generate a conc
 #### 章节 9：后续规划（可选）
 
 **内容要点**：
+
 - 短期优化（2-3 条）
 - 长期规划（2-3 条）
 
@@ -222,6 +233,7 @@ description: Use when you have atomic tasks document and need to generate a conc
    - `docs/plans/YYYY-MM-DD-<feature-name>-prototype-design.md`
 
 2. **文档结构**：
+
    ```markdown
    # [Feature Name] - 原型设计文档
    
@@ -272,12 +284,14 @@ description: Use when you have atomic tasks document and need to generate a conc
 ### 文档结构（根据使用场景调整）
 
 **必须包含的章节**：
+
 1. 项目概述
 2. 系统架构
 3. 核心功能
 4. 实施计划
 
 **可选章节**（根据使用场景）：
+
 - 数据结构设计（技术团队、详细评审）
 - 关键业务规则（产品团队、业务评审）
 - 用户界面设计（产品团队、UI 评审）
