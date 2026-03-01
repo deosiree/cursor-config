@@ -1,3 +1,116 @@
+# Superpowers 插件
+
+<plugin name="superpowers">
+  <description>增强 AI 助手能力的技能集合</description>
+  <skills>
+    <skill>brainstorming</skill>
+    <skill>writing-plans</skill>
+    <skill>executing-plans</skill>
+    <skill>systematic-debugging</skill>
+    <skill>test-driven-development</skill>
+    <skill>subagent-driven-development</skill>
+    <skill>dispatching-parallel-agents</skill>
+    <skill>requesting-code-review</skill>
+    <skill>receiving-code-review</skill>
+    <skill>finishing-a-development-branch</skill>
+    <skill>using-git-worktrees</skill>
+    <skill>verification-before-completion</skill>
+    <skill>writing-skills</skill>
+    <skill>using-superpowers</skill>
+  </skills>
+</plugin>
+
+<plugin name="frontend-slides">
+  <description>创建精美、动画丰富的HTML演示文稿，从零开始或转换PowerPoint文件</description>
+  <skills>
+    <skill>frontend-slides</skill>
+  </skills>
+</plugin>
+
+<plugin name="plan-test-analysis">
+  <description>结构化分析测试报错原因，生成修复方案（不改代码）</description>
+  <skills>
+    <skill>plan-test-analysis</skill>
+  </skills>
+</plugin>
+
+<plugin name="prod-risk-check">
+  <description>检查生产环境异常是否与循环依赖/初始化顺序有关</description>
+  <skills>
+    <skill>prod-risk-check</skill>
+  </skills>
+</plugin>
+
+<plugin name="dom-utils-check">
+  <description>排查和改造DOM相关工具函数，处理位置越界、存储异常等问题</description>
+  <skills>
+    <skill>dom-utils-check</skill>
+  </skills>
+</plugin>
+
+<plugin name="data-flow-check">
+  <description>排查状态变化时序、异步操作、DOM更新等数据流相关问题</description>
+  <skills>
+    <skill>data-flow-check</skill>
+  </skills>
+</plugin>
+
+<plugin name="file-check">
+  <description>批量分析指定前端文件中的优化点、潜在问题和改进建议</description>
+  <skills>
+    <skill>file-check</skill>
+  </skills>
+</plugin>
+
+<plugin name="gen-debugskills">
+  <description>将对话沉淀为todolist + 易错清单 + skills</description>
+  <skills>
+    <skill>gen-debugskills</skill>
+  </skills>
+</plugin>
+
+<plugin name="conversation-summary">
+  <description>快速总结对话内容并生成迁移文档</description>
+  <skills>
+    <skill>conversation-summary</skill>
+  </skills>
+</plugin>
+
+<plugin name="tech-doc-to-podcast">
+  <description>将技术文档转换为双人播客脚本（含按问题拆分Markdown）</description>
+  <skills>
+    <skill>tech-doc-to-podcast</skill>
+  </skills>
+</plugin>
+
+<plugin name="trans-skills">
+  <description>将指定的Markdown文档或目录翻译为中文</description>
+  <skills>
+    <skill>trans-skills</skill>
+  </skills>
+</plugin>
+
+<plugin name="post-mortem">
+  <description>总结开发经验为结构化文档：经验总结（四段式）、语法扫盲、弯路复盘</description>
+  <skills>
+    <skill>post-mortem</skill>
+  </skills>
+</plugin>
+
+<plugin name="prototype-driven-dev">
+  <description>原型驱动开发工作流，以代码为中心的设计（Code-Centric Design）</description>
+  <skills>
+    <skill>prototype-driven-dev</skill>
+  </skills>
+</plugin>
+
+<plugin name="translate">
+  <description>CSV词条批量翻译工具，集成术语库、中文规范性检查、翻译验证等功能</description>
+  <skills>
+    <skill>translate</skill>
+  </skills>
+</plugin>
+
 # 使用技能（Using Superpowers）
 
 <EXTREMELY-IMPORTANT>
