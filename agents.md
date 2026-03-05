@@ -51,6 +51,15 @@
 4. **清单处理**: 如果技能有清单，为每个清单项创建 TodoWrite todo
 5. **严格遵循**: 严格按照技能指示执行，不要偏离
 
+## Skill 发现顺序（nebula 项目）
+
+1. 先扫描项目专有目录：`.cursor/nebula-skills`
+2. 再扫描通用目录：`.cursor/mySkills`
+3. 当两边存在同名 skill 或语义重叠时，优先使用 `.cursor/nebula-skills`
+4. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
+   - `route-architecture-delivery-skills`（位于 `.cursor/nebula-skills`）
+   - `mf-route-home-alignment`（位于 `.cursor/nebula-skills`）
+
 ## 响应要求
 - 选择最合适的技能内部使用
 - 除非被询问，否则不要提及技能名称

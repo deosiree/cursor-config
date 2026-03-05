@@ -1,6 +1,6 @@
 ---
 name: route-architecture-delivery-skills
-description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范”但未明确 skill 名称的场景。
+description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范、微前端登录落点/路由前缀一致性”但未明确 skill 名称的场景。
 ---
 
 # 目标

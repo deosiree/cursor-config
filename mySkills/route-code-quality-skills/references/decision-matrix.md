@@ -6,3 +6,4 @@
 4. 发布前阻断项、回滚路径、配置差异检查，优先 `prod-risk-check`。
 5. 需要按 checklist 做系统化排查，优先 `todolist`。
 6. 需要沉淀调试流程为可复用 skill，优先 `gen-debugskills`。
+7. 需要监控 Codex 会话长时间无响应或资源异常提醒，优先 `codex-session-watchdog`。

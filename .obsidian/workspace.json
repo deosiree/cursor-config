@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mySkills/version-switch-with-env/SKILL.md",
+                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 416.5
   },
   "right": {
     "id": "3fe0bd91fa8355f5",
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "mySkills/version-switch-with-env/SKILL.md",
+                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "mySkills/version-switch-with-env/SKILL.md",
+                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -156,7 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "mySkills/version-switch-with-env/SKILL.md",
+                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -185,6 +185,8 @@
   },
   "active": "43d162c5f2fb4fa2",
   "lastOpenFiles": [
+    "mySkills/trans-doc/SKILL.md",
+    "mySkills/version-switch-with-env/SKILL.md",
     "mySkills/route-language-localization-skills/agents/openai.yaml",
     "mySkills/route-language-localization-skills/agents",
     "mySkills/route-knowledge-content-skills/agents/openai.yaml",
@@ -199,7 +201,6 @@
     "mySkills/route-language-localization-skills",
     "mySkills/route-knowledge-content-skills/references/decision-matrix.md",
     "mySkills/route-knowledge-content-skills/SKILL.md",
-    "mySkills/route-knowledge-content-skills/references",
     "mySkills/route-architecture-delivery-skills/references/decision-matrix.md",
     "mySkills/route-architecture-delivery-skills/SKILL.md",
     "mySkills/route-code-quality-skills/references/decision-matrix.md",
@@ -219,7 +220,6 @@
     "mySkills/prototype-driven-dev/references/pdd-skill1_10-proto2planning.md",
     "mySkills/prototype-driven-dev/references/pdd-skill1_1-improve.md",
     "mySkills/prototype-driven-dev/references/原型设计需求.md",
-    "mySkills/prototype-driven-dev/references/原型驱动开发-工作流.md",
-    "mySkills/todolist/SKILL.md"
+    "mySkills/prototype-driven-dev/references/原型驱动开发-工作流.md"
   ]
 }

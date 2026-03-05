@@ -9,6 +9,8 @@
 ├── skills/           # Cursor Skills（技能）
 │   ├── todolist/    # 待办清单和易错清单
 │   └── *.md         # 各种技能文档
+├── mySkills/         # 通用可复用 skills
+├── nebula-skills/    # nebula 项目专有 skills（业务耦合）
 ├── plans/           # 项目计划和方案
 ├── review/          # 代码审查和知识库
 └── agents.md        # Agent 配置
@@ -158,6 +160,12 @@ git log --oneline
    cd .cursor
    git pull origin main
    ```
+
+## 🎯 skill 使用优先级（nebula）
+
+1. 业务耦合问题优先使用 `.cursor/nebula-skills`。
+2. 通用能力与跨项目能力使用 `.cursor/mySkills`。
+3. 若两者存在同名或近似 skill，以 `.cursor/nebula-skills` 为准。
 
 ## 📝 版本管理
 

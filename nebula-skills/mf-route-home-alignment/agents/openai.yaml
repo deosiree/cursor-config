@@ -1,0 +1,5 @@
+interface:
+  display_name: "统一登录落点路由"
+  short_description: "修复微前端登录回跳、默认首页与历史前缀不一致导致的 404 问题"
+  default_prompt: "使用 $mf-route-home-alignment 统一主子应用路由前缀、默认首页和登录回跳，并输出回归结果。"
+

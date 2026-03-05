@@ -1,4 +1,4 @@
 interface:
   display_name: "路由架构技能"
-  short_description: "路由架构设计与交付推进类需求，推荐迁移、版本、原型和计划相关 skill"
+  short_description: "路由架构设计与交付推进类需求，推荐迁移、版本、原型、计划及微前端登录落点一致性 skill"
   default_prompt: "使用 $route-architecture-delivery-skills 根据当前目标推荐最合适的架构与交付类 skill。"

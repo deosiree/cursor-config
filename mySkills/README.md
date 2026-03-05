@@ -7,21 +7,27 @@
 ## 父级路由 skills
 1. `route-code-quality-skills`
    - 面向：代码质量与故障排查
-   - 子技能：`data-flow-check` `dom-utils-check` `file-check` `prod-risk-check` `todolist` `gen-debugskills`
-2. `route-architecture-delivery-skills`
-   - 面向：架构设计与交付推进
-   - 子技能：`api-swagger-ready` `version-switch-with-env` `prototype-driven-dev` `plan-test-analysis` `git-gen-branch`
-3. `route-knowledge-content-skills`
+   - 子技能：`data-flow-check` `dom-utils-check` `file-check` `prod-risk-check` `todolist` `gen-debugskills` `codex-session-watchdog`
+2. `route-knowledge-content-skills`
    - 面向：总结复盘与内容加工
    - 子技能：`conversation-summary` `post-mortem` `tech-doc-to-podcast`
-4. `route-language-localization-skills`
+3. `route-language-localization-skills`
    - 面向：翻译与本地化
    - 子技能：`trans-doc` `translate`
 
 ## 直接调用示例
 1. `使用 $route-code-quality-skills 先判断我这个前端异常该用哪个 skill。`
-2. `使用 $route-architecture-delivery-skills 帮我在迁移与版本切换里选最合适的 skill。`
-3. `使用 $route-language-localization-skills 根据输入文件类型推荐翻译 skill。`
+2. `使用 $route-language-localization-skills 根据输入文件类型推荐翻译 skill。`
+3. `使用 $codex-session-watchdog 监控会话，长时间无响应或资源异常时系统通知提醒中断。`
+
+## 项目专有 skills
+1. 与 `nebula` 业务耦合的架构与路由技能已迁移到 `.cursor/nebula-skills`。
+2. 包括：`route-architecture-delivery-skills`、`mf-route-home-alignment`。
+
+## 运维与守护 skills
+1. `codex-session-watchdog`
+   - 面向：Codex 对话执行监控（无响应超时、CPU/内存异常）
+   - 脚本：`.cursor/mySkills/codex-session-watchdog/scripts/watchdog.ps1`
 
 ## 维护规则
 1. 新增 skill 时，必须同步更新对应父级路由 skill 的 `references/decision-matrix.md`。
