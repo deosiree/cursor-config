@@ -12,6 +12,18 @@
 
 **功能**：结构化分析测试报错原因，生成修复方案（不改代码）
 
+### 2. 版本切换与 env 控制
+
+**文件**：`version-switch-with-env.md`
+
+**功能**：设计并实现一套通过环境变量/配置来控制业务版本（V1/V2/灰度/回滚）的通用方案，支持在同一代码仓库内按 env/租户/请求切换不同版本行为
+
+### 3. Git 远程配置标准化（git-gen-branch）
+
+**文件**：`git-gen-branch.md`
+
+**功能**：统一任意项目仓库的 Git 远程配置（`origin` / 可选 `upstream`），支持通过参数或自然语言（如“修改子项目F:\...\microfb的上游应用为 http://10.17.196.23/nebula-cloud/microfb”）自动解析项目路径、项目名和远程 URL，并生成标准化的 `git remote set-url` / `git remote add` / 验证步骤。
+
 ---
 
 ## 快速使用指南
