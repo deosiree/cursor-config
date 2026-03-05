@@ -50,6 +50,8 @@
 3. **响应顺序**: 在任何响应（包括澄清问题）之前调用相关技能
 4. **清单处理**: 如果技能有清单，为每个清单项创建 TodoWrite todo
 5. **严格遵循**: 严格按照技能指示执行，不要偏离
+6. **规则同步（强制）**: 后续新增/修改规则时，必须同步更新全部规则文件：`.cursorrules`、`.cursor/.cursorrules`、`.codexrules`、`CLAUDE.md`
+7. **规则语言（强制）**: 所有规则文件统一使用中文
 
 ## Skill 发现顺序（nebula 项目）
 
@@ -59,6 +61,9 @@
 4. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
    - `route-architecture-delivery-skills`（位于 `.cursor/nebula-skills`）
    - `mf-route-home-alignment`（位于 `.cursor/nebula-skills`）
+5. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
+6. **强制规则**：nebula 项目级 skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
+7. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
 
 ## 响应要求
 - 选择最合适的技能内部使用

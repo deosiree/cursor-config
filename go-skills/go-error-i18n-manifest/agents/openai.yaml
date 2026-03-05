@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 错误码国际化"
+  short_description: "统一 Go 后端错误码多语言映射与语言协商机制"
+  default_prompt: "请使用 $go-error-i18n-manifest 规范 Go 后端错误码多语言映射与 locale 协商策略。"
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,45 @@
+# 🛠️ OpenAI Codex 专项执行指令
+
+## 🎯 核心目标
+- [cite_start]**代码生产力**：生成符合企业级规范的 Vue 3 + TS 代码 [cite: 8, 14]。
+- [cite_start]**沙盒安全**：在执行 `Sandbox` 命令前，必须先进行风险评估 [cite: 1, 4]。
+- **中文交互**：所有解释、提示及注释必须使用**中文**。
+
+## 🔧 开发规范 (SOP)
+1. **逻辑组织**：
+   - [cite_start]自动识别并提取重复逻辑为辅助方法（如 `extractXxx`, `validateXxx`） [cite: 1, 4]。
+   - [cite_start]在 `methods` 或脚本块中使用 `// ====================` 进行功能分组 [cite: 1]。
+2. **技术偏好**：
+   - [cite_start]优先使用 `Composition API` (<script setup>) [cite: 14]。
+   - [cite_start]使用 `ref()` 处理响应式数据，避免使用 `Enum`（改用 `const as const`） [cite: 19, 20]。
+   - [cite_start]Element Plus 组件默认采用 `size="small"` 以维持高信息密度 [cite: 17]。
+3. **API 与 数据**：
+   - [cite_start]严格遵循 TypeScript Interface 定义，禁止使用 `any` [cite: 11, 16]。
+3. **状态管理规范**
+	1. **Pinia 使用**：状态必须通过 Functional Store 组织，优先使用 `ref()` 保持响应式清晰度 。 
+	2. **性能防护**：对于非响应式的大数据，必须使用 `shallowRef` 以减少开销 。
+5. **文件命名 SOP**
+   - **命名约束**：组件目录一律使用 `kebab-case`，组件文件使用 `PascalCase`，逻辑抽离至 `composables/` 。
+## ⚠️ 报错处理 (Skill)
+- 当执行命令失败时，立即进入 **Plan 模式**：
+  - [cite_start]1. 采集堆栈 -> 2. 分析根因 -> 3. 提供修复步骤（不直接改动代码，直到确认） [cite: 6]。
+
+## 📝 注释与可检阅性规则（强制）
+- 任何代码修改都必须同步检查“函数头注释”。
+- 所有新增或修改的函数声明（包含 `function`、导出函数、类方法、对象方法）必须提供 JSDoc。
+- JSDoc 至少包含：
+  - 一句话说明职责；
+  - `@param`（有参数时必须完整）；
+  - `@returns`（返回值非 `void` 时必须标注；`void` 建议显式标注）；
+  - 异步函数需标注 `Promise<...>` 返回语义。
+- 提交前必须把“缺失 JSDoc 的函数”视为待修复项，不可忽略。
+
+## 🔒 规则文件同步机制（强制）
+1. 后续新增或修改“规则”时，必须同步检查并更新以下全部规则文件：
+   - `.cursorrules`
+   - `.cursor/.cursorrules`
+   - `.codexrules`
+   - `CLAUDE.md`（Claude 规则入口文件）
+2. 若上述文件不存在，必须先创建再同步写入规则。
+3. 规则落地前必须完成一次全量核对，确认四处内容一致或明确差异说明。
+4. 所有规则文件统一使用中文撰写（标题、条款、示例说明均为中文）。

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go gRPC 客户端治理"
+  short_description: "统一 Go gRPC 客户端生命周期与连接复用策略"
+  default_prompt: "请使用 $go-grpc-client-lifecycle 审查并规范 Go gRPC 客户端初始化、复用、超时与连接管理方案。"
+
+policy:
+  allow_implicit_invocation: true

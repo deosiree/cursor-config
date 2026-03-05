@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 横切拦截器治理"
+  short_description: "收敛审计鉴权日志指标等横切逻辑到拦截器"
+  default_prompt: "请使用 $go-cross-cutting-interceptor 将 Go 服务横切逻辑统一收敛到拦截器与中间件。"
+
+policy:
+  allow_implicit_invocation: true

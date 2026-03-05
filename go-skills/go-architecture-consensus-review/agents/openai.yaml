@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 架构共识审查"
+  short_description: "按团队共识快速审查 Go 后端关键架构决策"
+  default_prompt: "请使用 $go-architecture-consensus-review 审查 Go 后端改动是否符合团队架构共识并路由到专题技能。"
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 锁与定时任务治理"
+  short_description: "治理多实例并发写与定时任务重复执行风险"
+  default_prompt: "请使用 $go-distributed-lock-and-cron-singleton 设计 Go 服务的分布式锁与定时任务单实例执行方案。"
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 链路透传规范"
+  short_description: "保障 Go 服务/MQ/定时任务 trace 与 context 不断链"
+  default_prompt: "请使用 $go-trace-context-propagation 统一 Go RPC、MQ 与定时任务中的 trace 与 context 透传规范。"
+
+policy:
+  allow_implicit_invocation: true

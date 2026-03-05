@@ -166,6 +166,8 @@ git log --oneline
 1. 业务耦合问题优先使用 `.cursor/nebula-skills`。
 2. 通用能力与跨项目能力使用 `.cursor/mySkills`。
 3. 若两者存在同名或近似 skill，以 `.cursor/nebula-skills` 为准。
+4. **强制**：nebula 项目级（业务耦合）skill 只能放在 `.cursor/nebula-skills`，不得放入 `.cursor/mySkills`。
+5. **强制**：nebula 项目级 skill 统一使用中文版（`SKILL.md` 与 `agents/openai.yaml`）。
 
 ## 📝 版本管理
 

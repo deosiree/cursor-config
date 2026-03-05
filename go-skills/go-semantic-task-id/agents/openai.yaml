@@ -1,0 +1,7 @@
+interface:
+  display_name: "Go 语义化任务ID"
+  short_description: "建立可幂等、可去重、可追踪的 Go 任务 ID 规范"
+  default_prompt: "请使用 $go-semantic-task-id 设计具备语义化、幂等与去重能力的 Go 异步任务 ID。"
+
+policy:
+  allow_implicit_invocation: true
