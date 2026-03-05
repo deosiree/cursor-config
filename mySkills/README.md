@@ -1,265 +1,34 @@
-# Cursor Skills 使用指南
-
-## 概述
-
-本目录包含项目专用的Cursor AI Skills，用于提高开发效率和代码质量。
-
-## 可用Skills
-
-### 1. Plan模式测试报错分析
-
-**文件**：`plan-test-analysis.md`
-
-**功能**：结构化分析测试报错原因，生成修复方案（不改代码）
-
-### 2. 版本切换与 env 控制
-
-**文件**：`version-switch-with-env.md`
-
-**功能**：设计并实现一套通过环境变量/配置来控制业务版本（V1/V2/灰度/回滚）的通用方案，支持在同一代码仓库内按 env/租户/请求切换不同版本行为
-
-### 3. Git 远程配置标准化（git-gen-branch）
-
-**文件**：`git-gen-branch.md`
-
-**功能**：统一任意项目仓库的 Git 远程配置（`origin` / 可选 `upstream`），支持通过参数或自然语言（如“修改子项目F:\...\microfb的上游应用为 http://10.17.196.23/nebula-cloud/microfb”）自动解析项目路径、项目名和远程 URL，并生成标准化的 `git remote set-url` / `git remote add` / 验证步骤。
-
----
-
-## 快速使用指南
-
-### Plan模式测试报错分析
-
-#### 方式一：直接触发（推荐）
-
-在Cursor的聊天框中输入以下任一命令：
-
-```
-@plan [你的错误信息]
-```
-
-**示例**：
-```
-@plan 测试报错：TypeError: Cannot read properties of null (reading 'userName')
-```
-
-```
-@plan AssertionError: expected null to be undefined
-```
-
-#### 方式二：使用关键词触发
-
-输入包含以下关键词的句子：
-
-- `plan模式分析`
-- `plan模式`
-- `先给plan不改代码`
-- `[PLAN]`
-
-**示例**：
-```
-使用plan模式分析这个测试失败的原因
-```
-
-```
-plan模式分析：为什么这个测试失败了？
-```
-
-#### 方式三：自动识别
-
-当Cursor检测到以下情况时，会自动触发：
-
-- 测试报错信息
-- 错误堆栈信息
-- 用户询问"为什么测试失败"、"如何修复测试错误"
-
-**示例**：
-```
-为什么这个测试失败了？
-AssertionError: expected null to be undefined
-```
-
----
-
-## 使用场景
-
-### 场景1：测试运行失败
-
-**问题**：运行 `npm test` 后发现有测试失败
-
-**操作**：
-1. 复制错误信息
-2. 在Cursor中输入：`@plan [粘贴错误信息]`
-3. 等待分析结果
-
-**输出**：完整的分析报告，包括：
-- 问题分类
-- 根因分析
-- 修复方案
-- 优先级排序
-
-### 场景2：需要了解错误原因
-
-**问题**：想知道为什么某个测试会失败，但不想立即修改代码
-
-**操作**：
-```
-使用plan模式分析这个错误：[粘贴错误信息]
-```
-
-**输出**：详细的分析计划，不包含代码修改
-
-### 场景3：批量错误分析
-
-**问题**：有多个测试失败，需要系统化分析
-
-**操作**：
-```
-@plan 分析所有测试失败的原因
-```
-
-然后粘贴完整的测试输出
-
-**输出**：按错误类型分组的分析报告
-
----
-
-## 输出格式说明
-
-Skill会生成结构化的分析报告，包含以下部分：
-
-### 1. 现场信息
-- 错误摘要（类型、数量、通过率）
-- 错误详情
-- 相关文件列表
-
-### 2. 执行计划分析
-- 执行路径追踪
-- 问题节点识别
-- 成本评估
-
-### 3. 根因分析
-- 按问题类型分组
-- 每个问题的根本原因
-- 影响范围
-
-### 4. 修复方案
-- 方案概览
-- 详细修复步骤
-- 预期效果
-- 风险评估
-
-### 5. 验证计划
-- 修复后验证步骤
-- 成功标准
-
----
-
-## 最佳实践
-
-### 1. 提供完整上下文
-
-**好的做法**：
-```
-@plan 测试报错：
-TypeError: Cannot read properties of null (reading 'userName')
-at writeBackButton.vue:127
-```
-
-**不好的做法**：
-```
-@plan 测试失败了
-```
-
-### 2. 一次分析一个主要问题
-
-如果有很多错误，可以：
-- 先分析最严重的错误
-- 或者说"分析所有错误"，然后粘贴完整输出
-
-### 3. 保存分析结果
-
-分析完成后，建议：
-- 将分析结果记录到 `错误分析与解决方案.md`
-- 或创建新的issue记录
-
-### 4. 按优先级修复
-
-根据分析报告中的优先级排序：
-1. 先修复高优先级问题
-2. 再修复中优先级问题
-3. 最后处理低优先级问题
-
----
-
-## 常见问题
-
-### Q1: Skill没有触发？
-
-**可能原因**：
-- 关键词不匹配
-- 错误信息格式不完整
-
-**解决方案**：
-- 使用明确的触发词：`@plan` 或 `plan模式分析`
-- 提供完整的错误信息
-
-### Q2: 分析结果不够详细？
-
-**解决方案**：
-- 提供更多上下文信息（相关文件、配置等）
-- 说明具体的测试场景
-
-### Q3: 如何修改分析结果？
-
-**说明**：
-- Skill只提供分析计划，不修改代码
-- 如果需要修改代码，请明确说明："现在开始修复"或"实施方案A"
-
----
-
-## 技巧和提示
-
-### 技巧1：结合测试命令使用
-
-```bash
-# 运行测试并查看输出
-npm test > test-output.txt
-
-# 然后在Cursor中
-@plan [粘贴test-output.txt的内容]
-```
-
-### 技巧2：针对特定文件分析
-
-```
-@plan 分析 src/components/Button/writeBackButton.vue 的测试失败原因
-```
-
-### 技巧3：对比分析
-
-```
-@plan 对比修复前后的测试结果差异
-```
-
----
-
-## 相关资源
-
-- **Skill详细文档**：`.cursor/skills/plan-test-analysis.md`
-- **项目测试文档**：`tests/测试框架安装与使用指南.md`
-- **错误分析记录**：`错误分析与解决方案.md`
-
----
-
-## 更新日志
-
-- **2024-01-XX**：创建Plan模式测试报错分析Skill
-
----
-
-## 反馈和建议
-
-如果发现Skill使用中的问题或有改进建议，请：
-1. 记录问题到项目issue
-2. 或直接修改skill文件（`.cursor/skills/plan-test-analysis.md`）
+# mySkills 导航
+
+## 使用顺序
+1. 先使用父级路由 skill 选择具体 skill。
+2. 再调用被推荐的具体 skill 执行任务。
+
+## 父级路由 skills
+1. `route-code-quality-skills`
+   - 面向：代码质量与故障排查
+   - 子技能：`data-flow-check` `dom-utils-check` `file-check` `prod-risk-check` `todolist` `gen-debugskills`
+2. `route-architecture-delivery-skills`
+   - 面向：架构设计与交付推进
+   - 子技能：`api-swagger-ready` `version-switch-with-env` `prototype-driven-dev` `plan-test-analysis` `git-gen-branch`
+3. `route-knowledge-content-skills`
+   - 面向：总结复盘与内容加工
+   - 子技能：`conversation-summary` `post-mortem` `tech-doc-to-podcast`
+4. `route-language-localization-skills`
+   - 面向：翻译与本地化
+   - 子技能：`trans-doc` `translate`
+
+## 直接调用示例
+1. `使用 $route-code-quality-skills 先判断我这个前端异常该用哪个 skill。`
+2. `使用 $route-architecture-delivery-skills 帮我在迁移与版本切换里选最合适的 skill。`
+3. `使用 $route-language-localization-skills 根据输入文件类型推荐翻译 skill。`
+
+## 维护规则
+1. 新增 skill 时，必须同步更新对应父级路由 skill 的 `references/decision-matrix.md`。
+2. `display_name` 统一使用“动词+对象”格式。
+3. 父级路由 skill 只负责“选 skill”，不替代子 skill 的详细执行逻辑。
+
+## 全局规则：先检索最佳实践
+1. 无论是否调用具体 skill，先做 web search 获取最新最佳实践。
+2. 优先使用官方文档与维护者来源，避免仅依赖社区二手结论。
+3. 在最终结论中附来源链接，并说明采用/不采用原因。

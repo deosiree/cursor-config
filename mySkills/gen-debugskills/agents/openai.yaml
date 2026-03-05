@@ -1,0 +1,4 @@
+interface:
+  display_name: "生成调试技能"
+  short_description: "生成可复用的调试类 skill，沉淀统一触发方式、排查流程与输出模板"
+  default_prompt: "使用 $gen-debugskills 将当前排障流程沉淀为标准 skill，并输出触发与流程模板。"

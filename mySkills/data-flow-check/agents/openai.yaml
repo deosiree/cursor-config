@@ -1,0 +1,4 @@
+interface:
+  display_name: "排查数据流问题"
+  short_description: "排查状态更新与渲染时序问题，输出根因分类、证据路径和优先级修复方案"
+  default_prompt: "使用 $data-flow-check 排查当前异常的数据流断点，并给出 P0/P1 修复建议。"

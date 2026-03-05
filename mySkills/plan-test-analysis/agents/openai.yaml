@@ -1,0 +1,4 @@
+interface:
+  display_name: "规划测试分析"
+  short_description: "规划计划-测试-分析闭环流程，建立任务拆解、验证矩阵与偏差处置路径"
+  default_prompt: "使用 $plan-test-analysis 为当前任务拆计划、定义测试矩阵并输出分析结论。"

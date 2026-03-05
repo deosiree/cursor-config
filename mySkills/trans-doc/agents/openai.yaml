@@ -1,0 +1,4 @@
+interface:
+  display_name: "翻译文档内容"
+  short_description: "翻译 Markdown 文档或目录并保持结构不变，生成可直接使用的中文版本文件"
+  default_prompt: "使用 $trans-doc 把指定 Markdown 文档或目录翻译为中文，并保留原结构。"

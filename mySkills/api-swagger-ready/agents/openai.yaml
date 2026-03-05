@@ -1,0 +1,4 @@
+interface:
+  display_name: "分析接口迁移"
+  short_description: "分析 Swagger 与代码引用证据，生成分项目可执行迁移计划与验收清单"
+  default_prompt: "使用 $api-swagger-ready 分析 source 到 target 的接口迁移，输出证据、优先级和 mock 影响。"

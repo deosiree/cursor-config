@@ -1,0 +1,4 @@
+interface:
+  display_name: "切换环境版本"
+  short_description: "切换并治理多版本业务逻辑，统一版本路由、灰度策略与快速回滚执行路径"
+  default_prompt: "使用 $version-switch-with-env 设计 V1/V2 环境切换方案，并给出最小改造骨架。"

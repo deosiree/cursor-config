@@ -1,0 +1,4 @@
+interface:
+  display_name: "路由质量技能"
+  short_description: "路由代码质量与故障排查类需求，快速推荐最匹配的具体 skill 与使用顺序"
+  default_prompt: "使用 $route-code-quality-skills 根据我的问题先推荐最合适的排查类 skill。"

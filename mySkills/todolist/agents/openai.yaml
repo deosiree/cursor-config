@@ -1,0 +1,4 @@
+interface:
+  display_name: "执行排查清单"
+  short_description: "执行 DOM 与数据流排查清单，汇总命中项证据并输出分优先级修复计划"
+  default_prompt: "使用 $todolist 根据当前故障类型选择清单，汇总命中项并给出 P0/P1 计划。"

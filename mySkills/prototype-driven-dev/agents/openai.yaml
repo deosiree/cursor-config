@@ -1,0 +1,4 @@
+interface:
+  display_name: "推进原型开发"
+  short_description: "推进原型驱动开发流程，从需求收敛到 API 拆解再到可执行开发任务落地"
+  default_prompt: "使用 $prototype-driven-dev 基于现有需求先做原型评审，再拆解 API 与开发任务。"

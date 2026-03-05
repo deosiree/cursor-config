@@ -1,0 +1,4 @@
+interface:
+  display_name: "核查文件变更"
+  short_description: "核查路径命名与引用断裂风险，前端场景同时输出 ESLint 结果与未解决项"
+  default_prompt: "使用 $file-check 审查本次文件变更，列出高风险项、ESLint 结果与修复顺序。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "改写播客脚本"
+  short_description: "改写技术文档为可朗读播客脚本，在保持准确性的同时优化节奏与可听性"
+  default_prompt: "使用 $tech-doc-to-podcast 把这份技术文档改写为可录制播客脚本并保留关键术语。"

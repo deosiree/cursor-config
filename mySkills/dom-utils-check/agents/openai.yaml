@@ -1,0 +1,4 @@
+interface:
+  display_name: "排查DOM问题"
+  short_description: "排查 DOM 生命周期与工具函数边界问题，输出最小改动修复路径与回归检查点"
+  default_prompt: "使用 $dom-utils-check 分析当前 UI 异常，定位 DOM 时机与工具函数问题。"

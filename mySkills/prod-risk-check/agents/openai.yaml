@@ -1,0 +1,4 @@
+interface:
+  display_name: "检查发布风险"
+  short_description: "检查生产发布风险，覆盖配置、数据、回滚与观测面并输出阻断项处置建议"
+  default_prompt: "使用 $prod-risk-check 审查本次上线风险，输出阻断项与观察期清单。"
