@@ -23,6 +23,9 @@
 ## 项目专有 skills
 1. 与 `nebula` 业务耦合的架构与路由技能已迁移到 `.cursor/nebula-skills`。
 2. 包括：`route-architecture-delivery-skills`、`mf-route-home-alignment`。
+3. 新增：`git-commit-batching`
+   - 面向：多天未推送改动的分功能分批提交与命名规范输出
+   - 文件：`.cursor/mySkills/git-commit-batching/SKILL.md`
 
 ## 运维与守护 skills
 1. `codex-session-watchdog`
