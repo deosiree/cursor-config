@@ -26,6 +26,9 @@
 3. 新增：`git-commit-batching`
    - 面向：多天未推送改动的分功能分批提交与命名规范输出
    - 文件：`.cursor/mySkills/git-commit-batching/SKILL.md`
+4. 新增：`commit-review-unblock`
+   - 面向：提交被 pre-commit/lint-staged 阻塞，同时需要做结构化代码审查
+   - 文件：`.cursor/mySkills/commit-review-unblock/SKILL.md`
 
 ## 运维与守护 skills
 1. `codex-session-watchdog`

@@ -7,3 +7,4 @@
 5. 需要按 checklist 做系统化排查，优先 `todolist`。
 6. 需要沉淀调试流程为可复用 skill，优先 `gen-debugskills`。
 7. 需要监控 Codex 会话长时间无响应或资源异常提醒，优先 `codex-session-watchdog`。
+8. 提交被 pre-commit/lint-staged 阻塞且需同步做代码审查，优先 `commit-review-unblock`。
