@@ -1,10 +1,16 @@
 ---
 name: route-architecture-delivery-skills
-description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范、分批次 commit 命名与推送整理、微前端登录落点/路由前缀一致性、Vite 代理 v1/v2 分流与 404 排障”但未明确 skill 名称的场景。
+description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“API 契约/接口设计/方案设计/Swagger/OpenAPI 对齐/ready 接口梳理、接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范、分批次 commit 命名与推送整理、微前端登录落点/路由前缀一致性、Vite 代理 v1/v2 分流与 404 排障”但未明确 skill 名称的场景；其中凡涉及 API 契约必须先执行 seccenter swagger 契约浏览。
 ---
 
 # 目标
-把复杂工程诉求路由到最匹配的执行 skill，提升推进速度。
+把复杂工程诉求路由到最匹配的执行 skill，提升推进速度；并确保所有“API 契约/接口设计/方案设计”先以 Swagger 契约为单一事实源。
+
+## 总原则（API 契约强制前置）
+
+- 只要用户需求包含任一关键词：**API 契约 / 接口设计 / 方案设计 / 字段对齐 / ready 接口梳理 / Swagger / OpenAPI / operationId / definitions / $ref**
+  - 必须先进入 skill：`seccenter-api-contract`
+  - 并强制前置读取：`F:\Documents\Repertory\Sieyuan\nebula\docs\api\seccenter.swagger.json`
 
 ## 执行步骤
 1. 识别诉求主轴（迁移/架构/流程/版本/协作）。
@@ -38,3 +44,4 @@ description: 在架构设计与交付推进类 skill 中快速路由。用于用
 3. 至少引用 2 个来源；高风险任务（生产、权限、安全、数据）至少 3 个来源交叉验证。
 4. 输出中必须包含：来源链接、采纳点、未采纳点与原因。
 5. 若检索结果不足或冲突，必须明确不确定性并给出保守方案。
+

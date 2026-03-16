@@ -1,0 +1,4 @@
+interface:
+  display_name: "网关版本治理"
+  short_description: "在 v1/v2/v3 混用场景下，统一主版本与失败降级链策略，收敛业务层直连与分支逻辑"
+  default_prompt: "使用 $gateway-version-control 设计并推进 API 版本主路由与降级链统一治理。"
