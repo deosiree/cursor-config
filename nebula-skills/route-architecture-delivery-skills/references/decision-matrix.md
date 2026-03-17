@@ -8,3 +8,4 @@
 6. 多天未推送且改动混杂，需按功能分批提交并产出规范 commit 名称，优先 `git-commit-batching`。
 7. 微前端登录回跳/默认首页/历史前缀不一致（如 `/manage` 与 `/Apex` 混用）优先 `mf-route-home-alignment`。
 8. Vite 本地代理出现 `/dev-api/...` 404、v1/v2 分流错配、配置文件双轨（`vite.config.ts/js`）导致改动不生效，优先 `vite-proxy-v2-debug`。
+9. 修改路由相关代码后需要检查 hardcoded 路径散点（router/guard/menu/activeRule/base/redirect），优先 `route-scatter-check`。

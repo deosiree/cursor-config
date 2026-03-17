@@ -1,0 +1,5 @@
+interface:
+  display_name: "路由散点巡检"
+  short_description: "路由相关改动时，扫描并收束 hardcoded route/path 散点，输出 P0/P1 风险与最小回归结果"
+  default_prompt: "使用 $route-scatter-check 检查本次路由改动是否仍有散点，并给出收束建议与回归结论。"
+

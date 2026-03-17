@@ -1,6 +1,6 @@
 ---
 name: route-architecture-delivery-skills
-description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“API 契约/接口设计/方案设计/Swagger/OpenAPI 对齐/ready 接口梳理、接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范、分批次 commit 命名与推送整理、微前端登录落点/路由前缀一致性、Vite 代理 v1/v2 分流与 404 排障”但未明确 skill 名称的场景；其中凡涉及 API 契约必须先执行 seccenter swagger 契约浏览。
+description: 在架构设计与交付推进类 skill 中快速路由。用于用户需求涉及“API 契约/接口设计/方案设计/Swagger/OpenAPI 对齐/ready 接口梳理、接口迁移、版本切换、原型驱动开发、计划测试闭环、分支规范、分批次 commit 命名与推送整理、微前端登录落点/路由前缀一致性、路由散点收束巡检、Vite 代理 v1/v2 分流与 404 排障”但未明确 skill 名称的场景；其中凡涉及 API 契约必须先执行 seccenter swagger 契约浏览。
 ---
 
 # 目标
@@ -15,9 +15,10 @@ description: 在架构设计与交付推进类 skill 中快速路由。用于用
 ## 执行步骤
 1. 识别诉求主轴（迁移/架构/流程/版本/协作）。
 2. 对照 `references/decision-matrix.md` 选择首选 skill。
-3. 同时给出 1 个备选 skill，并说明适用边界。
-4. 给出不推荐 skill（1-2 个）及简短理由。
-5. 输出首选 skill 的直接下一步命令。
+3. 若诉求涉及路由代码修改（router/guard/menu/activeRule/base），优先评估 `route-scatter-check`。
+4. 同时给出 1 个备选 skill，并说明适用边界。
+5. 给出不推荐 skill（1-2 个）及简短理由。
+6. 输出首选 skill 的直接下一步命令。
 
 ## 输出要求
 1. 必须使用固定三档：`首选`、`备选`、`不推荐`。
