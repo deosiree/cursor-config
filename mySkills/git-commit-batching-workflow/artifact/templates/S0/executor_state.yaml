@@ -1,0 +1,7 @@
+executor_state:
+  run_id: ""
+  last_state: "InitTemplate"
+  step_id: ""
+  status: "pending"
+  updated_at: ""
+  step_history: []

@@ -1,0 +1,14 @@
+workspace_root: ""
+repo_names: ""
+themes_raw: ""
+
+remote: "origin"
+branch: ""
+
+session_source: "current"
+session_id: null
+lookback_scope: "recent_n_turns"
+
+external_doc_paths: []
+doc_role: "other"
+trust_level: "medium"

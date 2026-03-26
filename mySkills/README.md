@@ -7,7 +7,7 @@
 ## 父级路由 skills
 1. `route-code-quality-skills`
    - 面向：代码质量与故障排查
-   - 子技能：`data-flow-check` `dom-utils-check` `file-check` `prod-risk-check` `todolist` `gen-debugskills` `codex-session-watchdog`
+   - 子技能：`data-flow-check` `dom-utils-check` `file-check` `prod-risk-check` `todolist` `gen-debugskills` `codex-session-watchdog` `vue3-component-slimming`
 2. `route-knowledge-content-skills`
    - 面向：总结复盘与内容加工
    - 子技能：`conversation-summary` `post-mortem` `tech-doc-to-podcast`
@@ -26,9 +26,16 @@
 3. 新增：`git-commit-batching`
    - 面向：多天未推送改动的分功能分批提交与命名规范输出
    - 文件：`.cursor/mySkills/git-commit-batching/SKILL.md`
-4. 新增：`commit-review-unblock`
+4. 新增：`git-commit-batching-workflow`（父子链路统一目录）
+   - 面向：多仓库未提交变更链式编排；首行 `<type>(<scope>): :<emoji>: <summary>` + 正文【元信息】一行一项 + 四段式（**契约以父 `README.md` + `s8-commit-batch-plan/SKILL.md` 为准**）
+   - 父：`.cursor/mySkills/git-commit-batching-workflow/SKILL.md`
+   - 子（V2）：`S1 s1-repo-targets`、`S2 s2-subject-limit-detector`、`S3 s3-git-change-scan`、`S4 s4-session-context-reader`、`S5 s5-external-markdown-ingest`、`S6 s6-session-capability-merge`、`S7 s7-commit-summary-assembler`、`S8 s8-commit-batch-plan`、`S9 s9-git-publish-command-emitter`
+5. 新增：`commit-review-unblock`
    - 面向：提交被 pre-commit/lint-staged 阻塞，同时需要做结构化代码审查
    - 文件：`.cursor/mySkills/commit-review-unblock/SKILL.md`
+6. 新增：`vue3-component-slimming`
+   - 面向：Vue 3 大组件瘦身审查，以及把状态机安全抽成 composable / component / utils / config
+   - 文件：`.cursor/mySkills/vue3-component-slimming/SKILL.md`
 
 ## 运维与守护 skills
 1. `codex-session-watchdog`

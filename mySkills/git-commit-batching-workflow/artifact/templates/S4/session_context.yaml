@@ -1,0 +1,13 @@
+session_context:
+  summary_md: ""
+  hints: []
+  constraints: []
+  open_questions: []
+
+  trace:
+    completeness: "unknown"
+    items: []
+
+  confidence:
+    level: "unknown"
+    reasons: []

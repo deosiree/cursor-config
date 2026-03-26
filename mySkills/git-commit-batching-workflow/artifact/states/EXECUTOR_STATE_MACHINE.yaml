@@ -1,0 +1,69 @@
+executor_state_machine_version: "0.1"
+summary: >
+用于执行器的状态机草案。该状态机只定义“模板生成/拷贝覆盖/写入 start_inputs/按 S1~S9 顺序执行/做 artifact 完整性校验”。
+子步骤实现细节以各子 `SKILL.md` 为准。
+
+run_inputs:
+  command_line: "@.cursor/mySkills/git-commit-batching-workflow/SKILL.md <repos> + <themes_raw>"
+  artifact_root: "<可选，父 SKILL 默认 ../commit-workflow-artifacts/>"
+  run_id: "<可选，默认自动生成>"
+
+states:
+  - id: ResolveRunId
+    purpose: "解析/生成本次调用 run_id_new；若用户未传或目标目录已存在，则追加 nonce 直到目录不存在，避免复用旧 artifacts"
+    reads: []
+    writes: []
+    on_fail: "requires_user 或 fail-fast（目录创建/路径解析失败属于低置信）"
+
+  - id: InitTemplate
+    purpose: "确保 templates 目录存在且包含最小可解析骨架文件"
+    reads: []
+    writes:
+      - "artifact/templates/*"
+    on_fail: "requires_user (并建议先修复模板骨架 YAML)"
+
+  - id: MaterializeRun
+    purpose: "在“新目录”run 目录拷贝 templates（禁止复用旧 run 目录）；若目录意外存在则视为碰撞并重新选择 run_id_new"
+    reads:
+      - "artifact/templates/*"
+    writes:
+      - "${artifact_root}/${run_id}/*"
+    on_fail: "stop (文件系统错误，必须人工处理)"
+
+  - id: WriteStartInputs
+    purpose: "解析命令行并写入 ${artifact_root}/${run_id}/S0/start_inputs.yaml"
+    reads: []
+    writes:
+      - "${artifact_root}/${run_id}/S0/start_inputs.yaml"
+    on_fail: "stop (参数解析失败)"
+
+  - id: WriteExecutorState
+    purpose: "初始化/覆盖写入 ${artifact_root}/${run_id}/S0/executor_state.yaml，记录当前执行阶段"
+    reads: []
+    writes:
+      - "${artifact_root}/${run_id}/S0/executor_state.yaml"
+    on_fail: "stop (文件系统错误)"
+
+  - id: ExecutePipeline_S1_to_S9
+    purpose: "按父编排器顺序执行 S1~S9。每步只读写固定 artifact 路径。"
+    order: ["S1","S2","S3","S4","S5","S6","S7","S8","S9"]
+    reads:
+      - "${artifact_root}/${run_id}/S0/start_inputs.yaml"
+      - "${artifact_root}/${run_id}/S{prev}/*"
+    writes:
+      - "${artifact_root}/${run_id}/S{step}/*"
+    on_fail: "requires_user 或 fail-fast，按具体子步骤契约在执行时判定"
+
+  - id: ValidateArtifacts
+    purpose: "做 artifact 完整性校验：确认关键产物文件存在；缺失则触发人工确认/重跑"
+    reads:
+      - "${artifact_root}/${run_id}/S3/scan_changes.yaml"
+      - "${artifact_root}/${run_id}/S4/session_context.yaml"
+      - "${artifact_root}/${run_id}/S5/external_context.yaml"
+      - "${artifact_root}/${run_id}/S6/map_capabilities.yaml"
+      - "${artifact_root}/${run_id}/S7/summary_parts.yaml"
+      - "${artifact_root}/${run_id}/S8/plan_batches.yaml"
+      - "${artifact_root}/${run_id}/S0/end_outputs.md"
+    writes: []
+    on_fail: "requires_user (或建议重跑失败步骤)"
+

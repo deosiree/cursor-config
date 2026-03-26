@@ -1,0 +1,98 @@
+artifact_contracts_version: "0.1"
+summary: >
+用于执行器做一致性校验的“最小契约索引”。本文件不参与语义合并，只用于确认
+模板/产物文件至少满足 YAML 可解析与关键顶层键存在。
+notes:
+  - "模板中的 YAML 必须可被 YAML parser 解析。"
+  - "执行阶段每一步应覆盖写入其声明的输出文件。"
+artifacts:
+  S0/start_inputs.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - workspace_root
+      - repo_names
+      - themes_raw
+      - remote
+      - branch
+      - session_source
+      - session_id
+      - lookback_scope
+      - external_doc_paths
+      - doc_role
+      - trust_level
+  S0/end_outputs.md:
+    kind: markdown
+    required_presence: true
+  S0/executor_state.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - executor_state
+    required_nested_keys:
+      executor_state.run_id: ""
+      executor_state.last_state: ""
+      executor_state.status: ""
+  S1/ctx_pack.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - ctx_workspace_root
+      - ctx_repos
+      - ctx_themes
+      - ctx_parse_notes
+  S2/limit_subject.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - limit_subject
+  S3/scan_changes.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - scan_changes
+    required_nested_keys:
+      scan_changes.changed_files: []
+  S3/scan_capability_candidates.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - scan_capability_candidates
+  S4/session_context.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - session_context
+    required_nested_keys:
+      session_context.trace.completeness: ""
+      session_context.confidence.level: ""
+  S5/external_context.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - external_context
+    required_nested_keys:
+      external_context.docs: []
+  S6/map_capabilities.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - map_capabilities
+  S6/map_coupling_bundles.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - map_coupling_bundles
+  S6/map_conflicts.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - map_conflicts
+  S6/map_confidence.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - map_confidence
+    required_nested_keys:
+      map_confidence.level: ""
+  S6/map_notes.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - map_notes
+  S7/summary_parts.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - summary_final
+      - summary_trim_notice
+  S8/plan_batches.yaml:
+    kind: yaml
+    required_top_level_keys:
+      - plan_batches

@@ -8,3 +8,4 @@
 6. 需要沉淀调试流程为可复用 skill，优先 `gen-debugskills`。
 7. 需要监控 Codex 会话长时间无响应或资源异常提醒，优先 `codex-session-watchdog`。
 8. 提交被 pre-commit/lint-staged 阻塞且需同步做代码审查，优先 `commit-review-unblock`。
+9. Vue 3 单文件组件过重，想做文件级瘦身审查并抽成 composable/component/utils/config，优先 `vue3-component-slimming`。
