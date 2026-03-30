@@ -73,6 +73,27 @@ commands_publish:
 - 否则：
   - 命令里的提交首行使用 `header_short`
 
+## commit-msg 正文内容渲染规则（必读）
+S9 必须把“主题/能力映射/问题+解决/四段式”写入提交正文，而不是只依赖 subject/header。
+
+对每个批次的 `plan_batches.plan_batches[]` 元素（批次对象），S9 渲染提交正文的字段映射如下：
+1. `plan_batches.plan_batches[i].selected_header`：作为提交 subject（首行）
+2. `theme_line`：写入正文 `【元信息】` 段的 `主题：<theme_line>`
+3. `capability_line`：写入正文 `【元信息】` 段的 `能力：<capability_line>`
+4. 若 `summary_line` 非空：输出一段 `【摘要】`，内容为 `summary_line`
+5. `body_quadrants` 输出四段式（固定四行）：
+   - `定义：` + `body_quadrants.define`
+   - `问题：` + `body_quadrants.problem`
+   - `解决：` + `body_quadrants.solution`
+   - `价值：` + `body_quadrants.value`
+
+正文拼装的固定顺序（必须保持与参考模板一致）：
+1. `selected_header`
+2. 空一行
+3. `【元信息】`（主题/能力两行）
+4. （可选）`【摘要】`
+5. 四段式：定义/问题/解决/价值
+
 ## conflict / low-confidence 触发策略（必读）
 当满足任一条件时：
 - `map_confidence.level = low`

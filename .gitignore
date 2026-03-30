@@ -14,3 +14,6 @@ Thumbs.db
 # 备份文件
 *.bak
 *.backup
+
+# Cursor/Commit workflow 产物（不需要进入版本库）
+commit-workflow-artifacts/

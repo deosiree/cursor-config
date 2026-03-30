@@ -107,6 +107,24 @@ S8 的业务语义输入 **只能**来自固定 artifact 文件（离线可验�
 > 3) 不允许把 S9 命令单独放在批次块之外。
 ```
 
+## `plan_batches.yaml` 批次对象字段契约（供 S9 渲染）
+> 注意：此契约用于“读取 plan 并生成可复制 commit 命令块”。为避免 S9 无法取得 body 信息，S8 必须在写入 `${artifact_root}/${run_id}/S8/plan_batches.yaml` 时填齐以下字段。
+
+每个 `plan_batches.plan_batches[]` 元素（批次对象）至少包含：
+1. `batch_id`：`<repo>/<id>` 或与 S9 一致的唯一字符串标识
+2. `repo`：仓库名（如 `apex_dev`）
+3. `cwd`：该仓库在本机的绝对路径（用于 Set-Location）
+4. `header_full`：首行 subject（用于 S9 的 header_full/header_short 选择）
+5. `header_short`：首行 subject 备选（可选，但建议提供）
+6. `theme_line`：用于 commit-msg 正文中的 `主题：<...>`
+7. `capability_line`：用于 commit-msg 正文中的 `能力：<...>`
+8. `summary_line`：用于正文 `【摘要】`（可选；为空则 S9 不输出该段）
+9. `body_quadrants`：用于正文四段式
+   - `body_quadrants.define`：渲染为 `定义：`
+   - `body_quadrants.problem`：渲染为 `问题：`
+   - `body_quadrants.solution`：渲染为 `解决：`
+   - `body_quadrants.value`：渲染为 `价值：`
+
 ## 不做
 - 不执行 git 命令
 - 不修改仓库配置
