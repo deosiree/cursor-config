@@ -1,57 +1,80 @@
 # route-api-gateway-register
 
-## 用途
-为 nebula 项目提供一套“API/网关/权限元数据/页面动作/注册中心链路”的维护指引与模板化操作步骤。
+## 范围
+本目录用于维护 nebula 当前链路文档：
+- 功能项 -> registry source -> `@/registry` -> 前端网关/权限层/API 薄包装
+- 页面定义 -> registry route tree -> `routes.ts` / 页面注册 / 菜单绑定
+- 子应用上送 -> 基座聚合 -> 下发回填
+- 新增模块/新增微服务接入
 
-## 本 session 做过的关键改造（tenant 基线）
-1. **页面动作的 gatewayAction 约束收口**  
-   - `TenantGatewayAction` 改为从 `TenantGateway` 的方法名派生（单写点来自网关方法集合）。  
-   - `src/views/tenant/tenant.actions.ts` 中的 `gatewayAction` 同步为新方法名（不再使用 `*V2` 后缀）。
-2. **tenant 网关兼容壳迁移到 `src/gateways` 并瘦身**  
-   - `src/gateways/tenant/tenant.gateway.ts`：去掉 v1/fallback 与 `executeWithVersionFallback`，统一方法名去除 `V2`，并保留敏感动作的权限前置校验（依赖 resolver 结果做短路）。
-3. **权限声明元数据收口到解析/注册中心同类目录**（更贴近职责边界）  
-   - 将旧路径 `src/api/gateway/{tenant,role}.permission-meta.ts` 迁移为  
-     - `src/permissions/permission-meta/{tenant,role}.permission-meta.ts`
-   - 同步更新引用：  
-     - `src/permissions/page-action-registry.ts`
-     - `src/gateways/{tenant,role}/*.gateway.ts`
-4. **全局 mock 单写点**（避免网关里写 env 分支导致漂逸）  
-   - `apex_dev/vite.config.ts`：增加 `VITE_MOCK_TENANT` 模块开关，并在 `vite-plugin-mock-dev-server` 的 `include` 中装配：
-     - `mock/tenant.mock.ts`
-     - `mock/seccenter.tenant.v2.mock.ts`
-   - `src/types/env.d.ts` 与 `.env.*` 补齐 `VITE_MOCK_TENANT`。
-5. **测试与回归**  
-   - 同步更新 tenant 相关测试与菜单绑定测试里的 `gatewayAction` 字符串常量。
-   - 已通过：`pnpm -C apex_dev test:unit`
+## 当前链路总原则
+1. 真相源只落在 `apex_dev/src/registry/sources/*`。
+2. 路由真相源同样只落在 `apex_dev/src/registry/sources/*/*.pages.ts`。
+3. 模块内聚合走 `apex_dev/src/registry/sources/<module>/index.ts`。
+4. 网关层、业务层、权限层、router 或其他消费者统一经 `apex_dev/src/registry/index.ts` 暴露的 `@/registry` 入口消费。
+5. 每个节点都可定位到来源文件 + 变量 + 属性。
 
-## 目录/职责建议（适用于后续模块）
-- `src/api/**`：只做真实 HTTP 客户端与 endpoint 路由生成（不做权限/注册中心策略解析）。
-- `src/gateways/**`：业务兼容壳（Adapter/ACL Facade）
-  - 对业务层暴露稳定方法名（必要时进行参数/返回归一化）
-  - 对敏感动作做 resolver 前置校验（避免“按钮隐藏但仍被绕过请求”）
-  - **不把 mock 开关散落在网关内部**（mock 只由 Vite 插件层决定）
-- `src/permissions/permission-meta/**`：权限映射声明型数据
-  - `gatewayAction -> apiUrls`（供 `page-action-registry` / `runtime-permission-resolver` 组装结果）
-- `src/permissions/**`：解析/注册中心逻辑
-  - `page-action-registry.ts`：汇总页面动作 + 权限 meta，给运行时 resolver 提供候选数据
-  - `runtime-permission-resolver.ts`：根据菜单绑定与 actionKey 决定 allowed/拒绝原因与 API 列表
+## 真相源总表（核心）
+| 节点 | 真相源文件 | 真相源变量 | 关键属性 | 下游消费 |
+|---|---|---|---|---|
+| 页面动作定义 | `apex_dev/src/registry/sources/tenant/tenant.actions.ts` | `tenantPageActions` | `actionKey,label,gatewayAction` | `tenantRegistrySource` |
+| 页面动作定义 | `apex_dev/src/registry/sources/role/role.actions.ts` | `rolePageActions` | `actionKey,label,gatewayAction` | `roleRegistrySource` |
+| 页面定义 | `apex_dev/src/registry/sources/system/system.pages.ts` | `systemRegistryPages` | `routeName,path,componentImportPath,meta,parentRouteName,order` | `systemRegistrySource` |
+| 页面定义 | `apex_dev/src/registry/sources/role/role.pages.ts` | `roleRegistryPages` | `routeName,path,componentImportPath,meta,parentRouteName,order` | `roleRegistrySource` |
+| 页面定义 | `apex_dev/src/registry/sources/tenant/tenant.pages.ts` | `tenantRegistryPages` | `routeName,path,componentImportPath,meta,parentRouteName,order` | `tenantRegistrySource` |
+| 网关动作绑定 | `apex_dev/src/registry/sources/tenant/tenant.gateway-bindings.ts` | `tenantGatewayActionBindings` | `gatewayAction -> apiKeys[]` | `tenantRegistrySource` |
+| 网关动作绑定 | `apex_dev/src/registry/sources/role/role.gateway-bindings.ts` | `roleGatewayActionBindings` | `gatewayAction -> apiKeys[]` | `roleRegistrySource` |
+| API 元数据 | `apex_dev/src/registry/sources/tenant/tenant.api-meta.ts` | `tenantApiMeta` | `apiUrl,apiMethod,description` | `tenantRegistrySource` |
+| API 元数据 | `apex_dev/src/registry/sources/role/role.api-meta.ts` | `roleApiMeta` | `apiUrl,apiMethod,description` | `roleRegistrySource` |
+| 模块级聚合 | `apex_dev/src/registry/sources/tenant/index.ts` | `tenantRegistrySource` | `domain,routeName,pages,actions,gatewayActionBindings,apiMeta` | `@/registry`、`tenant.gateway.ts`、`tenant.api.ts` |
+| 模块级聚合 | `apex_dev/src/registry/sources/role/index.ts` | `roleRegistrySource` | `domain,routeName,pages,actions,gatewayActionBindings,apiMeta` | `@/registry`、`role.gateway.ts`、`role.v2.api.ts` |
+| 模块级聚合 | `apex_dev/src/registry/sources/system/index.ts` | `systemRegistrySource` | `domain,pages` | `@/registry` |
+| 统一消费入口 | `apex_dev/src/registry/index.ts` | `registrySources/getRegistryPages/getRegistryRouteTree` | `pages/tree/finders/validation` | `router/routes.ts`、`page-route-registry`、`page-action-registry`、网关层 |
+| 路由消费层 | `apex_dev/src/router/routes.ts` | `constantRoutes/buildRouteRecordFromRegistry` | `RouteRecordRaw/component loader/path transform` | Vue Router |
+| 动作注册中心 | `apex_dev/src/permissions/registry-route-action/page-action-registry.ts` | `registrySources` / `getRegisteredPageActions` | `actions/functions` | `runtime-permission-resolver`、`binding-registry-snapshot` |
+| 路由注册中心 | `apex_dev/src/permissions/registry-route-action/page-route-registry.ts` | `getRegisteredPageRoutes` | `routePath/fullRoutePath/component*` | `page-action-registry`、snapshot |
+| 运行时权限解析 | `apex_dev/src/permissions/registry-route-action/runtime-permission-resolver.ts` | `resolveByActionKey/resolveByGatewayAction` | `allowed,reason,gatewayAction,permissionApis` | 网关守卫、指令判权 |
+| 子应用上送快照 | `apex_dev/src/permissions/registry-route-action/binding-registry-snapshot.ts` | `buildBindingRegistrySnapshot` | `routes/actions/functions` | `registerBindingRegistry` |
+| 子应用上送动作 | `apex_dev/src/plugins/qiankun/lifecycle.ts` | `reportBindingRegistryToHost` | `registerBindingRegistry(snapshot)` | 基座聚合 |
+| 基座注册中心聚合 | `microfb/src/store/modules/micro-app-binding-registry.store.ts` | `upsertSnapshot/getPublicState` | `apps[].snapshot` | 基座菜单绑定与透传 |
+| 基座向子应用下发 | `microfb/src/plugins/qiankun/apps.ts` | `getBindingRegistryState` | registry public state | 子应用 `syncBindingRegistryFromHost` |
 
-## 链路速览（推荐的“稳定依赖方向”）
-页面组件/业务层（只依赖网关）：
-1. 页面按钮通过 `v-confirmPerm` 指向 `routePath + actionKey`
-2. `runtime-permission-resolver` 使用菜单绑定与 `permission-meta` 解析到 `apiUrls + gatewayAction`
-3. 网关按 `gatewayAction` 对外暴露的稳定方法名发请求（敏感动作前置短路）
+## 单写点定义
+1. `actionKey/gatewayAction` 单写点：`apex_dev/src/registry/sources/<module>/*.actions.ts`
+2. `gatewayAction -> apiKeys` 单写点：`apex_dev/src/registry/sources/<module>/*.gateway-bindings.ts`
+3. `apiKey -> apiUrl/apiMethod` 单写点：`apex_dev/src/registry/sources/<module>/*.api-meta.ts`
+4. 模块聚合单写点：`apex_dev/src/registry/sources/<module>/index.ts`
+5. 统一消费入口单写点：`apex_dev/src/registry/index.ts`
+6. `route metadata` 单写点：`apex_dev/src/registry/sources/*/*.pages.ts`
+7. `snapshot 聚合结构` 单写点：`binding-registry-snapshot.ts`
 
-## 为什么不做 `api -> gateway -> 业务/注册中心` 单向三段就结束？
-因为你的“权限与注册中心”并不是请求实现，而是**策略数据与解析逻辑**：
-- permission meta 是声明型 ACL mapping（`gatewayAction -> apiUrls`）
-- resolver/registry 是解析与组装逻辑  
+禁止第二写点：
+- 禁止在组件、网关层或业务层额外声明 `gatewayAction -> apiUrl`
+- 禁止在非 `*.api-meta.ts` 处维护重复 endpoint 常量
+- 禁止在非 `src/registry/sources/*` 处散落 `actionKey/gatewayAction/apiKeys` 业务定义
+- 禁止继续把 `routes.ts` 当作路由真相源直接增删页面
+- 禁止跨层绕过 `@/registry` 直接拼装新的 registry source 入口
 
-把“权限声明数据”强塞进 gateway 实现里，会造成职责混杂与潜在依赖闭环；把它放在 `src/permissions/**` 与解析层保持同类，会更可维护。
+## 前端/后端持久化边界
+1. 前端持久化
+   - 菜单缓存：`apex_dev/src/services/menu/menu-repo.ts`（`readMenuCache/writeMenuCache`）
+   - 用户上下文：`Storage("userInfo")`
+   - 基座 registry 状态：`micro-app-binding-registry` store（内存态）
+2. 后端持久化
+   - 菜单树与功能项绑定（`perm/apis`）以后端菜单服务落库为准
+   - 前端 registry/snapshot 仅用于展示与解析，不替代后端事实
 
-## 参考（最佳实践）
-- `vite-plugin-mock-dev-server` 模块开关与 include 装配（全局单写点）  
-  https://vite-plugin-mock-dev-server.netlify.app/guide/usage
-- ACL / Anti-Corruption Layer（翻译/隔离层的职责边界）  
-  https://oneuptime.com/blog/post/2026-01-30-anti-corruption-layer-pattern/view
+## 子 skill 导航
+- `01-function-api-contract-chain/README.md`
+- `02-component-route-chain/README.md`
+- `03-registry-reporting-flow/README.md`
+- `04-module-onboarding-playbook/README.md`
+- `05-registry-module-template/README.md`
 
+## 验收标准
+以 `TODOLIST.md` 为准，必须能直接回答：
+1. 每个节点从哪个文件哪个变量来。
+2. 每个节点关键属性是什么。
+3. 哪些是真相源，哪些只是 `@/registry` 的消费者。
+4. 哪些是单写点，哪里禁止重复写。
+5. 新增模块/新增微服务分别改哪些文件。

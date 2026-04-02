@@ -26,6 +26,11 @@
 @.cursor/mySkills/git-commit-batching-workflow/SKILL.md apex_dev,microfb，主题：菜单管理与权限；权限注册中心，推送参数：origin，分支名：seccenter_v2
 ```
 
+```text
+@.cursor/mySkills/git-commit-batching-workflow/SKILL.md apex_dev and microfb，主题：功能项-api-api契约-前端网关方法、组件-路由的链路、前端的持久化、后端的持久化、微服务和基座的注册中心上送与下发、菜单管理的UI交互解耦、租户管理的UI交互解耦、角色管理的UI交互解耦
+记得使用编排器，依次触发子skill，每一步都落袋到commit-workflow-artifacts，最后根据输出文件参考mySkills\git-commit-batching-workflow\artifact\templates\S0\examples\end_outputs.md生成输出文档
+```
+
 ## 流程总览
 
 `S1 -> S2 -> S3 -> S4 -> S5 -> S6 -> S7 -> S8 -> S9`

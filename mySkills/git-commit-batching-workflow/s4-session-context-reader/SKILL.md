@@ -25,6 +25,7 @@ description: Read current or specified session context and normalize it into str
 
 ## `session_context.constraints` 口径（自包含）
 - `constraints` 必须以“约束语句”形式表达：例如“禁止将 X 作为同一能力域拆成两个批次”“必须同批提交 Y 和 Z”等。
+- 鼓励在可得时写入 **对比与演进类约束**（例如对比分支/合并基、或「须对照某次 diff 摘要撰写四段式」），供 S6 写入 `map_notes`、S8 生成 **改前/改后** 轮廓；不得在此步骤编造未给出的对比细节。
 - 若约束来自用户明确确认：标记为更高权重（在 `confidence.reasons` 中解释）。
 
 ## `session_context.confidence` 计算（自包含）

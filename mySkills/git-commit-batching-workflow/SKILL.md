@@ -64,6 +64,7 @@ run_id：<本次 workflow 运行标识，可选>（默认：自动生成且每�
    - S8/S9 的渲染仍以契约模板为准（最终用户看到的仍是完整 S8/S9 渲染块）
 6. 最终用户可读文本必须由 S9 写入 `${artifact_root}/${run_id}/S0/end_outputs.md`（而不是依赖对话上下文累积拼接）。
 7. executor 必须先落盘并更新：`${artifact_root}/${run_id}/S0/executor_state.yaml`，否则本次运行应视为低置信并建议重跑。
+8. **提交正文的事实锚定**：`【摘要】` 与四段式须以可核对的变更事实为根基，优先表达 **基准形态 → 变更后形态 → 动因与收益**；细则与禁止项以 `s8-commit-batch-plan/SKILL.md` 为准。**默认对比基**为当前仓库当前分支的 **已提交 tip（`HEAD`）**：「改前」= `HEAD` 快照，「改后」= 相对 `HEAD` 的未提交变更（与 `s3-git-change-scan` 扫描范围一致）；用户未指定跨分支对比时，**不**应仅因「未填写远端分支名」而否定叙事可信度。若叙事目标是 **跨分支/合并基** 而会话与外部文档均未提供该基线或结构化 diff，执行方须在 `S6/map_confidence.yaml` 或 `S6/map_notes.yaml` 中显式降级，**不得**用无据的「从零建设」「原先不存在」等措辞冒充已验证的跨分支结论。
 
 ## 入口执行器（必经）
 父级入口调用时必须先完成「落盘与调度」并确保 executor 状态机可追溯；执行器状态机契约见：`artifact/states/EXECUTOR_STATE_MACHINE.yaml`。

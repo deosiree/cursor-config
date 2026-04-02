@@ -60,6 +60,22 @@ description: Merge git scan, session context, and external docs into final capab
   - `medium`：completeness=partial/unknown 但未触发 needs-user 的硬冲突，或存在 requires_user=false 且 suggested_resolution 非空
   - `low`：至少一条需要人工确认（requires_user=true），或 external/session 与 git scan 的事实层矛盾未解决
 - `map_confidence.reasons`：必须给出至少 1 条短因果（不可空）。
+- **默认对比基 = `HEAD`（释义）**：用户未要求跨分支叙事时，「改前」即 **当前分支最近一次提交**；只要 `scan_changes` 对路径与状态完整，**不应**仅因「未填写远端分支/合并基名称」而把 `map_confidence` 压到 `low` 或强制认为「缺少改前材料」。当且仅当目标是 **跨分支/自定义合并基** 而会话与外部文档又未提供该基线或经核对的 diff 摘要时，才应在 `reasons` 中点明 **缺少跨分支对照材料**，并指导 S8 使用中性表述、避免对「远端尚未合入前的形态」做断言。
+- S6 **不执行** `git log` / shell；不通过「数历史提交」推断演进/绿场。
+
+## `map_notes` 与正文叙事素材（供 S8 消费）
+
+- `map_notes` 除拆批提示外，在信息可得时应沉淀 **演进叙述线索**：用短句区分「变更前实现/数据形态」与「变更后实现/数据形态」及「动因」，且每条线索须能回溯到 `scan_changes` / `session_context` / `external_context` 中的事实，**禁止编造**未出现的字段名或业务细节。
+- 若执行方已产出结构化对比（例如合并基范围、关键 hunk 摘要），宜在 `map_notes` 中引用其 **来源标签**（文件名、约束 id、文档标题），不要求在 notes 中粘贴大段 diff。
+
+## 演进 / 绿场动词倾向的 **默认推断**（供 S7，无需用户声明）
+
+- 由执行方根据 `scan_changes.changed_files[].status`（及 `diff_baseline_ref`，默认 `HEAD`）聚合后，在 `map_notes` 写入 **机器可读短标签**（字符串列表项即可），推荐形态：
+  - `narrative:diff_baseline=HEAD`
+  - `narrative:verb_bias=evolved`：本批（或全仓本次扫描）以 **已跟踪文件的修改/删除/重命名**（如 `M`/`D`/`R` 等，具体枚举与 S3 一致）为主；
+  - `narrative:verb_bias=net-new`：以 **新增路径**（如 `A`/`??` 等）为主且语义上视为新文件/新模块占主导；
+  - `narrative:verb_bias=mixed`：两类均显著或无法简单归类。
+- 若会话或外部文档 **显式**声明与默认推断冲突，以会话/外部文档为准，并在 `map_conflicts` 或 `map_notes` 中写明冲突与取舍，**仍不**要求用户重复口述「演进/绿场」关键词。
 
 ## 输出文件（固定写入）
 - 写入 `${artifact_root}/${run_id}/S6/map_capabilities.yaml`

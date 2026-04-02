@@ -5,6 +5,7 @@ summary: >
 notes:
   - "模板中的 YAML 必须可被 YAML parser 解析。"
   - "执行阶段每一步应覆盖写入其声明的输出文件。"
+  - "S3/scan_changes：推荐提供默认对比基语义（如 scan_changes.diff_baseline_ref=HEAD）及 changed_files[].status（与 git status 一致或归一化），供相对「本分支上次提交」的叙事与 S6 默认 verb_bias 推断；二者非契约必填键，但实现方宜写入以便下游一致。"
 artifacts:
   S0/start_inputs.yaml:
     kind: yaml
