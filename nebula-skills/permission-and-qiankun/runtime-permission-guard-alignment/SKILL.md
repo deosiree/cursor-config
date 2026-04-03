@@ -8,8 +8,8 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 ## Overview
 把“页面按钮显示”“gateway 是否允许发请求”“菜单功能项绑定结果”统一到同一条权限判断链：
 
-1. 菜单功能项 `menu.perm` 绑定 `actionKey`
-2. 页面动作注册中心提供 `actionKey -> gatewayAction`
+1. 菜单功能项 `menu.perm` 绑定 `perm`
+2. 页面动作注册中心提供 `perm -> gatewayAction`
 3. runtime permission resolver 解析当前页面是否允许执行动作
 4. `v-confirmPerm` 控制按钮显示
 5. gateway 敏感操作前置短路
@@ -29,7 +29,7 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 
 ## 执行步骤
 1. 先确认页面动作注册是否存在
-- 必须能从页面 `routePath` 找到对应 `actionKey/gatewayAction`。
+- 必须能从页面 `routePath` 找到对应 `perm/gatewayAction`。
 
 2. 再确认菜单绑定是否存在
 - 必须能从菜单树页面上下文下找到功能项的 `perm`。
@@ -37,7 +37,7 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 3. 统一 runtime resolver
 - resolver 只接收：
   - `routePath`
-  - `actionKey`
+  - `perm`
 - 不直接接收 API URL。
 
 4. 接入指令
@@ -55,10 +55,10 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 
 2. 注册中心解析阶段
 - 页面进入后，根据当前 `routePath` 从注册中心拿到页面动作集合。
-- 根据按钮上的 `actionKey` 找到对应 `gatewayAction`。
+- 根据按钮上的 `perm` 找到对应 `gatewayAction`。
 
 3. runtime resolver 阶段
-- resolver 用 `routePath + actionKey` 去菜单树中反查当前页面下是否存在对应功能项。
+- resolver 用 `routePath + perm` 去菜单树中反查当前页面下是否存在对应功能项。
 - 命中则返回允许状态、API 路径和原因；未命中则返回明确失败原因。
 
 4. 指令阶段
@@ -73,7 +73,7 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 - 后续页面重新解析新菜单树，不额外维护第二份运行时状态。
 
 ## 单一写点规则
-1. `actionKey -> gatewayAction` 写点只在页面动作注册中心。
+1. `perm -> gatewayAction` 写点只在页面动作注册中心。
 2. `gatewayAction -> API路径` 写点只在 gateway permission meta。
 3. `perm` 写库只认 `menu.perm`。
 4. resolver 只做解析，不生成新业务数据。

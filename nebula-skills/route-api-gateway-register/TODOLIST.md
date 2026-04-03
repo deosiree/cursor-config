@@ -11,7 +11,7 @@
 - [ ] 每条链路都标注“反例”：常见第二写点/散落写点（并说明为何不允许）
 
 ## C. 功能项 -> API -> 契约 -> 网关方法链路
-- [ ] 说明 `actionKey/gatewayAction` 来源（`src/registry/sources/*/*.actions.ts`）
+- [ ] 说明 `perm/gatewayAction` 来源（`src/registry/sources/*/*.actions.ts`）
 - [ ] 说明 `gatewayAction -> apiKeys` 来源（`src/registry/sources/*/*.gateway-bindings.ts`）
 - [ ] 说明 `apiKey -> apiUrl/apiMethod` 来源（`src/registry/sources/*/*.api-meta.ts`）
 - [ ] 说明模块级 `*RegistrySource` 如何在 `src/registry/sources/<module>/index.ts` 聚合
@@ -48,7 +48,7 @@
 - [ ] 主应用聚合与菜单绑定消费检查点
 
 ## I. 术语与命名一致性
-- [ ] 全文统一使用：`actionKey`、`gatewayAction`、`apiKeys`、`apis`、`apiUrls`
+- [ ] 全文统一使用：`perm`、`gatewayAction`、`apiKeys`、`apis`、`apiUrls`
 - [ ] 全文统一使用：`registry source`、`@/registry`、`src/registry/sources/*`
 - [ ] 全文统一区分：`*.pages.ts` 是路由真相源，`routes.ts` / `page-route-registry.ts` 是消费者
 - [ ] 删除旧链路术语：`permission-meta`（若为已废弃）

@@ -80,7 +80,7 @@ description: Use when 需要先明确 menu、directory、page、function 四种�
 
 4. `function`
 - 候选来自“父页面命中后的前端动作注册中心”
-- `actionKey / gatewayAction / apiPath` 属于前端强约束
+- `perm / gatewayAction / apiPath` 属于前端强约束
 - 缺失时直接提示“未注册前端动作”，不能从后端脏值回退拼装
 
 ## 链路业务逻辑（状态机）

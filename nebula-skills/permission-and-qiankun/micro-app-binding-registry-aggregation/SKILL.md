@@ -60,7 +60,7 @@ description: Use when 需要把多个微服务的本地注册中心通过 qianku
   - `fullRoutePath`
   - `componentDisplayPath`
   - `componentStoragePath`
-  - `actionKey`
+  - `perm`
   - `apiPath`
   - `gatewayAction`
 

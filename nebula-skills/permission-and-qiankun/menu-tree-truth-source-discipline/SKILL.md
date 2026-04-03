@@ -47,7 +47,7 @@ description: Use when 需要明确“菜单树是真相源，注册中心是扩�
 - `menu.perm`
 3. 前端注册中心自己的持久化契约属于强约束，不应以“后端当前还没补齐”为理由放宽：
 - `routes.ts` 中页面路由与组件路径映射
-- 页面动作注册中心中的 `actionKey -> gatewayAction -> apiPath`
+- 页面动作注册中心中的 `perm -> gatewayAction -> apiPath`
 - snapshot 输出字段契约
 4. 判断规则：
 - 后端传来的业务字段：允许空值进入“可编辑态”

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Permission Meta Usage"
+  short_description: "在 nebula 中新增权限元数据并接入按钮与 Tab 的操作指南"
+  default_prompt: "Use $create_new_permission-meta_and_used_in_views to add permission metadata for an apex_dev or microfb module and wire it into buttons, tabs, and registry consumers."

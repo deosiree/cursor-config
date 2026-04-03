@@ -25,7 +25,7 @@
 
 ## C. 验收命令（建议）
 1. `pnpm -C apex_dev test:unit src/views/tenant/__tests__/gateway-permission.test.ts src/permissions/registry-route-action/__tests__/page-action-registry.test.ts`
-2. `rg "gatewayAction|actionKey|apiKeys|ApiMeta|RegistrySource" apex_dev/src/registry apex_dev/src/permissions`
+2. `rg "gatewayAction|perm|apiKeys|ApiMeta|RegistrySource" apex_dev/src/registry apex_dev/src/permissions`
 3. `rg "registerBindingRegistry|getBindingRegistryState|upsertSnapshot" apex_dev/src microfb/src`
 
 ## D. 常见误区

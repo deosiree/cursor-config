@@ -59,7 +59,7 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 2. 收口页面动作写点
 - 在目标页面目录新增或收敛 `*.actions.ts`。
 - 每个动作至少包含：
-  - `actionKey`
+  - `perm`
   - `label`
   - `gatewayAction`
 - 不在页面组件里重复维护动作列表。
@@ -78,7 +78,7 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 
 6. 接入菜单绑定
 - 菜单页面节点绑定路由。
-- 功能项绑定 `actionKey` 到 `menu.perm`。
+- 功能项绑定 `perm` 到 `menu.perm`。
 - 不再手工输入 API 权限字符串。
 
 ## 链路业务逻辑（状态机）
@@ -86,7 +86,7 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 
 1. 注册阶段
 - 页面在路由写点中注册 `routePath -> component`。
-- 页面在 `*.actions.ts` 中注册 `actionKey -> gatewayAction`。
+- 页面在 `*.actions.ts` 中注册 `perm -> gatewayAction`。
 - gateway permission meta 注册 `gatewayAction -> apiPath`。
 
 2. 菜单绑定阶段
@@ -95,7 +95,7 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 - 保存后刷新菜单缓存，菜单树成为新的真相源。
 
 3. 运行时解析阶段
-- 页面进入后，runtime resolver 根据当前页面 `routePath` 和按钮 `actionKey` 查菜单树。
+- 页面进入后，runtime resolver 根据当前页面 `routePath` 和按钮 `perm` 查菜单树。
 - 若菜单树中存在对应功能项绑定，则解析出允许状态与 API 路径。
 
 4. 页面交互阶段
@@ -128,7 +128,7 @@ rg --line-number "<模块动作关键字>|<模块路由关键字>" apex_dev/src/
 - 模块自身 gateway 或页面测试目录：优先与目标模块同目录的 `__tests__`
 
 ## 常见错误
-1. 直接在页面里拼 `actionKey -> API` 映射，绕过注册中心。
+1. 直接在页面里拼 `perm -> API` 映射，绕过注册中心。
 2. gateway 不做权限短路，只靠按钮隐藏。
 3. 把 `gatewayAction` 写回数据库。
 4. 同时保留旧权限配置入口和新绑定入口，造成双写点。

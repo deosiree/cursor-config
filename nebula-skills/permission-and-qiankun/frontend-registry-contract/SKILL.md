@@ -16,7 +16,7 @@ description: Use when 需要为某个微服务建立或对齐本地注册中心�
 
 ## 适用场景
 1. 新微服务要接入现有权限/菜单/qiankun 总链路。
-2. 当前微服务存在多处同时维护 `routePath/component/actionKey/apiPath`。
+2. 当前微服务存在多处同时维护 `routePath/component/perm/apiPath`。
 3. 菜单管理、resolver、gateway、snapshot 输出字段口径不一致。
 4. 团队开始把后端字段名直接塞进前端变量名。
 
@@ -49,7 +49,7 @@ description: Use when 需要为某个微服务建立或对齐本地注册中心�
 - `perm`
 3. 前端注册中心自身维护的字段属于强约束：
 - `routePath / fullRoutePath / componentDisplayPath / componentStoragePath`
-- `actionKey / gatewayAction / apiPath`
+- `perm / gatewayAction / apiPath`
 4. 强约束字段缺失时：
 - 在注册中心、snapshot、resolver、gateway 层直接暴露错误
 - 不使用 `?.`、空串、`try-catch` 静默吞掉
@@ -82,7 +82,7 @@ description: Use when 需要为某个微服务建立或对齐本地注册中心�
 - 用于写回后端 `menu.component`
 
 ### 动作类字段
-1. `actionKey`
+1. `perm`
 - 前端动作注册键
 - 来源说明：最终写回后端 `menu.perm`
 

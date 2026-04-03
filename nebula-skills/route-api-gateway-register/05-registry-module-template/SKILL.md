@@ -25,7 +25,7 @@ description: Use when adding or refactoring a nebula registry domain module and 
 
 ## 单写点
 1. 路由/组件/菜单元信息：`*.pages.ts`
-2. `actionKey -> gatewayAction`：`*.actions.ts`
+2. `perm -> gatewayAction`：`*.actions.ts`
 3. `gatewayAction -> apiKeys[]`：`*.gateway-bindings.ts`
 4. `apiKey -> apiUrl/apiMethod/description`：`*.api-meta.ts`
 5. 模块对外暴露：`sources/<domain>/index.ts`

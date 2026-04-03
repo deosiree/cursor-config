@@ -35,7 +35,7 @@ description: Use when 需要从用户使用视角梳理“菜单管理、注册�
 ## 链路业务逻辑（状态机）
 ### 1. 前端实现注册阶段
 - 页面在路由写点注册 `routePath -> component`。
-- 页面在动作写点注册 `actionKey -> gatewayAction`。
+- 页面在动作写点注册 `perm -> gatewayAction`。
 - gateway permission meta 注册 `gatewayAction -> apiPath`。
 
 ### 2. 菜单管理绑定阶段
@@ -50,9 +50,9 @@ description: Use when 需要从用户使用视角梳理“菜单管理、注册�
 - 再根据菜单树找到该页面下当前已绑定的功能项集合。
 
 ### 4. 按钮渲染阶段
-- 页面按钮声明自身 `actionKey`。
+- 页面按钮声明自身 `perm`。
 - `v-confirmPerm` 调用 runtime resolver。
-- resolver 根据 `routePath + actionKey` 返回：
+- resolver 根据 `routePath + perm` 返回：
   - 是否允许
   - 命中原因
   - API 路径
@@ -84,6 +84,6 @@ description: Use when 需要从用户使用视角梳理“菜单管理、注册�
 
 ## 常见错误
 1. 菜单管理改了绑定，但没走菜单刷新单写点。
-2. 页面按钮直接写 API 权限字符串，不走 `actionKey`。
+2. 页面按钮直接写 API 权限字符串，不走 `perm`。
 3. gateway 自己再拼一套权限判断。
 4. resolver 命不中时返回空值而不是明确错误。
