@@ -9,3 +9,4 @@
 7. 需要监控 Codex 会话长时间无响应或资源异常提醒，优先 `codex-session-watchdog`。
 8. 提交被 pre-commit/lint-staged 阻塞且需同步做代码审查，优先 `commit-review-unblock`。
 9. Vue 3 单文件组件过重，想做文件级瘦身审查并抽成 composable/component/utils/config，优先 `vue3-component-slimming`。
+10. `vite build` 后产物是新的，但 `vite preview` 看到旧页面、旧 hash、或本地 UI/远端接口串包，优先 `vite-preview-proxy-debug`。

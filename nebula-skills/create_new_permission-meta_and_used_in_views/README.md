@@ -249,7 +249,7 @@
 @.cursor/nebula-skills/create_new_permission-meta_and_used_in_views/SKILL.md  
 root: apex_dev
 module: user
-权限点：按钮：“搜索”、“新增”、“删除”、“禁用用户”和“启用用户”、“编辑”、“告警订阅”、“重置密码”、“删除”；网关方法：“显示用户列表”、“查询角色列表”
+权限点：按钮：“搜索”、“新增”、“删除”、“停用用户”和“启用用户”、“编辑”、“告警订阅”、“重置密码”、“删除”；网关方法：“显示用户列表”、“查询角色列表”
 ```
 
 ```prompt

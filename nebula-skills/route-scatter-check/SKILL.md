@@ -22,7 +22,7 @@ description: Use when modifying route-related code (router, guard, menu redirect
 
 ## 建议扫描命令
 ```powershell
-rg -n --hidden --glob '!**/node_modules/**' --glob '!**/dist/**' --glob '!**/cloud2/**' --glob '!**/.git/**' --glob '!**/__tests__/**' "(/login|/Apex|/Opsdeck|/DevelopCenter|/manage|/redirect/|subapp-container)" microfb/src apex_dev/src
+rg -n --hidden --glob '!**/node_modules/**' --glob '!**/dist/**' --glob '!**/cloud/**' --glob '!**/.git/**' --glob '!**/__tests__/**' "(/login|/Apex|/Opsdeck|/DevelopCenter|/manage|/redirect/|subapp-container)" microfb/src apex_dev/src
 ```
 
 ## 输出要求

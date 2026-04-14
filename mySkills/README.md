@@ -36,6 +36,9 @@
 6. 新增：`vue3-component-slimming`
    - 面向：Vue 3 大组件瘦身审查，以及把状态机安全抽成 composable / component / utils / config
    - 文件：`.cursor/mySkills/vue3-component-slimming/SKILL.md`
+7. 新增：`vite-preview-proxy-debug`
+   - 面向：Vite `build/preview` 与远端代理串包排障，尤其是 `base=/cloud`、`VITE_APP_BASE_API=/`、本地 UI 与远端接口混用场景
+   - 文件：`.cursor/mySkills/vite-preview-proxy-debug/SKILL.md`
 
 ## 运维与守护 skills
 1. `codex-session-watchdog`

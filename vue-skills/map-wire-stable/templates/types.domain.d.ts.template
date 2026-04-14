@@ -1,0 +1,28 @@
+export type DomainStableStatus =
+  | "unspecified"
+  | "active"
+  | "locked"
+  | "disabled"
+  | "activation";
+
+export interface DomainInfo {
+  id?: string;
+  name?: string;
+}
+
+export interface DomainQuery extends PageQuery {
+  keywords?: string;
+  status?: DomainStableStatus;
+}
+
+export interface DomainVO {
+  id: string;
+  name?: string;
+  status?: DomainStableStatus;
+}
+
+export interface DomainForm {
+  id?: string;
+  name?: string;
+  status?: DomainStableStatus;
+}
