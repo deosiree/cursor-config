@@ -8,20 +8,91 @@
         "type": "tabs",
         "children": [
           {
-            "id": "43d162c5f2fb4fa2",
+            "id": "b620bf5816b71e51",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
+                "file": "vue-skills/gen-README/template/microfb/状态链路/页面显示链路_登录-路由-守卫-组件.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SKILL"
+              "title": "页面显示链路_登录-路由-守卫-组件"
+            }
+          },
+          {
+            "id": "8f7b4ec4867fc5e9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "vue-skills/gen-README/template/microfb/状态链路/子应用注册链路_qiankun启动与Apex自动降级.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "子应用注册链路_qiankun启动与Apex自动降级"
+            }
+          },
+          {
+            "id": "85a905606a9962df",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "nebula-skills/i18n-server/__template__/microfb/templates/orchestration-flow.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "orchestration-flow"
+            }
+          },
+          {
+            "id": "7f3ca2e9ae673675",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "vue-skills/gen-README/template/microfb/状态链路/菜单存储链路.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "菜单存储链路"
+            }
+          },
+          {
+            "id": "5a0adb1ea2d48a80",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "vue-skills/gen-README/template/microfb/状态链路/菜单刷新链路_无刷新同步与路由回退.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "菜单刷新链路_无刷新同步与路由回退"
+            }
+          },
+          {
+            "id": "3731cce9d09d1e57",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "nebula-skills/i18n-server/errors/返回动态拼接的工具函数.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "返回动态拼接的工具函数"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -53,7 +124,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "path:\"nebula-skills/i18n-server/__template__/microfb/subskills/commit-01-static-deprecation/template/mvp/src/components/\" ",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,7 +149,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 416.5
+    "width": 322.5
   },
   "right": {
     "id": "3fe0bd91fa8355f5",
@@ -180,46 +251,50 @@
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "bases:新建数据库": false
+      "bases:新建数据库": false,
+      "mermaid-tools:Open Mermaid Toolbar": false,
+      "vscode-editor:新建代码文件": false
     }
   },
-  "active": "43d162c5f2fb4fa2",
+  "active": "94a952b4d3255246",
   "lastOpenFiles": [
-    "mySkills/trans-doc/SKILL.md",
-    "mySkills/version-switch-with-env/SKILL.md",
-    "mySkills/route-language-localization-skills/agents/openai.yaml",
-    "mySkills/route-language-localization-skills/agents",
-    "mySkills/route-knowledge-content-skills/agents/openai.yaml",
-    "mySkills/route-knowledge-content-skills/agents",
-    "mySkills/route-architecture-delivery-skills/agents/openai.yaml",
-    "mySkills/route-architecture-delivery-skills/agents",
-    "mySkills/route-code-quality-skills/agents/openai.yaml",
-    "mySkills/route-code-quality-skills/agents",
-    "mySkills/route-language-localization-skills/references/decision-matrix.md",
-    "mySkills/route-language-localization-skills/SKILL.md",
-    "mySkills/route-language-localization-skills/references",
-    "mySkills/route-language-localization-skills",
-    "mySkills/route-knowledge-content-skills/references/decision-matrix.md",
-    "mySkills/route-knowledge-content-skills/SKILL.md",
-    "mySkills/route-architecture-delivery-skills/references/decision-matrix.md",
-    "mySkills/route-architecture-delivery-skills/SKILL.md",
-    "mySkills/route-code-quality-skills/references/decision-matrix.md",
-    "mySkills/route-code-quality-skills/SKILL.md",
-    "mySkills/todolist/references/生产环境易错问题检查清单.md",
-    "mySkills/todolist/references/数据流问题易错清单.md",
-    "mySkills/todolist/references/数据流问题排查清单.md",
-    "mySkills/todolist/references/dom问题易错清单.md",
-    "mySkills/todolist/references/dom问题排查清单.md",
-    "mySkills/tech-doc-to-podcast/references/tech-doc-to-podcast-reference.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill3-dev.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill2-api.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1-prototype.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1_9-proto2planning.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1_8-proto2planning.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1_7-proto2planning.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1_10-proto2planning.md",
-    "mySkills/prototype-driven-dev/references/pdd-skill1_1-improve.md",
-    "mySkills/prototype-driven-dev/references/原型设计需求.md",
-    "mySkills/prototype-driven-dev/references/原型驱动开发-工作流.md"
+    "nebula-skills/i18n-server/__template__/microfb/templates/migration-routing-table.md",
+    "nebula-skills/i18n-server/__template__/microfb/templates/migration-checklist.md",
+    "nebula-skills/i18n-server/__template__/microfb/SKILL.md",
+    "nebula-skills/i18n-server/errors/返回动态拼接的工具函数.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/views/login/components/Login.vue",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/views/login/components",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/views/login",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/views",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/utils/login-mfa.ts",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/utils/login-auth.ts",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src/utils",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/snapshot/src",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/mvp/src/views/login/components/Login.vue",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/mvp/src/views/login/components",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-08-script-setup-runtime-t/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-08-script-setup-runtime-t/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-08-script-setup-runtime-t/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-07-form-rules-consumption-boundary/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-07-form-rules-consumption-boundary/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-07-form-rules-consumption-boundary/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-06-vue-template-dollar-t/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-06-vue-template-dollar-t/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-06-vue-template-dollar-t/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-05-locale-json-fill/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-05-locale-json-fill/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-05-locale-json-fill/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-04-lang-select-recovery/template/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-04-lang-select-recovery/SKILL.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-04-lang-select-recovery/README.md",
+    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-03-runtime-bootstrap/template/README.md",
+    "nebula-skills/Pasted image 20260423191104.png",
+    "Pasted image 20260423191104.png"
   ]
 }
