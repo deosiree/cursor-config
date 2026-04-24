@@ -1,0 +1,74 @@
+version: "1.0"
+skill: "gen-perms"
+mode: "repository-agnostic"
+
+inputs:
+  required:
+    - projectRoot
+    - routeEntryFiles
+    - viewRoots
+    - permissionDirectiveKeywords
+    - outputDocs
+  optional:
+    - swaggerFiles
+    - scope
+  schema:
+    projectRoot: "string"
+    routeEntryFiles: "string[]"
+    viewRoots: "string[]"
+    permissionDirectiveKeywords: "string[]"
+    swaggerFiles: "string[] | null"
+    scope: "string[] | null"
+    outputDocs:
+      routePermApiDoc: "string"
+      unhitRoutePermDesignDoc: "string"
+
+outputs:
+  docTypeA:
+    name: "routePermApiDoc"
+    requiredTables:
+      - "apiMethod|apiUrl|description"
+  docTypeB:
+    name: "unhitRoutePermDesignDoc"
+    headingKeys:
+      route: "## [route]"
+      perm: "### [perm]"
+    requiredTables:
+      - "路由|对应组件|组件路径"
+      - "权限点(按现有风格设计)|对应哪一行(源码行号+业务行)|对应什么代码中"
+      - "apiMethod|apiUrl|description"
+
+rules:
+  apiUrlNormalization:
+    removePrefixes:
+      - "/direct"
+      - "/forward"
+      - "{direct|forward}"
+  descriptionFallback:
+    priority:
+      - "description"
+      - "summary"
+      - "swagger 未提供接口描述"
+  noApiPolicy:
+    placeholderMethod: "-"
+    placeholderUrl: "-"
+    placeholderDescription: "当前无后端 API 调用"
+
+compatibility:
+  fallbackWhenNoSwagger:
+    enabled: true
+    strategy:
+      - "源码注释"
+      - "函数语义"
+      - "接口描述待补充"
+  fallbackWhenNoCentralRouter:
+    enabled: true
+    strategy:
+      - "扫描 routeEntryFiles 候选"
+      - "按用户指定路由入口补齐"
+
+validationChecklist:
+  - "输入参数完整且可解析"
+  - "文档层级键稳定且可追踪"
+  - "表头与列顺序完全匹配"
+  - "每个权限点均有 API 表或无 API 说明"
