@@ -5,9 +5,10 @@
       "id": "should-trigger-1",
       "category": "should_trigger",
       "prompt": "使用 $write-skill 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
-      "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、assets、references、evals 结构。",
+      "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、template、assets、references、evals 结构。",
       "assertions": [
         "输出中提到 README.md 和 SKILL.md",
+        "输出中提到 template 目录",
         "输出中提到 assets 目录",
         "输出中提到 RED、GREEN、REFACTOR"
       ]
@@ -16,11 +17,23 @@
       "id": "should-trigger-2",
       "category": "should_trigger",
       "prompt": "把一个只有 SKILL.md 的旧 skill 改造成带 few-shot 示例和验证材料的完整套件。",
-      "expected_output": "输出应识别为 skill 改造任务，并要求补齐模板资源与验证材料。",
+      "expected_output": "输出应识别为 skill 改造任务，并要求补齐前后示例、agent 素材与验证材料。",
       "assertions": [
+        "输出中提到 before/after 或 mvp/snapshot",
         "输出中提到 few-shot 示例",
         "输出中提到 evals 或触发测试",
         "输出中提到 README.md"
+      ]
+    },
+    {
+      "id": "should-trigger-3",
+      "category": "should_trigger",
+      "prompt": "使用 $write-skill 优化一个中文 skill，自带代码改造示例，主 SKILL.md 不要太长，并在文档中用双链引用 template 和 references。",
+      "expected_output": "输出应识别为更新型 skill 任务，并将大段示例下沉到 template，使用双链引用 supporting files。",
+      "assertions": [
+        "输出中提到 template/before 或 template/after",
+        "输出中提到双链引用",
+        "输出中提到主 SKILL.md 保持精简"
       ]
     },
     {

@@ -24,3 +24,8 @@
 ```text
 使用 $会话总结skill 总结当前关于登录页异常排查的对话，供下个会话继续使用
 ```
+
+## 配套资源跳转
+- 结构验收参考：[[../skill-output-checklist.md]]
+- frontmatter 占位参考：[[../frontmatter-template.yaml]]
+- 长说明应下沉到：[[../../references/writing-skills-core.md]]

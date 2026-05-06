@@ -54,7 +54,13 @@ agent 在压力下会为跳过规则找借口，例如：
 推荐做法：
 - 主 `SKILL.md`：放每次都必须读的规则
 - `README.md`：放维护者说明
+- `template/`：放给人类看的完整示例、`before/after`、`mvp/snapshot`
+- `assets/`：放给 agent 按需读取的 supporting files
 - `references/`：放长说明与补充材料
+
+这条可以视为主 `SKILL.md` 的 token 预算规则：
+- 主文件只保留触发条件、核心流程、硬约束、关键决策表
+- 大段示例和迁移清单下沉，不要堆进主文件正文
 
 ## 6. few-shot 应该给成品，不只给空模板
 空模板只能告诉使用者“有哪些栏位”，不能展示“一个合格成品长什么样”。
@@ -62,6 +68,8 @@ agent 在压力下会为跳过规则找借口，例如：
 因此更稳妥的做法是同时提供：
 - 空模板
 - 完整 few-shot 示例
+
+如果任务本质是“代码/文档更新”，更优先提供 `before/after` 或 `mvp/snapshot`，而不是只给 `README-template.md` / `SKILL-template.md`。
 
 ## 7. 验证不只看输出，还要看触发
 一个 skill 即使内容写得不错，如果触发不了，等于没有价值。
@@ -71,3 +79,22 @@ agent 在压力下会为跳过规则找借口，例如：
 - should-not-trigger 情况下会不会误触发
 
 建议每条用例重复运行 3 次，避免偶然性误判。
+
+## 8. frontmatter 可以有两种模式
+对于中文仓库内部长期复用的 skill，可以优先采用“本地中文模式”：
+- `name` 用中文
+- `description` 用中文触发描述
+
+如果目标是对外分享、规范校验或兼容通用 Agent Skills 生态，则切换到“对外兼容模式”：
+- `name` 用英文 slug
+- `description` 用规范兼容描述
+
+关键不是二选一，而是要在交付物里明确声明本次采用的是哪一种模式。
+
+## 9. `assets/` 不是官方唯一强制目录
+本地 `writing-skills` 提供的是 supporting files 思路，而不是强制所有资源都必须放在 `assets/`。
+
+因此更稳妥的口径是：
+- 官方要求 `SKILL.md` 必需，并允许 supporting files
+- `assets/` 是团队可选约定，适合存放 agent 侧素材
+- `template/` 是团队可选约定，适合存放给人类看的前后示例和任务模板

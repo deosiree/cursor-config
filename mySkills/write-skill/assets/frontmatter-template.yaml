@@ -1,2 +1,7 @@
+# 默认：本地中文模式
 name: <中文skill名>
 description: 当需要<触发条件>，并希望<结果>时使用。
+
+# 对外兼容模式示例
+# name: <english-slug-name>
+# description: Use when <specific triggering conditions and symptoms>
