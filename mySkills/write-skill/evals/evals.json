@@ -1,0 +1,45 @@
+{
+  "skill_name": "写skill",
+  "evals": [
+    {
+      "id": "should-trigger-1",
+      "category": "should_trigger",
+      "prompt": "使用 $write-skill 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
+      "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、assets、references、evals 结构。",
+      "assertions": [
+        "输出中提到 README.md 和 SKILL.md",
+        "输出中提到 assets 目录",
+        "输出中提到 RED、GREEN、REFACTOR"
+      ]
+    },
+    {
+      "id": "should-trigger-2",
+      "category": "should_trigger",
+      "prompt": "把一个只有 SKILL.md 的旧 skill 改造成带 few-shot 示例和验证材料的完整套件。",
+      "expected_output": "输出应识别为 skill 改造任务，并要求补齐模板资源与验证材料。",
+      "assertions": [
+        "输出中提到 few-shot 示例",
+        "输出中提到 evals 或触发测试",
+        "输出中提到 README.md"
+      ]
+    },
+    {
+      "id": "should-not-trigger-1",
+      "category": "should_not_trigger",
+      "prompt": "帮我修复 Login.vue 的一个按钮点击无响应问题。",
+      "expected_output": "这不是写 skill 任务，不应触发 write-skill。",
+      "assertions": [
+        "不应把任务重写为 skill 设计任务"
+      ]
+    },
+    {
+      "id": "should-not-trigger-2",
+      "category": "should_not_trigger",
+      "prompt": "请把这个 Markdown 文档翻译成中文。",
+      "expected_output": "这属于翻译任务，不应触发 write-skill。",
+      "assertions": [
+        "不应输出 skill 目录结构"
+      ]
+    }
+  ]
+}
