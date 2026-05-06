@@ -18,6 +18,8 @@
    - 面向：`vite-plugin-mock-dev-server` 按模块开关（`VITE_MOCK_*`）、`8080` 宿主与 `8081` 子应用 mock 双轨对齐
 6. `api-types-global`
    - 面向：将 v1/v2 兼容分支收敛到稳定网关契约，统一 `types` 稳定类型与 `api` 原始 DTO 分层
+7. `degrade-gateway`
+   - 面向：当旧版本接口已经下线后，系统性退化 gateway 版本兼容层、兼容壳方法、旧 API、旧测试与临时兜底文件
 
 ## 使用示例
 1. `使用 $route-architecture-delivery-skills 根据当前 nebula 架构目标推荐最合适 skill。`
@@ -26,6 +28,7 @@
 4. `使用 $route-scatter-check 检查本次路由改动是否仍有散点并输出收束清单。`
 5. `使用 $create-mock-module 为未入 Swagger 的接口增加模块级 mock 开关，并避免误 mock 已有真实接口。`
 6. `使用 $api-types-global 将模块迁移到“types 稳定类型 + gateway 映射 + 业务只依赖稳定契约”的目标架构。`
+7. `使用 $degrade-gateway 删除已经失效的 gateway-version-policy / gateway-executor、兼容壳方法、无引用旧 API 与旧 fallback 测试。`
 
 ## 维护规则
 1. 业务规则变更时优先更新这里，再决定是否回流到通用 skills。

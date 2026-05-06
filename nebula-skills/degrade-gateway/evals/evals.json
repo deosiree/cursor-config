@@ -1,0 +1,66 @@
+{
+  "should_trigger": [
+    {
+      "input": "使用 $degrade-gateway 删除 microfb 中已经失效的 gateway-version-policy、gateway-executor 和 fallback 测试",
+      "expect": [
+        "盘点兼容层引用",
+        "删除版本策略层",
+        "清理测试与验证"
+      ]
+    },
+    {
+      "input": "旧 v1 已下线，把业务层 loginV2 改成 login，并顺手删掉无引用 auth.api.ts",
+      "expect": [
+        "识别兼容壳方法",
+        "业务调用收口",
+        "删除无引用旧 API"
+      ]
+    },
+    {
+      "input": "检查 src/temp 里的临时菜单兜底是否还能删，并一并清理旧 gateway 兼容注释",
+      "expect": [
+        "检索真实引用",
+        "删除临时兜底文件",
+        "清理历史注释"
+      ]
+    },
+    {
+      "input": "这是一个更新型 skill，请按退化前后对照整理 microfb 的 gateway 兼容层退场方案",
+      "expect": [
+        "使用 before/after 视角",
+        "盘点退化前残留",
+        "给出退化后目标状态"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "input": "使用 $degrade-gateway 为 auth/menu 模块新增 v2 -> v1 失败降级策略",
+      "expect": [
+        "拒绝使用本 skill",
+        "建议改用 gateway-version-control"
+      ]
+    },
+    {
+      "input": "使用 $degrade-gateway 设计稳定类型、DTO 映射和 gateway 输出分层",
+      "expect": [
+        "拒绝使用本 skill",
+        "建议改用 api-types-global"
+      ]
+    },
+    {
+      "input": "旧接口还没下线，但我想先把 fallback 删掉",
+      "expect": [
+        "指出前提不成立",
+        "不允许直接退化"
+      ]
+    },
+    {
+      "input": "我要为 auth/menu 新增统一版本策略中心和失败降级链",
+      "expect": [
+        "拒绝使用本 skill",
+        "建议改用 gateway-version-control"
+      ]
+    }
+  ]
+}
