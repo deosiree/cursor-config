@@ -1,5 +1,5 @@
 ---
-name: api-types-global
+name: 收敛为稳定版本
 description: Use when 需要将模块从 v1/v2 兼容分支收敛到稳定版本，并建立 types 稳定类型、api 原始类型、gateway 映射输出的分层契约。
 ---
 

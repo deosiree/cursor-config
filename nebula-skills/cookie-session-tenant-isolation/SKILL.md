@@ -1,5 +1,5 @@
 ---
-name: cookie-session-tenant-isolation
+name: Cookie-Session 租户隔离链路
 description: 用于解释、审计或排查 microfb 的 Cookie-Session 租户隔离链路，覆盖登录、Set-Cookie、withCredentials、路由守卫 verifySession 与后端会话判定边界。
 ---
 

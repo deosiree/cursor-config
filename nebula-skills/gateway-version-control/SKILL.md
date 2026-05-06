@@ -1,5 +1,5 @@
 ---
-name: gateway-version-control
+name: 收敛到 Gateway 统一版本策略（已弃用）
 description: Use when 需要把 v1/v2/v3 混用 API 收敛到 Gateway 统一版本策略（主版本 + 失败降级链），并清理业务层的版本分支与直连调用。
 ---
 

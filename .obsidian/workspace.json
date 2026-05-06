@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "vue-skills/gen-README/template/microfb/状态链路/页面显示链路_登录-路由-守卫-组件.md",
+                "file": "nebula-skills/i18n-server/docs/前端国际化方案说明.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "页面显示链路_登录-路由-守卫-组件"
+              "title": "前端国际化方案说明"
             }
           },
           {
@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "nebula-skills/i18n-server/__template__/microfb/templates/orchestration-flow.md",
+                "file": "nebula-skills/i18n-server/docs/前端国际化方案说明.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "orchestration-flow"
+              "title": "前端国际化方案说明"
             }
           },
           {
@@ -91,8 +91,7 @@
               "title": "返回动态拼接的工具函数"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -160,88 +159,25 @@
         "type": "tabs",
         "children": [
           {
-            "id": "21c07d187f008dcc",
-            "type": "leaf",
-            "state": {
-              "type": "backlink",
-              "state": {
-                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
-                "collapseAll": false,
-                "extraContext": false,
-                "sortOrder": "alphabetical",
-                "showSearch": false,
-                "searchQuery": "",
-                "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "SKILL 的反向链接列表"
-            }
-          },
-          {
-            "id": "a1563a98ae756144",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "SKILL 的出链列表"
-            }
-          },
-          {
-            "id": "3ed6a21bec4d743e",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "标签"
-            }
-          },
-          {
-            "id": "15df46384731f3f0",
-            "type": "leaf",
-            "state": {
-              "type": "all-properties",
-              "state": {
-                "sortOrder": "frequency",
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-archive",
-              "title": "添加笔记属性"
-            }
-          },
-          {
             "id": "fab40829fd696130",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "mySkills/tech-doc-to-podcast/SKILL.md",
+                "file": "nebula-skills/i18n-server/docs/前端国际化方案说明.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "SKILL 的大纲"
+              "title": "前端国际化方案说明 的大纲"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -256,8 +192,15 @@
       "vscode-editor:新建代码文件": false
     }
   },
-  "active": "85a905606a9962df",
+  "active": "b620bf5816b71e51",
   "lastOpenFiles": [
+    "mySkills/map-prompt2skill/SKILL.md",
+    "mySkills/map-prompt2skill/README.md",
+    "mySkills/map-prompt2skill",
+    "vue-skills/gen-README/template/microfb/状态链路/页面显示链路_登录-路由-守卫-组件.md",
+    "nebula-skills/i18n-server/docs/前端国际化方案说明.md",
+    "Pasted image 20260505142211.png",
+    "nebula-skills/i18n-server/__template__/microfb/templates/orchestration-flow.md",
     "nebula-skills/gen-perms/template/template-index.yaml",
     "nebula-skills/gen-perms/template/README.md",
     "nebula-skills/gen-perms/docs/spec.yaml",
@@ -279,8 +222,6 @@
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/mvp/src/views/login/components/Login.vue",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/snapshot/src/views/login/components",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/mvp/src/views/login/components",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/snapshot/src/utils/login-mfa.ts",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/snapshot/src/views/login",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/template/README.md",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/SKILL.md",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-10-dynamic-function-text-callback/README.md",
@@ -290,10 +231,6 @@
     "nebula-skills/i18n-server/errors/返回动态拼接的工具函数.md",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/template/README.md",
     "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/SKILL.md",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-11-foundation-cleanup/README.md",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/template/README.md",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/SKILL.md",
-    "nebula-skills/i18n-server/__template__/microfb/subskills/commit-09-trans-key-marking-mvp/README.md",
     "nebula-skills/Pasted image 20260423191104.png",
     "Pasted image 20260423191104.png"
   ]

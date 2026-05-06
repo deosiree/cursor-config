@@ -1,5 +1,5 @@
 ---
-name: seccenter-api-contract
+name: 读取seccenter的api契约
 description: Reads and uses the SecCenter Swagger/OpenAPI contract as the source of truth for any API contract, endpoint design, request/response schema alignment, or integration plan. Use when the user mentions API 契约, 接口设计, Swagger/OpenAPI, 协议/字段对齐, 方案设计, ready 接口, or asks to browse/verify seccenter endpoints.
 ---
 
