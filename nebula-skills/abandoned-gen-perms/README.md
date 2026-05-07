@@ -1,6 +1,7 @@
 # gen-perms
 
 通用权限梳理与补齐文档生成 skill，可用于任意仓库，不依赖 `apex_dev` 固定目录结构。
+已废弃：theme_line: "拓展权限指令hasPerm；基于perm为父级收敛权限标识消费的所有元素(api，route,component,gateway,acton,...)；修改注册中心，上送权限元数据；修改菜单管理处消费的权限点为新的权限元数据；设计role的权限点；基于role的权限管理MVP"
 
 ## 适用场景
 
