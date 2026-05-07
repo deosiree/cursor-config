@@ -72,4 +72,6 @@ description: 当需要把较长对话沉淀为结构化中文总结，供后续�
 
 ## 支持文件跳转
 - 资源分层说明见 [[../../template/README.md]]
+- Markdown 结构规则见 [[../../references/markdown-format-rules.md]]
+- 交付前结构自检见 [[../skill-output-checklist.md]]
 - 长说明见 [[../../references/writing-skills-core.md]]

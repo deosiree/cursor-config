@@ -91,6 +91,7 @@ description: 当需要基于通用TDD方法编写、改造或标准化一个中�
 2. 如果 skill 被误触发，收紧 `description` 和适用场景。
 3. 如果 skill 不触发，补充更贴近用户意图的关键词和场景描述。
 4. 如果输出结构不稳定，就把给人看的前后示例固化到 `[[template/]]`，把给 agent 的辅助素材固化到 `[[assets/]]`，不要只用文字描述。
+5. 交付前按 `[[assets/skill-output-checklist.md]]` 做结构自检；Markdown 标题空行、H1 策略和 frontmatter 文档标题规则统一参考 `[[references/markdown-format-rules.md]]`。
 
 ## 固定输出结构
 最终交付至少包含：

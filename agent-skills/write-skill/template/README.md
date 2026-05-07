@@ -19,3 +19,11 @@
 - `[[../assets/frontmatter-template.yaml]]`
 - `[[../assets/few-shot-example]]`
 - `[[../references/writing-skills-core.md]]`
+
+## Markdown 结构说明
+模板目录中的示例需要遵守统一的 Markdown 标题策略。
+
+- `README.md`、`SKILL.md`：默认保留单一 H1
+- 带 frontmatter 且属性已承载标题的样本、边界文件：默认不写正文总 H1
+
+具体规则见 `[[../references/markdown-format-rules.md]]`，最终收尾按 `[[../assets/skill-output-checklist.md]]` 自检。

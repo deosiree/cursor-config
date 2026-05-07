@@ -28,4 +28,5 @@
 ## 配套资源跳转
 - 结构验收参考：[[../skill-output-checklist.md]]
 - frontmatter 占位参考：[[../frontmatter-template.yaml]]
+- Markdown 结构规则：[[../../references/markdown-format-rules.md]]
 - 长说明应下沉到：[[../../references/writing-skills-core.md]]

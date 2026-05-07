@@ -72,6 +72,16 @@
 5. 设计 should-trigger 与 should-not-trigger 用例，验证 skill 是否会被稳定触发。
 6. 根据测试中暴露的新漏洞继续 REFACTOR。
 
+## 格式约束的放置方式
+`write-skill` 的主任务是沉淀 skill 套件，不是承载整套 Markdown 规范。
+
+因此：
+- 主 `SKILL.md` 只保留一个简短入口和交付前自检提醒
+- 具体 Markdown 结构规则下沉到 `[[references/markdown-format-rules.md]]`
+- 最终收尾检查放在 `[[assets/skill-output-checklist.md]]`
+
+这样后续如果要继续扩展 Markdown 格式规则，不需要持续膨胀主 `SKILL.md`。
+
 ## 为什么使用 `template + assets`
 官方通用规范强调的是 supporting files，而不是强制所有资源都必须放进 `assets/`。
 
@@ -129,3 +139,7 @@ F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\legacy-skill
 - 不要只写“如何做”，不写“何时触发”和“如何验证”
 - 不要让 `description` 变成长摘要；它首先要服务于触发
 - 不要把给人看的示例和给 agent 的素材混在同一层目录
+
+## 结构自检入口
+- Markdown 结构规则：`[[references/markdown-format-rules.md]]`
+- 交付前检查清单：`[[assets/skill-output-checklist.md]]`
