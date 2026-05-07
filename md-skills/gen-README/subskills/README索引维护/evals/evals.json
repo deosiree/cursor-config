@@ -1,0 +1,6 @@
+{
+  "should_trigger": ["请根据最新产物清单更新 README 索引"],
+  "should_not_trigger": ["请先规划文档结构"],
+  "red_flags": ["为不存在的文档占位", "正文变了但索引没改"],
+  "acceptance_checks": ["输出索引更新方案", "导航不清时先问人"]
+}

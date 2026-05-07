@@ -1,0 +1,7 @@
+{
+  "should_trigger": ["请给这条链路补源码文件和读写点"],
+  "should_not_trigger": ["直接帮我生成整篇文档正文"],
+  "red_flags": ["没有源码落点", "多个候选实现却不提问"],
+  "acceptance_checks": ["输出文件与读写点", "歧义时先问人"]
+}
+

@@ -1,0 +1,7 @@
+{
+  "should_trigger": ["请先判断这段链路该用结构图还是时序图"],
+  "should_not_trigger": ["直接帮我修 Mermaid 语法"],
+  "red_flags": ["不给理由直接定图", "高歧义时不提问"],
+  "acceptance_checks": ["输出类型和理由", "歧义时先问人"]
+}
+

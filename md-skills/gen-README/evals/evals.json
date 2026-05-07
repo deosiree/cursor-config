@@ -1,0 +1,33 @@
+{
+  "should_trigger": [
+    "给你仓库根目录，请基于源码生成该项目的架构文档和 README 索引",
+    "根据现有源码和 docs，补齐这个仓库的模块说明与状态链路文档",
+    "请基于项目源码重构现有 README，按主题整理为多文件文档体系"
+  ],
+  "should_not_trigger": [
+    "帮我润色这段 README 文案",
+    "修复这个登录页报错",
+    "不看源码，直接凭经验写一篇项目架构说明"
+  ],
+  "must_ask_human_when": [
+    "仓库入口不清楚",
+    "存在多个合理模块边界且无法从源码证据排除",
+    "现有文档与源码冲突",
+    "输出目录、粒度或目标受众不明确"
+  ],
+  "acceptance_checks": [
+    "frontmatter 使用中文 name 与 description",
+    "SKILL.md 同时包含理想态单轮图与真实态多轮图",
+    "README.md 明确 template/microfb 为 few-shot 案例",
+    "输出包含 currentUnderstanding、missingFacts 与 nextIterationAction",
+    "信息不足时会先问人而不是继续猜",
+    "子 skill 模板必须落真实样例，不能只有说明文档",
+    "子 skill 模板结构统一为 template/mvp 与 template/snapshot",
+    "每个子 skill 都存在 template/mvp/来源摘录.md",
+    "每个子 skill 的 真实输出.md 都至少含一种真实片段",
+    "每个子 skill 的 产物快照.md 都可作为格式对照样板",
+    "5 个重点节点的 真实输出.md 不能只是短 bullet 结论",
+    "5 个重点节点的 来源摘录.md 必须保留真实原文摘录",
+    "5 个重点节点的 产物快照.md 必须可直接仿写"
+  ]
+}

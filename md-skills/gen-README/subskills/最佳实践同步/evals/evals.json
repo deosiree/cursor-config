@@ -1,0 +1,7 @@
+{
+  "should_trigger": ["请核对当前规则是否仍符合官方最佳实践"],
+  "should_not_trigger": ["直接修正文档正文"],
+  "red_flags": ["没有明确问题就泛搜", "不给来源依据"],
+  "acceptance_checks": ["输出来源和回写建议", "范围不清时先问人"]
+}
+

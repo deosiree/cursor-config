@@ -1,0 +1,7 @@
+{
+  "should_trigger": ["请修复这段 Mermaid 图语法并保持原意"],
+  "should_not_trigger": ["请先判断这该用什么图类型"],
+  "red_flags": ["修语法时改图意", "不列问题清单"],
+  "acceptance_checks": ["输出修复后图和问题列表", "改图意风险时先问人"]
+}
+

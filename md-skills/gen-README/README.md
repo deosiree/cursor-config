@@ -1,222 +1,174 @@
-# gen-README 技能体系（父子编排版）
+# 基于源码生成文档
 
-本目录提供一套面向 `microfb` 文档工程化生成的技能体系，支持：
+本目录是一套面向任意仓库的源码文档生成 Agent Skill。它的默认输入是“仓库根目录”，目标是让 agent 基于真实源码、现有文档和用户补充信息，多轮收敛后生成可维护的文档体系。
 
-- 父 skill 统一编排
-- 多子 skill 并行执行
-- “主题 × 模块”多文件产出
-- 架构拓扑 + 符号定位强约束
-- Mermaid / sequenceDiagram 自动分类与质检
+本 skill 采用“本地中文模式” frontmatter：
 
----
+- `name` 使用中文名称
+- `description` 使用中文触发描述
 
-## 1. 目录结构
+## 目录结构
 
 ```text
 gen-README/
-├─ SKILL.md                        # 父skill（编排器）
-├─ README.md                       # 使用说明（本文件）
+├─ SKILL.md
+├─ README.md
 ├─ docs/
-│  ├─ Mermaid.md                   # flowchart 规范
-│  └─ sequenceDiagram.md           # sequenceDiagram 规范
+├─ subskills/
 ├─ template/
-│  └─ microfb/                     # 会话产物模板副本
-└─ subskills/
-   ├─ subskill-router-classifier/
-   ├─ microfb-topology-mapper/
-   ├─ microfb-symbol-locator/
-   ├─ diagram-type-classifier/
-   ├─ microfb-source-extract/
-   ├─ microfb-doc-structure-planner/
-   ├─ microfb-doc-writer/
-   ├─ mermaid-lint-fixer/
-   ├─ readme-index-maintainer/
-   └─ web-best-practice-sync/
+├─ assets/
+├─ references/
+└─ evals/
 ```
 
----
+各目录职责如下：
 
-## 2. 父子协同状态机（执行流程）
+- `SKILL.md`：agent 激活后每次都必须知道的最小规则，包含双状态机、门禁、输入输出契约和多轮循环机制。
+- `README.md`：给维护者看的说明，包括目录职责、案例定位、触发方式和验证口径。
+- `docs/`：Mermaid 与 `sequenceDiagram` 的规范原件。
+- `subskills/`：父 agent 可调用的子 skill 节点。
+- `template/`：人类可仿写的完整成品案例。
+- `assets/`：agent 按需读取的辅助模板、清单和 few-shot。
+- `references/`：长篇设计理由、方法论和边界解释。
+- `evals/`：触发测试和输出验收样例。
 
-```mermaid
-flowchart TD
-  startNode([开始]) --> intakeTask["S1 任务接收"]
-  intakeTask --> routePhase["S2 子skill路由分类"]
-  routePhase --> resumeCheck{"R1 是否中间态介入?\n(resumeFromState)"}
-  resumeCheck -->|否| classifyTask["S2B 任务分类(主题/模块/粒度)"]
-  resumeCheck -->|S7| classifyDiagram["P2 图类型分类"]
-  resumeCheck -->|S8| writePhase["S8 文档生成"]
-  resumeCheck -->|S9| lintPhase["S9 图语法质检"]
+## 新增型定位
 
-  classifyTask --> topologyPhase["S3 生成架构拓扑"]
-  topologyPhase --> gateTopology{"G1 拓扑完整?"}
-  gateTopology -->|否| repairTopology["S3R 修复拓扑输入"] --> topologyPhase
-  gateTopology -->|是| symbolPhase["S4 符号定位"]
+这套 `gen-README` 按 `写skill` 规范应视为“新增型 skill”，不是“旧 skill 迁移说明模板”。
 
-  symbolPhase --> gateSymbol{"G2 定位完整?\n(文件/函数/变量/读写点)"}
-  gateSymbol -->|否| repairSymbol["S4R 补充定位范围"] --> symbolPhase
-  gateSymbol -->|是| structurePhase["S5 结构规划"]
+- 父级 `template/microfb/` 是真实 few-shot 成品案例。
+- 子 skill 的 `template/` 也应围绕真实试跑产物组织。
+- 子 skill 不再以 `before/after` 作为主模板结构，而统一采用新增型 `mvp/` 与 `snapshot/`。
 
-  structurePhase --> splitPhase["S6 多任务切分(主题 x 模块)"]
-  splitPhase --> matrixCheck{"G3 模块文档矩阵完整?"}
-  matrixCheck -->|否| repairMatrix["S6R 补齐模块文档集合"] --> splitPhase
-  matrixCheck -->|是| parallelStart["并行阶段入口"]
+这里的“真实试跑产物”有明确标准：
 
-  parallelStart --> extractPhase["P1 源码证据抽取"]
-  parallelStart --> classifyDiagram["P2 图类型分类"]
+- `template/mvp/任务输入.md`：完整记录一次真实调用上下文
+- `template/mvp/真实输出.md`：保留真实字段、表格、正文片段、图块或 JSON 片段
+- `template/mvp/来源摘录.md`：指向父级 `template/microfb/` 的真实材料来源
+- `template/snapshot/产物快照.md`：提供稳定输出格式样板，而不是检查提示
 
-  extractPhase --> writePhase["S8 文档生成"]
-  classifyDiagram --> writePhase
+## 本轮补强重点
 
-  writePhase --> lintPhase["S9 图语法质检"]
-  lintPhase --> gateLint{"G4 图语法通过?\n(flowchart/sequence)"}
-  gateLint -->|否| repairLint["S9R 修复图语法与标注"] --> lintPhase
-  gateLint -->|是| parallelReview["并行校验入口"]
+当前模板体系已经合规，但节点强度不均。本轮维护重点是把以下 5 个相对偏薄的子 skill 拉到“重摘录、强仿写、完整试跑记录”的标准：
 
-  parallelReview --> bestPractice["S10 最佳实践同步"]
-  parallelReview --> symbolAudit["S10B 符号定位抽检"]
-  bestPractice --> readmePhase["S11 索引回填"]
-  symbolAudit --> readmePhase
+- `图类型判定`
+- `最佳实践同步`
+- `README索引维护`
+- `源码符号定位`
+- `架构拓扑映射`
 
-  readmePhase --> finalGate{"G5 全量验收通过?\n(结构/定位/图型/索引)"}
-  finalGate -->|否| rollbackPhase["S11R 回退到对应阶段修复"] --> writePhase
-  finalGate -->|是| endNode([完成])
+补强目标不是简单加字数，而是让 `真实输出.md`、`来源摘录.md`、`产物快照.md` 更接近一次真实成功试跑后沉淀下来的可复用样板。
+
+## 父级定位
+
+父级不是一次性编排器，也不是只做路径分发的路由函数，而是一个可多轮迭代的 agent。
+
+它要做的是：
+
+1. 观察仓库结构、源码证据、现有文档和 few-shot。
+2. 判断认知是否足够。
+3. 必要时发起人工澄清。
+4. 选择合适的子 skill 节点推进当前阶段。
+5. 验证产物并决定下一轮动作。
+
+换句话说，它既会“选路径”，也会“停下来问”，还会“基于新回答继续执行”。
+
+## 如何触发
+
+典型 should-trigger 场景：
+
+- “给我一个仓库根目录，基于源码生成架构文档和 README”
+- “根据现有源码和 docs，把这套说明文档补全成多文件体系”
+- “基于项目源码梳理模块说明、状态链路和运行流程”
+- “重构现有 README 和索引，让文档能从源码证据出发组织起来”
+
+典型 should-not-trigger 场景：
+
+- “帮我润色这段说明”
+- “只写一篇临时文档，不用看源码”
+- “修一个功能 bug”
+- “凭经验帮我补一篇项目介绍”
+
+## 人工介入规则
+
+人工介入不是例外，而是核心能力。只要发生以下任一情况，就必须先问人：
+
+- 仓库入口、模块边界、输出目标或目标受众不清楚。
+- 现有文档和源码相互矛盾。
+- 有多个合理解释，但无法从仓库证据排除其一。
+- 图类型、章节结构、主题拆分存在高歧义。
+- few-shot 不足以覆盖当前任务。
+
+提问时必须做到：
+
+- 只问会改变执行路径的问题。
+- 明确说明“为什么现在不能继续猜”。
+- 收到回答后更新当前认知，再进入下一轮。
+
+## few-shot 与案例
+
+`template/microfb/` 会继续保留，但它的角色已经调整为：
+
+- 历史案例
+- few-shot 示例
+- 展示“完整产物长什么样”的成品参考
+
+它不再是默认输入来源，也不代表本 skill 只服务于 `microfb`。默认输入始终是用户给出的“仓库根目录”。
+
+对子 skill 而言，`template/microfb/` 还是一次“真实试跑样例库”：
+
+- `template/mvp/任务输入.md`：记录某个子 skill 在 `microfb` 案例上的真实输入
+- `template/mvp/真实输出.md`：记录该子 skill 在 `microfb` 上应产出的真实结果
+- `template/mvp/来源摘录.md`：摘录该节点真正消费的父级案例材料
+- `template/snapshot/产物快照.md`：沉淀稳定输出格式
+
+## 子 skill 说明
+
+当前子 skill 已统一升级为中文标准套件。父 agent 在运行时只将它们视为“可调用节点”，而不是固定必须串行执行的流水线步骤。
+
+节点包括：
+
+- `子技能路由决策`
+- `架构拓扑映射`
+- `源码符号定位`
+- `文档结构规划`
+- `源码证据抽取`
+- `图类型判定`
+- `文档内容生成`
+- `Mermaid图语法修复`
+- `最佳实践同步`
+- `README索引维护`
+
+这些节点都已经切换到中文职责名，并按 `写skill` 规范补齐了 README、模板、agent 素材、参考说明与触发验收材料。模板现在统一按“新增型 skill”落真实试跑产物，而不是停留在占位说明。
+
+## 使用示例
+
+### 示例 1：从仓库根目录生成文档体系
+
+```text
+使用“基于源码生成文档” skill，
+仓库根目录是 F:\repo\demo-app，
+请基于源码生成该项目的架构说明、模块文档和 README 索引。
+如果信息不足，先提问，不要硬猜。
 ```
 
-### 2.1 并行与回退说明
+### 示例 2：增量补全文档
 
-- **并行阶段 1（S6 之后）**：`源码证据抽取` 与 `图类型分类` 可并行，汇合后进入文档生成。
-- **并行阶段 2（S9 之后）**：`最佳实践同步` 与 `符号定位抽检` 可并行，汇合后再做索引回填。
-- **中间态恢复**：当 `resumeFromState` 为 `S7/S8/S9` 时，可从对应节点直接进入后续链路。
-- **循环回退 1**：`G1/G2/G3/G4` 任一不通过，回退到对应修复态重试。
-- **循环回退 2**：最终验收 `G5` 不通过，统一回退到文档生成阶段修复后再走后续步骤。
-
----
-
-## 3. 子 skill 职责速览
-
-| 子 skill | 作用 |
-| --- | --- |
-| `subskill-router-classifier` | 根据任务意图选择子skill调用路径（串行/并行/回退） |
-| `microfb-topology-mapper` | 先生成架构/运行时拓扑草图 |
-| `microfb-symbol-locator` | 定位文件/函数/变量/读写点 |
-| `diagram-type-classifier` | 判定 `flowchart TD` 或 `sequenceDiagram` |
-| `microfb-source-extract` | 从模板与源码提炼事实证据 |
-| `microfb-doc-structure-planner` | 规划“主题 × 模块”多文件矩阵 |
-| `microfb-doc-writer` | 落地文档并插入符号定位段 |
-| `mermaid-lint-fixer` | 按图类型执行语法质检修复 |
-| `readme-index-maintainer` | 回填 README/主题索引 |
-| `web-best-practice-sync` | WebSearch 同步外部最佳实践 |
-
----
-
-## 4. 核心约束（必须满足）
-
-1. 每个模块最少输出 6 类文档：
-   - 架构拓扑
-   - 运行时拓扑
-   - 状态驱动说明
-   - 单一状态链路
-   - 说明文档
-   - 使用手册
-2. 每份文档必须包含“符号定位”小节（文件 + 函数/变量 + 读写点）。
-3. 每张图必须先过 `diagram-type-classifier`，再由 `mermaid-lint-fixer` 校验。
-4. 每个子 skill 必须先读取本 skill 内定义的 `Template Anchors（相对引用）` 后才能执行。
-5. 锚点缺失时必须先报错并停机，禁止无模板自由发挥。
-
----
-
-## 5. 如何触发
-
-- 自动触发（语义相关时）：父 skill 会根据用户任务选择是否编排子 skill。
-- 显式触发：在对话中使用 `/gen-readme` 或直接指定子 skill 名称（例如 `/diagram-type-classifier`）。
-
----
-
-## 6. 路由决策示例（含中间态介入）
-
-### 6.1 示例输入（你给的场景）
-
-```json
-{
-  "taskIntent": "优化",
-  "moduleScope": ["认证", "路由", "子应用"],
-  "docScope": "全量",
-  "qualityLevel": "严格",
-  "timeBudget": "常规",
-  "resumeFromState": "S7",
-  "recheckScope": "全局",
-  "manualFindings": [
-    {
-      "docFile": "docs/mvp/状态链路/页面显示链路_登录-路由-守卫-组件.md",
-      "diagramId": "login-route-guard",
-      "finding": "渲染图更适合强调交互顺序"
-    }
-  ],
-  "overrideDecisions": [
-    {
-      "docFile": "docs/mvp/状态链路/页面显示链路_登录-路由-守卫-组件.md",
-      "diagramId": "login-route-guard",
-      "forceType": "sequenceDiagram",
-      "reason": "存在并行分支，需明确消息时序"
-    }
-  ]
-}
+```text
+使用“基于源码生成文档” skill，
+仓库根目录是 F:\repo\legacy-service，
+现有 docs 过于零散，请基于源码补齐模块说明与运行链路，
+保留现有文档，但按主题重组。
 ```
 
-### 6.2 期望路由输出（routingPlan）
+## 验证重点
 
-```json
-{
-  "resumeFromState": "S7",
-  "selectedPath": [
-    "diagram-type-classifier",
-    "microfb-doc-writer",
-    "mermaid-lint-fixer",
-    "readme-index-maintainer"
-  ],
-  "parallelGroups": [],
-  "gates": [
-    "G4 图语法通过",
-    "G5 全量验收通过"
-  ],
-  "rollbackMap": {
-    "G4_FAIL": "回到 mermaid-lint-fixer",
-    "G5_FAIL": "回到 microfb-doc-writer"
-  },
-  "appliedOverrides": [
-    {
-      "diagramId": "login-route-guard",
-      "effectiveType": "sequenceDiagram"
-    }
-  ],
-  "auditTrail": [
-    "检测到 resumeFromState=S7，跳过 S1-S6",
-    "合并人工覆盖决策后重跑图类型判定",
-    "执行写作、质检与索引回填并完成全局复检"
-  ],
-  "mvpScope": "仅变更受影响图块与引用段落，不重写无关模块正文"
-}
-```
-
----
-
-## 7. 故障排查
-
-- **问题：图渲染失败**
-  - 检查是否按图类型应用对应规范：
-    - `docs/Mermaid.md`
-    - `docs/sequenceDiagram.md`
-- **问题：文档没有符号定位**
-  - 检查是否执行了 `microfb-symbol-locator`，以及写作阶段是否消费了其输出。
-- **问题：README 未收录新文档**
-  - 检查 `readme-index-maintainer` 是否执行成功。
-
----
-
-## 8. 最佳实践来源（WebSearch 同步）
-
-- Cursor Skills 官方文档（skills 目录、frontmatter、按需加载）
-- Mermaid 官方文档（flowchart 语法、theming、sequence 规范）
-
-建议：当工具链升级或渲染规则变化时，优先运行 `web-best-practice-sync` 更新硬规则。
+- `SKILL.md` 是否同时包含理想态单轮图和真实态多轮图。
+- 触发语义是否面向任意仓库，而不是默认绑定 `microfb`。
+- 人工澄清是否被写成硬门禁，而不是建议项。
+- `template/microfb/` 是否已被清晰标注为 few-shot 案例。
+- 子 skill 的 `template/mvp` 是否包含真实试跑输入与真实输出，而不是空骨架。
+- 子 skill 的 `template/mvp/来源摘录.md` 是否能回指父级真实案例。
+- `template/snapshot/产物快照.md` 是否已经是稳定格式样板，而不是说明文。
+- 5 个重点节点的 `真实输出.md` 是否已经不是“短 bullet 结论”，而是带真实片段的试跑记录。
+- `assets/`、`references/`、`evals/` 是否齐备。
