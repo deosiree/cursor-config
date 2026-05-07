@@ -1,4 +1,0 @@
-interface:
-  display_name: "路由翻译技能"
-  short_description: "路由文档翻译与词条本地化类需求，按文件类型推荐对应翻译 skill"
-  default_prompt: "使用 $route-language-localization-skills 根据输入文件类型推荐最合适的翻译 skill。"
