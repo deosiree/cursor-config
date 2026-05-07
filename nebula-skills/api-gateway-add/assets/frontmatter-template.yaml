@@ -1,0 +1,2 @@
+name: 新增 API 分层接入
+description: 当需要基于 Swagger/OpenAPI 为现有业务接入新接口，并设计 api、types、gateway、business 四层最小改动方案时使用。

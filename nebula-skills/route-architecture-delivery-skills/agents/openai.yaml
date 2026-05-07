@@ -1,4 +1,0 @@
-interface:
-  display_name: "路由架构技能"
-  short_description: "路由架构设计与交付推进类需求，推荐迁移、版本、原型、计划、分批 commit 管理、微前端登录落点一致性、路由散点巡检、Vite 代理分流排障，以及功能项-API-契约-网关注册链路审计 skill"
-  default_prompt: "使用 $route-architecture-delivery-skills 根据当前目标推荐最合适的架构与交付类 skill。"

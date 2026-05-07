@@ -1,0 +1,71 @@
+{
+  "should_trigger": [
+    {
+      "input": "使用 $api-gateway-deprecate 清理已经下线的 v1 兼容层，并结合 Swagger 判断哪些旧 API 可以删。",
+      "expect": [
+        "先读取契约",
+        "区分删除与重命名",
+        "输出分阶段执行建议"
+      ]
+    },
+    {
+      "input": "旧接口已经下线，帮我盘点 gateway 壳方法、旧 API 和旧测试的退场边界。",
+      "expect": [
+        "输出兼容层落点清单",
+        "输出删除/保留决策"
+      ]
+    },
+    {
+      "input": "旧 v1 已下线，把业务层 loginV2 改成 login，并顺手删掉无引用 auth.api.ts。",
+      "expect": [
+        "识别兼容壳方法",
+        "业务调用收口",
+        "删除无引用旧 API"
+      ]
+    },
+    {
+      "input": "检查 src/temp 里的临时菜单兜底是否还能删，并一并清理旧 gateway 兼容注释。",
+      "expect": [
+        "检索真实引用",
+        "删除临时兜底文件",
+        "清理历史注释"
+      ]
+    },
+    {
+      "input": "这是一个更新型 skill，请按退化前后对照整理 microfb 的 gateway 兼容层退场方案。",
+      "expect": [
+        "使用 before/after 视角",
+        "盘点退化前残留",
+        "给出退化后目标状态"
+      ]
+    },
+    {
+      "input": "使用 $api-gateway-deprecate 并传入 spec_path=F:\\Documents\\Repertory\\Sieyuan\\nebula\\docs\\api\\seccenter.swagger.json，判断菜单模块哪些旧类型该删、哪些该重命名。",
+      "expect": [
+        "识别显式 spec_path",
+        "根据契约判断删除与重命名"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "input": "我要为菜单功能项新增 3 个写接口并设计四层改动。",
+      "expect": [
+        "应改由 api-gateway-add 处理"
+      ]
+    },
+    {
+      "input": "我只想知道 Swagger 里这个 schema 的原始字段名。",
+      "expect": [
+        "应先改由 seccenter-api-contract 处理"
+      ]
+    },
+    {
+      "input": "旧接口还没下线，但我想先把 fallback 删掉。",
+      "expect": [
+        "指出前提不成立",
+        "不允许直接退化"
+      ]
+    }
+  ]
+}

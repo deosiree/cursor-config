@@ -1,0 +1,33 @@
+{
+  "should_trigger": [
+    {
+      "input": "使用 $api-gateway-add 为菜单功能项新增 3 个写接口，读链路保持不动，给我四层最小改动设计。",
+      "expect": [
+        "输出四层改动清单",
+        "强调业务层只消费 gateway 与稳定类型",
+        "使用默认 spec_path"
+      ]
+    },
+    {
+      "input": "我要把新的 tenant 接口接进页面，并给出 stableReq 到 stableRes 的网关链路设计。",
+      "expect": [
+        "描述 stableReq -> wireReq -> api -> wireRes -> stableRes",
+        "给出映射命名规则"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "input": "旧版本接口已经下线，帮我删除旧 fallback 和旧 API。",
+      "expect": [
+        "应改由 api-gateway-deprecate 处理"
+      ]
+    },
+    {
+      "input": "我只想看 seccenter swagger 里这个 schema 的字段。",
+      "expect": [
+        "应先改由 seccenter-api-contract 处理"
+      ]
+    }
+  ]
+}

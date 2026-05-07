@@ -1,0 +1,33 @@
+{
+  "should_trigger": [
+    {
+      "input": "我想接一个新的菜单接口，同时后面准备清理旧 v1 兼容壳，先该用哪个 skill？",
+      "expect": [
+        "输出首选与备选",
+        "推荐先新增后退化",
+        "不展开执行步骤"
+      ]
+    },
+    {
+      "input": "旧接口已经下线了，但我不确定现在该先退化还是先接新接口，帮我选 skill。",
+      "expect": [
+        "识别新增与退化双命中",
+        "给执行顺序建议"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "input": "直接帮我设计菜单功能项新接口的四层改动方案。",
+      "expect": [
+        "应改由 api-gateway-add 处理"
+      ]
+    },
+    {
+      "input": "直接帮我删掉旧 gateway fallback 和失效测试。",
+      "expect": [
+        "应改由 api-gateway-deprecate 处理"
+      ]
+    }
+  ]
+}
