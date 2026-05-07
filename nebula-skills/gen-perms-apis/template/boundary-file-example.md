@@ -18,19 +18,19 @@ multi_round_rule: "contract incomplete -> partial output -> human intervention"
 pending_rule: "backend not implemented or version mismatch may stay pending"
 ---
 
-# 口径说明
+## 口径说明
 
 - 权限范围只看真实消费点，不看后台理论配置。
 - API 范围只看源码真实调用，不看菜单后台理论绑定。
 - 子组件权限并入父路由页面，并递归扫描该页面全部业务子孙组件。
 
-# 契约说明
+## 契约说明
 
 - `description` 优先读取默认契约。
 - 默认契约未命中时，再查补充契约。
 - 所有已知契约都未命中时，不主观推断正式 `description`，而是进入 `# 待人工介入`。
 
-# 未命中项说明
+## 未命中项说明
 
 - 每个路由下都允许存在：
   - `未命中权限控制的组件`
