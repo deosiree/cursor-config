@@ -4,6 +4,9 @@
 输出文件名: "路由-组件-权限点-API 源码梳理.md"
 API契约: "F:\\Documents\\Repertory\\Sieyuan\\nebula\\docs\\api\\seccenter.swagger.json"
 补充契约路径: []
+关注模块: []
+关注路由: []
+非关注路由处理策略: "未提供关注范围时不启用"
 约束与边界文件: "[[references/default-project-boundary.md]]"
 路由入口: "src/router/index.ts"
 视图根目录: "src/views"
@@ -17,6 +20,9 @@ output_dir: "<repo>/docs/plans"
 output_file: "路由-组件-权限点-API 源码梳理.md"
 api_contract: "F:\\Documents\\Repertory\\Sieyuan\\nebula\\docs\\api\\seccenter.swagger.json"
 extra_api_contracts: []
+focus_modules: []
+focus_routes: []
+non_focus_route_strategy: "disabled_when_focus_empty"
 boundary_file: "[[references/default-project-boundary.md]]"
 router_entry: "src/router/index.ts"
 views_root: "src/views"

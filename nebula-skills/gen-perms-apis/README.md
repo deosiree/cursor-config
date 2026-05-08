@@ -22,6 +22,9 @@
 - `输出文件名`：可选，默认 `路由-组件-权限点-API 源码梳理.md`
 - `api契约`：可选，默认 `F:\Documents\Repertory\Sieyuan\nebula\docs\api\seccenter.swagger.json`
 - `补充契约路径`：可选，支持 0 到多个路径
+- `关注模块`：可选，支持 0 到多个模块名或路由前缀；未提供或为空时表示全量关注
+- `关注路由`：可选，支持 0 到多个 routePath；未提供或为空时表示全量关注
+- `非关注路由处理策略`：可选，仅当 `关注模块` 或 `关注路由` 非空时启用
 - `约束与边界文件`：可选，默认 `[[references/default-project-boundary.md]]`
 - `路由入口`：可选，默认 `src/router/index.ts`
 - `视图根目录`：可选，默认 `src/views`
@@ -31,6 +34,22 @@
 
 以上全部参数都必须进入输出文档的笔记属性，且属性头必须从文件第一行开始。
 属性头同时保留中文字段和英文字段，中文优先给人读，英文保留给 agent / 脚本消费。
+
+## 关注范围参数
+- `关注模块` 与 `关注路由` 均为空时，不是缺参，而是默认扫描并重点处理全部路由。
+- 二者同时提供时取并集；命中任一条件即视为本轮关注范围。
+- `关注路由` 按 routePath 精确匹配，例如 `/Apex/profile`。
+- `关注模块` 支持模块名与路由前缀匹配，例如 `system` 可匹配 `/Apex/system/*`，`/Apex/system` 可按前缀匹配。
+- 只有用户提供了关注模块或关注路由时，才启用“非关注路由处理策略”；否则不要把任何路由弱化为非关注。
+
+## API 反查能力
+API 不能只看页面是否直接 import `src/api`。正式输出前必须完成 `[[references/api-backtrace-rules.md]]` 中的三类反查：
+
+- `业务层 -> gateway -> api -> 契约`
+- `业务层 -> api -> 契约`
+- `子组件 emit/prop/v-model -> 父组件/组合式函数 -> gateway/api -> 契约`
+
+gateway 内部的映射函数、模型转换函数、常量、模板字符串、`direct/forward` base URL 都必须继续解析到最终 API URL。不得把 `/${BASE_URL}/xxx`、错误 `/menu/*`、未追完链路时的“当前无后端 API 调用”当成最终结论。
 
 ## 多轮补全模式
 本 skill 不再假设一次调用就能产出最终完整文档。
@@ -54,9 +73,11 @@
 
 - `[[template/sample-run/apex_dev-route-component-perm-api.md]]`
 - `[[template/sample-run/apex_dev-route-component-perm-api-iteration.md]]`
+- `[[template/sample-run/apex_dev-api-backtrace-focus-iteration.md]]`
 
 第一份文件用于验证最终结构是否可读，不作为通用模板本体。
 第二份文件用于演示“契约不全 -> 人工介入 -> 二次补完”的完整闭环。
+第三份文件用于演示“漏看 gateway / 子组件 emit / 补充契约 / 关注路由”的 API 反查回归。
 样本试跑可以只覆盖部分路由；正式 skill 仍要求扫描每个路由页面及其所有业务子孙组件。
 
 ## 二次调用示例
@@ -71,6 +92,13 @@
 第二次调用：
 继续使用 $梳理权限点与apis 完善上一次输出文档，
 这次补充 /menu/export 对应的契约路径或人工接口说明。
+```
+
+```text
+关注路由调用：
+继续使用 $梳理权限点与apis 扫描 apex_dev，
+关注路由只关心 /Apex/tenant、/Apex/system/securityConfig、/Apex/profile。
+非关注路由保留扫描证据，但结论统一标记为非本轮关注范围。
 ```
 
 ## 使用示例
@@ -91,7 +119,14 @@ F:\Documents\Repertory\Sieyuan\nebula\apex_dev
 - `[[template/route-component-perm-api-output.md]]`
 - `[[template/boundary-file-example.md]]`
 - `[[template/sample-run/apex_dev-route-component-perm-api.md]]`
+- `[[template/sample-run/apex_dev-api-backtrace-focus-iteration.md]]`
 - `[[assets/few-shot-example]]`
+- `[[assets/few-shot-example/api-backtrace-regression.md]]`
+- `[[assets/few-shot-example/api-backtrace-regression/01-baseline-failures.md]]`
+- `[[assets/few-shot-example/api-backtrace-regression/02-gateway-contract-corrections.md]]`
+- `[[assets/few-shot-example/api-backtrace-regression/03-focus-and-backend-todo.md]]`
+- `[[assets/few-shot-example/api-backtrace-regression/04-emit-lift-and-profile-security.md]]`
 - `[[assets/skill-output-checklist.md]]`
 - `[[references/default-project-boundary.md]]`
+- `[[references/api-backtrace-rules.md]]`
 - `[[references/template-tuning-notes.md]]`

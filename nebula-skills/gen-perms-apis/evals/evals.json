@@ -9,6 +9,54 @@
       ]
     },
     {
+      "input": "扫描 apex_dev，不指定关注路由，默认把全部路由的权限点和 API 都梳理出来。",
+      "expect": [
+        "识别 focus_modules/focus_routes 为空等于全量关注",
+        "不启用非关注路由弱化策略",
+        "仍要求全路由域递归扫描"
+      ]
+    },
+    {
+      "input": "这次只关心 /Apex/system/securityConfig 和 /Apex/profile，其他路由不是我负责的关心，不关心。",
+      "expect": [
+        "识别关注路由输入",
+        "保持全路由扫描但收敛结论和待人工范围",
+        "非关注路由按用户口径弱化"
+      ]
+    },
+    {
+      "input": "关注模块是 system，关注路由是 /Apex/profile，二者都要处理。",
+      "expect": [
+        "识别 focus_modules 与 focus_routes",
+        "按并集处理关注范围",
+        "说明 system 可按模块名或路由前缀匹配"
+      ]
+    },
+    {
+      "input": "业务层调的是 gateway，不要看到没有直接 import api 就写当前无后端 API 调用，要继续追 gateway 到 api 到 swagger。",
+      "expect": [
+        "触发业务层 -> gateway -> api -> 契约反查",
+        "要求解析 gateway 内部映射函数",
+        "禁止提前写当前无后端 API 调用"
+      ]
+    },
+    {
+      "input": "这个页面直接 import src/api，请从业务层直接反查到 swagger。",
+      "expect": [
+        "触发业务层 -> api -> 契约反查",
+        "要求解析 api base URL 和模板字符串",
+        "按默认契约和补充契约查 description"
+      ]
+    },
+    {
+      "input": "子组件只 emit 给父组件保存，API 在父组件的组合式函数里，要从子组件抬升链路继续追。",
+      "expect": [
+        "触发子组件 emit/prop/v-model 抬升反查",
+        "继续追父组件或组合式函数",
+        "不把子组件误判为无后端 API"
+      ]
+    },
+    {
       "input": "默认 swagger 不够，请先输出已确认部分，再列出待人工介入问题。",
       "expect": [
         "支持补充契约路径",
@@ -52,8 +100,13 @@
     "每个未命中组件都有期望补齐的权限点",
     "未命中权限控制的权限点存在",
     "属性头包含补充契约路径和 extra_api_contracts",
+    "属性头包含关注模块/focus_modules 与关注路由/focus_routes",
+    "focus_modules 与 focus_routes 为空时明确表示全量关注",
     "文末支持待人工介入",
     "契约不全时输出待人工介入而不是伪造 description",
+    "API 表不出现未解析变量占位，例如 /${BASE_URL}/xxx 或 /${MENU_BASE_URL}/export",
+    "API 表不出现因漏看 gateway/base URL 得到的错误中间路径，例如 /menu/activate",
+    "未完成三类 API 反查前不输出 当前无后端 API 调用",
     "人工回答后允许保留问题挂起痕迹",
     "不要求所有问题都在第二轮被彻底解决",
     "人工介入后允许将问题归档为暂不处理，而不是强行补成已解决状态"

@@ -5,6 +5,9 @@
 输出文件名: "路由-组件-权限点-API 源码梳理.md"
 API契约: "F:\\Documents\\Repertory\\Sieyuan\\nebula\\docs\\api\\seccenter.swagger.json"
 补充契约路径: []
+关注模块: []
+关注路由: []
+非关注路由处理策略: "未提供关注范围时不启用"
 约束与边界文件: "[[references/default-project-boundary.md]]"
 路由入口: "src/router/index.ts"
 视图根目录: "src/views"
@@ -18,6 +21,9 @@ output_dir: "<repo>/docs/plans"
 output_file: "路由-组件-权限点-API 源码梳理.md"
 api_contract: "F:\\Documents\\Repertory\\Sieyuan\\nebula\\docs\\api\\seccenter.swagger.json"
 extra_api_contracts: []
+focus_modules: []
+focus_routes: []
+non_focus_route_strategy: "disabled_when_focus_empty"
 boundary_file: "[[references/default-project-boundary.md]]"
 router_entry: "src/router/index.ts"
 views_root: "src/views"
@@ -33,6 +39,10 @@ generated_by: "梳理权限点与apis"
 - `apiUrl` 去掉 `direct` / `forward` / `{direct|forward}` 前缀，统一落业务路径。
 - `description` 优先读取默认契约或补充契约中的 `description`，缺失回退 `summary`。
 - 若所有已知契约都未命中，不允许主观推断正式 `description`，改为标记“待人工确认”，并进入文末 `# 待人工介入`。
+- `关注模块 / focus_modules` 与 `关注路由 / focus_routes` 均为空时表示全量关注；同时提供时取并集。
+- 只有提供关注范围时才启用非关注路由处理策略；非关注路由可标记为“非本轮关注范围”或用户指定口径。
+- API 反查必须覆盖 `业务层 -> gateway -> api -> 契约`、`业务层 -> api -> 契约`、`子组件 emit/prop/v-model -> 父组件/组合式函数 -> gateway/api -> 契约`。
+- gateway 内部映射函数、base URL 常量、模板字符串、`direct/forward` 前缀必须继续解析；正式 API 表不允许出现未解析的 `/${BASE_URL}/xxx` 或漏看 base URL 得到的错误中间路径。
 - 每个路由页面需要递归扫描页面组件及其所有业务子孙组件。
 - 未命中 `v-hasPerm` 但真实调用 API 的交互，分别落到“未命中权限控制的组件”和“未命中权限控制的权限点”。
 
