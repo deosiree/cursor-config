@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-微服务-qiankun	-	84	baseline	-	单节点 dry_run 基线，总分 84/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-微服务-qiankun	84	84	trial_pass	routing	prompt=qiankun-01-happy-path | expected=迁移i18n-微服务-qiankun | actual=迁移i18n-微服务-qiankun | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-微服务-qiankun	84	84	trial_pass	routing	prompt=qiankun-02-boundary | expected=迁移i18n-微服务-qiankun | actual=迁移i18n-微服务-qiankun | 未被误分流到壳层接缝或语言选择器节点	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-微服务-qiankun	84	84	trial_pass	routing	prompt=qiankun-03-upstream-route | expected=迁移i18n-微服务-qiankun | actual=迁移i18n-微服务-qiankun | 能作为上游路由收敛后的功能节点稳定命中	dry_run

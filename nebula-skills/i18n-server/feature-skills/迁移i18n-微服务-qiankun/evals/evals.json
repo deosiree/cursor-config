@@ -1,0 +1,15 @@
+{
+  "should_trigger": [
+    "请使用 迁移i18n-微服务-qiankun 处理：主子应用语言状态尚未同步，或子应用还缺少 qiankun 侧的新 i18n 接缝。",
+    "当前仓库需要参考 迁移i18n-微服务-qiankun，因为需要直接复用 迁移i18n-微服务-qiankun 的主模板或 few-shot。"
+  ],
+  "should_not_trigger": [
+    "我只想分析旧链路，不想直接进入 迁移i18n-微服务-qiankun 的实现步骤。",
+    "当前只是纯硬编码中文清点，没有明确落到这个功能边界。"
+  ],
+  "output_checklist": [
+    "说明为什么命中该 skill",
+    "说明主模板或 few-shot 的选择理由",
+    "说明完成态与下一步边界"
+  ]
+}

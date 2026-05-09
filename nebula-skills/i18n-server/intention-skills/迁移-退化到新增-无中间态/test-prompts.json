@@ -1,0 +1,20 @@
+[
+  {
+    "id": "deprecate-01-happy-path",
+    "prompt": "旧 i18n runtime 还深度参与运行，想先退化旧方案，再新增新 i18n。",
+    "expected": "稳定命中 迁移-退化到新增-无中间态，并产出 handoff 到新增阶段",
+    "expected_intention_skill": "迁移-退化到新增-无中间态"
+  },
+  {
+    "id": "deprecate-02-analysis-first",
+    "prompt": "如果分析结果证明 legacy 负担很重，就按先退化再新增的路径帮我规划。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 迁移-退化到新增-无中间态",
+    "expected_intention_skill": "分析-i18n链路 -> 迁移-退化到新增-无中间态"
+  },
+  {
+    "id": "deprecate-03-boundary",
+    "prompt": "这个仓库改动面很大，不适合保留长中间态，先退化再进入新增阶段。",
+    "expected": "命中 迁移-退化到新增-无中间态，不能误进 有中间态收敛 或 新增阶段",
+    "expected_intention_skill": "迁移-退化到新增-无中间态"
+  }
+]

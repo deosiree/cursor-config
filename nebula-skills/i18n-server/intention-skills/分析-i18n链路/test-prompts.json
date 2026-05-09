@@ -1,0 +1,20 @@
+[
+  {
+    "id": "analysis-01-happy-path",
+    "prompt": "我不知道当前 i18n 怎么跑，先帮我分析链路。",
+    "expected": "稳定命中 分析-i18n链路，并产出链路、时序图和后续候选意图",
+    "expected_intention_skill": "分析-i18n链路"
+  },
+  {
+    "id": "analysis-02-before-plan",
+    "prompt": "我想做总方案，但现在不确定还有没有旧 runtime，先分析事实。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 编排-i18n迁移",
+    "expected_intention_skill": "分析-i18n链路 -> 编排-i18n迁移"
+  },
+  {
+    "id": "analysis-03-before-route",
+    "prompt": "我只知道下一步要改 i18n，但不知道该进哪个功能 skill，先分析事实再判断。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 路由-选择功能子skill",
+    "expected_intention_skill": "分析-i18n链路 -> 路由-选择功能子skill"
+  }
+]

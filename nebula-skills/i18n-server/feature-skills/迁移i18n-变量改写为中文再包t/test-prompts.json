@@ -1,0 +1,20 @@
+[
+  {
+    "id": "rewrite-var-01-happy-path",
+    "prompt": "现在项目里有很多变量里塞英文 key 或拼接 key，我想先把变量改成中文语义再统一包 t。",
+    "expected": "稳定命中 迁移i18n-变量改写为中文再包t，并给出变量改写范围",
+    "expected_feature_skill": "迁移i18n-变量改写为中文再包t"
+  },
+  {
+    "id": "rewrite-var-02-boundary",
+    "prompt": "不是要补 json，也不是要改模板，我现在只处理变量承载文案再包 t 的问题。",
+    "expected": "稳定命中 迁移i18n-变量改写为中文再包t，不能误进 新i18n-补充翻译json 或 模板节点",
+    "expected_feature_skill": "迁移i18n-变量改写为中文再包t"
+  },
+  {
+    "id": "rewrite-var-03-upstream-route",
+    "prompt": "上游已经判定当前问题就是变量语义不清导致 t 包装不稳定，你直接按变量改写为中文再包 t 处理。",
+    "expected": "稳定命中 迁移i18n-变量改写为中文再包t，作为单次功能节点被消费",
+    "expected_feature_skill": "迁移i18n-变量改写为中文再包t"
+  }
+]

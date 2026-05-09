@@ -1,0 +1,20 @@
+[
+  {
+    "id": "qiankun-01-happy-path",
+    "prompt": "这个微服务接入新 i18n 后，还需要把 qiankun 里的语言同步链路补齐，你直接处理这部分桥接。",
+    "expected": "稳定命中 迁移i18n-微服务-qiankun，并输出语言桥接改造点",
+    "expected_feature_skill": "迁移i18n-微服务-qiankun"
+  },
+  {
+    "id": "qiankun-02-boundary",
+    "prompt": "我已经确认只差 qiankun 语言桥，不是做壳层接缝保留，也不是做语言选择器本身。",
+    "expected": "稳定命中 迁移i18n-微服务-qiankun，不能误进 壳层接缝保留 或 语言选择器节点",
+    "expected_feature_skill": "迁移i18n-微服务-qiankun"
+  },
+  {
+    "id": "qiankun-03-upstream-route",
+    "prompt": "上游已经把问题收敛到微服务 qiankun 语言同步，你直接按这个功能节点处理。",
+    "expected": "稳定命中 迁移i18n-微服务-qiankun，作为单次功能节点被消费",
+    "expected_feature_skill": "迁移i18n-微服务-qiankun"
+  }
+]

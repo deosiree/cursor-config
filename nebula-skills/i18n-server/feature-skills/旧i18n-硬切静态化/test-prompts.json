@@ -1,0 +1,20 @@
+[
+  {
+    "id": "hardcut-static-01-happy-path",
+    "prompt": "先不要接新 i18n，帮我把旧 i18n 全部退成静态中文，尽快切断旧 runtime 依赖。",
+    "expected": "稳定命中 旧i18n-硬切静态化，并输出静态化改造范围",
+    "expected_feature_skill": "旧i18n-硬切静态化"
+  },
+  {
+    "id": "hardcut-static-02-boundary",
+    "prompt": "我现在的目标只是退出旧 runtime，不做新增新 i18n，你直接把旧文案切回静态中文。",
+    "expected": "稳定命中 旧i18n-硬切静态化，不能误进 策略-新增新i18n 对应的新方案节点",
+    "expected_feature_skill": "旧i18n-硬切静态化"
+  },
+  {
+    "id": "hardcut-static-03-upstream-route",
+    "prompt": "上游已经决定先退化旧链路，这一步只做旧 i18n 的硬切静态化。",
+    "expected": "稳定命中 旧i18n-硬切静态化，作为迁移策略下的单次功能节点被消费",
+    "expected_feature_skill": "旧i18n-硬切静态化"
+  }
+]

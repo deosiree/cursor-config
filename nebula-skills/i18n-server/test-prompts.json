@@ -1,0 +1,50 @@
+[
+  {
+    "id": "root-01-analysis",
+    "prompt": "我不知道当前 i18n 怎么跑，先帮我分析链路，再告诉我下一步该做什么。",
+    "expected": "命中根层后优先进入 分析-i18n链路",
+    "expected_intention_skill": "分析-i18n链路"
+  },
+  {
+    "id": "root-02-orchestration",
+    "prompt": "这个仓库既有旧 runtime 又有新方案试点，帮我比较总方案、改动面和推荐路径。",
+    "expected": "命中根层后进入 编排-i18n迁移，必要时先分析",
+    "expected_intention_skill": "编排-i18n迁移"
+  },
+  {
+    "id": "root-03-deprecate-then-add",
+    "prompt": "旧 i18n 负担很重，我想先退化旧方案，再新增新 i18n。",
+    "expected": "命中根层后进入 迁移-退化到新增-无中间态",
+    "expected_intention_skill": "迁移-退化到新增-无中间态"
+  },
+  {
+    "id": "root-04-add-new",
+    "prompt": "我们已经没有旧 i18n 了，只想把新 i18n 接入完整。",
+    "expected": "命中根层后进入 策略-新增新i18n",
+    "expected_intention_skill": "策略-新增新i18n"
+  },
+  {
+    "id": "root-05-single-route",
+    "prompt": "我只想知道当前这一步应该选哪个功能 skill。",
+    "expected": "命中根层后进入 路由-选择功能子skill",
+    "expected_intention_skill": "路由-选择功能子skill"
+  },
+  {
+    "id": "root-06-analysis-then-plan",
+    "prompt": "当前链路我也说不清，但我还是需要一个总方案。",
+    "expected": "先进入 分析-i18n链路，再进入 编排-i18n迁移",
+    "expected_intention_skill": "分析-i18n链路 -> 编排-i18n迁移"
+  },
+  {
+    "id": "root-07-analysis-then-route",
+    "prompt": "gap 还不明确，但我仍然只想先收敛出一个当前最优先的功能节点。",
+    "expected": "先进入 分析-i18n链路，再进入 路由-选择功能子skill",
+    "expected_intention_skill": "分析-i18n链路 -> 路由-选择功能子skill"
+  },
+  {
+    "id": "root-08-analysis-then-strategy",
+    "prompt": "如果分析结果显示旧 i18n 已经完全退化，就帮我进入新增新 i18n 阶段。",
+    "expected": "先进入 分析-i18n链路，再按条件进入 策略-新增新i18n",
+    "expected_intention_skill": "分析-i18n链路 -> 策略-新增新i18n"
+  }
+]

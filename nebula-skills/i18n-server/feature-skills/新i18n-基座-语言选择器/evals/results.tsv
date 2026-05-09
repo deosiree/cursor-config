@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-基座-语言选择器	-	83	baseline	-	单节点 dry_run 基线，总分 83/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-基座-语言选择器	83	83	trial_pass	routing	prompt=host-language-01-happy-path | expected=新i18n-基座-语言选择器 | actual=新i18n-基座-语言选择器 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-基座-语言选择器	83	83	trial_pass	routing	prompt=host-language-02-boundary | expected=新i18n-基座-语言选择器 | actual=新i18n-基座-语言选择器 | 未被误分流到微服务语言选择器或 qiankun 节点	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-基座-语言选择器	83	83	trial_pass	routing	prompt=host-language-03-upstream-route | expected=新i18n-基座-语言选择器 | actual=新i18n-基座-语言选择器 | 能作为上游路由收敛后的功能节点稳定命中	dry_run

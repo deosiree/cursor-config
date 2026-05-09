@@ -1,0 +1,20 @@
+[
+  {
+    "id": "dynamic-callback-01-happy-path",
+    "prompt": "有些 helper 和业务函数里会动态拼接文案，我想把 t 作为回调传到函数定义里处理这些场景。",
+    "expected": "稳定命中 新i18n-动态拼接：业务层回调t到函数定义，并输出动态拼接改造点",
+    "expected_feature_skill": "新i18n-动态拼接：业务层回调t到函数定义"
+  },
+  {
+    "id": "dynamic-callback-02-boundary",
+    "prompt": "这次不是编译宏外包 trans，也不是变量改写为中文再包 t，我只处理动态回调 t 到函数定义。",
+    "expected": "稳定命中 新i18n-动态拼接：业务层回调t到函数定义，不能误进 trans 节点 或 变量改写节点",
+    "expected_feature_skill": "新i18n-动态拼接：业务层回调t到函数定义"
+  },
+  {
+    "id": "dynamic-callback-03-upstream-route",
+    "prompt": "上游已经确认问题出在 helper 定义层的动态文案，你直接把 t 回调到函数定义里处理。",
+    "expected": "稳定命中 新i18n-动态拼接：业务层回调t到函数定义，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-动态拼接：业务层回调t到函数定义"
+  }
+]

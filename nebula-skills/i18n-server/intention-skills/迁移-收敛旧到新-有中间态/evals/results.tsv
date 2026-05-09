@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	迁移-收敛旧到新-有中间态	-	74	baseline	-	单节点 dry_run 基线，总分 74/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	迁移-收敛旧到新-有中间态	74	74	trial_pass	routing	prompt=converge-01-happy-path | expected=迁移-收敛旧到新-有中间态 | actual=迁移-收敛旧到新-有中间态 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	迁移-收敛旧到新-有中间态	74	74	trial_pass	routing	prompt=converge-02-analysis-first | expected=分析-i18n链路 -> 迁移-收敛旧到新-有中间态 | actual=分析-i18n链路 -> 迁移-收敛旧到新-有中间态 | 事实不足时先分析再收敛策略，边界成立	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	迁移-收敛旧到新-有中间态	74	74	trial_pass	routing	prompt=converge-03-boundary | expected=迁移-收敛旧到新-有中间态 | actual=迁移-收敛旧到新-有中间态 | 未被误判成先退化再新增	dry_run

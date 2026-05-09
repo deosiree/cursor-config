@@ -1,0 +1,20 @@
+[
+  {
+    "id": "scaffold-01-happy-path",
+    "prompt": "新 i18n 运行时已经准备好了，现在需要把样板代码和基础接线补出来，你先处理样板代码。",
+    "expected": "稳定命中 新i18n-样板代码，并输出样板接线改造点",
+    "expected_feature_skill": "新i18n-样板代码"
+  },
+  {
+    "id": "scaffold-02-boundary",
+    "prompt": "我现在不是安装插件，也不是只补翻译 json，而是想先把新 i18n 的样板代码铺起来。",
+    "expected": "稳定命中 新i18n-样板代码，不能误进 新i18n-安装插件 或 新i18n-补充翻译json",
+    "expected_feature_skill": "新i18n-样板代码"
+  },
+  {
+    "id": "scaffold-03-upstream-route",
+    "prompt": "上游已经判断下一步就是新 i18n 样板代码，你直接处理这一层。",
+    "expected": "稳定命中 新i18n-样板代码，作为新增阶段的单次功能节点被消费",
+    "expected_feature_skill": "新i18n-样板代码"
+  }
+]

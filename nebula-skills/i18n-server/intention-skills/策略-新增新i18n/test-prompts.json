@@ -1,0 +1,20 @@
+[
+  {
+    "id": "add-new-01-happy-path",
+    "prompt": "当前模块没有旧 i18n，只需要接入新的 i18n 方案。",
+    "expected": "稳定命中 策略-新增新i18n，并给出新增阶段功能顺序",
+    "expected_intention_skill": "策略-新增新i18n"
+  },
+  {
+    "id": "add-new-02-historical-path",
+    "prompt": "参考 microfb 退化后的第二阶段，告诉我新增新 i18n 先做哪些功能节点。",
+    "expected": "命中 策略-新增新i18n，并沿真实 few-shot 给出顺序",
+    "expected_intention_skill": "策略-新增新i18n"
+  },
+  {
+    "id": "add-new-03-analysis-first",
+    "prompt": "我不确定旧 i18n 是否已经完全退化，但如果分析结论显示已经退化完成，就帮我进入新增新 i18n 阶段。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 策略-新增新i18n",
+    "expected_intention_skill": "分析-i18n链路 -> 策略-新增新i18n"
+  }
+]

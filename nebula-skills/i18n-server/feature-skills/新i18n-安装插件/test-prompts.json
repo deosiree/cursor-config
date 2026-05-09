@@ -1,0 +1,20 @@
+[
+  {
+    "id": "install-plugin-01-happy-path",
+    "prompt": "当前仓库还没接新 i18n 插件和基础运行时，你先把插件安装和接线做好。",
+    "expected": "稳定命中 新i18n-安装插件，并输出插件接入改造点",
+    "expected_feature_skill": "新i18n-安装插件"
+  },
+  {
+    "id": "install-plugin-02-boundary",
+    "prompt": "现在不是写样板代码，也不是补翻译 json，我只想先把新 i18n 插件安装进工程。",
+    "expected": "稳定命中 新i18n-安装插件，不能误进 新i18n-样板代码 或 新i18n-补充翻译json",
+    "expected_feature_skill": "新i18n-安装插件"
+  },
+  {
+    "id": "install-plugin-03-upstream-route",
+    "prompt": "上游已经判断第一步就是安装新 i18n 插件，你直接处理这个功能节点。",
+    "expected": "稳定命中 新i18n-安装插件，作为新增阶段的单次功能节点被消费",
+    "expected_feature_skill": "新i18n-安装插件"
+  }
+]

@@ -1,0 +1,172 @@
+<template>
+  <div class="table-wrapper">
+    <el-table
+      v-loading="loading"
+      :data="data"
+      border
+      stripe
+      highlight-current-row
+      class="data-table__content"
+      style="max-height: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="50" align="center" />
+      <el-table-column label="租户名" prop="tenantName" width="auto" />
+      <el-table-column label="联系人" prop="contactName" width="auto" />
+      <el-table-column label="手机号码" align="center" prop="contactPhone" width="auto" />
+      <el-table-column label="邮箱" align="center" prop="contactEmail" min-width="170" />
+      <el-table-column label="状态" align="center" prop="status" width="90">
+        <template #default="{ row }">
+          <el-tag :type="getTenantStatusMeta(row).type">
+            {{ getTenantStatusMeta(row).label }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="到期时间" align="center" prop="expireAt" min-width="160">
+        <template #default="{ row }">
+          <span :class="getExpireTextClass(row)">
+            {{ row.expireAt ? formatDateTime(row.expireAt) : "永久" }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" prop="createdAt" min-width="160">
+        <template #default="{ row }">
+          {{ formatDateTime(row.createdAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" width="340">
+        <template #default="{ row }">
+          <el-button
+            v-hasPerm="'sys:tenant:edit'"
+            type="primary"
+            link
+            size="small"
+            @click="$emit('manageInfo', row)"
+          >
+            管理信息
+          </el-button>
+          <el-button
+            v-hasPerm="'sys:tenant:edit'"
+            type="primary"
+            icon="edit"
+            link
+            size="small"
+            @click="$emit('manageProject', row)"
+          >
+            管理项目
+          </el-button>
+          <el-button type="primary" link size="small" @click="$emit('manageBindDevice', row)">
+            <div class="i-svg:bind-device w-[14px] h-[14px] mr-[4px]"></div>
+            管理边端设备
+          </el-button>
+          <el-button
+            v-if="row.showResendActivation"
+            v-hasPerm="'sys:tenant:edit'"
+            type="primary"
+            link
+            size="small"
+            @click="emit('resendActivation', row)"
+          >
+            重发激活链接
+          </el-button>
+          <el-button
+            v-hasPerm="'sys:tenant:delete'"
+            type="danger"
+            icon="delete"
+            link
+            size="small"
+            @click="$emit('delete', row)"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { formatDateTime } from "@/utils/format";
+import { TENANT_STATUS_VO_CONFIG } from "@/enums";
+import type { TenantTableRowModel } from "@/types/tenant";
+
+const EXPIRE_TEXT_CLASS = {
+  success: "tenant-expire--success",
+  info: "tenant-expire--info",
+  warning: "tenant-expire--warning",
+  danger: "tenant-expire--danger",
+  primary: "tenant-expire--primary",
+} as const;
+
+interface Props {
+  data?: TenantTableRowModel[];
+  loading?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  data: () => [],
+  loading: false,
+});
+
+const emit = defineEmits<{
+  selectionChange: [selection: TenantTableRowModel[]];
+  manageInfo: [row: TenantTableRowModel];
+  manageProject: [row: TenantTableRowModel];
+  manageBindDevice: [row: TenantTableRowModel];
+  resendActivation: [row: TenantTableRowModel];
+  delete: [row: TenantTableRowModel];
+}>();
+
+/**
+ * 处理选中项变化
+ * @param selection 选中的租户列表
+ */
+function handleSelectionChange(selection: TenantTableRowModel[]) {
+  emit("selectionChange", selection);
+}
+
+/**
+ * 获取租户状态元信息
+ * @param row 租户信息
+ */
+function getTenantStatusMeta(row: TenantTableRowModel) {
+  return TENANT_STATUS_VO_CONFIG[row.statusVO ?? "unspecified"];
+}
+
+/**
+ * 获取租户到期时间文本类名
+ * @param row 租户信息
+ */
+function getExpireTextClass(row: TenantTableRowModel) {
+  return EXPIRE_TEXT_CLASS[getTenantStatusMeta(row).type];
+}
+</script>
+
+<style scoped lang="scss">
+.table-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: calc(100% - 106px);
+}
+
+.tenant-expire--success {
+  color: var(--el-color-success);
+}
+
+.tenant-expire--info {
+  color: var(--el-color-info);
+}
+
+.tenant-expire--warning {
+  color: var(--el-color-warning);
+}
+
+.tenant-expire--danger {
+  color: var(--el-color-danger);
+}
+
+.tenant-expire--primary {
+  color: var(--el-color-primary);
+}
+</style>

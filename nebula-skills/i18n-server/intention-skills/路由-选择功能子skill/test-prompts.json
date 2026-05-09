@@ -1,0 +1,20 @@
+[
+  {
+    "id": "router-01-happy-path",
+    "prompt": "我只想知道当前一步该选哪个功能 skill。",
+    "expected": "稳定命中 路由-选择功能子skill，并产出唯一 selectedFeatureSkill",
+    "expected_intention_skill": "路由-选择功能子skill"
+  },
+  {
+    "id": "router-02-analysis-assisted",
+    "prompt": "现在链路有点乱，但我还是想先判断该进哪个实现节点。",
+    "expected": "先命中 路由-选择功能子skill，必要时借助 分析-i18n链路 的事实辅助判断",
+    "expected_intention_skill": "路由-选择功能子skill"
+  },
+  {
+    "id": "router-03-boundary",
+    "prompt": "gap 还不完全明确，但我仍然只想先收敛出一个当前最优先的功能节点。",
+    "expected": "命中 路由-选择功能子skill，不能误升级成 编排-i18n迁移",
+    "expected_intention_skill": "路由-选择功能子skill"
+  }
+]

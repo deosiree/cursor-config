@@ -1,0 +1,2 @@
+name: 迁移i18n-微服务-qiankun
+description: 当仓库命中“主子应用语言状态尚未同步，或子应用还缺少 qiankun 侧的新 i18n 接缝。”这一类问题时使用。

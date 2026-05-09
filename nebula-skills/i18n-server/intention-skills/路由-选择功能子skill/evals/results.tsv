@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	路由-选择功能子skill	-	75	baseline	-	单节点 dry_run 基线，总分 75/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	路由-选择功能子skill	75	75	trial_pass	routing	prompt=router-01-happy-path | expected=路由-选择功能子skill | actual=路由-选择功能子skill | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	路由-选择功能子skill	75	75	trial_pass	routing	prompt=router-02-analysis-assisted | expected=路由-选择功能子skill | actual=路由-选择功能子skill | gap 不明确但仍停留在单次路由层，边界成立	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	路由-选择功能子skill	75	75	trial_pass	routing	prompt=router-03-boundary | expected=路由-选择功能子skill | actual=路由-选择功能子skill | 未被误升级成总编排节点	dry_run

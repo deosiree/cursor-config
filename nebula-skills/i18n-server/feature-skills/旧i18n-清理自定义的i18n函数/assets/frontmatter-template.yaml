@@ -1,0 +1,2 @@
+name: 旧i18n-清理自定义的i18n函数
+description: 当仓库命中“组件已经接入新方案，但仍保留自定义 t 包装、本地 translations 或旧 key 组织方式。”这一类问题时使用。

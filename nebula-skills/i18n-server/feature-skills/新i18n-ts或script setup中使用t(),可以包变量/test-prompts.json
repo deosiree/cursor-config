@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ts-t-01-happy-path",
+    "prompt": "我需要在 ts 文件和 script setup 里直接用 t，变量里带文案也要能稳定处理，你先改这层。",
+    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，并输出 ts / script setup 改造点",
+    "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
+  },
+  {
+    "id": "ts-t-02-boundary",
+    "prompt": "这次不是模板里用 $t，也不是编译宏外包 trans，我只想处理 ts 和 script setup 里直接调用 t。",
+    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，不能误进 Vue 模板节点 或 trans 节点",
+    "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
+  },
+  {
+    "id": "ts-t-03-upstream-route",
+    "prompt": "上游已经把问题收敛到 ts / script setup 消费层，你直接处理这一类 t 用法。",
+    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
+  }
+]

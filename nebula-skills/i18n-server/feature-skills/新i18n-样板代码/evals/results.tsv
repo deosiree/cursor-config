@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-样板代码	-	85	baseline	-	单节点 dry_run 基线，总分 85/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-样板代码	85	85	trial_pass	routing	prompt=scaffold-01-happy-path | expected=新i18n-样板代码 | actual=新i18n-样板代码 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-样板代码	85	85	trial_pass	routing	prompt=scaffold-02-boundary | expected=新i18n-样板代码 | actual=新i18n-样板代码 | 未被误分流到安装插件或补充翻译 json 节点	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	新i18n-样板代码	85	85	trial_pass	routing	prompt=scaffold-03-upstream-route | expected=新i18n-样板代码 | actual=新i18n-样板代码 | 能作为新增阶段的单次功能节点稳定命中	dry_run

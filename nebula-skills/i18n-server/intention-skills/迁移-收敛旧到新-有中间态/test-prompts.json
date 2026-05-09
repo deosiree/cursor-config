@@ -1,0 +1,20 @@
+[
+  {
+    "id": "converge-01-happy-path",
+    "prompt": "这个仓库 legacy 负担不算太重，允许保留接缝，想边迁边收敛到新 i18n。",
+    "expected": "稳定命中 迁移-收敛旧到新-有中间态，并产出渐进收口功能序列",
+    "expected_intention_skill": "迁移-收敛旧到新-有中间态"
+  },
+  {
+    "id": "converge-02-analysis-first",
+    "prompt": "如果分析结果显示可以保留中间态，就按渐进收口的路径帮我规划。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 迁移-收敛旧到新-有中间态",
+    "expected_intention_skill": "分析-i18n链路 -> 迁移-收敛旧到新-有中间态"
+  },
+  {
+    "id": "converge-03-boundary",
+    "prompt": "我接受中间态，只要改动面小，帮我规划逐步收口路径。",
+    "expected": "命中 迁移-收敛旧到新-有中间态，不能误进 先退化再新增",
+    "expected_intention_skill": "迁移-收敛旧到新-有中间态"
+  }
+]

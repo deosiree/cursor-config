@@ -1,0 +1,20 @@
+[
+  {
+    "id": "orchestration-01-happy-path",
+    "prompt": "帮我比较这个仓库接入新 i18n 的几个方案，给出改动面对比和推荐路径。",
+    "expected": "稳定命中 编排-i18n迁移，并产出候选方案矩阵",
+    "expected_intention_skill": "编排-i18n迁移"
+  },
+  {
+    "id": "orchestration-02-analysis-first",
+    "prompt": "当前仓库状态很复杂，先分析再给我推荐哪个迁移方案更合适。",
+    "expected": "先命中 分析-i18n链路，再把后续候选指向 编排-i18n迁移",
+    "expected_intention_skill": "分析-i18n链路 -> 编排-i18n迁移"
+  },
+  {
+    "id": "orchestration-03-boundary",
+    "prompt": "我想比较先退化再新增和带中间态收敛，但当前链路也不够清楚，你先分析再给方案矩阵。",
+    "expected": "先命中 分析-i18n链路，再进入 编排-i18n迁移，不能误收缩成单次路由",
+    "expected_intention_skill": "分析-i18n链路 -> 编排-i18n迁移"
+  }
+]

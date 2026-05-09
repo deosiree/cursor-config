@@ -1,0 +1,20 @@
+[
+  {
+    "id": "trans-wrap-01-happy-path",
+    "prompt": "有些文案定义点不在编译宏里，想在定义点包 trans、消费点再包 t，你直接处理这类场景。",
+    "expected": "稳定命中 新i18n-编译宏外的定义点包trans+消费点包t，并输出定义点与消费点改造点",
+    "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
+  },
+  {
+    "id": "trans-wrap-02-boundary",
+    "prompt": "这次不是 script setup 里直接调 t，也不是动态回调 t 到函数定义，我只处理编译宏外定义点包 trans 的模式。",
+    "expected": "稳定命中 新i18n-编译宏外的定义点包trans+消费点包t，不能误进 ts/script setup 或 动态拼接节点",
+    "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
+  },
+  {
+    "id": "trans-wrap-03-upstream-route",
+    "prompt": "上游已经把问题定位到编译宏外定义文案这层，你直接按 trans 加 t 的组合处理。",
+    "expected": "稳定命中 新i18n-编译宏外的定义点包trans+消费点包t，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
+  }
+]

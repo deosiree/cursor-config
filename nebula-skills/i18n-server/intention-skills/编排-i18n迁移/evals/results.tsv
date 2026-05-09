@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	编排-i18n迁移	-	76	baseline	-	单节点 dry_run 基线，总分 76/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	编排-i18n迁移	76	76	trial_pass	routing	prompt=orchestration-01-happy-path | expected=编排-i18n迁移 | actual=编排-i18n迁移 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	编排-i18n迁移	76	76	trial_pass	routing	prompt=orchestration-02-analysis-first | expected=分析-i18n链路 -> 编排-i18n迁移 | actual=分析-i18n链路 -> 编排-i18n迁移 | 事实不足时先分析再总编排，边界成立	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	编排-i18n迁移	76	76	trial_pass	routing	prompt=orchestration-03-boundary | expected=分析-i18n链路 -> 编排-i18n迁移 | actual=分析-i18n链路 -> 编排-i18n迁移 | 未被误收缩成单次功能路由	dry_run

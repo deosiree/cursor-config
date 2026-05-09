@@ -1,0 +1,20 @@
+[
+  {
+    "id": "fill-json-01-happy-path",
+    "prompt": "代码已经开始用新 i18n 了，但 locale json 还没补全，你先把翻译 json 缺口补齐。",
+    "expected": "稳定命中 新i18n-补充翻译json，并输出词条补充范围",
+    "expected_feature_skill": "新i18n-补充翻译json"
+  },
+  {
+    "id": "fill-json-02-boundary",
+    "prompt": "这次不是改模板，也不是改 ts 调用，我只需要把缺失的 locale json 补齐。",
+    "expected": "稳定命中 新i18n-补充翻译json，不能误进 模板节点 或 ts/script setup 节点",
+    "expected_feature_skill": "新i18n-补充翻译json"
+  },
+  {
+    "id": "fill-json-03-upstream-route",
+    "prompt": "上游已经把问题收敛到缺翻译词条，你直接处理 locale json 补充。",
+    "expected": "稳定命中 新i18n-补充翻译json，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-补充翻译json"
+  }
+]

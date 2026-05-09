@@ -1,0 +1,20 @@
+[
+  {
+    "id": "micro-language-01-happy-path",
+    "prompt": "微服务自己也需要语言选择器，但不想和 host 混在一起，你先把微服务层语言切换入口补好。",
+    "expected": "稳定命中 新i18n-微服务-语言选择器，并输出微服务语言切换改造点",
+    "expected_feature_skill": "新i18n-微服务-语言选择器"
+  },
+  {
+    "id": "micro-language-02-boundary",
+    "prompt": "我不是处理基座语言选择器，也不是 qiankun 语言桥，我只处理微服务自己这层的语言选择器。",
+    "expected": "稳定命中 新i18n-微服务-语言选择器，不能误进 基座语言选择器 或 qiankun 节点",
+    "expected_feature_skill": "新i18n-微服务-语言选择器"
+  },
+  {
+    "id": "micro-language-03-upstream-route",
+    "prompt": "上游已经确认只差微服务语言切换入口，你直接处理这个功能节点。",
+    "expected": "稳定命中 新i18n-微服务-语言选择器，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-微服务-语言选择器"
+  }
+]

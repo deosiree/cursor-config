@@ -1,0 +1,10 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	-	76	baseline	-	套件级 controlled-trial 前的 dry_run 基线，总分 76/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-01-analysis | expected=分析-i18n链路 | actual=分析-i18n链路 | 根层 analysis_required 与根 eval should_trigger 一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-02-orchestration | expected=编排-i18n迁移 | actual=编排-i18n迁移 | 根层总方案路由与编排节点 should_trigger 一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-03-deprecate-then-add | expected=迁移-退化到新增-无中间态 | actual=迁移-退化到新增-无中间态 | 根层重 legacy 路由与迁移节点边界一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-04-add-new | expected=策略-新增新i18n | actual=策略-新增新i18n | 根层无旧 i18n 路由与新增节点 should_trigger 一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-05-single-route | expected=路由-选择功能子skill | actual=路由-选择功能子skill | 根层单次功能路由与 router 节点 should_trigger 一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-06-analysis-then-plan | expected=分析-i18n链路 -> 编排-i18n迁移 | actual=分析-i18n链路 -> 编排-i18n迁移 | analysis-first few-shot 与编排前置分析规则一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-07-analysis-then-route | expected=分析-i18n链路 -> 路由-选择功能子skill | actual=分析-i18n链路 -> 路由-选择功能子skill | analysis-assisted routing 与 router 节点规则一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	i18n-server	76	76	trial_pass	routing	prompt=root-08-analysis-then-strategy | expected=分析-i18n链路 -> 策略-新增新i18n | actual=分析-i18n链路 -> 策略-新增新i18n | 条件式新增阶段请求先分析再策略分流，边界成立	dry_run

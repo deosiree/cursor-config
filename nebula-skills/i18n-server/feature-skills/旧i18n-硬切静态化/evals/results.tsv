@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-硬切静态化	-	83	baseline	-	单节点 dry_run 基线，总分 83/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-硬切静态化	83	83	trial_pass	routing	prompt=hardcut-static-01-happy-path | expected=旧i18n-硬切静态化 | actual=旧i18n-硬切静态化 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-硬切静态化	83	83	trial_pass	routing	prompt=hardcut-static-02-boundary | expected=旧i18n-硬切静态化 | actual=旧i18n-硬切静态化 | 未被误分流到新增新 i18n 功能节点	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-硬切静态化	83	83	trial_pass	routing	prompt=hardcut-static-03-upstream-route | expected=旧i18n-硬切静态化 | actual=旧i18n-硬切静态化 | 能作为迁移策略下的单次功能节点稳定命中	dry_run

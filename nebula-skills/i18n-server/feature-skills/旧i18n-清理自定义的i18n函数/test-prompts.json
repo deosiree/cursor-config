@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cleanup-custom-01-happy-path",
+    "prompt": "仓库里有不少自定义 i18n helper 和包装函数，先不要引入新方案，帮我统一清理掉这些自定义函数。",
+    "expected": "稳定命中 旧i18n-清理自定义的i18n函数，并收敛到统一调用方式",
+    "expected_feature_skill": "旧i18n-清理自定义的i18n函数"
+  },
+  {
+    "id": "cleanup-custom-02-boundary",
+    "prompt": "旧 runtime 先不动，我现在只想处理 scattered 的自定义 i18n 函数封装。",
+    "expected": "稳定命中 旧i18n-清理自定义的i18n函数，不能误进 旧i18n-硬切静态化",
+    "expected_feature_skill": "旧i18n-清理自定义的i18n函数"
+  },
+  {
+    "id": "cleanup-custom-03-upstream-route",
+    "prompt": "上游已经确认下一步就是把项目里自定义的 i18n 函数和 wrapper 清掉，你直接处理这一层。",
+    "expected": "稳定命中 旧i18n-清理自定义的i18n函数，作为单次功能节点被消费",
+    "expected_feature_skill": "旧i18n-清理自定义的i18n函数"
+  }
+]

@@ -103,4 +103,3 @@ withDefaults(
 - [ ] `defineProps/withDefaults` 默认值是否引用了 `useXxx()` 返回值
 - [ ] 默认值是否为静态可提升值（字符串、数字、布尔、字面量对象等）
 - [ ] i18n 默认文案是否放在模板或 `computed` 中处理
-

@@ -1,0 +1,15 @@
+{
+  "should_trigger": [
+    "请使用 新i18n-ts或script setup中使用t(),可以包变量 处理：运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。",
+    "当前仓库需要参考 新i18n-ts或script setup中使用t(),可以包变量，因为需要直接复用 新i18n-ts或script setup中使用t(),可以包变量 的主模板或 few-shot。"
+  ],
+  "should_not_trigger": [
+    "我只想分析旧链路，不想直接进入 新i18n-ts或script setup中使用t(),可以包变量 的实现步骤。",
+    "当前只是纯硬编码中文清点，没有明确落到这个功能边界。"
+  ],
+  "output_checklist": [
+    "说明为什么命中该 skill",
+    "说明主模板或 few-shot 的选择理由",
+    "说明完成态与下一步边界"
+  ]
+}

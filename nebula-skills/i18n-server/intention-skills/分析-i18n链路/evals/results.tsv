@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	分析-i18n链路	-	74	baseline	-	单节点 dry_run 基线，总分 74/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	分析-i18n链路	74	74	trial_pass	routing	prompt=analysis-01-happy-path | expected=分析-i18n链路 | actual=分析-i18n链路 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	分析-i18n链路	74	74	trial_pass	routing	prompt=analysis-02-before-plan | expected=分析-i18n链路 -> 编排-i18n迁移 | actual=分析-i18n链路 -> 编排-i18n迁移 | analysis-first 后再进入总方案节点，边界成立	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	分析-i18n链路	74	74	trial_pass	routing	prompt=analysis-03-before-route | expected=分析-i18n链路 -> 路由-选择功能子skill | actual=分析-i18n链路 -> 路由-选择功能子skill | analysis-first 后再进入单次路由节点，边界成立	dry_run

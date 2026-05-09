@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-变量改写为中文再包t	-	81	baseline	-	单节点 dry_run 基线，总分 81/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-变量改写为中文再包t	81	81	trial_pass	routing	prompt=rewrite-var-01-happy-path | expected=迁移i18n-变量改写为中文再包t | actual=迁移i18n-变量改写为中文再包t | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-变量改写为中文再包t	81	81	trial_pass	routing	prompt=rewrite-var-02-boundary | expected=迁移i18n-变量改写为中文再包t | actual=迁移i18n-变量改写为中文再包t | 未被误分流到补 json 或模板节点	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	迁移i18n-变量改写为中文再包t	81	81	trial_pass	routing	prompt=rewrite-var-03-upstream-route | expected=迁移i18n-变量改写为中文再包t | actual=迁移i18n-变量改写为中文再包t | 能作为上游意图层消费的单次功能节点稳定命中	dry_run

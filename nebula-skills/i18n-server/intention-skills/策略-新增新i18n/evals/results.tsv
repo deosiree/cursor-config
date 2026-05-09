@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	策略-新增新i18n	-	79	baseline	-	单节点 dry_run 基线，总分 79/100	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	策略-新增新i18n	79	79	trial_pass	routing	prompt=add-new-01-happy-path | expected=策略-新增新i18n | actual=策略-新增新i18n | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	策略-新增新i18n	79	79	trial_pass	routing	prompt=add-new-02-historical-path | expected=策略-新增新i18n | actual=策略-新增新i18n | 与 microfb 第二阶段 few-shot 对齐	dry_run
+2026-05-09T11:06:00.8618602+08:00	workspace-unversioned	策略-新增新i18n	79	79	trial_pass	routing	prompt=add-new-03-analysis-first | expected=分析-i18n链路 -> 策略-新增新i18n | actual=分析-i18n链路 -> 策略-新增新i18n | 条件式新增阶段请求先分析再策略分流，边界成立	dry_run

@@ -1,0 +1,2 @@
+name: 新i18n-补充翻译json
+description: 当仓库命中“locale JSON 缺 key、value 错误或组织粒度不适合统一消费。”这一类问题时使用。

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "host-language-01-happy-path",
+    "prompt": "基座应用已经接了新 i18n，但语言选择器还没补齐，你先把基座层的语言切换入口做好。",
+    "expected": "稳定命中 新i18n-基座-语言选择器，并输出基座语言切换改造点",
+    "expected_feature_skill": "新i18n-基座-语言选择器"
+  },
+  {
+    "id": "host-language-02-boundary",
+    "prompt": "我现在不是处理微服务语言选择器，也不是 qiankun 语言桥，只想先把基座语言选择器补好。",
+    "expected": "稳定命中 新i18n-基座-语言选择器，不能误进 微服务语言选择器 或 qiankun 节点",
+    "expected_feature_skill": "新i18n-基座-语言选择器"
+  },
+  {
+    "id": "host-language-03-upstream-route",
+    "prompt": "上游已经确认当前缺口就是 host 层语言选择器，你直接处理基座节点。",
+    "expected": "稳定命中 新i18n-基座-语言选择器，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-基座-语言选择器"
+  }
+]

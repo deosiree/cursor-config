@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-清理自定义的i18n函数	-	82	baseline	-	单节点 dry_run 基线，总分 82/100	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-清理自定义的i18n函数	82	82	trial_pass	routing	prompt=cleanup-custom-01-happy-path | expected=旧i18n-清理自定义的i18n函数 | actual=旧i18n-清理自定义的i18n函数 | should_trigger 与 README 使用示例一致	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-清理自定义的i18n函数	82	82	trial_pass	routing	prompt=cleanup-custom-02-boundary | expected=旧i18n-清理自定义的i18n函数 | actual=旧i18n-清理自定义的i18n函数 | 未被误分流到 旧i18n-硬切静态化	dry_run
+2026-05-09T12:05:00+08:00	workspace-unversioned	旧i18n-清理自定义的i18n函数	82	82	trial_pass	routing	prompt=cleanup-custom-03-upstream-route | expected=旧i18n-清理自定义的i18n函数 | actual=旧i18n-清理自定义的i18n函数 | 能作为上游意图层消费的单次功能节点稳定命中	dry_run
