@@ -1,10 +1,10 @@
 {
-  "skill_name": "写skill",
+  "skill_name": "写skill-single",
   "evals": [
     {
       "id": "should-trigger-1",
       "category": "should_trigger",
-      "prompt": "使用 $write-skill 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
+      "prompt": "使用 $write-skill-single 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
       "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、template、assets、references、evals 结构。",
       "assertions": [
         "输出中提到 README.md 和 SKILL.md",
@@ -28,7 +28,7 @@
     {
       "id": "should-trigger-3",
       "category": "should_trigger",
-      "prompt": "使用 $write-skill 优化一个中文 skill，自带代码改造示例，主 SKILL.md 不要太长，并在文档中用双链引用 template 和 references。",
+      "prompt": "使用 $write-skill-single 优化一个中文 skill，自带代码改造示例，主 SKILL.md 不要太长，并在文档中用双链引用 template 和 references。",
       "expected_output": "输出应识别为更新型 skill 任务，并将大段示例下沉到 template，使用双链引用 supporting files。",
       "assertions": [
         "输出中提到 template/before 或 template/after",
@@ -40,7 +40,7 @@
       "id": "should-not-trigger-1",
       "category": "should_not_trigger",
       "prompt": "帮我修复 Login.vue 的一个按钮点击无响应问题。",
-      "expected_output": "这不是写 skill 任务，不应触发 write-skill。",
+      "expected_output": "这不是写 skill 任务，不应触发 write-skill-single。",
       "assertions": [
         "不应把任务重写为 skill 设计任务"
       ]
@@ -49,7 +49,7 @@
       "id": "should-not-trigger-2",
       "category": "should_not_trigger",
       "prompt": "请把这个 Markdown 文档翻译成中文。",
-      "expected_output": "这属于翻译任务，不应触发 write-skill。",
+      "expected_output": "这属于翻译任务，不应触发 write-skill-single。",
       "assertions": [
         "不应输出 skill 目录结构"
       ]

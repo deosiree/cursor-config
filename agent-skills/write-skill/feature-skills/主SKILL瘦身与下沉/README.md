@@ -17,7 +17,7 @@
 - 模板：`[[template/README.md]]`
 - few-shot：`[[assets/few-shot-example/README.md]]`
 - 校验：`[[evals/evals.json]]`
-- callback 约束：`[[../../references/write-skill-callback-guardrails.md]]`
+- callback 约束：`[[../../references/write-skill-single-guardrails.md]]`
 
 ## 使用示例
 ```text

@@ -1,6 +1,6 @@
 # 主文档反空心化验收 备注
 
-本节点来源于 `write-skill-callback` 的规范基线增强。
+本节点来源于 `write-skill-single` 的规范基线增强。
 
 它的职责是把 callback 中“文档不得空心化”的隐性要求，提炼成显式门禁能力。
 

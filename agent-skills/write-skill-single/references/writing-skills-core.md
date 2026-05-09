@@ -1,7 +1,7 @@
 # writing-skills 核心原则整理
 
 ## 这份文档的作用
-这不是对 `writing-skills` 的逐段翻译，而是为中文仓库提炼它最关键的工作方法，供 `write-skill` 在需要时按需引用。
+这不是对 `writing-skills` 的逐段翻译，而是为中文仓库提炼它最关键的工作方法，供 `write-skill-single` 在需要时按需引用。
 
 ## 1. 先看失败，再写 skill
 `writing-skills` 的第一原则不是“先写出一个看起来完整的 skill”，而是先观察没有 skill 时 agent 会如何失败。

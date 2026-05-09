@@ -19,7 +19,7 @@
 - 模板：`[[template/README.md]]`
 - few-shot：`[[assets/few-shot-example/README.md]]`
 - 校验：`[[evals/evals.json]]`
-- callback 基线：`[[../../../../write-skill-callback/SKILL.md]]`
+- callback 基线：`[[../../../../write-skill-single/SKILL.md]]`
 
 ## 使用示例
 ```text

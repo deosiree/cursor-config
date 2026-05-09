@@ -5,7 +5,7 @@
 - [ ] 主 `SKILL.md` 只负责分类、路由、人工门禁与质量闭环入口
 - [ ] 主 `SKILL.md` 没有重新塞入命名细则、模板细则和 few-shot 细节
 - [ ] 输出契约至少包含 `skillTaskClassification` 与 `qualityGatePlan`
-- [ ] 已对照 `[[../references/write-skill-callback-guardrails.md]]` 做最低规范自检
+- [ ] 已对照 `[[../references/write-skill-single-guardrails.md]]` 做最低规范自检
 - [ ] 主 `SKILL.md` 保留 `RED`、`GREEN`、`REFACTOR`
 - [ ] 主 `SKILL.md` 与 `README.md` 都保留真实使用示例
 

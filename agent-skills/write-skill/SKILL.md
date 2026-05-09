@@ -33,7 +33,7 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 - 缺“是否允许引入 Darwin”，但请求又涉及评分、试跑或优化
 
 ## callback 约束
-当前分层版 `write-skill` 受 `[[../write-skill-callback/SKILL.md]]` 约束。
+当前分层版 `write-skill` 受 `[[../write-skill-single/SKILL.md]]` 约束。
 
 最低要求：
 - 保留 `RED`、`GREEN`、`REFACTOR`
@@ -41,7 +41,7 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 - 子 skill 主文档不能空心化
 - `template/`、`assets/`、`references/`、`evals/` 的职责边界清晰
 
-细则见：`[[references/write-skill-callback-guardrails.md]]`
+细则见：`[[references/write-skill-single-guardrails.md]]`
 
 ## RED
 1. 先识别失败基线，不要跳过现状判断。

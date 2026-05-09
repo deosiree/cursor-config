@@ -1,5 +1,5 @@
 ---
-name: 写skill
+name: 写skill-single
 description: 当需要基于通用TDD方法编写、改造或标准化一个中文skill，并同时交付README、SKILL、template、assets、references与验证材料时使用。
 ---
 
@@ -135,14 +135,14 @@ description: 当需要基于通用TDD方法编写、改造或标准化一个中�
 ### 示例 1：创建新 skill
 
 ```text
-使用 $write-skill 为“多仓库发布说明编写”创建一个中文 skill，
+使用 $write-skill-single 为“多仓库发布说明编写”创建一个中文 skill，
 目标目录为 F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\release-note-skill
 ```
 
 ### 示例 2：改造旧 skill
 
 ```text
-使用 $write-skill 把 F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\legacy-skill
+使用 $write-skill-single 把 F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\legacy-skill
 从单文件结构升级为包含 template、assets、references、evals 的完整 skill 套件，
 并提供 [[template/before]] / [[template/after]] 对照
 ```

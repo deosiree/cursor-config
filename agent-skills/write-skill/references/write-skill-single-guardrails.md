@@ -1,9 +1,9 @@
 # write-skill callback 约束基线
 
 ## 作用
-这份文档把 `[[../../write-skill-callback/SKILL.md]]` 中不可随意退化的规范抽出来，作为当前分层版 `write-skill` 的最低验收门槛。
+这份文档把 `[[../../write-skill-single/SKILL.md]]` 中不可随意退化的规范抽出来，作为当前分层版 `write-skill` 的最低验收门槛。
 
-`write-skill-callback` 是规范基线，不是当前主套件的实现替代品。  
+`write-skill-single` 是规范基线，不是当前主套件的实现替代品。  
 当前 `write-skill` 可以继续保留 intention / feature 分层、Darwin 桥接和人工门禁，但不能突破以下最低规范。
 
 ## 不可退化规则

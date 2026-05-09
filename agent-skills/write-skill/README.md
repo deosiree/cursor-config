@@ -47,11 +47,11 @@ write-skill/
 当前 README 主要保留长期背景、结构职责和演化边界，不再承接完整执行手册。
 
 ## callback 约束基线
-当前分层版 `write-skill` 不是自由演化状态，它受 `write-skill-callback` 约束。
+当前分层版 `write-skill` 不是自由演化状态，它受 `write-skill-single` 约束。
 
 约束来源：
-- `[[../write-skill-callback/SKILL.md]]`
-- `[[references/write-skill-callback-guardrails.md]]`
+- `[[../write-skill-single/SKILL.md]]`
+- `[[references/write-skill-single-guardrails.md]]`
 
 这份基线要求至少满足：
 - 主 `SKILL.md` 保留 `RED`、`GREEN`、`REFACTOR`
@@ -70,7 +70,7 @@ write-skill/
 
 对应规则入口：
 - `[[references/write-skill-operating-guide.md]]`
-- `[[references/write-skill-callback-guardrails.md]]`
+- `[[references/write-skill-single-guardrails.md]]`
 - `[[references/writing-skills-core.md]]`
 
 ## Darwin 与执行流

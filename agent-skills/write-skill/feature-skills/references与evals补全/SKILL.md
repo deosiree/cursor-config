@@ -30,7 +30,7 @@ description: 当 skill 套件已经有主流程，但缺少 references、should-
 ## 常用配套
 - `[[../历史版本回填为few-shot/SKILL.md]]`
 - `[[../Markdown格式规范收尾/SKILL.md]]`
-- `[[../../references/write-skill-callback-guardrails.md]]`
+- `[[../../references/write-skill-single-guardrails.md]]`
 
 ## 使用示例
 ```text

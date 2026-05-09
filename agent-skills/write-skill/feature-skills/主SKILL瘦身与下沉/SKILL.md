@@ -30,7 +30,7 @@ description: 当主 SKILL.md 已承载过多正文、示例、细则或案例，
 ## 常用配套
 - `[[../references与evals补全/SKILL.md]]`
 - `[[../Markdown格式规范收尾/SKILL.md]]`
-- `[[../../references/write-skill-callback-guardrails.md]]`
+- `[[../../references/write-skill-single-guardrails.md]]`
 
 ## 使用示例
 ```text

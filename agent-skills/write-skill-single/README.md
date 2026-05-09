@@ -1,15 +1,15 @@
-# write-skill
+# write-skill-single
 
 ## 定位
-`write-skill` 是一个面向中文仓库的 meta-skill，用来编写、改造和标准化新的 skill 套件。
+`write-skill-single` 是一个面向中文仓库的 meta-skill，用来编写、改造和标准化新的 skill 套件。
 
 它继承 [`writing-skills`](C:\Users\Administrator\.agents\skills\writing-skills\SKILL.md) 的通用 TDD 主线，不替代其方法论；它额外解决的是中文团队常见的交付不一致问题：有的人只写 `SKILL.md`，有的人缺少说明文档，有的人没有模板资产和验证材料。
 
 ## 与 writing-skills 的关系
 - `writing-skills` 负责通用方法论：先看失败基线，再写 skill，再补漏洞。
-- `write-skill` 负责中文落地：固定目录结构、双层资源分工、few-shot 样例、触发测试与输出验收。
+- `write-skill-single` 负责中文落地：固定目录结构、双层资源分工、few-shot 样例、触发测试与输出验收。
 
-换言之，`write-skill` 是 `writing-skills` 的中文增强交付版，而不是另一套新理论。
+换言之，`write-skill-single` 是 `writing-skills` 的中文增强交付版，而不是另一套新理论。
 
 ## 固定目录结构
 使用本 skill 产出的目标 skill，默认按下列结构组织：
@@ -73,7 +73,7 @@
 6. 根据测试中暴露的新漏洞继续 REFACTOR。
 
 ## 格式约束的放置方式
-`write-skill` 的主任务是沉淀 skill 套件，不是承载整套 Markdown 规范。
+`write-skill-single` 的主任务是沉淀 skill 套件，不是承载整套 Markdown 规范。
 
 因此：
 - 主 `SKILL.md` 只保留一个简短入口和交付前自检提醒
@@ -109,7 +109,7 @@
 ### 示例 1：从 0 新建一个 skill
 
 ```text
-使用 $write-skill 为“前端接口联调记录”设计一个中文 skill，目标目录为
+使用 $write-skill-single 为“前端接口联调记录”设计一个中文 skill，目标目录为
 F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\api-debug-log
 ```
 
@@ -121,7 +121,7 @@ F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\api-debug-log
 ### 示例 2：把单文件 skill 改造成规范套件
 
 ```text
-使用 $write-skill 把
+使用 $write-skill-single 把
 F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\legacy-skill
 从只有 SKILL.md 的形式改造成 README + SKILL + template + assets + evals 结构，
 并提供 [[template/before]] / [[template/after]] 对照

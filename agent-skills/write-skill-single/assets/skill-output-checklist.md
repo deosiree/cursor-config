@@ -54,4 +54,4 @@
 
 反空心化门禁实现见：
 
-- `[[../../write-skill/intention-skills/主文档反空心化验收/SKILL.md]]`
+- `[[../../write-skill-single/intention-skills/主文档反空心化验收/SKILL.md]]`
