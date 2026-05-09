@@ -1,32 +1,33 @@
-# 会话总结skill
+# few-shot 索引
 
-## 定位
-把一次较长的开发或排障对话整理成结构化中文总结，便于后续继续推进。
+当前 `写skill` 默认复用三类正式案例。
 
-## 适用场景
-- 当对话已经很长，需要做阶段性沉淀。
-- 当准备切换会话，但不希望上下文丢失。
+## 1. 套件级真实案例
 
-## 不适用场景
-- 不用于正式对外公告。
-- 不用于替代完整技术文档。
+- `[[suite-cases/gen-README/README.md]]`
+- `[[suite-cases/i18n-server/README.md]]`
 
-## 输入契约
-- `对话内容`：当前会话中的关键上下文。
-- `目标读者`：后续继续处理该任务的人或 agent。
+这两类目录里已经直接放入真实实现片段，而不再只是说明文档。
 
-## 输出结构
-- 一份结构化中文总结
-- 包括目标、现状、已完成、未完成、风险、下一步
+## 2. Darwin 质量闭环案例
 
-## 使用示例
+- `darwin-skill`
 
-```text
-使用 $会话总结skill 总结当前关于登录页异常排查的对话，供下个会话继续使用
-```
+它的真实试跑样例已经被分发到：
 
-## 配套资源跳转
-- 结构验收参考：[[../skill-output-checklist.md]]
-- frontmatter 占位参考：[[../frontmatter-template.yaml]]
-- Markdown 结构规则：[[../../references/markdown-format-rules.md]]
-- 长说明应下沉到：[[../../references/writing-skills-core.md]]
+- `intention-skills/编排-skill质量迭代/assets/few-shot-example/example-01`
+- `feature-skills/darwin质量评估与迭代/assets/few-shot-example/example-01`
+
+## 3. 子skill 局部 few-shot
+
+每个 intention / feature 节点都应在自己的：
+
+- `assets/few-shot-example/example-01/`
+
+下提供局部真实片段，不再只依赖顶层索引。
+
+对应方法说明见：
+
+- `[[../references/旧skill升级为agent-skill案例说明.md]]`
+- `[[../references/意图层与功能层拆分案例说明.md]]`
+- `[[../references/darwin评估闭环案例说明.md]]`

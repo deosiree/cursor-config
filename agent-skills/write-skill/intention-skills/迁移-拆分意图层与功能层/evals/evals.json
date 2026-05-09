@@ -1,0 +1,24 @@
+{
+  "skill_name": "迁移-拆分意图层与功能层",
+  "evals": [
+    {
+      "id": "should-trigger-layer-split",
+      "category": "should_trigger",
+      "prompt": "这个 skill 套件子节点越来越多，帮我拆成意图层和功能层。",
+      "expected_output": "应进入拆分意图层与功能层节点。",
+      "assertions": [
+        "输出中提到判断节点和执行节点",
+        "输出中提到拆层后的路由"
+      ]
+    },
+    {
+      "id": "should-not-trigger-agent-only",
+      "category": "should_not_trigger",
+      "prompt": "我只想把主 skill 瘦身，不打算继续拆层。",
+      "expected_output": "这更适合主 skill agent 化节点。",
+      "assertions": [
+        "不应把单纯瘦身误判为拆层"
+      ]
+    }
+  ]
+}

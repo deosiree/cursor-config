@@ -1,0 +1,20 @@
+[
+  {
+    "id": "shell-seam-01-happy-path",
+    "prompt": "这个微服务迁移时我不想一次性切断壳层桥接，先帮我保留壳层接缝，让新旧链路能并存一段时间。",
+    "expected": "稳定命中 迁移i18n-壳层接缝保留，并输出接缝保留点",
+    "expected_feature_skill": "迁移i18n-壳层接缝保留"
+  },
+  {
+    "id": "shell-seam-02-boundary",
+    "prompt": "现在不是做 qiankun 语言桥，也不是做总方案，我只想保住壳层接缝，避免一次性断层。",
+    "expected": "稳定命中 迁移i18n-壳层接缝保留，不能误进 迁移i18n-微服务-qiankun 或 编排节点",
+    "expected_feature_skill": "迁移i18n-壳层接缝保留"
+  },
+  {
+    "id": "shell-seam-03-upstream-route",
+    "prompt": "上游已经决定走有中间态迁移，这一步先只处理壳层接缝保留。",
+    "expected": "稳定命中 迁移i18n-壳层接缝保留，作为中间态迁移下的功能节点被消费",
+    "expected_feature_skill": "迁移i18n-壳层接缝保留"
+  }
+]

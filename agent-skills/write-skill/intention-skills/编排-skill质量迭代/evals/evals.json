@@ -1,0 +1,24 @@
+{
+  "skill_name": "编排-skill质量迭代",
+  "evals": [
+    {
+      "id": "should-trigger-quality-orchestration",
+      "category": "should_trigger",
+      "prompt": "我想在 skill 写完后先跑一轮质量评估和试跑，再决定是否继续改。",
+      "expected_output": "应进入质量迭代编排节点。",
+      "assertions": [
+        "输出中提到 baseline 或 trial",
+        "输出中提到 Darwin 接入模式"
+      ]
+    },
+    {
+      "id": "should-not-trigger-structure-first",
+      "category": "should_not_trigger",
+      "prompt": "现在节点结构都没补齐，先帮我补套件结构。",
+      "expected_output": "这应先进入结构阶段，不应直接编排 Darwin。",
+      "assertions": [
+        "不应在结构未齐时直接进入 Darwin 编排"
+      ]
+    }
+  ]
+}

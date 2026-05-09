@@ -1,0 +1,20 @@
+[
+  {
+    "id": "vue-template-01-happy-path",
+    "prompt": "我现在只想把 Vue 模板里的静态中文和旧写法改成 $t()，你先处理 template 层。",
+    "expected": "稳定命中 新i18n-Vue模板中使用$t()，并输出 template 改造点",
+    "expected_feature_skill": "新i18n-Vue模板中使用$t()"
+  },
+  {
+    "id": "vue-template-02-boundary",
+    "prompt": "这次不是 ts/script setup 里用 t，也不是补翻译 json，我只改 Vue 模板里的 $t() 用法。",
+    "expected": "稳定命中 新i18n-Vue模板中使用$t()，不能误进 ts/script setup 节点 或 补充翻译 json 节点",
+    "expected_feature_skill": "新i18n-Vue模板中使用$t()"
+  },
+  {
+    "id": "vue-template-03-upstream-route",
+    "prompt": "上游已经判断当前缺口就是模板层的 i18n 消费，你直接把 Vue 模板改成 $t()。",
+    "expected": "稳定命中 新i18n-Vue模板中使用$t()，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-Vue模板中使用$t()"
+  }
+]

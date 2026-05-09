@@ -1,0 +1,24 @@
+{
+  "skill_name": "主SKILL瘦身与下沉",
+  "evals": [
+    {
+      "id": "should-trigger-skill-slimming",
+      "category": "should_trigger",
+      "prompt": "主 SKILL.md 太长了，帮我把细节下沉出去。",
+      "expected_output": "应进入主 SKILL 瘦身节点。",
+      "assertions": [
+        "输出中提到下沉到 template、assets 或 references",
+        "输出中提到主文件只保留高频规则"
+      ]
+    },
+    {
+      "id": "should-not-trigger-layer-split",
+      "category": "should_not_trigger",
+      "prompt": "我想继续拆 intention 和 feature 两层。",
+      "expected_output": "这应进入拆层节点。",
+      "assertions": [
+        "不应把拆层任务误判成主文件瘦身"
+      ]
+    }
+  ]
+}

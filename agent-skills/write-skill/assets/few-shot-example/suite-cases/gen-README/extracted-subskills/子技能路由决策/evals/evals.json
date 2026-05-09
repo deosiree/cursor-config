@@ -1,0 +1,7 @@
+{
+  "should_trigger": ["请根据当前认知选择本轮最小子节点路径"],
+  "should_not_trigger": ["直接帮我写一段 README 文案"],
+  "red_flags": ["默认全链路串行执行", "缺失事实时仍继续选路"],
+  "acceptance_checks": ["输出包含 selectedPath", "边界不清楚时先问人"]
+}
+

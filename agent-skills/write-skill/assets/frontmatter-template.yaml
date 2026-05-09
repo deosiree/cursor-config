@@ -2,6 +2,9 @@
 name: <中文skill名>
 description: 当需要<触发条件>，并希望<结果>时使用。
 
+# 若当前节点是父级 agent，可补充：
+# suiteStructureType: single_skill | agent_with_subskills | agent_with_intention_and_feature_layers
+
 # 对外兼容模式示例
 # name: <english-slug-name>
-# description: Use when <specific triggering conditions and symptoms>
+# description: 当需要与通用 Agent Skills 生态兼容，并满足<具体触发条件>时使用。

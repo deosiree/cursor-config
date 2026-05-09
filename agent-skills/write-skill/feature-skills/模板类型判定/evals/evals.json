@@ -1,0 +1,24 @@
+{
+  "skill_name": "模板类型判定",
+  "evals": [
+    {
+      "id": "should-trigger-template-type",
+      "category": "should_trigger",
+      "prompt": "这个节点到底该用 before/after 还是 mvp/snapshot，先帮我判定。",
+      "expected_output": "应进入模板类型判定节点。",
+      "assertions": [
+        "输出中提到 before/after 或 mvp/snapshot",
+        "输出中提到判定依据"
+      ]
+    },
+    {
+      "id": "should-not-trigger-fewshot-backfill",
+      "category": "should_not_trigger",
+      "prompt": "我已经知道模板类型了，现在要把历史版本回填进去。",
+      "expected_output": "这应进入历史版本回填节点。",
+      "assertions": [
+        "不应把回填动作误判成模板类型判定"
+      ]
+    }
+  ]
+}

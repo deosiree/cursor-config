@@ -1,0 +1,66 @@
+{
+  "skill_name": "主文档反空心化验收",
+  "evals": [
+    {
+      "id": "should-trigger-hollow-doc-audit",
+      "category": "should_trigger",
+      "prompt": "这个 skill 套件结构看起来都在，但我怀疑主 README 和 SKILL 已经被瘦成空壳了。",
+      "expected_output": "应进入主文档反空心化验收，并输出空心化缺口与验收结论。",
+      "assertions": [
+        "输出中提到 hollowDocFindings 或 acceptanceDecision",
+        "输出中提到主 README 或主 SKILL 的缺口",
+        "输出中提到回流修复 feature"
+      ]
+    },
+    {
+      "id": "should-not-trigger-markdown-only",
+      "category": "should_not_trigger",
+      "prompt": "现在只是 Markdown 标题空行不统一。",
+      "expected_output": "这应进入 Markdown 收尾节点，而不是空心化验收。",
+      "assertions": [
+        "不应把纯 Markdown 结构问题误判为空心化问题"
+      ]
+    },
+    {
+      "id": "should-detect-missing-example",
+      "category": "should_trigger",
+      "prompt": "这个 skill 的主 README 和 SKILL 都写了任务，但没有任何使用示例。请做空心化验收。",
+      "expected_output": "应指出示例缺失，并给出 `needs_fix` 或等价验收结论。",
+      "assertions": [
+        "输出中提到 exampleCoverageStatus 或示例缺失",
+        "输出中提到 acceptanceDecision",
+        "输出中提到回流修复建议"
+      ]
+    },
+    {
+      "id": "should-detect-missing-skill-output",
+      "category": "should_trigger",
+      "prompt": "主 SKILL 里写了任务和边界，但没有输出字段。请做空心化验收。",
+      "expected_output": "应指出主 SKILL 缺输出字段，并给出需要修复的结论。",
+      "assertions": [
+        "输出中提到 missingMainDocSections 或输出字段缺失",
+        "输出中提到主 SKILL"
+      ]
+    },
+    {
+      "id": "should-detect-missing-readme-acceptance",
+      "category": "should_trigger",
+      "prompt": "这个节点的主 README 有定位和边界，但没有验收方式。请判断是否空心化。",
+      "expected_output": "应指出主 README 验收方式缺失，而不是笼统说文档不完整。",
+      "assertions": [
+        "输出中提到主 README",
+        "输出中提到验收方式缺失"
+      ]
+    },
+    {
+      "id": "should-detect-layering-violation-without-total-hollow",
+      "category": "should_trigger",
+      "prompt": "主文档还能读，但关键边界条件和输出细节主要都藏在 assets 和 evals 里。请做空心化验收。",
+      "expected_output": "应识别为资源分层违规，而不是误判为完全合格或完全空心。",
+      "assertions": [
+        "输出中提到 layeringViolations 或资源分层违规",
+        "输出中提到主文档仍有内容但 supporting files 越界"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "skill_name": "Markdown格式规范收尾",
+  "evals": [
+    {
+      "id": "should-trigger-markdown-refine",
+      "category": "should_trigger",
+      "prompt": "skill 套件已经写完，但文档总是违反 markdownlint，先统一做 Markdown 收尾，不要直接跑 Darwin。",
+      "expected_output": "应进入 Markdown 格式规范收尾节点，并强调 Darwin 需要后置。",
+      "assertions": [
+        "输出中提到 markdown-format-rules",
+        "输出中提到 H1 或空行规则",
+        "输出中提到先收尾再 Darwin"
+      ]
+    },
+    {
+      "id": "should-not-trigger-feature-routing",
+      "category": "should_not_trigger",
+      "prompt": "我要把一个旧 skill 主文件拆成 agent 和子skill。",
+      "expected_output": "这应先进入结构或迁移节点，而不是 Markdown 收尾。",
+      "assertions": [
+        "不应把任务直接识别成纯 Markdown 收尾"
+      ]
+    }
+  ]
+}

@@ -1,29 +1,20 @@
-# template 目录说明
+# template 说明
 
-`template/` 是给人类看的示例层，不是给 agent 的执行素材层。
+这里保留的是父级 agent 套件与分层套件的总模板导览；新增型与更新型的真实模板真源已经收敛到：
 
-## 适合放什么
-- 新建型 skill 的完整新增示例
-- 更新型 skill 的修改前后对照
-- `before/after`
-- `mvp/snapshot`
-- 输入/输出示例
-- 迁移清单、编排表、任务模板
+- `[[../feature-skills/模板类型判定/template/README.md]]`
 
-## 不适合放什么
-- frontmatter 通用占位
-- 只给 agent 用的精简提示
-- 长篇方法论说明
+## 当前模板族
 
-这些内容分别应放到：
-- `[[../assets/frontmatter-template.yaml]]`
-- `[[../assets/few-shot-example]]`
-- `[[../references/writing-skills-core.md]]`
+- `父级agent套件模板.md`
+- `intention-skill模板.md`
+- `feature-skill模板.md`
+- `darwin接入模板.md`
 
-## Markdown 结构说明
-模板目录中的示例需要遵守统一的 Markdown 标题策略。
+## 选择规则
 
-- `README.md`、`SKILL.md`：默认保留单一 H1
-- 带 frontmatter 且属性已承载标题的样本、边界文件：默认不写正文总 H1
-
-具体规则见 `[[../references/markdown-format-rules.md]]`，最终收尾按 `[[../assets/skill-output-checklist.md]]` 自检。
+- 只需要一个普通 skill：先看 `feature-skill模板.md`
+- 需要父级 agent：先看 `父级agent套件模板.md`
+- 需要继续拆 intention / feature 两层：同时看 `intention-skill模板.md` 与 `feature-skill模板.md`
+- 需要真实 `add-skill` / `update-skill` 模板：去 `[[../feature-skills/模板类型判定/template/README.md]]`
+- 需要接入质量闭环：看 `darwin接入模板.md`

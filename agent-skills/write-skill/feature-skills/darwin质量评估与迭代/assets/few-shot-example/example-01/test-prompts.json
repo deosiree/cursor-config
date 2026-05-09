@@ -1,0 +1,16 @@
+[
+  {
+    "id": "baseline-evaluate-only",
+    "targetSkillPath": ".cursor/nebula-skills/gen-perms-apis/SKILL.md",
+    "mode": "evaluate-only",
+    "prompt": "评估 .cursor/nebula-skills/gen-perms-apis/SKILL.md 的技能质量，只做 baseline 评分，不修改文件。请输出 8 维评分、最弱维度、should-trigger 建议和受控试跑下一步。",
+    "expected": "输出 8 维评分表、最弱维度、eval_mode 和下一步建议。"
+  },
+  {
+    "id": "controlled-trial-dry-run",
+    "targetSkillPath": ".cursor/nebula-skills/gen-perms-apis/SKILL.md",
+    "mode": "controlled-trial",
+    "prompt": "对 .cursor/nebula-skills/gen-perms-apis/SKILL.md 做一次受控试跑。只跑 1 个 skill，允许 dry_run，不进入自动 git 提交。请设计 2 条测试提示词，并给出 baseline 记录格式。",
+    "expected": "输出测试提示词、baseline 记录、eval_mode=dry_run 和是否建议进入 optimize。"
+  }
+]

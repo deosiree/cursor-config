@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.trae
+node_modules
+dist
+dist-ssr
+*.local
+*.tsbuildinfo
+.eslintcache
+.cache/
+.vite/
+.turbo/
+.parcel-cache/
+.sass-cache/
+
+
+# git worktrees（本地隔离工作区，勿提交）
+.worktrees/
+
+# 打包
+cloud/*
+cloud2/*
+
+# 临时/备份目录（勿提交）
+src/views/login_bak/
+src/types/auto-imports.d.ts
+
+# 本地覆盖（仅自己使用，勿提交；真实 token 等敏感信息放这里）
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.test.ts
+types/auto-imports.d.ts
+
+src/types/auto-imports.d.ts
+
+docs/

@@ -1,0 +1,24 @@
+{
+  "skill_name": "darwin质量评估与迭代",
+  "evals": [
+    {
+      "id": "should-trigger-darwin-feature",
+      "category": "should_trigger",
+      "prompt": "结构和 Markdown 都收尾了，现在进入 Darwin 评估。",
+      "expected_output": "应进入 Darwin 质量评估节点。",
+      "assertions": [
+        "输出中提到 baseline 或 trial",
+        "输出中提到 keep 或 revert"
+      ]
+    },
+    {
+      "id": "should-not-trigger-too-early",
+      "category": "should_not_trigger",
+      "prompt": "现在很多节点还只有 README 和 SKILL，直接帮我跑 Darwin。",
+      "expected_output": "结构未齐时不应直接进入 Darwin。",
+      "assertions": [
+        "应先指出前置条件未满足"
+      ]
+    }
+  ]
+}

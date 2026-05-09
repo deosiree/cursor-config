@@ -1,0 +1,24 @@
+{
+  "skill_name": "策略-升级旧skill",
+  "evals": [
+    {
+      "id": "should-trigger-upgrade-strategy",
+      "category": "should_trigger",
+      "prompt": "这个旧 skill 太薄了，先帮我决定该怎么升级。",
+      "expected_output": "应进入升级旧 skill 节点。",
+      "assertions": [
+        "输出中提到最小升级路径",
+        "输出中提到下一步节点"
+      ]
+    },
+    {
+      "id": "should-not-trigger-new-skill",
+      "category": "should_not_trigger",
+      "prompt": "我要从 0 新建一个 skill。",
+      "expected_output": "这应进入新建 skill 节点。",
+      "assertions": [
+        "不应误判为旧 skill 升级"
+      ]
+    }
+  ]
+}

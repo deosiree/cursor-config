@@ -1,0 +1,15 @@
+{
+  "skill_name": "真实历史样本型模板-写snapshot",
+  "evals": [
+    {
+      "id": "should-trigger-snapshot-template",
+      "category": "should_trigger",
+      "prompt": "这是新增型能力，而且已经有完整成品了，帮我落一个 template/snapshot。",
+      "expected_output": "应进入写snapshot节点，并给出完整成品模板。",
+      "assertions": [
+        "输出中提到 template/snapshot",
+        "输出中提到 完整成品"
+      ]
+    }
+  ]
+}

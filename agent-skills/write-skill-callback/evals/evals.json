@@ -1,0 +1,119 @@
+{
+  "skill_name": "写skill",
+  "evals": [
+    {
+      "id": "should-trigger-1",
+      "category": "should_trigger",
+      "prompt": "使用 $write-skill 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
+      "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、template、assets、references、evals 结构。",
+      "assertions": [
+        "输出中提到 README.md 和 SKILL.md",
+        "输出中提到 template 目录",
+        "输出中提到 assets 目录",
+        "输出中提到 RED、GREEN、REFACTOR"
+      ]
+    },
+    {
+      "id": "should-trigger-2",
+      "category": "should_trigger",
+      "prompt": "把一个只有 SKILL.md 的旧 skill 改造成带 few-shot 示例和验证材料的完整套件。",
+      "expected_output": "输出应识别为 skill 改造任务，并要求补齐前后示例、agent 素材与验证材料。",
+      "assertions": [
+        "输出中提到 before/after 或 mvp/snapshot",
+        "输出中提到 few-shot 示例",
+        "输出中提到 evals 或触发测试",
+        "输出中提到 README.md"
+      ]
+    },
+    {
+      "id": "should-trigger-3",
+      "category": "should_trigger",
+      "prompt": "使用 $write-skill 优化一个中文 skill，自带代码改造示例，主 SKILL.md 不要太长，并在文档中用双链引用 template 和 references。",
+      "expected_output": "输出应识别为更新型 skill 任务，并将大段示例下沉到 template，使用双链引用 supporting files。",
+      "assertions": [
+        "输出中提到 template/before 或 template/after",
+        "输出中提到双链引用",
+        "输出中提到主 SKILL.md 保持精简"
+      ]
+    },
+    {
+      "id": "should-not-trigger-1",
+      "category": "should_not_trigger",
+      "prompt": "帮我修复 Login.vue 的一个按钮点击无响应问题。",
+      "expected_output": "这不是写 skill 任务，不应触发 write-skill。",
+      "assertions": [
+        "不应把任务重写为 skill 设计任务"
+      ]
+    },
+    {
+      "id": "should-not-trigger-2",
+      "category": "should_not_trigger",
+      "prompt": "请把这个 Markdown 文档翻译成中文。",
+      "expected_output": "这属于翻译任务，不应触发 write-skill。",
+      "assertions": [
+        "不应输出 skill 目录结构"
+      ]
+    },
+    {
+      "id": "should-reject-hollow-skill-docs",
+      "category": "should_trigger",
+      "prompt": "这个 skill 套件目录齐了，但主 README 和 SKILL 基本只剩标题和一句作用说明。请按 callback 规则检查是否合格。",
+      "expected_output": "应识别为空心化验收场景，并要求补主文档任务、输入、输出、边界或示例。",
+      "assertions": [
+        "输出中提到 README.md 与 SKILL.md 的主文档缺口",
+        "输出中提到任务、输入、输出、边界或示例至少一类缺失",
+        "输出中不应把目录齐全误判为已经合格"
+      ]
+    },
+    {
+      "id": "should-require-readme-and-skill-examples",
+      "category": "should_trigger",
+      "prompt": "这个 skill 的 supporting files 很全，但 README 和 SKILL 都没写使用示例。请按 callback 规范验收。",
+      "expected_output": "应指出 README 与 SKILL 都必须有使用示例，当前不能通过验收。",
+      "assertions": [
+        "输出中提到 README.md 与 SKILL.md 都必须有使用示例",
+        "输出中提到当前不能通过验收"
+      ]
+    },
+    {
+      "id": "should-reject-over-delegation-to-assets",
+      "category": "should_trigger",
+      "prompt": "主文档我想尽量删短，任务说明、输出字段和边界条件都放到 assets/few-shot 里就行。",
+      "expected_output": "应拒绝这种过度下沉，指出主文档仍需保留摘要级任务、输出与边界。",
+      "assertions": [
+        "输出中提到不能把任务说明、输出字段、边界条件全部下沉",
+        "输出中提到主文档仍需保留摘要级内容"
+      ]
+    },
+    {
+      "id": "should-enforce-human-vs-agent-layering",
+      "category": "should_trigger",
+      "prompt": "我打算把给人看的完整示例也都塞进 assets，template 可以空着。",
+      "expected_output": "应指出 template 与 assets 的职责分层被混淆，不能通过 callback 验收。",
+      "assertions": [
+        "输出中提到 template 给人看、assets 给 agent 看",
+        "输出中提到资源分层混淆"
+      ]
+    },
+    {
+      "id": "should-reject-hollow-template-after",
+      "category": "should_trigger",
+      "prompt": "这个 skill 的 template/after 只有 README 和 SKILL 说明，没有任何真实样本文件。请按 callback 规则验收。",
+      "expected_output": "应指出 template/after 仍是说明壳，当前不能通过验收。",
+      "assertions": [
+        "输出中提到 template/after 只有说明壳或缺真实样本",
+        "输出中提到不能通过验收或 needs_fix"
+      ]
+    },
+    {
+      "id": "should-allow-hollow-before-only-for-hollow-doc-audit",
+      "category": "should_trigger",
+      "prompt": "主文档反空心化验收这个节点自身的 before 保留为空心问题态，其他节点的 before 都必须是真实失败样本。请按 callback 规则判断这条约定是否合理。",
+      "expected_output": "应接受这个例外约定，同时强调它只适用于主文档反空心化验收自身。",
+      "assertions": [
+        "输出中提到这是主文档反空心化验收的特例",
+        "输出中提到其他节点 before 仍需是真实失败样本"
+      ]
+    }
+  ]
+}

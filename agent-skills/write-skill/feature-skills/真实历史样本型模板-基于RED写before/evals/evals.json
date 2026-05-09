@@ -1,0 +1,15 @@
+{
+  "skill_name": "真实历史样本型模板-基于RED写before",
+  "evals": [
+    {
+      "id": "should-trigger-red-before",
+      "category": "should_trigger",
+      "prompt": "我已经有真实失败样本了，帮我落成 template/before。",
+      "expected_output": "应进入基于RED写before节点，并强调真实失败样本来源。",
+      "assertions": [
+        "输出中提到 template/before",
+        "输出中提到 真实失败样本 或 历史版本"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "skill_name": "策略-新建skill",
+  "evals": [
+    {
+      "id": "should-trigger-new-skill-strategy",
+      "category": "should_trigger",
+      "prompt": "我要新建一个 skill，先帮我决定用单 skill 还是 agent 套件。",
+      "expected_output": "应进入新建策略节点。",
+      "assertions": [
+        "输出中提到结构类型",
+        "输出中提到命名或模板建议"
+      ]
+    },
+    {
+      "id": "should-not-trigger-upgrade",
+      "category": "should_not_trigger",
+      "prompt": "已有旧 skill，现在要升级它。",
+      "expected_output": "这应进入升级旧 skill 节点。",
+      "assertions": [
+        "不应把旧 skill 升级误判成新建 skill"
+      ]
+    }
+  ]
+}

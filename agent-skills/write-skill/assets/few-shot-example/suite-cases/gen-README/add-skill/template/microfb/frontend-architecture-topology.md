@@ -1,0 +1,96 @@
+# microfb（基座）MVP：前端架构拓扑图
+
+本文档目标：基于 `microfb` 源码事实，输出可版本化的 **静态架构拓扑图**（C4 Container / Component），用于团队对齐边界、依赖方向与关键链路入口。
+
+配套索引：
+- `docs/mvp/flow-symbol-map.md`：将图中关键变量/函数定位到源码（文件 → 导出名/读写点）
+
+## 1. 结论先行（MVP 范围）
+
+- **主容器**：`microfb`（Vue3 + Vite）作为 qiankun 主应用，挂载并管理多个子应用（示例：`Apex`）。
+- **权限链路**：路由守卫 `setupPermission()` 负责“未登录拦截 → 登录跳转 → 动态路由生成 → 入口菜单落点”。
+- **菜单/路由生成**：`permission.store.generateRoutes()` 以“菜单缓存（v2）优先、v1 回退”为原则，生成动态路由并 `router.addRoute()` 注入。
+- **登录后置**：`user.store.finalizeV2Login()` 负责“写入 userInfo → 解析/兜底菜单树 → 写入菜单缓存 → 同步 props 到子应用 → 跳转首个菜单”。
+- **微前端注册**：`registerApps()` 在 `router.isReady()` 后启动 qiankun，避免容器未渲染导致挂载失败。
+
+## 2. 静态拓扑
+
+
+```mermaid
+graph TB
+    user((用户))
+    
+    subgraph microfb_boundary [microfb 主应用]
+        web[microfb WebApp]
+        storage[(Browser Storage)]
+    end
+
+    seccenter[SecCenter API]
+    subapps[Qiankun 子应用]
+
+    user -- "HTTPS 访问" --> web
+    
+    %% 这里改用 <br/>，不要用列表符号
+    web -- "读写缓存数据<br/>(userInfo, 菜单)" --> storage
+    web -- "Auth/Menu 请求<br/>(Gateway 分流)" --> seccenter
+    web -- "注册并透传 Props<br/>(qiankun)" --> subapps
+```
+
+### 源码证据（对应边与节点）
+
+- **基座启动与 qiankun 启动时机**：`src/main.ts`
+- **路由 base（部署在子路径）**：`src/router/index.ts` → `getAppBase()`（`src/gateway/route-base.gateway.ts`）
+- **路由守卫/登录跳转/动态路由注入**：`src/plugins/permission.ts`
+- **动态路由生成（菜单缓存优先、v1 回退）**：`src/store/modules/permission.store.ts`
+- **登录后置初始化与子应用 props 同步**：`src/store/modules/user/user.store.ts`（`finalizeV2Login()`）
+- **qiankun 注册与 props 透传（menuList/userInfo）**：`src/plugins/qiankun/apps.ts`
+- **认证网关（v1/v2 分流与降级）**：`src/gateway/auth.gateway.ts`
+
+## 3. 静态拓扑（聚焦“鉴权-菜单-路由-微前端”）
+
+```mermaid
+flowchart TD
+    %% 整体边界
+    subgraph web [microfb WebApp 内部组件]
+        direction TB
+        
+        app_entry[<b>App Bootstrap</b><br/>src/main.ts<br/>装配、注册、启动]
+        route[<b>Router</b><br/>src/router/<br/>静态路由与 Base 配置]
+        guard[<b>Auth Guard</b><br/>permission.ts<br/>路由守卫与拦截]
+        
+        subgraph stores [Store 层]
+            pinia[Pinia 聚合]
+            userStore[UserStore<br/>登录/登出/菜单同步]
+            permStore[PermissionStore<br/>动态路由生成]
+        end
+        
+        menuRepo[<b>Menu Repo</b><br/>菜单持久化与版本管理]
+        qk[<b>Qiankun Host</b><br/>子应用注册与 Props 透传]
+        gateway[<b>API Gateway</b><br/>网关请求与版本兜底]
+        authUtil[<b>Auth Utility</b><br/>登录态判断工具]
+    end
+
+    %% 核心链路
+    app_entry -->|app.use| route
+    app_entry -->|app.use| pinia
+    app_entry -->|setup| guard
+    app_entry -->|router.isReady| qk
+
+    guard -->|check| authUtil
+    guard -->|load| permStore
+    guard -->|reset| userStore
+
+    permStore -->|read| menuRepo
+    userStore -->|write/clear| menuRepo
+    userStore -->|sync| qk
+    userStore -->|call| gateway
+
+    qk -->|mount props| menuRepo
+```
+
+## 4. MVP 的“边界约定”（先写成文字，后续可固化为依赖规则）
+
+- **组件禁止直连 API 实现**：页面/组件只调用 store 或 composable；HTTP 细节仅在 `src/api/**`。
+- **登录态来源**：以 `Cookie-Session` 为主，前端不保存 token（`finalizeV2Login` 已体现），仅缓存 userInfo/menu。
+- **子应用数据同步**：统一通过 `setMicroAppProps()` 透传 `menuList/userInfo/menuVersion/routerBase`，避免子应用重复拉取或产生版本漂移。
+

@@ -2,56 +2,140 @@
   "skill_name": "写skill",
   "evals": [
     {
-      "id": "should-trigger-1",
+      "id": "should-trigger-upgrade-to-agent",
       "category": "should_trigger",
-      "prompt": "使用 $write-skill 为一个新的中文代码审查 skill 设计 README、SKILL、assets 和触发测试。",
-      "expected_output": "输出应明确进入 skill 设计流程，并包含 README、SKILL、template、assets、references、evals 结构。",
+      "prompt": "使用 $写skill 把一个旧单文件 skill 升级成父级 agent 套件，并把主 SKILL.md 瘦身。",
+      "expected_output": "应识别为旧 skill 升级与 agent 化任务，并提到 intention-skills、feature-skills 和主 skill 瘦身。",
       "assertions": [
-        "输出中提到 README.md 和 SKILL.md",
-        "输出中提到 template 目录",
-        "输出中提到 assets 目录",
-        "输出中提到 RED、GREEN、REFACTOR"
+        "输出中提到 intention-skills",
+        "输出中提到 feature-skills",
+        "输出中提到主 SKILL.md 只做路由"
       ]
     },
     {
-      "id": "should-trigger-2",
+      "id": "should-trigger-intention-feature-split",
       "category": "should_trigger",
-      "prompt": "把一个只有 SKILL.md 的旧 skill 改造成带 few-shot 示例和验证材料的完整套件。",
-      "expected_output": "输出应识别为 skill 改造任务，并要求补齐前后示例、agent 素材与验证材料。",
+      "prompt": "继续优化一个已有 skill 套件，把平铺子skill拆成意图层和功能层。",
+      "expected_output": "应识别为 intention / feature 拆层任务。",
       "assertions": [
-        "输出中提到 before/after 或 mvp/snapshot",
-        "输出中提到 few-shot 示例",
-        "输出中提到 evals 或触发测试",
-        "输出中提到 README.md"
+        "输出中提到 intention-skills",
+        "输出中提到 feature-skills",
+        "输出中提到拆层条件"
       ]
     },
     {
-      "id": "should-trigger-3",
+      "id": "should-trigger-darwin-loop",
       "category": "should_trigger",
-      "prompt": "使用 $write-skill 优化一个中文 skill，自带代码改造示例，主 SKILL.md 不要太长，并在文档中用双链引用 template 和 references。",
-      "expected_output": "输出应识别为更新型 skill 任务，并将大段示例下沉到 template，使用双链引用 supporting files。",
+      "prompt": "skill 写完后我还要继续评估质量、试跑并优化，请把 Darwin 闭环也接进去。",
+      "expected_output": "应识别为 Darwin 质量迭代任务，并给出桥接外部 Darwin skill 的路径。",
       "assertions": [
-        "输出中提到 template/before 或 template/after",
-        "输出中提到双链引用",
-        "输出中提到主 SKILL.md 保持精简"
+        "输出中提到 darwin-skill",
+        "输出中提到 baseline 或 controlled trial",
+        "输出中提到桥接、人工介入或内部降级"
       ]
     },
     {
-      "id": "should-not-trigger-1",
+      "id": "should-trigger-markdown-before-darwin",
+      "category": "should_trigger",
+      "prompt": "先别急着跑 Darwin，这个 skill 套件的 Markdown 总是违反 markdownlint，先统一做 Markdown 收尾。",
+      "expected_output": "应先进入 Markdown 收尾阶段，而不是直接进入 Darwin。",
+      "assertions": [
+        "输出中提到 Markdown格式规范收尾",
+        "输出中提到先收尾再 Darwin"
+      ]
+    },
+    {
+      "id": "should-not-trigger-biz-code-fix",
       "category": "should_not_trigger",
-      "prompt": "帮我修复 Login.vue 的一个按钮点击无响应问题。",
-      "expected_output": "这不是写 skill 任务，不应触发 write-skill。",
+      "prompt": "帮我修复 UserForm.vue 的提交按钮无响应问题。",
+      "expected_output": "这不是 skill 套件任务，不应触发写skill。",
       "assertions": [
-        "不应把任务重写为 skill 设计任务"
+        "不应输出 skill 套件目录结构"
       ]
     },
     {
-      "id": "should-not-trigger-2",
+      "id": "should-not-trigger-readme-polish",
       "category": "should_not_trigger",
-      "prompt": "请把这个 Markdown 文档翻译成中文。",
-      "expected_output": "这属于翻译任务，不应触发 write-skill。",
+      "prompt": "请把这个 README 的语句润色得更自然一些。",
+      "expected_output": "这只是文案润色，不应触发写skill主流程。",
       "assertions": [
-        "不应输出 skill 目录结构"
+        "不应输出 intention-skills 或 feature-skills 方案"
+      ]
+    },
+    {
+      "id": "should-not-trigger-darwin-too-early",
+      "category": "should_not_trigger",
+      "prompt": "现在很多子skill 还只有 README 和 SKILL，直接帮我跑一轮 Darwin 评分。",
+      "expected_output": "结构未齐时不应直接进入 Darwin，而应先补结构和内容。",
+      "assertions": [
+        "应指出结构未齐",
+        "不应直接进入 Darwin 阶段"
+      ]
+    },
+    {
+      "id": "should-trigger-evaluate-only-with-darwin-present",
+      "category": "should_trigger",
+      "prompt": "当前工作区已经有 .cursor/darwin-skill。使用 $写skill 评估这个 skill 套件质量，只做 baseline，不进入优化。",
+      "expected_output": "应进入 Darwin 质量评估分支，但收敛在 evaluate-only，不直接展开优化循环。",
+      "assertions": [
+        "输出中提到 darwin-skill 或 Darwin 质量评估",
+        "输出中提到 evaluate-only、baseline 或只评估不优化",
+        "不应直接进入 optimize 或 keep / revert 执行"
+      ]
+    },
+    {
+      "id": "should-gate-on-missing-target-path",
+      "category": "should_trigger",
+      "prompt": "我想评估一下最近写的那个中文 skill，你先帮我看看质量。",
+      "expected_output": "缺少稳定 targetPath 时，应先触发人工门禁，而不是直接泛化到整仓扫描或展开完整改造流程。",
+      "assertions": [
+        "输出中提到 missingFacts 或 humanGateReason",
+        "输出中提到 targetPath 缺失或目标 skill 无法稳定定位",
+        "不应直接输出完整 intention-skills / feature-skills 改造方案"
+      ]
+    },
+    {
+      "id": "should-focus-main-goal-in-mixed-scope-request",
+      "category": "should_trigger",
+      "prompt": "使用 $写skill 优化这个 skill 套件，顺手把 README 文字也润色一下。",
+      "expected_output": "应以 skill 套件改造为主任务，README 润色只能作为从属事项，不能把请求误判为普通文案润色。",
+      "assertions": [
+        "输出中提到 skill 套件改造或子skill 路由",
+        "不应把任务降级成单纯 README 润色",
+        "必要时应提示混合范围并收敛主目标"
+      ]
+    },
+    {
+      "id": "should-route-single-feature-only-request",
+      "category": "should_trigger",
+      "prompt": "这个 skill 套件主要缺 few-shot 和 evals，使用 $写skill 只补这两块，不要重讲整套流程。",
+      "expected_output": "应收敛到 feature 节点，优先处理 few-shot 与 evals 补强，而不是重复展开整套总流程。",
+      "assertions": [
+        "输出中提到 few-shot、evals 或对应 feature 节点",
+        "输出中提到只补这两块或最少必要子skill",
+        "不应重复展开完整标准阶段说明"
+      ]
+    },
+    {
+      "id": "should-route-hollow-template-gate-to-intention",
+      "category": "should_trigger",
+      "prompt": "这个 skill 的 template/after 只有 README 和 SKILL 说明，没有真实样本。先判断模板是不是空心，再决定怎么修。",
+      "expected_output": "应优先命中主文档反空心化验收 intention，并指出 template/after 说明壳不能通过验收。",
+      "assertions": [
+        "输出中提到 主文档反空心化验收 或 intention 门禁",
+        "输出中提到 template/after 只有说明壳或缺真实样本",
+        "不应直接把问题降级成普通 few-shot 回填"
+      ]
+    },
+    {
+      "id": "should-route-real-history-template-workers",
+      "category": "should_trigger",
+      "prompt": "我已经有真实历史失败样本和修复后成品，使用 $写skill 帮我分别落成 before 和 after 模板实体。",
+      "expected_output": "应路由到真实历史样本型模板相关 feature，而不是泛化到抽象模板说明。",
+      "assertions": [
+        "输出中提到 基于RED写before 或 基于GREEN写after",
+        "输出中提到 真实历史样本 或 模板实体",
+        "不应只输出 README 级模板说明"
       ]
     }
   ]

@@ -1,100 +1,76 @@
-# writing-skills 核心原则整理
+# 写skill 核心规则
 
-## 这份文档的作用
-这不是对 `writing-skills` 的逐段翻译，而是为中文仓库提炼它最关键的工作方法，供 `write-skill` 在需要时按需引用。
+## 1. 主 skill 默认只做 agent
+当一个 skill 套件同时拥有多个真正独立的子能力时，主 `SKILL.md` 应升级为父级 agent：
+- 负责分类
+- 负责路由
+- 负责人工门禁
+- 负责质量闭环入口
 
-## 1. 先看失败，再写 skill
-`writing-skills` 的第一原则不是“先写出一个看起来完整的 skill”，而是先观察没有 skill 时 agent 会如何失败。
+不要让主 skill 同时承载：
+- 分析
+- 策略
+- 模板判定
+- few-shot 组织
+- Darwin 试跑细节
 
-原因：
-- 只有真实失败，才能暴露真正需要约束的点。
-- 没看过失败，就容易写成泛泛的“最佳实践合集”。
-- skill 的价值不在于写得长，而在于能纠正会重复发生的错误。
+## 2. 何时拆成 intention / feature 两层
+如果当前套件同时需要：
+- 现状分析
+- 策略判断
+- 迁移编排
+- 真实功能落地
 
-## 2. RED / GREEN / REFACTOR 仍然成立
-### RED
-- 先设计压力场景或真实任务。
-- 观察 agent 在没有 skill 时的表现。
-- 记录它遗漏了什么、误判了什么、用什么借口跳步。
+则优先拆成：
+- `intention-skills/`
+- `feature-skills/`
 
-### GREEN
-- 只针对已观察到的问题写最小可用 skill。
-- 不要一开始就为所有假想情况堆内容。
+## 3. 何时需要编排型节点
+如果流程里存在以下任一复杂度：
+- 多阶段判断
+- 方案比较
+- 质量门禁
+- keep / revert 决策
+- 外部 skill 桥接与回退
 
-### REFACTOR
-- 测试后如果还有新漏洞，就继续补。
-- 新漏洞包括：误触发、不触发、输出格式漂移、跳步、自我合理化。
+则不要继续挤在主 `SKILL.md`，而应新增编排型节点。
 
-## 3. description 的本质是触发器
-`description` 不是摘要，它首先决定 skill 会不会被加载。
+## 4. 命名规则
+- 优先中文功能名
+- 优先表达“它补什么能力”
+- 不用 `commit-*`
+- 不用 `feature-*`
+- 不用仓库专属、但没有功能语义的中间层名称
 
-写法要求：
-- 重点写“何时使用”
-- 尽量贴近用户意图，而不是内部实现细节
-- 用中文时也要覆盖常见触发语义
+## 5. 模板规则
+- 新增型能力：优先 `mvp/snapshot`
+- 更新型能力：优先 `before/after`
+- 若使用历史版本示例，必须以真实历史事实为准，不允许伪造前后态
 
-## 4. rationalization / loophole / red flags
-### rationalization
-agent 在压力下会为跳过规则找借口，例如：
-- “这个很简单，不需要先做测试”
-- “我先写出来再补验证也一样”
+## 6. few-shot 规则
+如果多个历史案例都在解决同一个功能名：
+- 保留一个功能型 skill
+- 每个历史案例都作为这个 skill 下的独立 few-shot
 
-### loophole
-如果规则只写得很抽象，agent 会找到可钻的空子。
+## 7. Darwin 质量闭环规则
+先写出最小可用套件，不等于任务完成。
 
-### red flags
-把高风险信号列成清单，能帮助 agent 在执行中及时自检，例如：
-- 还没看失败基线就开始写正文
-- 只写结论，不写触发条件
-- 没有 should-not-trigger 用例
+默认还要继续经历：
+1. baseline
+2. controlled trial
+3. optimize
+4. keep / revert
 
-## 5. 主文件只放高频规则
-长篇理论、背景解释、外部参考不要全部堆进主 `SKILL.md`。
+优先桥接工作区下的 `./.cursor/darwin-skill`；缺失时才人工索取，再退化到内部降级方案。
 
-推荐做法：
-- 主 `SKILL.md`：放每次都必须读的规则
-- `README.md`：放维护者说明
-- `template/`：放给人类看的完整示例、`before/after`、`mvp/snapshot`
-- `assets/`：放给 agent 按需读取的 supporting files
-- `references/`：放长说明与补充材料
+## 8. Markdown 收尾规则
+`references/markdown-format-rules.md` 只是长说明，不应停留在被动参考。
 
-这条可以视为主 `SKILL.md` 的 token 预算规则：
-- 主文件只保留触发条件、核心流程、硬约束、关键决策表
-- 大段示例和迁移清单下沉，不要堆进主文件正文
+当套件进入收尾阶段时，应显式进入：
+- `[[../feature-skills/Markdown格式规范收尾/SKILL.md]]`
 
-## 6. few-shot 应该给成品，不只给空模板
-空模板只能告诉使用者“有哪些栏位”，不能展示“一个合格成品长什么样”。
-
-因此更稳妥的做法是同时提供：
-- 空模板
-- 完整 few-shot 示例
-
-如果任务本质是“代码/文档更新”，更优先提供 `before/after` 或 `mvp/snapshot`，而不是只给 `README-template.md` / `SKILL-template.md`。
-
-## 7. 验证不只看输出，还要看触发
-一个 skill 即使内容写得不错，如果触发不了，等于没有价值。
-
-至少要验证两件事：
-- should-trigger 情况下能否被稳定触发
-- should-not-trigger 情况下会不会误触发
-
-建议每条用例重复运行 3 次，避免偶然性误判。
-
-## 8. frontmatter 可以有两种模式
-对于中文仓库内部长期复用的 skill，可以优先采用“本地中文模式”：
-- `name` 用中文
-- `description` 用中文触发描述
-
-如果目标是对外分享、规范校验或兼容通用 Agent Skills 生态，则切换到“对外兼容模式”：
-- `name` 用英文 slug
-- `description` 用规范兼容描述
-
-关键不是二选一，而是要在交付物里明确声明本次采用的是哪一种模式。
-
-## 9. `assets/` 不是官方唯一强制目录
-本地 `writing-skills` 提供的是 supporting files 思路，而不是强制所有资源都必须放在 `assets/`。
-
-因此更稳妥的口径是：
-- 官方要求 `SKILL.md` 必需，并允许 supporting files
-- `assets/` 是团队可选约定，适合存放 agent 侧素材
-- `template/` 是团队可选约定，适合存放给人类看的前后示例和任务模板
+执行顺序固定为：
+1. 结构补齐
+2. 内容补齐
+3. Markdown 收尾
+4. Darwin 评估

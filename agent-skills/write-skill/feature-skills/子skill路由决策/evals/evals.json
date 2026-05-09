@@ -1,0 +1,24 @@
+{
+  "skill_name": "子skill路由决策",
+  "evals": [
+    {
+      "id": "should-trigger-feature-routing",
+      "category": "should_trigger",
+      "prompt": "当前已经确定要升级 skill，但我想知道先走哪几个功能节点最合适。",
+      "expected_output": "应进入子skill 路由决策节点。",
+      "assertions": [
+        "输出中提到最少节点组合",
+        "输出中提到顺序"
+      ]
+    },
+    {
+      "id": "should-not-trigger-intention-analysis",
+      "category": "should_not_trigger",
+      "prompt": "先帮我判断这个 skill 当前是什么状态。",
+      "expected_output": "这应进入分析现状节点。",
+      "assertions": [
+        "不应把现状分析误判成 feature 路由"
+      ]
+    }
+  ]
+}

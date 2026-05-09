@@ -1,0 +1,24 @@
+{
+  "skill_name": "历史版本回填为few-shot",
+  "evals": [
+    {
+      "id": "should-trigger-fewshot-backfill",
+      "category": "should_trigger",
+      "prompt": "我已经有几份真实历史案例了，帮我回填成模板和 few-shot。",
+      "expected_output": "应进入历史版本回填节点。",
+      "assertions": [
+        "输出中提到模板和 few-shot",
+        "输出中提到来源说明"
+      ]
+    },
+    {
+      "id": "should-not-trigger-template-only",
+      "category": "should_not_trigger",
+      "prompt": "我只是想先判断该用哪种模板类型。",
+      "expected_output": "这应进入模板类型判定节点。",
+      "assertions": [
+        "不应把模板判定误判成 few-shot 回填"
+      ]
+    }
+  ]
+}

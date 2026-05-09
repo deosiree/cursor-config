@@ -1,0 +1,24 @@
+{
+  "skill_name": "子skill上提与中间层删除",
+  "evals": [
+    {
+      "id": "should-trigger-flattening",
+      "category": "should_trigger",
+      "prompt": "这个套件里有一层目录只是在多包一层，帮我把真正子skill上提。",
+      "expected_output": "应进入子skill 上提与中间层删除节点。",
+      "assertions": [
+        "输出中提到中间层删除或上提",
+        "输出中提到判断职责"
+      ]
+    },
+    {
+      "id": "should-not-trigger-darwin",
+      "category": "should_not_trigger",
+      "prompt": "我想先跑一轮 Darwin 质量评估。",
+      "expected_output": "这应进入质量迭代编排或 Darwin 节点。",
+      "assertions": [
+        "不应把质量评估误判成结构上提"
+      ]
+    }
+  ]
+}

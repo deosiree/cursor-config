@@ -1,0 +1,24 @@
+{
+  "skill_name": "分析-skill现状",
+  "evals": [
+    {
+      "id": "should-trigger-analyze",
+      "category": "should_trigger",
+      "prompt": "先帮我判断这个 skill 套件现在是什么状态，再决定下一步改造路径。",
+      "expected_output": "应先做结构诊断，而不是直接改文件。",
+      "assertions": [
+        "输出中提到当前结构判定",
+        "输出中提到下一步推荐"
+      ]
+    },
+    {
+      "id": "should-not-trigger-direct-build",
+      "category": "should_not_trigger",
+      "prompt": "直接给我把 Markdown 空行修掉。",
+      "expected_output": "这不是分析现状节点的主任务。",
+      "assertions": [
+        "不应把任务当作纯分析节点收下"
+      ]
+    }
+  ]
+}

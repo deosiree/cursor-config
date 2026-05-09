@@ -1,0 +1,15 @@
+{
+  "skill_name": "真实历史样本型模板-基于GREEN写after",
+  "evals": [
+    {
+      "id": "should-trigger-green-after",
+      "category": "should_trigger",
+      "prompt": "我已经有修复后的真实成品了，帮我落成 template/after。",
+      "expected_output": "应进入基于GREEN写after节点，并强调真实成品样本来源。",
+      "assertions": [
+        "输出中提到 template/after",
+        "输出中提到 真实成品 或 历史成功样本"
+      ]
+    }
+  ]
+}

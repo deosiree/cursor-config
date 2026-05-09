@@ -1,145 +1,187 @@
-# write-skill
+# 写skill
 
 ## 定位
-`write-skill` 是一个面向中文仓库的 meta-skill，用来编写、改造和标准化新的 skill 套件。
+`写skill` 已从“单体 meta-skill”升级为“父级 agent + 意图层 + 功能层 + Darwin 质量闭环”的中文套件。
 
-它继承 [`writing-skills`](C:\Users\Administrator\.agents\skills\writing-skills\SKILL.md) 的通用 TDD 主线，不替代其方法论；它额外解决的是中文团队常见的交付不一致问题：有的人只写 `SKILL.md`，有的人缺少说明文档，有的人没有模板资产和验证材料。
+它吸收了三类已验证经验：
+- `gen-README`：主 skill 应 agent 化，细节下沉到同级子skill。
+- `i18n-server`：当任务同时存在“意图判断”和“功能落地”时，应拆成 `intention-skills/` 与 `feature-skills/`。
+- `darwin-skill`：skill 写完不等于完成，还要评估、试跑、迭代优化。
 
-## 与 writing-skills 的关系
-- `writing-skills` 负责通用方法论：先看失败基线，再写 skill，再补漏洞。
-- `write-skill` 负责中文落地：固定目录结构、双层资源分工、few-shot 样例、触发测试与输出验收。
-
-换言之，`write-skill` 是 `writing-skills` 的中文增强交付版，而不是另一套新理论。
-
-## 固定目录结构
-使用本 skill 产出的目标 skill，默认按下列结构组织：
+## 当前结构
 
 ```text
-<skill-dir>/
+write-skill/
 ├── README.md
 ├── SKILL.md
+├── intention-skills/
+├── feature-skills/
 ├── template/
 ├── assets/
-│   ├── frontmatter-template.yaml
-│   ├── skill-output-checklist.md
-│   └── few-shot-example/
-│       ├── README.md
-│       └── SKILL.md
 ├── references/
-│   └── writing-skills-core.md
 └── evals/
-    └── evals.json
 ```
 
-## 每个文件的职责
-- `README.md`：给维护者读，解释 skill 定位、结构、输入输出、示例和验收方式。
-- `SKILL.md`：给 agent 读，保留每次激活都需要看到的核心执行规则；主文件应尽量短，只放高频规则。
-- `template/`：给人类读，放完整示例、更新示例、迁移清单、输入输出样例、`before/after`、`mvp/snapshot`。
-- `assets/`：给 agent 读，放 frontmatter 模板、few-shot、精简 checklist、触发辅助文档。
-- `references/`：放长说明和补充材料，避免主 `SKILL.md` 过重。
-- `evals/`：放触发测试与输出质量测试样例。
+## 目录职责
+- `SKILL.md`
+  - 父级 agent 入口。
+  - 只负责分类、路由、人工门禁、Darwin 入口。
+- `intention-skills/`
+  - 负责判断当前到底要做哪类 skill 改造。
+- `feature-skills/`
+  - 负责具体落地某一项能力。
+- `template/`
+  - 只放父级套件模板、分层模板与 Darwin 接入模板。
+- `assets/`
+  - 放 agent 辅助素材、few-shot 索引、检查清单。
+- `references/`
+  - 放方法论、案例说明、Darwin 集成策略。
+- `evals/`
+  - 放 should-trigger / should-not-trigger 与质量门禁用例。
 
-引用支持文件时，优先使用双链：
-- `[[template/README.md]]`
-- `[[template/before]]`
-- `[[assets/frontmatter-template.yaml]]`
+## 运行说明入口
+如果你需要的是“当前应该怎么执行这一套”，优先看：
+- `[[SKILL.md]]`
+- `[[references/write-skill-operating-guide.md]]`
+
+当前 README 主要保留长期背景、结构职责和演化边界，不再承接完整执行手册。
+
+## callback 约束基线
+当前分层版 `write-skill` 不是自由演化状态，它受 `write-skill-callback` 约束。
+
+约束来源：
+- `[[../write-skill-callback/SKILL.md]]`
+- `[[references/write-skill-callback-guardrails.md]]`
+
+这份基线要求至少满足：
+- 主 `SKILL.md` 保留 `RED`、`GREEN`、`REFACTOR`
+- 主 `SKILL.md` 与 `README.md` 都有使用示例
+- 子 skill 主文档不是空壳
+- 主文档能直接读到任务、输入、输出、边界和摘要级示例
+
+当前 `write-skill` 仍保留分层实现，但分层不能成为“把有效内容全部下沉”的借口。
+
+## 长期结构原则
+以下判断现在作为长期原则保留，而不是每次都在主入口重复展开：
+- 何时升级为父级 agent 套件
+- 何时继续拆成 `intention-skills/` 与 `feature-skills/`
+- 何时把质量门禁从 feature 升到 intention
+- 何时删除不承担判断职责的中间层
+
+对应规则入口：
+- `[[references/write-skill-operating-guide.md]]`
+- `[[references/write-skill-callback-guardrails.md]]`
 - `[[references/writing-skills-core.md]]`
 
-## frontmatter 语言约束
-对于面向中文仓库长期复用的 skill：
-- `SKILL.md` 的 `name` 必须是中文名称。
-- `SKILL.md` 的 `description` 必须是中文触发描述。
-- 不允许出现 `Use when ...`、英文目录名直接复用为 `name`、英文 few-shot 成品 frontmatter。
+## Darwin 与执行流
+Darwin 接入策略、执行顺序、人工门禁与回退策略不再在 README 里展开细编排。
 
-换句话说，frontmatter 不是例外区，它也属于需要中文化的正式交付内容。
+执行性说明统一下沉到：
+- `[[references/write-skill-operating-guide.md]]`
+- `[[intention-skills/编排-skill质量迭代/SKILL.md]]`
+- `[[feature-skills/darwin质量评估与迭代/SKILL.md]]`
 
-## frontmatter 双模式
-默认采用“本地中文模式”：
+## 子 skill 主文档最低要求
+每个 intention / feature 节点的主 `SKILL.md` 至少应包含：
+- 核心任务
+- 何时触发
+- 输入 / 前置条件
+- 输出字段
+- 边界
+- 使用示例
+
+每个节点的 `README.md` 至少应包含：
+- 作用说明
+- 适用场景
+- 与相邻节点边界
+- 模板 / few-shot / evals 入口
+- 使用示例
+
+## intention-skills
+- `[[intention-skills/分析-skill现状/SKILL.md]]`
+- `[[intention-skills/策略-新建skill/SKILL.md]]`
+- `[[intention-skills/策略-升级旧skill/SKILL.md]]`
+- `[[intention-skills/迁移-主skill改造为agent/SKILL.md]]`
+- `[[intention-skills/迁移-拆分意图层与功能层/SKILL.md]]`
+- `[[intention-skills/主文档反空心化验收/SKILL.md]]`
+- `[[intention-skills/编排-skill质量迭代/SKILL.md]]`
+
+## feature-skills
+- `[[feature-skills/子skill路由决策/SKILL.md]]`
+- `[[feature-skills/中文技能命名收敛/SKILL.md]]`
+- `[[feature-skills/子skill上提与中间层删除/SKILL.md]]`
+- `[[feature-skills/模板类型判定/SKILL.md]]`
+- `[[feature-skills/历史版本回填为few-shot/SKILL.md]]`
+- `[[feature-skills/主SKILL瘦身与下沉/SKILL.md]]`
+- `[[feature-skills/真实历史样本型模板-基于RED写before/SKILL.md]]`
+- `[[feature-skills/真实历史样本型模板-基于GREEN写after/SKILL.md]]`
+- `[[feature-skills/真实历史样本型模板-写mvp/SKILL.md]]`
+- `[[feature-skills/真实历史样本型模板-写snapshot/SKILL.md]]`
+- `[[feature-skills/references与evals补全/SKILL.md]]`
+- `[[feature-skills/Markdown格式规范收尾/SKILL.md]]`
+- `[[feature-skills/darwin质量评估与迭代/SKILL.md]]`
+
+## 模板实体化标准
+除 `模板类型判定` 外，单一模型节点不再保留 `template/update-skill` 或 `template/add-skill` 这一层。
+
+统一约定：
+- 更新型节点：直接使用 `template/before`、`template/after`
+- 新增型节点：直接使用 `template/mvp`、`template/snapshot`
+
+模板不是薄说明壳：
+- `before` 默认必须是错误态、失败产物或真实历史版本片段
+- `after` 必须是成品态，优先来自真实历史样本
+- 只有 `主文档反空心化验收` 这个节点自身，允许 `before` 表现为空心问题态
+- `template/<scenario>/` 除实体样本外，还必须有最小结构说明，解释样本如何从历史事实中抽取出来
+
+## 门禁能力
+反空心化门禁现在已升到 intention 层：
+- `[[intention-skills/主文档反空心化验收/SKILL.md]]`
+
+它只负责判定与回流，不替代：
+- `主SKILL瘦身与下沉`
+- `references与evals补全`
+- `真实历史样本型模板-*`
+
+## 样例来源
+当前套件正式把这些案例当作 few-shot 入口：
+- `gen-README`
+  - 旧套件升级为父级 agent + 同级子skill
+- `i18n-server`
+  - 从平铺子skill演化到 `intention-skills/` + `feature-skills/`
+- `darwin-skill`
+  - skill 写完后继续评估、试跑、迭代
+
+案例说明见：
+- `[[references/旧skill升级为agent-skill案例说明.md]]`
+- `[[references/意图层与功能层拆分案例说明.md]]`
+- `[[references/darwin评估闭环案例说明.md]]`
+
+## 当前维护重点
+- 主 `SKILL.md` 继续保持 agent 入口，不回流低频解释。
+- README 保留长期背景、结构职责与维护边界。
+- 更细的执行流和对照试跑结论继续下沉到 references / 子节点。
+
+## 使用示例
+```text
+使用 $写skill 优化 F:\Documents\Repertory\Sieyuan\nebula\.cursor\agent-skills\write-skill，
+把主 skill 保持为 agent 入口，新增 intention-skills 与 feature-skills，
+并接入 Darwin 质量评估闭环。
+```
+
+## 当前 frontmatter 模式
+本套件使用“本地中文模式”：
 - `name` 用中文
 - `description` 用中文触发描述
 
-如果用户明确要求“对外分享 / 规范校验 / 兼容通用 Agent Skills 生态”，则切换到“对外兼容模式”：
-- `name` 用英文 slug
-- `description` 用规范兼容描述
+## 主入口不再承载的内容
+以下内容保留在 README、references 或子skill 中，不再回流到主 `SKILL.md`：
+- 标准阶段顺序的展开说明
+- Refactor 信号与长期演化说明
+- Darwin 细编排与 keep / revert 细则
+- 长示例与 README 级背景说明
 
-无论采用哪种模式，都需要在目标 skill 的 `README.md` 中显式声明。
-
-## 生成流程
-1. 先做 failing test / baseline，记录没有该 skill 时 agent 会怎么失败。
-2. 收集真实上下文：触发场景、失败原因、常见误判、需要固定的输出格式。
-3. 编写最小可用 `SKILL.md`，只保留高频核心规则，并把大段示例下沉到 `[[template/]]` 或 `[[references/]]`。
-4. 补齐 `README.md`、`template/`、`assets/`、`references/`、`evals/`。
-5. 设计 should-trigger 与 should-not-trigger 用例，验证 skill 是否会被稳定触发。
-6. 根据测试中暴露的新漏洞继续 REFACTOR。
-
-## 格式约束的放置方式
-`write-skill` 的主任务是沉淀 skill 套件，不是承载整套 Markdown 规范。
-
-因此：
-- 主 `SKILL.md` 只保留一个简短入口和交付前自检提醒
-- 具体 Markdown 结构规则下沉到 `[[references/markdown-format-rules.md]]`
-- 最终收尾检查放在 `[[assets/skill-output-checklist.md]]`
-
-这样后续如果要继续扩展 Markdown 格式规则，不需要持续膨胀主 `SKILL.md`。
-
-## 为什么使用 `template + assets`
-官方通用规范强调的是 supporting files，而不是强制所有资源都必须放进 `assets/`。
-
-当前仓库选择：
-- `template/` 负责给人类看
-- `assets/` 负责给 agent 看
-
-这样更适合中文知识库里“人类评审 + agent 执行”的双重使用场景，也更贴近你们现有的 `before/after`、`mvp/snapshot`、迁移清单实践。
-
-## 验收清单
-- 存在 `README.md`、`SKILL.md`、`template/`、`assets/`
-- `SKILL.md` frontmatter 至少包含 `name`、`description`
-- `SKILL.md` 的 `name`、`description` 为中文正式文案，不是英文模板或英文成品
-- 已声明采用“本地中文模式”或“对外兼容模式”
-- `SKILL.md` 保留 `RED`、`GREEN`、`REFACTOR`
-- `README.md` 与 `SKILL.md` 都包含使用示例
-- `template/` 中有与任务类型匹配的示例
-- `assets/` 中有 frontmatter 模板、few-shot、agent 辅助文档
-- `references/` 有长说明，不把所有理论都塞进主 `SKILL.md`
-- 主 `SKILL.md` 不承载大段示例正文
-- 文内对支持文件的引用优先使用双链
-- `evals/evals.json` 同时覆盖 should-trigger 与 should-not-trigger
-
-## 使用示例
-### 示例 1：从 0 新建一个 skill
-
-```text
-使用 $write-skill 为“前端接口联调记录”设计一个中文 skill，目标目录为
-F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\api-debug-log
-```
-
-预期行为：
-- 先要求整理失败基线与触发场景
-- 再生成 `README.md`、`SKILL.md`、`template/`、`assets/`、`references/`、`evals/`
-- 产出的 `SKILL.md` 保留 TDD 主线
-
-### 示例 2：把单文件 skill 改造成规范套件
-
-```text
-使用 $write-skill 把
-F:\Documents\Repertory\Sieyuan\nebula\.cursor\mySkills\legacy-skill
-从只有 SKILL.md 的形式改造成 README + SKILL + template + assets + evals 结构，
-并提供 [[template/before]] / [[template/after]] 对照
-```
-
-预期行为：
-- 先识别原 skill 缺失的资源层
-- 保留原有有效规则
-- 补齐说明文档、前后示例、few-shot 样例和触发测试
-
-## 注意事项
-- 不要把 `writing-skills` 整篇内容原样复制到目标 `SKILL.md`
-- 不要把 frontmatter 当成“可以保留英文”的特殊区域
-- 不要只产出抽象模板，不给完整新增示例或前后对照
-- 不要只写“如何做”，不写“何时触发”和“如何验证”
-- 不要让 `description` 变成长摘要；它首先要服务于触发
-- 不要把给人看的示例和给 agent 的素材混在同一层目录
-
-## 结构自检入口
-- Markdown 结构规则：`[[references/markdown-format-rules.md]]`
-- 交付前检查清单：`[[assets/skill-output-checklist.md]]`
+但以下内容不能全部下沉：
+- 主套件和子 skill 的摘要级任务说明
+- 主文档中的输入 / 输出 / 边界
+- 主文档中的最小使用示例
