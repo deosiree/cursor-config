@@ -1,0 +1,20 @@
+{
+  "should_trigger": [
+    "评估这个 skill 的质量，只做 baseline 评分，不修改文件。",
+    "优化 .cursor/nebula-skills/gen-perms-apis/SKILL.md，但先做受控试跑。",
+    "帮我给这个 skill 打分，并设计 2 条测试提示词。",
+    "仅评估不改，看看这个 skill 适不适合继续优化。"
+  ],
+  "should_not_trigger": [
+    "帮我修一下 apex_dev/src/gateway/device/device.gateway.ts。",
+    "把这个 README 翻译成英文。",
+    "给这个 Vue 组件补权限点。",
+    "单纯帮我画一张 Mermaid 图。"
+  ],
+  "acceptance_checks": [
+    "主 SKILL.md 只保留执行规则，不混入展示层大段内容。",
+    "输出包含 baseline 分数、最弱维度、测试提示词和 nextAction。",
+    "首轮建议优先 evaluate-only 或 controlled-trial，而不是直接全量自动优化。",
+    "如果无法 full test，必须显式标注 eval_mode=dry_run。"
+  ]
+}
