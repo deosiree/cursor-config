@@ -228,7 +228,7 @@ import SinglePaneDialog from "@/components/Dialog/SinglePaneDialog.vue";
 import TenantFormStep from "@/views/tenant/components/TenantFormStep.vue";
 import TenantProjectSelectStep from "@/views/tenant/components/TenantProjectSelectStep.vue";
 import TenantRolePreviewStep from "@/views/tenant/components/TenantRolePreviewStep.vue";
-import ActivationDialog from "@/components/Activation/ActivationDialog.vue";
+import ActivationDialog from "@/views/components/Activation/ActivationDialog.vue";
 import UserGateway from "@/gateway/system/user.gateway";
 import { resolveTenantDefaultLocale, resolveTenantDefaultTimezone } from "@/constants/tenant";
 import {

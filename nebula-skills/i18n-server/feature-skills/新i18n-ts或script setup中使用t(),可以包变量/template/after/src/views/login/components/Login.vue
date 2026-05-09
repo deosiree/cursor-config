@@ -167,7 +167,7 @@ import AuthGateway, {
   type LoginSettingV2Response,
   type LoginV2Request,
   type LoginV2Response,
-} from "@/api/gateway/auth.gateway";
+} from "@/gateway/auth.gateway";
 import AcctField from "@/components/auth/field/AcctField.vue";
 import CaptchaFld from "@/components/auth/field/CaptchaFld.vue";
 import CodeField from "@/components/auth/field/CodeField.vue";
@@ -176,7 +176,7 @@ import MainBtn from "@/components/auth/layout/MainBtn.vue";
 import TabsShell from "@/components/auth/layout/TabsShell.vue";
 import TextLink from "@/components/auth/layout/TextLink.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-import { resolvePasswordForTransit } from "@/api/gateway/password-transit.gateway";
+import { resolvePasswordForTransit } from "@/gateway/password-transit.gateway";
 import { useUserStore } from "@/store";
 import { resolveAccountType, type AccountType } from "@/utils/account";
 import { clearCountdown, startCountdown } from "@/utils/countdown";

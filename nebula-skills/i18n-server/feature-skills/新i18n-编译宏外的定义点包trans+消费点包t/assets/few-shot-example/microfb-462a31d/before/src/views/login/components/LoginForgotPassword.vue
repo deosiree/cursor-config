@@ -33,8 +33,8 @@
 import { computed, onUnmounted, reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 
-import AuthGateway, { type LoginSettingV2Response } from "@/api/gateway/auth.gateway";
-import { resolvePasswordForTransit } from "@/api/gateway/password-transit.gateway";
+import AuthGateway, { type LoginSettingV2Response } from "@/gateway/auth.gateway";
+import { resolvePasswordForTransit } from "@/gateway/password-transit.gateway";
 import PasswordResetAPI from "@/api/seccenter/password-reset.api";
 import { clearCountdown, startCountdown } from "@/utils/countdown";
 import {

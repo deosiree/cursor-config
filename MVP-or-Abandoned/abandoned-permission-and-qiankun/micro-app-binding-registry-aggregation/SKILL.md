@@ -119,7 +119,7 @@ description: Use when 需要把多个微服务的本地注册中心通过 qianku
 
 ## 验证
 1. 基座 store 测试：
-- 参考 [microfb/src/api/gateway/__tests__/micro-app-binding-registry.store.test.ts](f:/Documents/Repertory/Sieyuan/nebula/microfb/src/api/gateway/__tests__/micro-app-binding-registry.store.test.ts)
+- 参考 [microfb/src/gateway/__tests__/micro-app-binding-registry.store.test.ts](f:/Documents/Repertory/Sieyuan/nebula/microfb/src/gateway/__tests__/micro-app-binding-registry.store.test.ts)
 
 2. 子应用 snapshot 测试：
 - 参考 [apex_dev/src/views/system/menu/__tests__/binding-registry-snapshot.test.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/views/system/menu/__tests__/binding-registry-snapshot.test.ts)

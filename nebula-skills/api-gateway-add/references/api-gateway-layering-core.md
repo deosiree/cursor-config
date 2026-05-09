@@ -6,7 +6,7 @@
   - 名称与契约定义保持一致
 - `src/types/**`
   - 只放稳定类型
-- `src/api/gateway/**`
+- `src/gateway/**`
   - 负责映射、聚合、编排、校验
 - 业务层
   - 只消费稳定类型与 gateway 方法

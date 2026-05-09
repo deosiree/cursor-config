@@ -11,7 +11,7 @@ description: 新增接口接入后的目标设计示意。
 2. `src/types/**`
 - 补稳定类型字段 `id`、`menuId`
 
-3. `src/api/gateway/**`
+3. `src/gateway/**`
 - 新增 `addFunctionApi/updateFunctionApi/deleteFunctionApi`
 - 新增 `mapWire2StableXXX` / `mapStable2WireXXX`
 

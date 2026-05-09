@@ -33,7 +33,7 @@ description: Use when 需要为某个微服务建立或对齐本地注册中心�
 - [apex_dev/src/permissions/page-action-registry.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/page-action-registry.ts)
 
 4. gateway 元信息
-- [apex_dev/src/api/gateway](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/api/gateway)
+- [apex_dev/src/gateway](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/gateway)
 
 5. qiankun snapshot 输出
 - [apex_dev/src/permissions/binding-registry-snapshot.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/binding-registry-snapshot.ts)

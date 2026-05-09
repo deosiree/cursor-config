@@ -101,7 +101,7 @@ import UserTable from "@/views/system/user/components/UserTable.vue";
 import UserEditDialog from "@/views/system/user/components/UserEditDialog.vue";
 import UserResetPasswordDialog from "@/views/system/user/components/UserResetPasswordDialog.vue";
 import UserImport from "@/views/system/user/components/UserImport.vue";
-import ActivationDialog from "@/components/Activation/ActivationDialog.vue";
+import ActivationDialog from "@/views/components/Activation/ActivationDialog.vue";
 import { resolvePasswordByLoginSetting } from "@/gateway/auth/password-transit.gateway";
 import type { ActivationMethodStable } from "@/types/security-config";
 import {

@@ -22,7 +22,7 @@ src/types/auto-imports.d.ts
 src/store/pinia.ts
 src/store/index.ts
 src/store/modules/micro-app-binding-registry.store.ts
-src/api/gateway/__tests__/micro-app-binding-registry.store.test.ts
+src/gateway/__tests__/micro-app-binding-registry.store.test.ts
 ```
 
 **git commit命令**
@@ -53,7 +53,7 @@ chore(build): :link: init pinia + permission registry store foundation
 
 git add -- ".env.development" ".env.production" "vite.config.ts" "src/vite-env.d.ts" "src/types/auto-imports.d.ts" `
           "src/store/pinia.ts" "src/store/index.ts" "src/store/modules/micro-app-binding-registry.store.ts" `
-          "src/api/gateway/__tests__/micro-app-binding-registry.store.test.ts"
+          "src/gateway/__tests__/micro-app-binding-registry.store.test.ts"
 
 git commit -F ".git/commit-msg-microfb-1.txt"
 
@@ -74,9 +74,9 @@ feat(router): :route: add registry route-path + route-base gateway
 **文件（每行一个）**
 ```
 src/router/utils/registry-route-path.ts
-src/api/gateway/route-base.gateway.ts
-src/api/gateway/__tests__/registry-route-path.test.ts
-src/api/gateway/__tests__/route-base.gateway.test.ts
+src/gateway/route-base.gateway.ts
+src/gateway/__tests__/registry-route-path.test.ts
+src/gateway/__tests__/route-base.gateway.test.ts
 ```
 
 **git commit命令**
@@ -105,8 +105,8 @@ feat(router): :route: add registry route-path + route-base gateway
 保证“注册中心 -> 路由映射 -> 网关取数”的一致性与可回归。
 '@ | Set-Content -Path ".git/commit-msg-microfb-2.txt" -Encoding utf8
 
-git add -- "src/router/utils/registry-route-path.ts" "src/api/gateway/route-base.gateway.ts" `
-          "src/api/gateway/__tests__/registry-route-path.test.ts" "src/api/gateway/__tests__/route-base.gateway.test.ts"
+git add -- "src/router/utils/registry-route-path.ts" "src/gateway/route-base.gateway.ts" `
+          "src/gateway/__tests__/registry-route-path.test.ts" "src/gateway/__tests__/route-base.gateway.test.ts"
 
 git commit -F ".git/commit-msg-microfb-2.txt"
 
@@ -129,7 +129,7 @@ feat(menu): :menu: menu-sync + MenuItem integration
 src/services/menu/menu-sync.ts
 src/layout/menu/components/MenuItem.vue
 src/utils/menu.ts
-src/api/gateway/__tests__/menu-sync-refresh.test.ts
+src/gateway/__tests__/menu-sync-refresh.test.ts
 ```
 
 **git commit命令**
@@ -159,7 +159,7 @@ feat(menu): :menu: menu-sync + MenuItem integration
 '@ | Set-Content -Path ".git/commit-msg-microfb-3.txt" -Encoding utf8
 
 git add -- "src/services/menu/menu-sync.ts" "src/layout/menu/components/MenuItem.vue" "src/utils/menu.ts" `
-          "src/api/gateway/__tests__/menu-sync-refresh.test.ts"
+          "src/gateway/__tests__/menu-sync-refresh.test.ts"
 
 git commit -F ".git/commit-msg-microfb-3.txt"
 
@@ -339,19 +339,19 @@ feat(gateway): :gear: migrate menu/role/tenant gateway APIs + route-base
 ```
 src/api/auth.api.ts
 src/api/device/device.api.ts
-src/api/gateway/__tests__/menu.gateway.test.ts
-src/api/gateway/__tests__/role-config.gateway.test.ts
-src/api/gateway/__tests__/tenant.gateway.test.ts
-src/api/gateway/__tests__/resource-project.gateway.test.ts
-src/api/gateway/__tests__/route-base.gateway.test.ts
-src/api/gateway/config.gateway.ts
-src/api/gateway/device.gateway.ts
-src/api/gateway/menu-legacy.gateway.ts
-src/api/gateway/menu.gateway.ts
-src/api/gateway/resource-project.gateway.ts
-src/api/gateway/role.gateway.ts
-src/api/gateway/route-base.gateway.ts
-src/api/gateway/tenant.gateway.ts
+src/gateway/__tests__/menu.gateway.test.ts
+src/gateway/__tests__/role-config.gateway.test.ts
+src/gateway/__tests__/tenant.gateway.test.ts
+src/gateway/__tests__/resource-project.gateway.test.ts
+src/gateway/__tests__/route-base.gateway.test.ts
+src/gateway/config.gateway.ts
+src/gateway/device.gateway.ts
+src/gateway/menu-legacy.gateway.ts
+src/gateway/menu.gateway.ts
+src/gateway/resource-project.gateway.ts
+src/gateway/role.gateway.ts
+src/gateway/route-base.gateway.ts
+src/gateway/tenant.gateway.ts
 src/api/resource/project.api.ts
 src/api/seccenter/dbres-project.v2.api.ts
 src/api/seccenter/role.v2.api.ts
@@ -388,10 +388,10 @@ feat(gateway): :gear: migrate menu/role/tenant gateway APIs + route-base
 '@ | Set-Content -Path ".git/commit-msg-apex-2.txt" -Encoding utf8
 
 git add -A -- "src/api/auth.api.ts" "src/api/device/device.api.ts" `
-  "src/api/gateway/config.gateway.ts" "src/api/gateway/device.gateway.ts" "src/api/gateway/menu-legacy.gateway.ts" "src/api/gateway/menu.gateway.ts" `
-  "src/api/gateway/resource-project.gateway.ts" "src/api/gateway/role.gateway.ts" "src/api/gateway/route-base.gateway.ts" "src/api/gateway/tenant.gateway.ts" `
-  "src/api/gateway/__tests__/menu.gateway.test.ts" "src/api/gateway/__tests__/role-config.gateway.test.ts" "src/api/gateway/__tests__/tenant.gateway.test.ts" `
-  "src/api/gateway/__tests__/resource-project.gateway.test.ts" "src/api/gateway/__tests__/route-base.gateway.test.ts" `
+  "src/gateway/config.gateway.ts" "src/gateway/device.gateway.ts" "src/gateway/menu-legacy.gateway.ts" "src/gateway/menu.gateway.ts" `
+  "src/gateway/resource-project.gateway.ts" "src/gateway/role.gateway.ts" "src/gateway/route-base.gateway.ts" "src/gateway/tenant.gateway.ts" `
+  "src/gateway/__tests__/menu.gateway.test.ts" "src/gateway/__tests__/role-config.gateway.test.ts" "src/gateway/__tests__/tenant.gateway.test.ts" `
+  "src/gateway/__tests__/resource-project.gateway.test.ts" "src/gateway/__tests__/route-base.gateway.test.ts" `
   "src/api/resource/project.api.ts" "src/api/seccenter/role.v2.api.ts" "src/api/seccenter/dbres-project.v2.api.ts" `
   "src/api/seccenter/role.v2.endpoints.ts" "src/api/seccenter/tenant.v2.endpoints.ts" "src/api/system/tenant.api.ts" `
   "src/constants/route-paths.ts"
@@ -414,9 +414,9 @@ feat(permissions): :lock: add permission meta registry + confirmPerm directive
 
 **文件（每行一个）**
 ```
-src/api/gateway/gateway-permission-meta.ts
-src/api/gateway/role.permission-meta.ts
-src/api/gateway/tenant.permission-meta.ts
+src/gateway/gateway-permission-meta.ts
+src/gateway/role.permission-meta.ts
+src/gateway/tenant.permission-meta.ts
 src/directive/index.ts
 src/directive/confirmPerm/index.ts
 src/permissions/binding-registry-snapshot.ts
@@ -452,7 +452,7 @@ feat(permissions): :lock: add permission meta registry + confirmPerm directive
 提升权限注册中心的可扩展性与一致性，并降低 UI 侧耦合。
 '@ | Set-Content -Path ".git/commit-msg-apex-3.txt" -Encoding utf8
 
-git add -- "src/api/gateway/gateway-permission-meta.ts" "src/api/gateway/role.permission-meta.ts" "src/api/gateway/tenant.permission-meta.ts" `
+git add -- "src/gateway/gateway-permission-meta.ts" "src/gateway/role.permission-meta.ts" "src/gateway/tenant.permission-meta.ts" `
   "src/directive/index.ts" "src/directive/confirmPerm/index.ts" `
   "src/permissions/binding-registry-snapshot.ts" "src/permissions/page-action-registry.ts" "src/permissions/runtime-permission-resolver.ts" `
   "src/views/tenant/__tests__/confirmPerm.test.ts" "src/views/tenant/__tests__/runtime-permission-resolver.test.ts"

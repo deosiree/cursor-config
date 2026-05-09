@@ -6,7 +6,7 @@ description: Use when 需要把 v1/v2/v3 混用 API 收敛到 Gateway 统一版�
 # Gateway Version Control（版本主路由与降级链）
 
 ## Overview
-将 API 版本选择统一收敛到 `src/api/gateway/*`，业务层（`views/store/utils/directive`）只引用 Gateway，不直接读环境变量，不直接引用 `*.v2.api/*.v3.api`。
+将 API 版本选择统一收敛到 `src/gateway/*`，业务层（`views/store/utils/directive`）只引用 Gateway，不直接读环境变量，不直接引用 `*.v2.api/*.v3.api`。
 
 核心原则：
 1. 单一事实来源：版本策略只在 `gateway-version-policy.ts` 读取。
@@ -23,7 +23,7 @@ description: Use when 需要把 v1/v2/v3 混用 API 收敛到 Gateway 统一版�
 4. 需要统一实现“默认允许版本 + 失败降级链”。
 
 ## Target State
-1. `src/api/gateway/gateway-version-policy.ts` 是唯一版本策略入口。
+1. `src/gateway/gateway-version-policy.ts` 是唯一版本策略入口。
 2. 每个业务模块有对应 `*.gateway.ts`（如 `user/menu/auth/role/config`）。
 3. 业务层仅引用 Gateway。
 4. `src/views` 内无 `*.v2.api/*.v3.api` 直连、无版本 env 分支。
@@ -95,13 +95,13 @@ function fn(input: X): Y { ... }
 ```bash
 rg --line-number "import\.meta\.env\.VITE_USE_SECCENTER|\.v2\.api|\.v3\.api" src/views src/store src/utils src/directive src/plugins
 ```
-- 期望：无命中（允许 `src/api/gateway` 内部命中）。
+- 期望：无命中（允许 `src/gateway` 内部命中）。
 
 2. 检索策略中心是否唯一：
 ```bash
 rg --line-number "VITE_GATEWAY_.*_PRIMARY|VITE_GATEWAY_.*_FALLBACK" src
 ```
-- 期望：仅在 `src/api/gateway/gateway-version-policy.ts` 命中（以及测试文件）。
+- 期望：仅在 `src/gateway/gateway-version-policy.ts` 命中（以及测试文件）。
 
 3. 类型检查：
 ```bash
@@ -127,7 +127,7 @@ npm run type-check
 rg --line-number "VITE_USE_SECCENTER|VITE_GATEWAY_.*(PRIMARY|FALLBACK)|\.v2\.api|\.v3\.api" src/views src/store src/utils src/directive src/plugins
 
 # 网关文件总览
-rg --files src/api/gateway
+rg --files src/gateway
 
 # 编译验证
 npm run type-check

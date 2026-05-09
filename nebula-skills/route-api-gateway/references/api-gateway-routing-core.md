@@ -3,7 +3,7 @@
 ## 这条链路只管什么
 只管：
 
-`Swagger/OpenAPI -> src/api 原始接口与原始类型 -> src/types 稳定类型 -> src/api/gateway 映射与编排 -> 业务层消费`
+`Swagger/OpenAPI -> src/api 原始接口与原始类型 -> src/types 稳定类型 -> src/gateway 映射与编排 -> 业务层消费`
 
 不管：
 - registry / permission metadata

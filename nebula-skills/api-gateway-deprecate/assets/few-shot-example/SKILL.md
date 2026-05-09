@@ -1,6 +1,6 @@
 ---
 name: 退化 API 网关旧兼容层 few-shot
-description: 给 agent 一个“如何结合契约退化旧 API/gateway 兼容层”的最小成品示例。
+description: 给 agent 一个“如何结合契约退化旧 gateway 兼容层”的最小成品示例。
 ---
 
 # 示例输入
@@ -12,8 +12,8 @@ description: 给 agent 一个“如何结合契约退化旧 API/gateway 兼容�
 
 # 示例输出骨架
 1. 兼容层落点
-- `src/api/gateway/gateway-version-policy.ts`
-- `src/api/gateway/gateway-executor.ts`
+- `src/gateway/gateway-version-policy.ts`
+- `src/gateway/gateway-executor.ts`
 - `auth.gateway.ts` 中 `loginV2`
 - `src/temp/temp-v1-menu.ts`
 

@@ -59,7 +59,7 @@ sequenceDiagram
 
 ## 4. 源码证据（关键节点 → 文件/函数）
 
-- **运行时 base 统一来源**：`src/api/gateway/route-base.gateway.ts`
+- **运行时 base 统一来源**：`src/gateway/route-base.gateway.ts`
   - `getAppBase()`：规范化 `VITE_APP_BASE`（去尾斜杠、确保 `/` 开头）
   - `getLoginPath()`：返回 `${base}${LOGIN_PATH}`
 - **路由 history.base 使用**：`src/router/index.ts`

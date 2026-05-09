@@ -97,8 +97,8 @@ feat(gateway): :gear: remove legacy menu gateway and align user gateway
 **文件（每行一个）**
 
 ```text
-src/api/gateway/__tests__/device.gateway.test.ts
-src/api/gateway/user.gateway.ts
+src/gateway/__tests__/device.gateway.test.ts
+src/gateway/user.gateway.ts
 src/gateways/system/menu/menu-legacy.gateway.ts
 ```
 
@@ -133,8 +133,8 @@ legacy 与新版映射并存时，审查难以判断真实调用链，易造成�
 '@ | Set-Content -Path ".git/commit-msg-apex_dev-2.txt" -Encoding utf8
 
 $files = @(
-  "src/api/gateway/__tests__/device.gateway.test.ts",
-  "src/api/gateway/user.gateway.ts",
+  "src/gateway/__tests__/device.gateway.test.ts",
+  "src/gateway/user.gateway.ts",
   "src/gateways/system/menu/menu-legacy.gateway.ts"
 )
 git add -- $files

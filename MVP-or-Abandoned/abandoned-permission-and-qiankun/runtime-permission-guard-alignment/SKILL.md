@@ -17,7 +17,7 @@ description: Use when 需要把页面按钮、运行时权限解析、gateway �
 ## 关键文件
 - [apex_dev/src/permissions/runtime-permission-resolver.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/runtime-permission-resolver.ts)
 - [apex_dev/src/directive/confirmPerm/index.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/directive/confirmPerm/index.ts)
-- [apex_dev/src/api/gateway/tenant.gateway.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/api/gateway/tenant.gateway.ts)
+- [apex_dev/src/gateway/tenant.gateway.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/gateway/tenant.gateway.ts)
 - [apex_dev/src/permissions/page-action-registry.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/page-action-registry.ts)
 - [apex_dev/src/views/system/menu/components/function-action-resolver.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/views/system/menu/components/function-action-resolver.ts)
 

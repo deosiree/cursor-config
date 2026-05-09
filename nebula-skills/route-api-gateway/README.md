@@ -3,7 +3,7 @@
 ## 定位
 `route-api-gateway` 是这条 API 分层链路的总入口：
 
-`Swagger/OpenAPI -> src/api 原始接口与原始类型 -> src/types 稳定类型 -> src/api/gateway 映射与编排 -> 业务层消费`
+`Swagger/OpenAPI -> src/api 原始接口与原始类型 -> src/types 稳定类型 -> src/gateway 映射与编排 -> 业务层消费`
 
 它只做条件路由，不做执行编排。
 

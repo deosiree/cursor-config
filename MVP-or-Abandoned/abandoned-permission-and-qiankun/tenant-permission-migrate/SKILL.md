@@ -25,8 +25,8 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 1. 租户管理基线
 - [apex_dev/src/views/tenant/index.vue](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/views/tenant/index.vue)
 - [apex_dev/src/views/tenant/tenant.actions.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/views/tenant/tenant.actions.ts)
-- [apex_dev/src/api/gateway/tenant.gateway.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/api/gateway/tenant.gateway.ts)
-- [apex_dev/src/api/gateway/tenant.permission-meta.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/api/gateway/tenant.permission-meta.ts)
+- [apex_dev/src/gateway/tenant.gateway.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/gateway/tenant.gateway.ts)
+- [apex_dev/src/gateway/tenant.permission-meta.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/gateway/tenant.permission-meta.ts)
 
 2. 注册中心与运行时解析
 - [apex_dev/src/router/routes.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/router/routes.ts)
@@ -115,12 +115,12 @@ description: Use when 需要把其他业务模块按“租户管理”现状迁�
 ## 验证
 1. 检索旧权限散点：
 ```bash
-rg --line-number "v-hasPerm|hasPerm|confirmPerm|perm|gatewayAction|permissionMeta" apex_dev/src/views/<模块目录> apex_dev/src/api/gateway
+rg --line-number "v-hasPerm|hasPerm|confirmPerm|perm|gatewayAction|permissionMeta" apex_dev/src/views/<模块目录> apex_dev/src/gateway
 ```
 
 2. 检查是否已注册：
 ```bash
-rg --line-number "<模块动作关键字>|<模块路由关键字>" apex_dev/src/router/routes.ts apex_dev/src/**/<模块>*.actions.ts apex_dev/src/api/gateway
+rg --line-number "<模块动作关键字>|<模块路由关键字>" apex_dev/src/router/routes.ts apex_dev/src/**/<模块>*.actions.ts apex_dev/src/gateway
 ```
 
 3. 跑相关测试：

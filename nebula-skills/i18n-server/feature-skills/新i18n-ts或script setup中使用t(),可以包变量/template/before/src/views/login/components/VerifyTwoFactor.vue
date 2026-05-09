@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
-import AuthGateway from "@/api/gateway/auth.gateway";
+import AuthGateway from "@/gateway/auth.gateway";
 import { useUserStore } from "@/store";
 import { showNotification } from "@/utils";
 import { PhoneFilled, Message, Back } from "@element-plus/icons-vue";

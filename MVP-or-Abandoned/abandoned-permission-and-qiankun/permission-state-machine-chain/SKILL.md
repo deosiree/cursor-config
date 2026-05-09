@@ -23,7 +23,7 @@ description: Use when 需要从用户使用视角梳理“菜单管理、注册�
 - [apex_dev/src/permissions/page-action-registry.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/page-action-registry.ts)
 - [apex_dev/src/permissions/runtime-permission-resolver.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/permissions/runtime-permission-resolver.ts)
 - [apex_dev/src/directive/confirmPerm/index.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/directive/confirmPerm/index.ts)
-- [apex_dev/src/api/gateway](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/api/gateway)
+- [apex_dev/src/gateway](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/gateway)
 - [apex_dev/src/utils/menu-cache-refresh.ts](f:/Documents/Repertory/Sieyuan/nebula/apex_dev/src/utils/menu-cache-refresh.ts)
 
 ## 适用场景

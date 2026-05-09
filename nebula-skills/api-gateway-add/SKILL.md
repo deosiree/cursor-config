@@ -9,7 +9,7 @@ description: 当需要基于 Swagger/OpenAPI 为现有业务接入新接口，�
 在不把原始类型泄漏到业务层的前提下，为新增接口输出一份可直接实施的最小改动方案，覆盖：
 1. `src/api/**` 原始接口与原始类型
 2. `src/types/**` 稳定类型
-3. `src/api/gateway/**` 映射与编排
+3. `src/gateway/**` 映射与编排
 4. `src/views|src/store|src/composables|src/utils` 的稳定消费入口
 
 先看：
@@ -36,7 +36,7 @@ description: 当需要基于 Swagger/OpenAPI 为现有业务接入新接口，�
 - 业务层
   - 只消费 gateway 方法与稳定类型
   - 组件内部专用常量可留在业务层本地
-- `src/api/gateway/**`
+- `src/gateway/**`
   - 负责 `stableReq -> wireReq -> api -> wireRes -> stableRes`
   - 映射函数统一命名为 `mapWire2StableXXX` / `mapStable2WireXXX`
   - `XXX` 使用契约里的原始类型名

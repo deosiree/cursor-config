@@ -6,8 +6,8 @@ description: 展示网关退化前仍保留版本策略层、兼容壳、旧 API
 # 退化前状态示例
 
 ## 代表性信号
-1. `src/api/gateway/gateway-version-policy.ts` 仍存在。
-2. `src/api/gateway/gateway-executor.ts` 仍存在。
+1. `src/gateway/gateway-version-policy.ts` 仍存在。
+2. `src/gateway/gateway-executor.ts` 仍存在。
 3. `auth.gateway.ts` 或 `menu.gateway.ts` 仍通过 `executeWithVersionFallback` 调用新旧分支。
 4. `user.store.ts`、页面层或 composable 仍调用 `loginV2` 这类历史入口。
 5. `src/api/auth.api.ts`、`src/api/role.api.ts`、`src/api/menu.v1.api.ts` 仍保留在仓库中。
@@ -16,7 +16,7 @@ description: 展示网关退化前仍保留版本策略层、兼容壳、旧 API
 
 ## 典型片段
 ```ts
-import { executeWithVersionFallback } from "@/api/gateway/gateway-executor";
+import { executeWithVersionFallback } from "@/gateway/gateway-executor";
 
 async login(data) {
   return executeWithVersionFallback({
