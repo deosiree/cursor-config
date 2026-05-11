@@ -1,116 +1,123 @@
 ---
 name: shownotification
-description: Use when nebula 项目中存在 ElMessage 与 showNotification 混用、需要统一通知入口、制定通知规范或执行通知迁移与验收时
+description: Use when nebula 项目中需要统一普通提示与后端错误提示，新增接入 showNotificationError，或治理 [code]message 与重复弹窗问题时
 ---
 
-# showNotification 统一通知规范
+# shownotification
 
-## 概述
-本 skill 用于约束 nebula 项目的前端提示规范，目标是把业务提示统一收口到 `showNotification(message, { type, ...options })`。
+## 目标
+把通知规范收敛为两条稳定规则：
 
-核心原则：
+1. 普通业务提示统一使用 `showNotification(message, { type, ...options })`
+2. 后端错误统一使用 `showNotificationError(err, fallbackMessage)`，并展示 `[code]message`
 
-- 业务代码只允许一个通知入口：`showNotification`
-- `type` 必须放在第二个参数对象中定义
-- 不允许在业务代码中直接使用 `ElMessage`
+本 skill 只负责通知职责，不负责国际化、全局 i18n 注入或 `useI18n()` 使用规范。
 
 ## 何时使用
+- 新增前端提示逻辑，需要判断该用 `showNotification` 还是 `showNotificationError`
+- 旧代码存在 `ElMessage`、手写 `[code]message` 拼接、或后端错误提示口径不一致
+- gateway / request / view 多层都在 `catch` 提示，怀疑存在重复弹窗
+- 其它微服务准备首次接入 `showNotificationError`
 
-在以下场景加载本 skill：
+## 何时不要使用
+- 只做表单规则、字段 validator、本地校验文案本身
+- 讨论国际化注入、`useI18n()` 在全局工具中的使用限制
+- 处理 `ElMessageBox`、确认弹窗、阻断式交互
 
-- 新增前端提示逻辑，准备弹出成功、失败、警告、信息提示
-- 修改旧页面，发现 `ElMessage` 与 `showNotification` 混用
-- 做代码治理，准备批量替换 `ElMessage`
-- 做代码 review，需要判断通知调用是否符合项目规范
-- 测试或联调反馈“使用了 ElMessage”类问题，需要按项目规范修正
+## 核心规则
 
-以下场景通常不适用：
+### 规则 1：普通提示
+以下场景统一使用 `showNotification`：
 
-- `ElMessageBox` 这类确认框、阻断式交互
-- 与通知无关的表单规则、字段校验本身
-- 第三方库内部实现，且当前仓库无法控制
+- 成功提示
+- 本地前置校验失败
+- 本地流程阻断
+- 警告、信息、无后端错误对象的前端错误
 
-## 项目规范
-
-### 唯一通知入口
-
-项目内业务提示统一使用：
+示例：
 
 ```ts
-showNotification(message, {
-  type: "warning",
-  duration: 5500,
-});
+showNotification("保存成功", { type: "success" });
+showNotification("请先选择文件", { type: "warning" });
+showNotification("验证码缺失，请重新获取", { type: "error" });
 ```
 
-允许的 `type`：
+### 规则 2：后端错误
+以下场景统一使用 `showNotificationError`：
 
-- `"success"`
-- `"info"`
-- `"warning"`
-- `"error"`
+- API 请求失败
+- gateway 层消费业务异常
+- request 工具层读取后端 `code`、`message`
 
-### 禁止项
+示例：
+
+```ts
+try {
+  await apiCall();
+} catch (err) {
+  showNotificationError(err, "加载失败");
+  throw err;
+}
+```
+
+展示规则：
+
+- 有后端 `code` 时：展示 `[code]message`
+- 无 `code` 时：展示 `message`
+- 无后端 message 时：回退到 `fallbackMessage`
+
+## 通知边界
+
+### request 层
+- 可以统一处理协议错误、HTTP 错误、网络错误
+- 若这里已经提示，调用方不要再对同一错误重复提示
+
+### gateway / helper 层
+- 可以对“该领域能明确归类的错误”做统一提示
+- 典型场景：密码传输加密失败、认证失败、MFA 校验失败
+- 若这里已经 `showNotificationError(err, "...")` 并继续抛错，上层只负责阻断，不再重复提示
+
+### view 层
+- 只负责普通业务提示与成功提示
+- 对已经在 request / gateway 层提示过的后端错误，不要再重复通知
+
+## 禁止项
 
 以下写法在业务代码中视为违规：
 
 ```ts
 ElMessage.success("保存成功");
-ElMessage.warning("请选择文件");
 ElMessage.error("请求失败");
-ElMessage.info("已取消操作");
 ```
 
-### 参数规则
-
-- 第一参数只传消息内容 `message`
-- 第二参数传展示配置，如 `type`、`duration`、`title`、`position`
-- 不要把 `message` 再放进第二参数
-- 不要为了兼容旧代码再新增第二套 message 封装
-
-### 推荐写法
+以下写法在处理后端错误时也视为违规：
 
 ```ts
-showNotification("保存成功", { type: "success" });
-showNotification("请先选择文件", { type: "warning" });
-showNotification("加载失败，请稍后重试", { type: "error" });
-showNotification("已取消删除", { type: "info" });
+catch (err) {
+  showNotification("请求失败", { type: "error" });
+}
 ```
-
-## 替换规则
-
-### 基础映射
-
-- `ElMessage.success(msg)` -> `showNotification(msg, { type: "success" })`
-- `ElMessage.info(msg)` -> `showNotification(msg, { type: "info" })`
-- `ElMessage.warning(msg)` -> `showNotification(msg, { type: "warning" })`
-- `ElMessage.error(msg)` -> `showNotification(msg, { type: "error" })`
-
-### 带配置项的写法
-
-把原来的展示配置平移到第二参数：
 
 ```ts
-showNotification(message, {
-  type: "warning",
-  title: "提示",
-  duration: 5500,
-});
+catch (err) {
+  const code = err?.error?.code ? `[${err.error.code}]` : "";
+  const msg = err?.error?.message ?? "请求失败";
+  showNotification(code + msg, { type: "error" });
+}
 ```
 
-### import 收口
-
-- 删除 `ElMessage` import
-- 补充 `showNotification` import
-- 优先统一从 `@/utils/notification` 或项目约定的统一出口导入
+另外，不要把翻译函数包装写进本 skill 的推荐示例中。
+本 skill 推荐的最小写法始终是不包 `t()` 的普通字符串 fallback。
 
 ## 执行步骤
-
-1. 先搜索业务代码中的 `ElMessage` 使用点
-2. 按映射规则替换为 `showNotification`
-3. 清理无用的 `ElMessage` import
-4. 检查是否保留了原有 `type`、`duration`、`title`
-5. 再次全局搜索，确认业务代码没有 `ElMessage` 残留
+1. 搜索 `ElMessage` 残留点
+2. 搜索后端错误是否仍然使用 `showNotification(... { type: "error" })`
+3. 搜索是否存在散落的 `err?.error?.code` 拼接逻辑
+4. 若项目里还没有 `showNotificationError`，先按最小模板补齐 helper
+5. 将普通提示统一到 `showNotification`
+6. 将后端错误统一到 `showNotificationError(err, fallbackMessage)`
+7. 检查 helper / gateway / request / view 是否存在同一错误重复提示
+8. 回归关键交互，确认 `[code]message` 展示正常
 
 推荐搜索命令：
 
@@ -118,40 +125,50 @@ showNotification(message, {
 rg -n "\bElMessage\b|ElMessage\.(success|warning|error|info)" src mock
 ```
 
+```powershell
+rg -n "showNotificationError\(|err\?\.error\?\.code|showNotification\(.*type:\s*\"error\"" src
+```
+
+## MVP 样本
+
+先看最小模板，再看真实历史样本：
+
+- `[[assets/examples/bootstrap-showNotificationError.md]]`
+- `[[assets/examples/minimal-usage.md]]`
+
+优先使用以下真实历史样本理解最小成功实践：
+
+- `[[assets/mvp-samples/sample-01-showNotificationError-code-message.md]]`
+- `[[assets/mvp-samples/sample-02-auth-gateway-password-error.md]]`
+- `[[assets/mvp-samples/sample-03-boundary-note-non-notification-history.md]]`
+
+## references
+
+- `[[references/error-notification-boundary.md]]`
+- `[[references/code-message-display.md]]`
+- `[[references/repeated-notification-avoidance.md]]`
+
 ## 验收标准
+- 普通提示统一走 `showNotification`
+- 后端错误统一走 `showNotificationError`
+- 后端错误展示 `[code]message`
+- 不存在手写 `[code]message` 拼接分支
+- 不存在同一错误的重复弹窗
+- skill 示例全部使用普通字符串 fallback，不包 `t()`
 
-满足以下条件才算完成：
+## 样本阅读顺序
+- 先读 `assets/examples/bootstrap-showNotificationError.md`
+  解决“这个项目里还没有 `showNotificationError` 时，我最少要补什么”
+- 再读 `assets/examples/minimal-usage.md`
+  解决“已经有 helper 后，业务代码怎么调用”
+- 最后读 `assets/mvp-samples/sample-01...` 和 `sample-02...`
+  解决“真实历史里是怎么从 before 改到 after 的”
 
-- `src/`、`mock/` 业务代码中无 `ElMessage` 调用残留
-- 提示逻辑统一为 `showNotification(message, { type })`
-- 原有文案未丢失
-- 原有额外配置未丢失
-- 未引入新的通知封装分支
+## 使用示例
 
-注意：
-
-- 类似 `src/types/auto-imports.d.ts` 的生成文件声明不属于业务调用残留
-- 需要区分“类型声明存在”与“业务代码实际调用”
-
-## 本次迁移方案摘要
-
-本次会话确认的迁移策略如下：
-
-- 将项目内业务代码中的 `ElMessage.success/info/warning/error` 全部替换为 `showNotification`
-- 不保留兼容层，不新增别名入口
-- `showNotification` 继续作为唯一通知封装
-- 以搜索结果和专项测试作为验收依据
-
-## 常见误区
-
-- 误区：只有 `warning/error` 需要替换
-  纠正：`success/info/warning/error` 都要统一
-
-- 误区：`type` 可以继续写在第一个参数里
-  纠正：`type` 必须放第二个参数对象
-
-- 误区：只改调用，不清 import 也没关系
-  纠正：无用 `ElMessage` import 也需要清理
-
-- 误区：`auto-imports.d.ts` 里还有 `ElMessage` 声明就说明迁移失败
-  纠正：生成类型声明不等于业务代码仍在调用
+```text
+使用 $shownotification 扫描 microfb 登录链路，
+把普通业务提示和后端错误提示分流，
+要求所有来自后端的报错统一展示 [code]message，
+并检查是否存在 request/gateway/view 重复弹窗。
+```

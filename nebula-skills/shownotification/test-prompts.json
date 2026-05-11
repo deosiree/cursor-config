@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "使用 $shownotification 扫描一个登录模块，把普通提示和后端错误提示分流，并检查 request、gateway、view 是否存在重复弹窗。",
+    "expected": "能先区分 showNotification 与 showNotificationError 的使用边界，再给出重复弹窗检查路径。"
+  },
+  {
+    "id": 2,
+    "prompt": "某个微服务还没有 showNotificationError，现在要新增接入所有来自后端的报错展示 [code]message。请按最小改动给出接入方式。",
+    "expected": "能先给出 showNotificationError 的最小 helper 模板，再说明如何替换手写 [code]message 和 catch 分支。"
+  },
+  {
+    "id": 3,
+    "prompt": "一个页面 catch 里直接 showNotification('请求失败', { type: 'error' })，同时 request 层已经处理了后端错误。使用 $shownotification 评审这段逻辑。",
+    "expected": "能指出这是后端错误分流错误和重复弹窗风险，并建议收口到 showNotificationError 或删除上层重复提示。"
+  }
+]
