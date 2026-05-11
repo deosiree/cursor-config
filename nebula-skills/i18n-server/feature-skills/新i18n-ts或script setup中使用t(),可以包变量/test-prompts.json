@@ -1,20 +1,26 @@
 [
   {
     "id": "ts-t-01-happy-path",
-    "prompt": "我需要在 ts 文件和 script setup 里直接用 t，变量里带文案也要能稳定处理，你先改这层。",
-    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，并输出 ts / script setup 改造点",
+    "prompt": "我需要在组件里的 script setup 和 notification 里直接用 t，变量里带文案也要能稳定处理，你先改这层。",
+    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，并输出组件侧 ts / script setup 改造点",
     "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
   },
   {
     "id": "ts-t-02-boundary",
-    "prompt": "这次不是模板里用 $t，也不是编译宏外包 trans，我只想处理 ts 和 script setup 里直接调用 t。",
-    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，不能误进 Vue 模板节点 或 trans 节点",
+    "prompt": "这次不是模板里用 $t，也不是 util.ts 里 import i18n.global.t，我只想处理组件里 ts 和 script setup 直接调用 t。",
+    "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，不能误进 Vue 模板节点、纯 TS global.t 节点 或 trans 节点",
     "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
   },
   {
     "id": "ts-t-03-upstream-route",
-    "prompt": "上游已经把问题收敛到 ts / script setup 消费层，你直接处理这一类 t 用法。",
+    "prompt": "上游已经把问题收敛到组件侧 ts / script setup 消费层，你直接处理这一类 t 用法。",
     "expected": "稳定命中 新i18n-ts或script setup中使用t(),可以包变量，作为单次功能节点被消费",
     "expected_feature_skill": "新i18n-ts或script setup中使用t(),可以包变量"
+  },
+  {
+    "id": "ts-t-04-should-not-trigger-global",
+    "prompt": "这次是 request.ts 和 helper.ts 里要 import i18n 后直接走 i18n.global.t，不是组件内 useI18n().t。",
+    "expected": "不能命中 新i18n-ts或script setup中使用t(),可以包变量，应让位给 新i18n-纯ts中用i18n.global.t",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
   }
 ]

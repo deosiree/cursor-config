@@ -1,11 +1,12 @@
 {
   "should_trigger": [
-    "请使用 新i18n-ts或script setup中使用t(),可以包变量 处理：运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。",
+    "请使用 新i18n-ts或script setup中使用t(),可以包变量 处理：组件内 script setup、computed 或 notification 仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。",
     "当前仓库需要参考 新i18n-ts或script setup中使用t(),可以包变量，因为需要直接复用 新i18n-ts或script setup中使用t(),可以包变量 的主模板或 few-shot。"
   ],
   "should_not_trigger": [
     "我只想分析旧链路，不想直接进入 新i18n-ts或script setup中使用t(),可以包变量 的实现步骤。",
-    "当前只是纯硬编码中文清点，没有明确落到这个功能边界。"
+    "当前只是纯硬编码中文清点，没有明确落到这个功能边界。",
+    "这次是 request.ts / util.ts / helper.ts 里直接 import i18n 并调用 i18n.global.t，不是组件内 useI18n().t。"
   ],
   "output_checklist": [
     "说明为什么命中该 skill",

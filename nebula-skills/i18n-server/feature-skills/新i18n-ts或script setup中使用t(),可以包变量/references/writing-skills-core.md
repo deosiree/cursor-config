@@ -8,12 +8,14 @@
 - `template/` 负责给人看真实 before/after 或 mvp/snapshot。
 - `assets/` 负责给 agent 看 frontmatter 模板、few-shot 入口和输出检查清单。
 - `evals/evals.json` 负责 should-trigger / should-not-trigger 的最小验证基线。
+- 本节点默认讨论组件内 `t()` 消费，不承接纯 TS 文件直接 `i18n.global.t(...)` 的全局实例场景。
 
 ## few-shot 选择原则
 
 - 先看主模板，理解这个功能最核心的实现闭环。
 - 如果当前仓库和主模板差异明显，再进入 `assets/few-shot-example/` 选择更接近的变体。
 - 不把某个仓库的局部细节误认为唯一做法，而是提炼功能边界与迁移动作。
+- 如果当前问题发生在 `request.ts`、`util.ts`、`helper.ts` 等非组件文件，并且需要直接 `import i18n`，应改走 `新i18n-纯ts中用i18n.global.t`。
 
 ## 何时补新的 few-shot
 

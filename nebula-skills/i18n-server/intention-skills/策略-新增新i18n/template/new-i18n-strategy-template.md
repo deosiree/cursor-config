@@ -12,7 +12,10 @@
 2. `新i18n-样板代码`
 3. 语言入口相关功能 skill
 4. `新i18n-补充翻译json`
-5. 模板 / TS / 特殊边界相关功能 skill
+5. `新i18n-Vue模板中使用$t()`
+6. `新i18n-纯ts中用i18n.global.t`
+7. `新i18n-ts或script setup中使用t(),可以包变量`
+8. `trans` / 动态拼接 / wrapper 清理相关功能 skill
 
 ## 前后链路
 

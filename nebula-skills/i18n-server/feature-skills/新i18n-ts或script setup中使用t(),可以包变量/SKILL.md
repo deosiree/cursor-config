@@ -1,6 +1,6 @@
 ---
 name: 新i18n-ts或script setup中使用t(),可以包变量
-description: 当仓库命中“运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。”这一类问题时使用。
+description: 当仓库命中“组件内 script setup、computed、notification 等运行时逻辑仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。”这一类问题时使用。
 ---
 
 # 新i18n-ts或script setup中使用t(),可以包变量
@@ -17,11 +17,17 @@ description: 当仓库命中“运行时逻辑层仍有硬编码中文，或虽�
 
 ## GREEN
 
-- 功能目标：把 script setup、TS 逻辑、computed、通知等运行时文案统一收口到 t()，并允许包变量。
+- 功能目标：把组件内 script setup、局部 TS 运行时逻辑、computed、通知等文案统一收口到 `t()`，并允许包变量。
 - 主模板来源：`microfb` `e87b6d1202c782a53dce05799af22d1760bf7b13`
 - 模板类型：更新型，优先对照 `template/before`，再落 `template/after`。
 - few-shot：
 - `microfb-e87b6d1`：仓库 `microfb`，提交 `e87b6d1202c782a53dce05799af22d1760bf7b13`，侧重点：script setup 与 TS 运行时文案
+
+## 边界
+
+- 命中本节点：组件内 `useI18n().t`、script setup、computed、notification、局部 TS 运行时文本、变量插值。
+- 不命中本节点：纯 TS / util / request / helper 中直接 `import i18n` 后使用 `i18n.global.t(...)`。
+- 不命中本节点：Vue 模板 `$t()`、`trans()` 定义点、需要业务层回调 `t` 的动态拼接。
 
 ## REFACTOR
 
@@ -32,5 +38,5 @@ description: 当仓库命中“运行时逻辑层仍有硬编码中文，或虽�
 ## 使用示例
 
 ```text
-运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。
+组件内 script setup、computed 或 notification 里仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。
 ```

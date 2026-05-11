@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pure-ts-global-01-happy-path",
+    "prompt": "这次要改 request.ts 和 util.ts 里的错误提示，它们没有 setup 上下文，所以要直接 import i18n 并走 i18n.global.t。",
+    "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，并输出纯 TS 全局 i18n 消费改造点",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
+  },
+  {
+    "id": "pure-ts-global-02-boundary",
+    "prompt": "这次不是模板里用 $t，也不是组件里 useI18n().t，而是 helper.ts 里直接 import i18n 后消费 i18n.global.t。",
+    "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，不能误进 Vue 模板节点、组件侧 t() 节点 或 trans 节点",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
+  },
+  {
+    "id": "pure-ts-global-03-upstream-route",
+    "prompt": "上游已经把问题收敛到纯 TS 全局实例消费层，你直接处理 request.ts / util.ts 这一类 i18n.global.t 用法。",
+    "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，作为单次功能节点被消费",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
+  }
+]

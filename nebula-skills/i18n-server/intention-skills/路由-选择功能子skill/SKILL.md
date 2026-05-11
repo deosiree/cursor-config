@@ -46,10 +46,11 @@ description: 当当前目标已经收敛到“这一步该进入哪个源码级�
 7. `locale_catalog_ready_needed`
 8. `template_runtime_consumption_needed`
 9. `script_setup_runtime_text_unmigrated`
-10. `trans_key_boundary_needed`
-11. `dynamic_or_rules_callback_t_needed`
-12. `custom_i18n_wrapper_cleanup_needed`
-13. `old_variable_key_needs_chinese_t`
+10. `pure_ts_global_i18n_needed`
+11. `trans_key_boundary_needed`
+12. `dynamic_or_rules_callback_t_needed`
+13. `custom_i18n_wrapper_cleanup_needed`
+14. `old_variable_key_needs_chinese_t`
 
 ## 工作流
 
@@ -69,7 +70,8 @@ description: 当当前目标已经收敛到“这一步该进入哪个源码级�
 - 需要打通 qiankun 主子应用语言同步：进入 `[[../../feature-skills/迁移i18n-微服务-qiankun]]`
 - locale JSON 缺 key、value 错或粒度不适合统一消费：进入 `[[../../feature-skills/新i18n-补充翻译json]]`
 - template 中仍有静态文案、本地 translations 或旧消费样板：进入 `[[../../feature-skills/新i18n-Vue模板中使用$t()]]`
-- `script setup` / TS / computed / notification 中仍有运行时硬编码文案：进入 `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`
+- 纯 TS / util / request / helper 中需要直接 `import i18n` 并使用 `i18n.global.t(...)`：进入 `[[../../feature-skills/新i18n-纯ts中用i18n.global.t]]`
+- `script setup` / 组件内 TS / computed / notification 中仍有运行时硬编码文案：进入 `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`
 - 编译宏外定义点需要 `trans()` 标记，消费点还要再 `t()`：进入 `[[../../feature-skills/新i18n-编译宏外的定义点包trans+消费点包t]]`
 - util / helper / formRules 需要业务层回调 `t`：进入 `[[../../feature-skills/新i18n-动态拼接：业务层回调t到函数定义]]`
 - 组件已接入新方案，但仍保留自定义 i18n 函数或本地 translations：进入 `[[../../feature-skills/旧i18n-清理自定义的i18n函数]]`

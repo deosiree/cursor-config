@@ -9,11 +9,23 @@
 
 ## 功能
 
-把 script setup、TS 逻辑、computed、通知等运行时文案统一收口到 t()，并允许包变量。
+把组件内 script setup、局部 TS 逻辑、computed、通知等运行时文案统一收口到 `t()`，并允许包变量。
 
 ## 何时使用
 
-- 运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 t()。
+- 组件内运行时逻辑层仍有硬编码中文，或虽然接入了 i18n 但没有把变量包进 `t()`。
+
+## 边界
+
+- 命中本节点：
+  - `script setup` 中 `const { t } = useI18n()`
+  - 组件内 `computed`、`notification`、局部 TS 运行时文本
+  - 变量插值或参数包裹到 `t()`
+- 不命中本节点：
+  - 纯 TS 文件、`util.ts`、`request.ts`、`helper.ts` 中直接 `import i18n` 并使用 `i18n.global.t(...)`
+  - Vue 模板 `$t()`
+  - `trans()` 定义点
+  - 动态拼接函数通过业务层回调 `t`
 
 ## 来源版本
 
@@ -36,9 +48,9 @@
 ## 使用示例
 
 ```text
-模板层已经差不多了，但 script setup、computed 和通知里还有硬编码中文，先进入“新i18n-ts或script setup中使用t(),可以包变量”。
+模板层已经差不多了，但组件里的 script setup、computed 和通知里还有硬编码中文，先进入“新i18n-ts或script setup中使用t(),可以包变量”。
 ```
 
 ```text
-当前只想处理 TS / script setup 运行时文案，不动模板层和 locale JSON。
+当前只想处理组件侧 TS / script setup 运行时文案，不动模板层、locale JSON，也不处理 util/request 里的全局 i18n 消费。
 ```

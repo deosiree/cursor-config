@@ -1,0 +1,2 @@
+name: 新i18n-纯ts中用i18n.global.t
+description: 当仓库命中“纯 TS / util / request / helper 等非组件逻辑文件中，需要直接 import i18n 并通过 i18n.global.t(...) 消费文案。”这一类问题时使用。

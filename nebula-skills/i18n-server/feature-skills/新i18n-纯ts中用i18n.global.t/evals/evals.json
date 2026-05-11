@@ -1,0 +1,16 @@
+{
+  "should_trigger": [
+    "请使用 新i18n-纯ts中用i18n.global.t 处理：request.ts、util.ts、helper.ts 里需要直接 import i18n，再通过 i18n.global.t 消费错误提示和通知文案。",
+    "当前仓库需要参考 新i18n-纯ts中用i18n.global.t，因为这次是纯 TS 文件里的全局 i18n 实例消费，不是组件内 useI18n().t。"
+  ],
+  "should_not_trigger": [
+    "我只想分析旧链路，不想直接进入 新i18n-纯ts中用i18n.global.t 的实现步骤。",
+    "这次只是 Vue 模板里改成 $t()，不涉及 request.ts 或 util.ts 里的 i18n.global.t。",
+    "这次是 script setup、computed 和 notification 里用 t()，不是纯 TS 文件里 import i18n。"
+  ],
+  "output_checklist": [
+    "说明为什么命中该 skill",
+    "说明主模板或 few-shot 的选择理由",
+    "说明纯 TS 全局 i18n 消费的完成态"
+  ]
+}

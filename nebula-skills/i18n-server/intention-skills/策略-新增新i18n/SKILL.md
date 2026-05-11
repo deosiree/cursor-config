@@ -64,8 +64,9 @@ description: 当当前模块没有旧 i18n，或旧 i18n 已完全退化完成�
 3. `[[../../feature-skills/新i18n-基座-语言选择器]]` 或 `[[../../feature-skills/新i18n-微服务-语言选择器]]`
 4. `[[../../feature-skills/新i18n-补充翻译json]]`
 5. `[[../../feature-skills/新i18n-Vue模板中使用$t()]]`
-6. `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`
-7. 按需进入 `trans` / 动态拼接 / wrapper 清理相关功能 skill
+6. `[[../../feature-skills/新i18n-纯ts中用i18n.global.t]]`
+7. `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`
+8. 按需进入 `trans` / 动态拼接 / wrapper 清理相关功能 skill
 
 ## Guardrails
 
