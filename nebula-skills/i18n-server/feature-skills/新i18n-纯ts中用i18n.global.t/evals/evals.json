@@ -1,16 +1,21 @@
 {
   "should_trigger": [
     "请使用 新i18n-纯ts中用i18n.global.t 处理：request.ts、util.ts、helper.ts 里需要直接 import i18n，再通过 i18n.global.t 消费错误提示和通知文案。",
-    "当前仓库需要参考 新i18n-纯ts中用i18n.global.t，因为这次是纯 TS 文件里的全局 i18n 实例消费，不是组件内 useI18n().t。"
+    "当前仓库需要参考 新i18n-纯ts中用i18n.global.t，因为这次是纯 TS 文件里的全局 i18n 实例消费，不是组件内 useI18n().t。",
+    "formRules.ts 里已经用 i18n.global.t 生成校验 message 了，为什么组件 computed rules 里还要写 void i18n.global.locale.value 才能让切语言后的校验提示更新？",
+    "登录页切换语言后校验提示还是旧语言，需要定位纯 TS i18n 工厂和组件侧 locale 订阅之间的联动问题。"
   ],
   "should_not_trigger": [
     "我只想分析旧链路，不想直接进入 新i18n-纯ts中用i18n.global.t 的实现步骤。",
     "这次只是 Vue 模板里改成 $t()，不涉及 request.ts 或 util.ts 里的 i18n.global.t。",
-    "这次是 script setup、computed 和 notification 里用 t()，不是纯 TS 文件里 import i18n。"
+    "这次是 script setup、computed 和 notification 里用 t()，不是纯 TS 文件里 import i18n。",
+    "这次只是组件内 useI18n().t 的通知文案改造，不涉及全局 i18n 工厂或 rules 重建。",
+    "这次需要 trans 标记和业务层回调 t 的动态拼接，不是 i18n.global.t 提前求值后的 locale 依赖问题。"
   ],
   "output_checklist": [
     "说明为什么命中该 skill",
     "说明主模板或 few-shot 的选择理由",
-    "说明纯 TS 全局 i18n 消费的完成态"
+    "说明纯 TS 全局 i18n 消费的完成态",
+    "若命中 formRules 联动变体，说明为什么需要显式读取 locale.value"
   ]
 }

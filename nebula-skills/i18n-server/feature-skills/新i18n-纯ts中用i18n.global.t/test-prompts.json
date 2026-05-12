@@ -16,5 +16,17 @@
     "prompt": "上游已经把问题收敛到纯 TS 全局实例消费层，你直接处理 request.ts / util.ts 这一类 i18n.global.t 用法。",
     "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，作为单次功能节点被消费",
     "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
+  },
+  {
+    "id": "pure-ts-global-04-form-rules-locale-reactivity",
+    "prompt": "formRules.ts 里已经用 i18n.global.t 把校验 message 提前算成字符串了，所以组件的 computed rules 里要显式读取 void i18n.global.locale.value，确保切语言后规则文案会重建。",
+    "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，并识别这是纯 TS i18n 工厂与组件侧 locale 订阅的联动变体",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
+  },
+  {
+    "id": "pure-ts-global-05-login-rules-stale-locale",
+    "prompt": "登录页切换语言后校验提示还是旧语言，要先看 formRules.ts 里是否通过 i18n.global.t 提前生成了 message，再判断组件 computed rules 是否缺少 locale 依赖。",
+    "expected": "稳定命中 新i18n-纯ts中用i18n.global.t，并输出纯 TS 工厂提前求值 + locale 订阅重建的判断",
+    "expected_feature_skill": "新i18n-纯ts中用i18n.global.t"
   }
 ]
