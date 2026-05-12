@@ -21,6 +21,9 @@ try {
 }
 ```
 
+边界提示：
+- 若 `request` 或 gateway 已经对同一后端错误提示过，上层不要再 `showNotificationError`
+
 ## helper 首次接入
 
 如果当前项目里还没有 `showNotificationError`，先看：

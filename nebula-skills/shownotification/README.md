@@ -40,6 +40,18 @@ showNotificationError(err, "加载失败");
 showNotificationError(err, "密码重置失败");
 ```
 
+默认 helper 风格以 `assets/examples/bootstrap-showNotificationError.md` 为准：
+- 保持 `microfb` 式单函数最小实现
+- 兼容 `err.error.*` 与 `err.response.data.*`
+- 不默认在 helper 内做重复弹窗打标记
+- 不默认拆私有解析函数或增加额外职责
+
+执行优先级补充：
+- 第一步先把 helper 落成最小模板
+- 第二步再改调用边界
+- 第三步才处理重复弹窗
+- 不要把“边界治理”偷换成“把 helper 做大”
+
 如果项目里还没有 `showNotificationError`，先从：
 
 - `assets/examples/bootstrap-showNotificationError.md`

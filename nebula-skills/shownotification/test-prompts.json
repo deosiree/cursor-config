@@ -13,5 +13,10 @@
     "id": 3,
     "prompt": "一个页面 catch 里直接 showNotification('请求失败', { type: 'error' })，同时 request 层已经处理了后端错误。使用 $shownotification 评审这段逻辑。",
     "expected": "能指出这是后端错误分流错误和重复弹窗风险，并建议收口到 showNotificationError 或删除上层重复提示。"
+  },
+  {
+    "id": 4,
+    "prompt": "给定一个已有 showNotificationError 的仓库，使用 $shownotification 统一通知 helper 风格。要求优先沿用 microfb 式最小实现，兼容 err.error.* 和 err.response.data.*，不要新增多层私有函数。",
+    "expected": "能优先推荐 microfb 式单函数最小实现，并明确重复弹窗优先靠 request/gateway/view 边界治理，而不是在 helper 内默认做黑盒消重。"
   }
 ]

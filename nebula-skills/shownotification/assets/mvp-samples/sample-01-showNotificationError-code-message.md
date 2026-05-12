@@ -86,10 +86,16 @@ catch (error) {
 ### `src/utils/notification.ts`
 
 ```ts
-export function showNotificationError(err: any, message?: string) {
-  const msg = err?.error?.message ?? message;
-  const code = err?.error.code ? `[${err?.error.code}]` : "";
-  showNotification(code + msg, { type: "error" });
+export function showNotificationError(err: any, fallbackMessage?: string) {
+  const code = err?.error?.code ?? err?.response?.data?.code;
+  const msg =
+    err?.error?.message ??
+    err?.response?.data?.message ??
+    err?.message ??
+    fallbackMessage ??
+    "操作失败";
+
+  showNotification(code ? `[${code}]${msg}` : msg, { type: "error" });
 }
 ```
 
@@ -120,6 +126,7 @@ catch (error) {
 - 先新增统一的后端错误入口 `showNotificationError`
 - 再把 request 层的 `[code]message` 展示逻辑收口
 - 页面层不再自己判断 `Error` 或拼消息，直接消费统一入口
+- helper 至少兼容 `err.error.*` 与 `err.response.data.*`
 
 ## 这个样本证明什么
 - `showNotificationError` 是新增型模板能力

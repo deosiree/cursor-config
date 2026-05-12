@@ -65,6 +65,10 @@ try {
 - 有后端 `code` 时：展示 `[code]message`
 - 无 `code` 时：展示 `message`
 - 无后端 message 时：回退到 `fallbackMessage`
+- 推荐最小实现口径：
+  先读 `err.error.code/message`，再读 `err.response.data.code/message`，再退化到 `err.message`，最后回退到 `fallbackMessage`
+- 首次补 helper 时，`assets/examples/bootstrap-showNotificationError.md` 的最小模板优先级最高；
+  若没有明确额外约束，不要自行扩展为“更完整封装版”
 
 ## 通知边界
 
@@ -108,12 +112,46 @@ catch (err) {
 
 另外，不要把翻译函数包装写进本 skill 的推荐示例中。
 本 skill 推荐的最小写法始终是不包 `t()` 的普通字符串 fallback。
+另外，不要默认把私有解析函数、已提示标记函数、埋点分支、错误分类器之类的重封装写进 `showNotificationError`；
+重复弹窗优先通过 request / gateway / view 边界治理，而不是在 helper 内做黑盒兜底。
+
+### 最小模板约束
+
+当任务目标是“新增 `showNotificationError`”或“首次接入统一错误提示”时，默认必须先落到如下级别的最小 helper：
+
+```ts
+export function showNotificationError(err: any, fallbackMessage?: string) {
+  const code = err?.error?.code ?? err?.response?.data?.code;
+  const msg =
+    err?.error?.message ??
+    err?.response?.data?.message ??
+    err?.message ??
+    fallbackMessage ??
+    "操作失败";
+
+  showNotification(code ? `[${code}]${msg}` : msg, { type: "error" });
+}
+```
+
+只有在用户或仓库现状明确要求时，才允许在这个 helper 上额外增加职责。
+
+默认不允许额外增加的职责：
+- 重复弹窗自动去重标记
+- 私有解析函数拆分
+- 埋点、监控、日志上报
+- 错误类型枚举分流
+- 国际化注入
+
+如果需要处理“重复弹窗”，先改调用边界：
+- request 已提示，则 view 不再提示
+- gateway 已提示，则上层只阻断不再提示
+- 只有边界治理无法落地时，才单独说明为何必须扩 helper
 
 ## 执行步骤
 1. 搜索 `ElMessage` 残留点
 2. 搜索后端错误是否仍然使用 `showNotification(... { type: "error" })`
 3. 搜索是否存在散落的 `err?.error?.code` 拼接逻辑
-4. 若项目里还没有 `showNotificationError`，先按最小模板补齐 helper
+4. 若项目里还没有 `showNotificationError`，先按最小模板补齐 helper，不要顺手叠加其他职责
 5. 将普通提示统一到 `showNotification`
 6. 将后端错误统一到 `showNotificationError(err, fallbackMessage)`
 7. 检查 helper / gateway / request / view 是否存在同一错误重复提示

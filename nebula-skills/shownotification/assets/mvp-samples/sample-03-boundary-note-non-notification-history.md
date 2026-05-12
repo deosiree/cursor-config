@@ -20,3 +20,5 @@
 - 历史提交中可能夹带通知之外的伴随改动
 - skill 回填样本时应只抽通知职责直接相关的最小片段
 - 不能因为某个 commit 同时改了通知和 i18n，就把 i18n 规范并入通知 skill
+- 不要把“重复弹窗治理”误解为必须在 `showNotificationError` 内加入标记或黑盒消重；
+  本 skill 默认推荐先从 request / gateway / view 边界治理重复通知
