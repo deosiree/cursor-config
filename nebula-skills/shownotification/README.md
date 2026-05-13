@@ -1,6 +1,7 @@
 # shownotification 套件说明
 
 ## 背景
+
 nebula 历史上同时存在这些通知问题：
 
 - `ElMessage` 与 `showNotification` 混用
@@ -11,7 +12,8 @@ nebula 历史上同时存在这些通知问题：
 因此本套件把通知分成两类统一治理：
 
 - 普通业务提示：`showNotification(message, { type, ...options })`
-- 后端错误提示：复用仓库内稳定错误提示 helper；若不存在，再新增 `showNotificationError(err, fallbackMessage)` 一类最小 helper
+- 后端错误提示：复用仓库内稳定错误提示 helper；若不存在，
+  再新增 `showNotificationError(err, fallbackMessage)` 一类最小 helper
 
 在重复弹窗风险较高的仓库里，还要继续把后端错误拆成两类：
 
@@ -19,6 +21,7 @@ nebula 历史上同时存在这些通知问题：
 - 业务错误：`status == 200 && code != 0`
 
 ## 本套件解决什么
+
 - 统一普通提示入口
 - 给后端错误建立统一入口，优先复用仓库现有 helper
 - 统一 `[code]message` 展示规则
@@ -26,6 +29,7 @@ nebula 历史上同时存在这些通知问题：
 - 说明何时需要把 HTTP 状态错误与业务错误继续分层
 
 ## 本套件不解决什么
+
 - 不负责 i18n 规范
 - 不讨论 `useI18n()` 在全局工具中的注入策略
 - 不覆盖确认框、阻断式弹窗
@@ -55,6 +59,7 @@ handleApiError(err, "密码重置失败");
 - 能被 request / gateway / view 边界稳定复用
 
 默认 helper 风格以 `assets/examples/bootstrap-showNotificationError.md` 为准：
+
 - 保持 `microfb` 式单函数最小实现
 - 兼容 `err.error.*` 与 `err.response.data.*`
 - 不默认在 helper 内做重复弹窗打标记
@@ -101,6 +106,7 @@ if ((error as any)?.type === "business") {
 - 不需要把 helper 扩成黑盒去重器
 
 执行优先级补充：
+
 - 第一步先搜索仓库里是否已经有等价 helper
 - 第二步若已有 helper，优先建议复用并申请人类确认是否沿用现名
 - 第三步只有在没有现成 helper 时，才把 helper 落成最小模板
@@ -134,16 +140,21 @@ if ((error as any)?.type === "business") {
 
 - `SKILL.md`
   主入口与执行规则
+
 - `references/`
   长说明与职责边界
+
 - `assets/mvp-samples/`
   来自真实仓库变更的 MVP 样本，当前同时覆盖 `microfb` 与 `apex_dev`
+
 - `assets/examples/`
   不依赖具体业务上下文的最小示例与首次接入模板
+
 - `__template__/notification-migration-checklist.md`
   执行与验收清单
 
 ## 历史样本范围
+
 本套件只抽通知职责直接相关的最小片段。
 
 即使原始提交里顺带包含：
@@ -154,14 +165,16 @@ if ((error as any)?.type === "business") {
 
 这些内容也不会进入本套件的 MVP 样本主体。
 
-真实历史片段若包含 `t(...)`，会保留为历史证据；但本套件自己的推荐写法仍以普通字符串 fallback 为准。
+真实历史片段若包含 `t(...)`，会保留为历史证据；
+但本套件自己的推荐写法仍以普通字符串 fallback 为准。
 
 ## 建议阅读顺序
 
 如果你正在处理 request / gateway 重复通知，建议按这个顺序读：
 
 1. `assets/mvp-samples/sample-05-handleStatusError-http-boundary.md`
-2. `assets/mvp-samples/sample-06-business-error-tagging-with-handleGatewayError.md`
+2. `assets/mvp-samples/`
+   `sample-06-business-error-tagging-with-handleGatewayError.md`
 
 其中：
 

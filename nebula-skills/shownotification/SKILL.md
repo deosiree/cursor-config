@@ -1,11 +1,17 @@
 ---
 name: shownotification
-description: Use when nebula 项目需要收口通知链路、统一 showNotification 与后端错误提示 helper、治理 [code]message、401/403/500 状态错误提示、status!=200 与 code!=0 分层、或排查 request/gateway/view 重复弹窗；触发词包括 通知收口、错误提示 helper、重复弹窗、[code]message、handleApiError、handleStatusError、handleGatewayError、business error、duplicate notification、toast/popup error
+description: >-
+  Use when nebula 项目需要收口通知链路、统一 showNotification 与后端错误提示
+  helper、治理 [code]message、401/403/500 状态错误提示、status!=200 与
+  code!=0 分层、或排查 request/gateway/view 重复弹窗；触发词包括 通知收口、
+  错误提示 helper、重复弹窗、[code]message、handleApiError、handleStatusError、
+  handleGatewayError、business error、duplicate notification、toast/popup error
 ---
 
 # shownotification
 
 ## 目标
+
 把通知规范收敛为三条稳定规则：
 
 1. 普通业务提示统一使用 `showNotification(message, { type, ...options })`
@@ -15,12 +21,14 @@ description: Use when nebula 项目需要收口通知链路、统一 showNotific
 本 skill 只负责通知职责，不负责国际化、全局 i18n 注入或 `useI18n()` 使用规范。
 
 ## 何时使用
+
 - 新增前端提示逻辑，需要判断该用 `showNotification` 还是错误提示 helper
 - 旧代码存在 `ElMessage`、手写 `[code]message` 拼接、或后端错误提示口径不一致
 - gateway / request / view 多层都在 `catch` 提示，怀疑存在重复弹窗
 - 其它微服务准备首次接入统一错误提示 helper
 
 ## 何时不要使用
+
 - 只做表单规则、字段 validator、本地校验文案本身
 - 讨论国际化注入、`useI18n()` 在全局工具中的使用限制
 - 处理 `ElMessageBox`、确认弹窗、阻断式交互
@@ -28,6 +36,7 @@ description: Use when nebula 项目需要收口通知链路、统一 showNotific
 ## 核心规则
 
 ### 规则 1：普通提示
+
 以下场景统一使用 `showNotification`：
 
 - 成功提示
@@ -44,6 +53,7 @@ showNotification("验证码缺失，请重新获取", { type: "error" });
 ```
 
 ### 规则 2：后端错误
+
 以下场景统一使用“错误提示 helper”：
 
 - API 请求失败
@@ -73,12 +83,17 @@ try {
 - 无 `code` 时：展示 `message`
 - 无后端 message 时：回退到 `fallbackMessage`
 - 推荐最小实现口径：
-  先读 `err.error.code/message`，再读 `err.response.data.code/message`，再退化到 `err.message`，最后回退到 `fallbackMessage`
+
+  先读 `err.error.code/message`，再读 `err.response.data.code/message`，
+  再退化到 `err.message`，最后回退到 `fallbackMessage`
 - 首次补 helper 时，`assets/examples/bootstrap-showNotificationError.md` 的最小模板优先级最高；
   若没有明确额外约束，不要自行扩展为“更完整封装版”
-- 若仓库已有现成 helper，则先判断是否等价；只有不存在等价 helper 时，才新增 `showNotificationError` 一类最小模板名
+- 若仓库已有现成 helper，则先判断是否等价；
+
+  只有不存在等价 helper 时，才新增 `showNotificationError` 一类最小模板名
 
 ### 规则 3：状态错误与业务错误分层
+
 当仓库里已经出现 request / gateway 重复通知时，需要继续把“后端错误”拆成两层：
 
 - `status != 200`：HTTP 状态错误
@@ -95,7 +110,10 @@ return Promise.reject({
 ```
 
 ```ts
-export async function handleGatewayError<T>(action: () => Promise<T>, defaultMsg = "操作失败") {
+export async function handleGatewayError<T>(
+  action: () => Promise<T>,
+  defaultMsg = "操作失败"
+) {
   try {
     return await action();
   } catch (error) {
@@ -117,17 +135,22 @@ export async function handleGatewayError<T>(action: () => Promise<T>, defaultMsg
 ## 通知边界
 
 ### request 层
+
 - 可以统一处理协议错误、HTTP 错误、网络错误
 - 若已经进入状态错误分层模式，`status != 200` 统一走 `handleStatusError`
 - 若这里已经提示，调用方不要再对同一错误重复提示
 
 ### gateway / helper 层
+
 - 可以对“该领域能明确归类的错误”做统一提示
 - 典型场景：密码传输加密失败、认证失败、MFA 校验失败
 - 若已经进入状态错误分层模式，只消费 `type === "business"` 的业务错误
-- 若这里已经通过错误提示 helper 或 `handleGatewayError(() => action(), "...")` 提示并继续抛错，上层只负责阻断，不再重复提示
+- 若这里已经通过错误提示 helper
+  或 `handleGatewayError(() => action(), "...")` 提示并继续抛错，
+  上层只负责阻断，不再重复提示
 
 ### view 层
+
 - 只负责普通业务提示与成功提示
 - 对已经在 request / gateway 层提示过的后端错误，不要再重复通知
 
@@ -205,6 +228,7 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 只有在用户或仓库现状明确要求时，才允许在这个 helper 上额外增加职责。
 
 默认不允许额外增加的职责：
+
 - 重复弹窗自动去重标记
 - 私有解析函数拆分
 - 埋点、监控、日志上报
@@ -212,6 +236,7 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 - 国际化注入
 
 如果需要处理“重复弹窗”，先改调用边界：
+
 - request 已提示，则 view 不再提示
 - gateway 已提示，则上层只阻断不再提示
 - 只有边界治理无法落地时，才单独说明为何必须扩 helper
@@ -229,40 +254,55 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 以下场景必须暂停并申请人类确认：
 
 1. `existingHelperDetection` 发现多个等价 helper
+
    输出：
+
    - 候选 helper 列表
    - 推荐复用对象
    - 不推荐对象及原因
 
 2. 需要决定是否新增 `handleStatusError`
+
    触发条件：
+
    - request 与 gateway 可能对同一 `status != 200` 重复提示
    输出：
+
    - 是否建议新增
    - 新增后由谁处理 `status != 200`
    - `handleApiError` 是否退回只处理业务错误
 
 3. 需要决定是否引入 `type === "business"` 协议
+
    触发条件：
+
    - `status == 200 && code != 0` 仍在裸抛 `new Error(message)`
    输出：
+
    - 是否建议结构化业务错误
    - gateway 是否只消费 `type === "business"`
 
 4. 仓库已有等价 helper，但名称与默认模板不一致
+
    输出：
+
    - 是否沿用现名
    - 是否只补 reference / sample，而不新增第二套命名
 
 ## 执行步骤
-1. 先搜索现有错误提示 helper：`handleApiError`、`showNotificationError` 或其他具备 `[code]message` / fallback 能力的函数
+
+1. 先搜索现有错误提示 helper：`handleApiError`、`showNotificationError`
+   或其他具备 `[code]message` / fallback 能力的函数
 2. 输出 `existingHelperDetection`
-3. 若扫描到多个候选 helper，或 request / gateway 已经同时处理后端错误，先申请人类确认复用入口与分层边界
+3. 若扫描到多个候选 helper，或 request / gateway
+   已经同时处理后端错误，先申请人类确认复用入口与分层边界
+
    - 若命中检查点 1，暂停，不继续改代码
 4. 搜索 `ElMessage` 残留点
 5. 搜索后端错误是否仍然使用 `showNotification(... { type: "error" })`
 6. 搜索是否存在散落的 `err?.error?.code` 拼接逻辑
 7. 若项目里没有等价 helper，先按最小模板补齐 helper，不要顺手叠加其他职责
+
    - 新增 helper 前，必须先确认未命中检查点 1 和检查点 4
 8. 将普通提示统一到 `showNotification`
 9. 将后端错误统一到“仓库已确认复用的错误提示 helper”
@@ -270,6 +310,7 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 11. 若 request / gateway 可能同时处理后端错误，先判断是否要分层：
     - `status != 200` 交给 `handleStatusError`
     - `status == 200 && code != 0` 包装成 `type === "business"`
+
     - 若命中检查点 2 或检查点 3，先输出分层方案，再等待确认
 12. 回归关键交互，确认 `[code]message` 展示正常
 
@@ -280,7 +321,10 @@ rg -n "\bElMessage\b|ElMessage\.(success|warning|error|info)" src mock
 ```
 
 ```powershell
-rg -n "showNotificationError\(|err\?\.error\?\.code|showNotification\(.*type:\s*\"error\"" src
+$pattern =
+  "showNotificationError\(|err\?\.error\?\.code|" +
+  "showNotification\(.*type:\s*\"error\""
+rg -n $pattern src
 ```
 
 ```powershell
@@ -301,7 +345,8 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
 - `[[assets/mvp-samples/sample-04-existing-helper-reuse-handleGatewayError.md]]`
 - `[[assets/mvp-samples/sample-03-boundary-note-non-notification-history.md]]`
 - `[[assets/mvp-samples/sample-05-handleStatusError-http-boundary.md]]`
-- `[[assets/mvp-samples/sample-06-business-error-tagging-with-handleGatewayError.md]]`
+- `[[assets/mvp-samples/`
+  `sample-06-business-error-tagging-with-handleGatewayError.md]]`
 
 ## references
 
@@ -312,6 +357,7 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
 - `[[references/repeated-notification-avoidance.md]]`
 
 ## 验收标准
+
 - 普通提示统一走 `showNotification`
 - 后端错误统一走仓库内已确认的错误提示 helper
 - 后端错误展示 `[code]message`
@@ -323,15 +369,23 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
 - 若仓库已有等价 helper，不会机械新增第二个同类函数
 
 ## 样本阅读顺序
+
 - 先读 `assets/examples/bootstrap-showNotificationError.md`
   解决“这个项目里还没有错误提示 helper 时，我最少要补什么”
+
 - 再读 `assets/examples/minimal-usage.md`
   解决“已经确认 helper 后，业务代码怎么调用”
+
 - 再读 `assets/mvp-samples/sample-05-handleStatusError-http-boundary.md`
   解决“HTTP 状态错误应该收在哪里”
-- 再读 `assets/mvp-samples/sample-06-business-error-tagging-with-handleGatewayError.md`
+
+- 再读
+  `assets/mvp-samples/`
+  `sample-06-business-error-tagging-with-handleGatewayError.md`
   解决“业务错误如何稳定进入 gateway 统一提示”
-- 最后读 `assets/mvp-samples/sample-01...`、`sample-02...` 和 `sample-04...`
+
+- 最后读 `assets/mvp-samples/sample-01...`、`sample-02...`
+  和 `sample-04...`
   解决“真实历史里其他类型的通知收口是怎么从 before 改到 after 的”
 
 ## 使用示例

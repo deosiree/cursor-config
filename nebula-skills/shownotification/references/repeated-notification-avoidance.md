@@ -1,14 +1,17 @@
 # repeated-notification-avoidance
 
 ## 目标
+
 避免同一后端错误在 helper / gateway / view 多层 catch 中被重复弹出。
 
 ## 常见重复链路
+
 - helper 内 `showNotificationError(err, "...")` 后 `throw`
 - gateway 外层 `catch` 再 `showNotificationError(err, "...")`
 - 页面层又 `catch` 一次并提示
 
 ## 处理规则
+
 - 谁最了解该错误语义，谁负责提示
 - 下层已经提示并继续抛错时，上层只负责阻断流程，不再重复提示
 - view 层只处理本地校验与成功提示；后端错误优先交给 request / gateway
