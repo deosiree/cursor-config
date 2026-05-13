@@ -13,11 +13,17 @@ nebula 历史上同时存在这些通知问题：
 - 普通业务提示：`showNotification(message, { type, ...options })`
 - 后端错误提示：复用仓库内稳定错误提示 helper；若不存在，再新增 `showNotificationError(err, fallbackMessage)` 一类最小 helper
 
+在重复弹窗风险较高的仓库里，还要继续把后端错误拆成两类：
+
+- HTTP 状态错误：`status != 200`
+- 业务错误：`status == 200 && code != 0`
+
 ## 本套件解决什么
 - 统一普通提示入口
 - 给后端错误建立统一入口，优先复用仓库现有 helper
 - 统一 `[code]message` 展示规则
 - 限制同一错误只在约定边界提示一次
+- 说明何时需要把 HTTP 状态错误与业务错误继续分层
 
 ## 本套件不解决什么
 - 不负责 i18n 规范
@@ -53,6 +59,46 @@ handleApiError(err, "密码重置失败");
 - 兼容 `err.error.*` 与 `err.response.data.*`
 - 不默认在 helper 内做重复弹窗打标记
 - 不默认拆私有解析函数或增加额外职责
+
+## 状态错误 vs 业务错误
+
+当 request、gateway、view 对同一个错误可能重复提示时，不要把所有后端错误都继续塞给同一个 helper。
+
+推荐分层：
+
+- `handleStatusError` 负责 `status != 200` 的 HTTP 状态错误
+- `handleApiError` 负责 `status == 200 && code != 0` 的业务错误
+- request 负责通用状态错误
+- gateway 负责消费结构化业务错误
+
+这样处理的重点不是“多一个 helper”，而是把提示边界拆干净。
+
+## 结构化业务错误联动
+
+如果 request 已经把 `status != 200` 收口掉，那么 `code != 0` 不应该再继续裸抛普通错误，而应显式标记为业务错误：
+
+```ts
+return Promise.reject({
+  type: "business",
+  error: new Error(message || "Business Error"),
+  response,
+});
+```
+
+gateway 再只消费这一类结构化错误：
+
+```ts
+if ((error as any)?.type === "business") {
+  handleApiError(error, defaultMsg);
+}
+```
+
+这条协议的价值是：
+
+- 不靠 `status` 猜业务错误
+- 不靠 `message` 猜错误来源
+- 不让 request 已处理过的 HTTP 错误再进入 gateway 二次通知
+- 不需要把 helper 扩成黑盒去重器
 
 执行优先级补充：
 - 第一步先搜索仓库里是否已经有等价 helper
@@ -91,7 +137,7 @@ handleApiError(err, "密码重置失败");
 - `references/`
   长说明与职责边界
 - `assets/mvp-samples/`
-  来自 microfb 的真实 `commit^ -> commit` MVP 样本
+  来自真实仓库变更的 MVP 样本，当前同时覆盖 `microfb` 与 `apex_dev`
 - `assets/examples/`
   不依赖具体业务上下文的最小示例与首次接入模板
 - `__template__/notification-migration-checklist.md`
@@ -109,6 +155,18 @@ handleApiError(err, "密码重置失败");
 这些内容也不会进入本套件的 MVP 样本主体。
 
 真实历史片段若包含 `t(...)`，会保留为历史证据；但本套件自己的推荐写法仍以普通字符串 fallback 为准。
+
+## 建议阅读顺序
+
+如果你正在处理 request / gateway 重复通知，建议按这个顺序读：
+
+1. `assets/mvp-samples/sample-05-handleStatusError-http-boundary.md`
+2. `assets/mvp-samples/sample-06-business-error-tagging-with-handleGatewayError.md`
+
+其中：
+
+- `sample-05` 解决“HTTP 状态错误应该收在哪里”
+- `sample-06` 解决“业务错误如何稳定进入 gateway 统一提示”
 
 ## 适用方式
 

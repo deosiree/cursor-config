@@ -28,5 +28,20 @@
     "id": 6,
     "prompt": "扫描一个模块的 request、gateway、view，发现多个错误提示 helper 混用。使用 $shownotification 先识别候选 helper，再申请人类介入确认复用入口，并给出迁移建议。",
     "expected": "能输出 existingHelperDetection，列出候选 helper、推荐复用对象和人类门禁原因，而不是直接指定新增 showNotificationError。"
+  },
+  {
+    "id": 7,
+    "prompt": "某仓库的 request 已经统一处理 status != 200，但仍然直接用 handleApiError 处理 401/403/500。使用 $shownotification 判断是否应补 handleStatusError，并说明 request / gateway 的边界。",
+    "expected": "能指出 HTTP 状态错误应从 handleApiError 中拆出，推荐用 handleStatusError 承接 status != 200，并说明 request 负责通用状态错误、gateway 负责业务错误。"
+  },
+  {
+    "id": 8,
+    "prompt": "某仓库在 status == 200 && code != 0 时只抛 new Error(message)，而 handleGatewayError 对所有 catch 到的错误都统一 handleApiError。使用 $shownotification 评审这条链路。",
+    "expected": "能指出缺少结构化业务错误协议，建议 request 将 code != 0 封装为 type === 'business'，并让 handleGatewayError 只消费该类型，而不是对所有错误统一提示。"
+  },
+  {
+    "id": 9,
+    "prompt": "request 已经处理了 401 跳登录与状态错误通知，但 gateway catch 里仍然无差别 handleApiError(error, '操作失败')。使用 $shownotification 判断是否会重复弹窗，并给出最小修复方向。",
+    "expected": "能识别 request / gateway 对同一错误重复通知的风险，建议保留 request 对 status != 200 的处理，并把 gateway 收紧为只消费 type === 'business' 的业务错误。"
   }
 ]
