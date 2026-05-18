@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mermaid 流程图 — 参考模板</title>
+<!--
+  html-visual-explainer 技能参考模板: Mermaid 流程图/图表。
+  青绿/石板调色板。
+  关键模式:
+  - Mermaid theme: 'base' 与自定义 themeVariables
+  - diagram-shell > mermaid-wrap > zoom-controls + viewport > canvas
+  - 缩放控件 (+/-/重置/展开)
+  - Ctrl/Cmd+滚轮缩放, 拖拽平移
+  - 点击展开(在新标签页打开全尺寸)
+  - 交错淡入
+  - 双主题
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ 主题 ============ */
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
+
+    --bg: #f4f8fb;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --border: rgba(0, 0, 0, 0.07);
+    --border-bright: rgba(0, 0, 0, 0.14);
+    --text: #0c1b2e;
+    --text-dim: #6b7d92;
+    --accent: #0891b2;
+    --accent-dim: rgba(8, 145, 178, 0.07);
+    --green: #059669;
+    --green-dim: rgba(5, 150, 105, 0.07);
+    --amber: #d97706;
+    --amber-dim: rgba(217, 119, 6, 0.07);
+    --rose: #be123c;
+    --rose-dim: rgba(190, 18, 60, 0.07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1419;
+      --surface: #16202a;
+      --surface-elevated: #1c2836;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #dce8f2;
+      --text-dim: #7e95ab;
+      --accent: #22d3ee;
+      --accent-dim: rgba(34, 211, 238, 0.1);
+      --green: #34d399;
+      --green-dim: rgba(52, 211, 153, 0.1);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.1);
+      --rose: #fb7185;
+      --rose-dim: rgba(251, 113, 133, 0.1);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 50% 0%, var(--accent-dim) 0%, transparent 60%),
+      radial-gradient(ellipse at 100% 100%, var(--green-dim) 0%, transparent 40%);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+
+  @media (max-width: 768px) { body { padding: 16px; } }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ============ 图表外壳 ============ */
+  .container {
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    animation: fadeIn 0.4s ease both;
+  }
+
+  .card__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  /* ============ 缩放控件 ============ */
+  .diagram-shell {
+    width: 100%;
+  }
+
+  .zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .zoom-btn {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 1;
+  }
+  .zoom-btn:hover { background: var(--accent-dim); border-color: var(--accent); }
+  .zoom-btn:active { transform: scale(0.95); }
+
+  .zoom-level {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .expand-btn { margin-left: auto; }
+
+  /* ============ Mermaid 视口 ============ */
+  .mermaid-viewport {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: grab;
+    touch-action: none;
+  }
+  .mermaid-viewport:active { cursor: grabbing; }
+
+  .mermaid-canvas {
+    transform-origin: 0 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none;
+  }
+
+  /* Mermaid 居中 */
+  .mermaid-canvas svg {
+    display: block;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="card">
+    <div class="card__label">架构流程图</div>
+    <h1>系统数据流</h1>
+
+    <div class="diagram-shell">
+      <!-- 缩放控件 -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" data-action="zoom-in" title="放大">+</button>
+        <button class="zoom-btn" data-action="zoom-out" title="缩小">−</button>
+        <button class="zoom-btn" data-action="zoom-reset" title="重置">↺</button>
+        <span class="zoom-level" id="zoomLevel">100%</span>
+        <button class="zoom-btn expand-btn" data-action="expand" title="在新标签页打开">⛶</button>
+      </div>
+
+      <!-- Mermaid 视口 -->
+      <div class="mermaid-viewport" id="mermaidViewport">
+        <div class="mermaid-canvas" id="mermaidCanvas">
+          <pre class="mermaid">
+flowchart TD
+    A["用户输入"] --> B["API 网关"]
+    B --> C{"认证服务"}
+    C -->|"通过"| D["业务处理"]
+    C -->|"失败"| E["错误响应"]
+    D --> F["缓存层"]
+    F --> G["主数据库"]
+    D --> H["消息队列"]
+    H --> I["异步处理器"]
+    I --> J["通知服务"]
+    J --> K["用户通知"]
+    D --> L["API 响应"]
+
+    style A fill:#0891b2,stroke:#0369a1,color:#ffffff
+    style B fill:#059669,stroke:#047857,color:#ffffff
+    style C fill:#d97706,stroke:#b45309,color:#ffffff
+    style E fill:#dc2626,stroke:#b91c1c,color:#ffffff
+    style G fill:#0891b2,stroke:#0369a1,color:#ffffff
+    style H fill:#059669,stroke:#047857,color:#ffffff
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Mermaid CDN -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  // 初始化 Mermaid
+  mermaid.initialize({
+    theme: 'base',
+    themeVariables: {
+      background: 'transparent',
+      primaryColor: '#0891b2',
+      primaryTextColor: '#1a1a2e',
+      primaryBorderColor: '#0891b2',
+      secondaryColor: '#059669',
+      secondaryTextColor: '#1a1a2e',
+      secondaryBorderColor: '#059669',
+      tertiaryColor: '#d97706',
+      tertiaryTextColor: '#1a1a2e',
+      tertiaryBorderColor: '#d97706',
+      lineColor: '#6b7d92',
+      fontSize: '14px',
+      fontFamily: 'DM Sans, system-ui, sans-serif',
+    }
+  });
+
+  // 缩放/平移控制
+  const viewport = document.getElementById('mermaidViewport');
+  const canvas = document.getElementById('mermaidCanvas');
+  const zoomLevel = document.getElementById('zoomLevel');
+
+  let scale = 1;
+  let panX = 0;
+  let panY = 0;
+  let isPanning = false;
+  let startX, startY;
+
+  function applyTransform() {
+    canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    zoomLevel.textContent = Math.round(scale * 100) + '%';
+  }
+
+  function zoomIn() { scale = Math.min(scale * 1.3, 5); applyTransform(); }
+  function zoomOut() { scale = Math.max(scale / 1.3, 0.2); applyTransform(); }
+  function zoomReset() { scale = 1; panX = 0; panY = 0; applyTransform(); }
+
+  // 按钮事件
+  document.querySelectorAll('.zoom-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const action = e.currentTarget.dataset.action;
+      if (action === 'zoom-in') zoomIn();
+      else if (action === 'zoom-out') zoomOut();
+      else if (action === 'zoom-reset') zoomReset();
+      else if (action === 'expand') openMermaidInNewTab();
+    });
+  });
+
+  // 滚轮缩放
+  viewport.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      if (e.deltaY < 0) zoomIn();
+      else zoomOut();
+    }
+  });
+
+  // 拖拽平移
+  viewport.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    isPanning = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+    viewport.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isPanning) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    applyTransform();
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isPanning) {
+      isPanning = false;
+      viewport.style.cursor = 'grab';
+    }
+  });
+
+  // 点击展开 - 在新标签页打开全尺寸 Mermaid SVG
+  function openMermaidInNewTab() {
+    const svg = document.querySelector('.mermaid-canvas svg');
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }
+</script>
+</body>
+</html>

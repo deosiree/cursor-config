@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幻灯片 — 参考模板</title>
+<!--
+  html-visual-explainer 技能参考模板: 幻灯片演示。
+  Midnight Editorial 预设 — 深海蓝 + 金色。
+  展示所有 10 种幻灯片类型。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:opsz,wght@14..32,400;14..32,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ 主题 ============ */
+  :root {
+    --font-body: 'Instrument Serif', 'Georgia', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --bg-slide: #0f172a;
+    --text-slide: #f8fafc;
+    --text-dim-slide: #94a3b8;
+    --accent-slide: #d4a73a;
+    --accent-dim-slide: rgba(212, 167, 58, 0.15);
+    --surface-slide: rgba(255, 255, 255, 0.04);
+  }
+
+  /* ============ 重置 ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-slide);
+    color: var(--text-slide);
+    font-family: var(--font-body);
+  }
+
+  /* ============ 幻灯片容器 ============ */
+  .slides-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100dvh;
+  }
+
+  /* ============ 幻灯片基础 ============ */
+  .slide {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 768px) {
+    .slide { padding: 40px 24px; }
+  }
+
+  /* ============ 幻灯片类型 ============ */
+
+  /* 1. Title */
+  .slide--title { align-items: center; text-align: center; }
+  .slide--title h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .slide--title .subtitle {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    color: var(--text-dim-slide);
+    max-width: 700px;
+  }
+  .slide--title .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-slide);
+    margin-top: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* 2. Section Divider */
+  .slide--section {
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-bottom: 15vh;
+  }
+  .slide--section .section-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--accent-slide);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .slide--section h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 800px;
+  }
+
+  /* 3. Content (标准) */
+  .slide--content h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    margin-bottom: 32px;
+    max-width: 800px;
+  }
+  .slide--content ul {
+    list-style: none;
+    max-width: 800px;
+  }
+  .slide--content li {
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    line-height: 1.6;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .slide--content li::before {
+    content: '→';
+    color: var(--accent-slide);
+    margin-right: 16px;
+  }
+
+  /* 4. Split */
+  .slide--split .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .slide--split h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 16px; }
+  .slide--split p { font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--text-dim-slide); line-height: 1.7; }
+  .slide--split .split-visual {
+    background: var(--surface-slide);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    font-size: 1.25rem;
+    color: var(--text-dim-slide);
+  }
+
+  /* 5. Diagram */
+  .slide--diagram h2 { font-size: 1.5rem; margin-bottom: 20px; }
+  .slide--diagram .diagram-area {
+    flex: 1;
+    background: var(--surface-slide);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--text-dim-slide);
+  }
+
+  /* 6. Dashboard */
+  .slide--dashboard .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .slide--dashboard .kpi-card {
+    background: var(--surface-slide);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+  }
+  .slide--dashboard .kpi-value {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--accent-slide);
+  }
+  .slide--dashboard .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim-slide);
+    margin-top: 8px;
+  }
+
+  /* 7. Table, 8. Code, 9. Quote, 10. Full-Bleed — 使用内联样式 */
+
+  /* 幻灯片编号（每张幻灯片右下角） */
+  .slide-number {
+    position: absolute;
+    bottom: 24px;
+    right: 40px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim-slide);
+  }
+
+  /* 键盘导航提示 */
+  .nav-hint {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim-slide);
+    opacity: 0.5;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+  <!-- 提示 -->
+  <div class="nav-hint">↓ ↑ 键盘导航</div>
+
+  <!-- 1. Title -->
+  <section class="slide slide--title">
+    <div class="meta">项目回顾</div>
+    <h1>系统架构升级<br/>方案概览</h1>
+    <div class="subtitle">微服务重构 + 可观测性增强 · 2026 Q2</div>
+    <div class="slide-number">01 / 08</div>
+  </section>
+
+  <!-- 2. Section Divider -->
+  <section class="slide slide--section">
+    <div class="section-num">第一节</div>
+    <h2>当前架构<br/>与痛点分析</h2>
+    <div class="slide-number">02 / 08</div>
+  </section>
+
+  <!-- 3. Content -->
+  <section class="slide slide--content">
+    <h2>核心待解决问题</h2>
+    <ul>
+      <li>单体服务部署困难，发布周期长达 2 周</li>
+      <li>数据库成为瓶颈，读负载集中在主库</li>
+      <li>缺乏统一的可观测性，排障平均耗时 4 小时</li>
+      <li>测试覆盖率不足 30%，回归风险高</li>
+      <li>API 版本管理混乱，客户端兼容成本高</li>
+    </ul>
+    <div class="slide-number">03 / 08</div>
+  </section>
+
+  <!-- 4. Split -->
+  <section class="slide slide--split">
+    <div class="split-grid">
+      <div>
+        <h2>从单体到微服务</h2>
+        <p>将现有单体按业务域拆分为 6 个独立服务，每个服务拥有独立的数据库和部署管道。API 网关统一入口，提供服务发现、限流和认证。</p>
+      </div>
+      <div class="split-visual">
+        架构转换图<br/>(Mermaid)
+      </div>
+    </div>
+    <div class="slide-number">04 / 08</div>
+  </section>
+
+  <!-- 5. Diagram -->
+  <section class="slide slide--diagram">
+    <h2>目标架构</h2>
+    <div class="diagram-area">
+      Mermaid 图表将在此渲染<br/>
+      使用 `flowchart TD` 展示 6 个微服务及其交互
+    </div>
+    <div class="slide-number">05 / 08</div>
+  </section>
+
+  <!-- 6. Dashboard -->
+  <section class="slide slide--dashboard">
+    <h2 style="margin-bottom:24px">关键指标</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">-60%</div>
+        <div class="kpi-label">部署时间</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">3x</div>
+        <div class="kpi-label">吞吐量</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">99.9%</div>
+        <div class="kpi-label">可用性目标</div>
+      </div>
+    </div>
+    <div class="slide-number">06 / 08</div>
+  </section>
+
+  <!-- 7. Quote -->
+  <section class="slide" style="align-items:center;justify-content:center;text-align:center">
+    <blockquote style="font-size:clamp(1.5rem,3vw,2.5rem);max-width:800px;line-height:1.4;font-style:italic">
+      "架构不是一天建成的，<br/>但好的架构让每一天的迭代都更安全。"
+    </blockquote>
+    <div style="margin-top:24px;font-family:var(--font-mono);font-size:13px;color:var(--text-dim-slide)">
+      —— 架构原则
+    </div>
+    <div class="slide-number">07 / 08</div>
+  </section>
+
+  <!-- 8. Section Divider (结束) -->
+  <section class="slide slide--section">
+    <div class="section-num">下一步</div>
+    <h2>分阶段实施计划<br/>第一阶段预计 6 周</h2>
+    <div class="slide-number">08 / 08</div>
+  </section>
+
+</div>
+
+<script>
+  // 键盘导航
+  const container = document.getElementById('slidesContainer');
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      container.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+  });
+</script>
+</body>
+</html>

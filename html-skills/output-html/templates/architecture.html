@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>架构图 — 参考模板</title>
+<!--
+  html-visual-explainer 技能参考模板: CSS Grid 架构布局。
+  暖色陶土/鼠尾草调色板 — 明显不同于 teal(mermaid) 和 rose(data-table) 模板。
+  关键模式:
+  - 暖色非默认调色板 (陶土 + 鼠尾草)
+  - 深度层级: hero(输入源), default(中间部分), recessed(标注)
+  - 非对称背景氛围(偏离中心的渐变网格)
+  - 大号标题(38px)排版对比
+  - 带彩色强调边框和圆点标签的章节卡片
+  - 章节间的垂直流向箭头(内联 SVG)
+  - 带步骤框和箭头分隔符的水平管道
+  - 管道中的并行分支
+  - 颜色编码图例, 三列输出行
+  - 通过 --i CSS 变量实现的交错淡入
+  - 减少运动尊重, 响应式单列回退
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ 主题 ============ */
+  :root {
+    --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+    /* 浅色主题 — 暖色调 */
+    --bg: #faf7f5;
+    --surface: #ffffff;
+    --surface2: #f5f0ec;
+    --surface-elevated: #fff9f5;
+    --border: rgba(0, 0, 0, 0.07);
+    --border-bright: rgba(0, 0, 0, 0.14);
+    --text: #292017;
+    --text-dim: #8a7e72;
+    --accent: #c2410c;
+    --accent-dim: rgba(194, 65, 12, 0.07);
+    --green: #4d7c0f;
+    --green-dim: rgba(77, 124, 15, 0.07);
+    --orange: #b45309;
+    --orange-dim: rgba(180, 83, 9, 0.07);
+    --sage: #65a30d;
+    --sage-dim: rgba(101, 163, 13, 0.07);
+    --teal: #0f766e;
+    --teal-dim: rgba(15, 118, 110, 0.07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1412;
+      --surface: #231d1a;
+      --surface2: #2e2622;
+      --surface-elevated: #352d28;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #ede5dd;
+      --text-dim: #a69889;
+      --accent: #fb923c;
+      --accent-dim: rgba(251, 146, 60, 0.12);
+      --green: #a3e635;
+      --green-dim: rgba(163, 230, 53, 0.1);
+      --orange: #fbbf24;
+      --orange-dim: rgba(251, 191, 36, 0.1);
+      --sage: #bef264;
+      --sage-dim: rgba(190, 242, 100, 0.1);
+      --teal: #5eead4;
+      --teal-dim: rgba(94, 234, 212, 0.1);
+    }
+  }
+
+  /* ============ 重置 + 基础 ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, var(--accent-dim) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, var(--sage-dim) 0%, transparent 40%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 768px) { body { padding: 20px 16px; } }
+
+  /* ============ 动画 ============ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .pipeline-step, .legend, .flow-arrow { animation: none !important; }
+    .card, .pipeline-step { opacity: 1 !important; }
+  }
+
+  /* ============ 布局 ============ */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  /* ============ 卡片系统 ============ */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .card--hero {
+    background: var(--surface-elevated);
+    border-color: var(--accent-dim);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .card--recessed {
+    background: var(--surface2);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .card__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card__label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* ============ 流向箭头 ============ */
+  .flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+    color: var(--text-dim);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  /* ============ 头部 ============ */
+  header h1 {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  header p {
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 700px;
+  }
+
+  /* ============ 网格系统 ============ */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ============ 水平管道 ============ */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pipeline-step {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+  }
+  .pipeline-step__num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .pipeline-step__title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .pipeline-arrow {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .pipeline { flex-direction: column; }
+    .pipeline-arrow { transform: rotate(90deg); }
+  }
+
+  /* ============ 图例 ============ */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.4s ease both;
+  }
+  .legend__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .legend__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* ============ 代码块 ============ */
+  .code-block {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ============ 响应式 ============ */
+  @media (max-width: 768px) {
+    header h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 头部 -->
+  <header class="card card--hero" style="--i:0">
+    <div class="card__label">系统架构</div>
+    <h1>系统架构概览</h1>
+    <p>展示关键组件、数据流向和架构层次的整体系统架构图。</p>
+  </header>
+
+  <!-- 图例 -->
+  <div class="legend" style="--i:1">
+    <div class="legend__item">
+      <div class="legend__swatch" style="background:var(--accent)"></div>
+      <span>输入/源</span>
+    </div>
+    <div class="legend__item">
+      <div class="legend__swatch" style="background:var(--green)"></div>
+      <span>处理层</span>
+    </div>
+    <div class="legend__item">
+      <div class="legend__swatch" style="background:var(--teal)"></div>
+      <span>存储/持久化</span>
+    </div>
+    <div class="legend__item">
+      <div class="legend__swatch" style="background:var(--orange)"></div>
+      <span>输出/交付</span>
+    </div>
+  </div>
+
+  <!-- 管道流 -->
+  <div class="pipeline" style="--i:2">
+    <div class="pipeline-step">
+      <div class="pipeline-step__num">步骤 01</div>
+      <div class="pipeline-step__title">数据收集</div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-step__num">步骤 02</div>
+      <div class="pipeline-step__title">处理/转换</div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-step__num">步骤 03</div>
+      <div class="pipeline-step__title">分析与存储</div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-step__num">步骤 04</div>
+      <div class="pipeline-step__title">交付与展示</div>
+    </div>
+  </div>
+
+  <!-- 主要架构网格 -->
+  <div class="grid-3">
+    <div class="card" style="--i:3">
+      <div class="card__label">输入源</div>
+      <h3 style="margin-bottom:8px">数据源层</h3>
+      <ul style="list-style:none;font-size:14px;line-height:2;color:var(--text-dim)">
+        <li>• 用户输入 / API 请求</li>
+        <li>• 外部系统集成</li>
+        <li>• 文件与数据流</li>
+        <li>• 传感器/LoT 设备</li>
+      </ul>
+    </div>
+    <div class="card" style="--i:4">
+      <div class="card__label">处理</div>
+      <h3 style="margin-bottom:8px">业务逻辑层</h3>
+      <ul style="list-style:none;font-size:14px;line-height:2;color:var(--text-dim)">
+        <li>• 认证与授权</li>
+        <li>• 业务编排</li>
+        <li>• 验证与转换</li>
+        <li>• 缓存与优化</li>
+      </ul>
+    </div>
+    <div class="card" style="--i:5">
+      <div class="card__label">存储</div>
+      <h3 style="margin-bottom:8px">数据持久化</h3>
+      <ul style="list-style:none;font-size:14px;line-height:2;color:var(--text-dim)">
+        <li>• 主数据库</li>
+        <li>• 缓存层 (Redis)</li>
+        <li>• 对象存储</li>
+        <li>• 搜索索引</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 输出展示 -->
+  <div class="grid-3">
+    <div class="card card--recessed" style="--i:6">
+      <div class="card__label">交付</div>
+      <h4 style="margin-bottom:4px;font-size:14px">REST API</h4>
+      <p style="font-size:13px;color:var(--text-dim)">为外部客户端提供标准化接口</p>
+    </div>
+    <div class="card card--recessed" style="--i:7">
+      <div class="card__label">交付</div>
+      <h4 style="margin-bottom:4px;font-size:14px">Web 应用</h4>
+      <p style="font-size:13px;color:var(--text-dim)">管理界面与仪表盘</p>
+    </div>
+    <div class="card card--recessed" style="--i:8">
+      <div class="card__label">交付</div>
+      <h4 style="margin-bottom:4px;font-size:14px">事件流</h4>
+      <p style="font-size:13px;color:var(--text-dim)">异步通知与 webhook</p>
+    </div>
+  </div>
+
+  <!-- 关键注意事项 -->
+  <div class="card card--recessed" style="--i:9">
+    <div class="card__label">设计注意事项</div>
+    <p style="font-size:14px;color:var(--text-dim);line-height:1.7">
+      此架构采用分层设计，每层可独立扩展。数据流自上而下：从输入源经过业务逻辑处理,
+      最终持久化存储并提供交付接口。缓存层位于处理层与存储层之间，减少数据库负载。
+      建议监控每层的延迟和错误率，确保端到端可靠性。
+    </p>
+  </div>
+
+  <!-- 交错动画延迟 -->
+  <style>
+    .card, .pipeline-step, .legend, .flow-arrow { animation-delay: calc(var(--i, 0) * 0.08s); }
+  </style>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据表 — 参考模板</title>
+<!--
+  html-visual-explainer 技能参考模板: 数据表/比较/审计页面。
+  玫瑰/石板调色板 — 以表格为中心．
+  关键模式:
+  - 粘性表头
+  - 交替行背景
+  - 行悬停高亮
+  - 响应式包装器(overflow-x: auto)
+  - 状态指示器(彩色圆点)
+  - 交错淡入动画
+  - 双主题
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ 主题 ============ */
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
+
+    --bg: #f5f3f5;
+    --surface: #ffffff;
+    --surface2: #faf8fa;
+    --surface-elevated: #ffffff;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-bright: rgba(0, 0, 0, 0.12);
+    --text: #1a1a2e;
+    --text-dim: #7c7a8c;
+    --accent: #be123c;
+    --accent-dim: rgba(190, 18, 60, 0.06);
+    --green: #16a34a;
+    --green-dim: rgba(22, 163, 74, 0.08);
+    --red: #dc2626;
+    --red-dim: rgba(220, 38, 38, 0.08);
+    --amber: #d97706;
+    --amber-dim: rgba(217, 119, 6, 0.08);
+    --blue: #2563eb;
+    --blue-dim: rgba(37, 99, 235, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121114;
+      --surface: #1c1b20;
+      --surface2: #232226;
+      --surface-elevated: #2a282e;
+      --border: rgba(255, 255, 255, 0.05);
+      --border-bright: rgba(255, 255, 255, 0.1);
+      --text: #e8e6ed;
+      --text-dim: #928fa0;
+      --accent: #fb7185;
+      --accent-dim: rgba(251, 113, 133, 0.1);
+      --green: #4ade80;
+      --green-dim: rgba(74, 222, 128, 0.1);
+      --red: #f87171;
+      --red-dim: rgba(248, 113, 113, 0.1);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.1);
+      --blue: #60a5fa;
+      --blue-dim: rgba(96, 165, 250, 0.1);
+    }
+  }
+
+  /* ============ 重置 + 基础 ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at 100% 0%, var(--accent-dim) 0%, transparent 60%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 768px) { body { padding: 20px 12px; } }
+
+  /* ============ 动画 ============ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, table { animation: none !important; }
+  }
+
+  /* ============ 容器 ============ */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ============ 卡片 ============ */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .card__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+  h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+
+  /* ============ 表格 ============ */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.5;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border-bright);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  tbody tr:nth-child(even) { background: var(--surface2); }
+
+  tbody tr:hover {
+    background: var(--accent-dim);
+  }
+
+  /* ============ 状态指示器 ============ */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .status-dot--green { background: var(--green); }
+  .status-dot--red { background: var(--red); }
+  .status-dot--amber { background: var(--amber); }
+  .status-dot--blue { background: var(--blue); }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--text-dim);
+    display: block;
+  }
+
+  /* ============ 响应式 ============ */
+  @media (max-width: 768px) {
+    h1 { font-size: 24px; }
+    thead th, tbody td { padding: 10px 12px; font-size: 13px; }
+  }
+
+  /* ============ 数字列右对齐 ============ */
+  td.numeric, th.numeric {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <div class="card" style="--i:0">
+    <div class="card__label">数据比较</div>
+    <h1>功能对比分析</h1>
+    <p style="color:var(--text-dim);margin-top:8px;font-size:15px;max-width:700px">
+      各功能模块与实现状态的对比分析表。
+    </p>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap" style="--i:1">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>功能模块</th>
+          <th>状态</th>
+          <th>优先级</th>
+          <th class="numeric">完成度</th>
+          <th>负责人</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--text-dim)">01</td>
+          <td><strong>用户认证</strong><br><small>登录、注册、OAuth</small></td>
+          <td><span class="status-dot status-dot--green"></span>已完成</td>
+          <td><code>P0</code></td>
+          <td class="numeric">100%</td>
+          <td>张三</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-dim)">02</td>
+          <td><strong>数据仪表盘</strong><br><small>实时指标、图表</small></td>
+          <td><span class="status-dot status-dot--green"></span>已完成</td>
+          <td><code>P0</code></td>
+          <td class="numeric">95%</td>
+          <td>李四</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-dim)">03</td>
+          <td><strong>API 网关</strong><br><small>限流、路由、认证</small></td>
+          <td><span class="status-dot status-dot--amber"></span>开发中</td>
+          <td><code>P1</code></td>
+          <td class="numeric">65%</td>
+          <td>王五</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-dim)">04</td>
+          <td><strong>搜索功能</strong><br><small>全文搜索、过滤</small></td>
+          <td><span class="status-dot status-dot--red"></span>未开始</td>
+          <td><code>P2</code></td>
+          <td class="numeric">0%</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-dim)">05</td>
+          <td><strong>通知系统</strong><br><small>推送、邮件、Webhook</small></td>
+          <td><span class="status-dot status-dot--blue"></span>规划中</td>
+          <td><code>P1</code></td>
+          <td class="numeric">20%</td>
+          <td>赵六</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 摘要卡片 -->
+  <div class="card" style="--i:2">
+    <div class="card__label">汇总</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+      <div>
+        <div style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">总计</div>
+        <div style="font-size:28px;font-weight:700">5</div>
+        <div style="font-size:13px;color:var(--text-dim)">功能模块</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">已完成</div>
+        <div style="font-size:28px;font-weight:700;color:var(--green)">2</div>
+        <div style="font-size:13px;color:var(--text-dim)">40% 完成率</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">进行中</div>
+        <div style="font-size:28px;font-weight:700;color:var(--amber)">1</div>
+        <div style="font-size:13px;color:var(--text-dim)">API 网关</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">未开始</div>
+        <div style="font-size:28px;font-weight:700;color:var(--red)">1</div>
+        <div style="font-size:13px;color:var(--text-dim)">搜索功能</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .card, table { animation-delay: calc(var(--i, 0) * 0.08s); }
+  </style>
+
+</div>
+</body>
+</html>

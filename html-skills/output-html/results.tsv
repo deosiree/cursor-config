@@ -1,0 +1,9 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+20260518-2125	backup	output-html	-	74.3	baseline	-	初始评估（dry_run）	dry_run
+20260518-2126	round1	output-html	74.3	75.7	keep	检查点设计	新增方向确认+预写检查点	dry_run
+20260518-2127	round2	output-html	75.7	76.7	keep	边界条件覆盖	新增6场景降级处理表	dry_run
+20260518-2128	round3	output-html	76.7	78.3	keep	Frontmatter质量	补充license/compatibility/metadata	dry_run
+20260518-2129	round4	output-html	78.3	79.8	keep	指令具体性	新增5步生成执行清单	dry_run
+20260518-2130	round5	output-html	79.8	81.3	keep	整体架构	去重精简字体/颜色列表	dry_run
+20260518-2131	round6	output-html	81.3	82.8	keep	工作流清晰度	4个步骤新增输入/输出声明	dry_run
+20260518-2132	round7	output-html	82.8	83.3	keep	资源整合度	新增资源速查表（9文件用途+读取时机）	dry_run

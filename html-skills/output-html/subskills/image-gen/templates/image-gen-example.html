@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 火箭升空 — 图像生成示例</title>
+<style>
+  /* ===== 主题变量 ===== */
+  :root {
+    --bg: #f0eeeb;
+    --surface: #faf8f5;
+    --border: rgba(0,0,0,0.08);
+    --text: #2c2c2c;
+    --text-dim: #88837e;
+    --accent: #c45a3c;
+    --accent-dim: #f0dbd4;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --surface: #242424;
+      --border: rgba(255,255,255,0.08);
+      --text: #e4e4e4;
+      --text-dim: #888888;
+      --accent: #e0785e;
+      --accent-dim: #3d2a24;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    padding: 40px 20px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ===== 图片容器（子 skill 核心模式） ===== */
+  .img-figure {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    max-width: 680px;
+    width: 100%;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .img-figure .img-container {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .img-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  .img-figure figcaption {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .img-figure figcaption strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ===== Fallback 占位（图片加载失败时显示） ===== */
+  .img-fallback {
+    display: none;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-dim);
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .img-fallback .fallback-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+  .img-fallback .fallback-title {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  img[src=""]{
+    display: none;
+  }
+  img[src=""] ~ .img-fallback {
+    display: block;
+  }
+  img.error + .img-fallback,
+  img:not([src]) + .img-fallback {
+    display: block;
+  }
+
+  /* ===== 页面装饰 ===== */
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .page-desc {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 28px;
+    text-align: center;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">🚀 火箭升空</h1>
+<p class="page-desc">
+  以下图片由大模型图像生成能力创建，展示火箭升空的震撼瞬间。
+  <br>使用 <code>.img-figure</code> 容器嵌入，支持双主题和加载降级。
+</p>
+
+<figure class="img-figure">
+  <div class="img-container">
+    <!--
+      图像生成步骤：
+      1. LLM 根据场景描述生成图片
+      2. 获取 data:image/... 或图片 URL
+      3. 填入下方 src
+      4. onerror 触发时显示 .img-fallback 占位
+    -->
+    <img
+      id="genImage"
+      class="generated-image"
+      src=""
+      alt="火箭升空示意图 — 火焰喷射、云层穿透、蓝天背景"
+      onerror="this.classList.add('error'); this.style.display='none'; this.nextElementSibling.style.display='block'"
+    >
+    <!-- Fallback：图像生成失败时的文字占位 -->
+    <div class="img-fallback" id="fallback">
+      <div class="fallback-icon">🛸</div>
+      <div class="fallback-title">图像生成占位</div>
+      <div>火箭升空场景：巨大的火焰从推进器喷射而出，<br>火箭穿过云层，背景是渐变的蔚蓝天空。</div>
+    </div>
+  </div>
+  <figcaption>
+    <strong>🛸 示意场景</strong> — 火箭升空 · 如果图片未加载，上方显示文字描述作为降级方案
+  </figcaption>
+</figure>
+
+<!--
+  使用说明（供 LLM 生成时参考）：
+  1. 将 src 替换为 LLM 生成的 data:image/... 或图片 URL
+  2. 修改 alt 和 figcaption 匹配实际图片内容
+  3. 按需调整 .img-figure 的 max-width
+  4. 双主题已内置，无需额外配置
+-->
+
+<script>
+  // 演示：后续可将此 src 替换为生成图片
+  // document.getElementById('genImage').src = 'data:image/png;base64,...';
+  //
+  // 如果图片加载失败，onerror 会自动显示 fallback 占位
+  // 如需重试加载，可移除 img 的 error 类并重新设置 src
+</script>
+
+</body>
+</html>

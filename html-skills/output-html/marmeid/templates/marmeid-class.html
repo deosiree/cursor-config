@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marmeid - 类图模板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f4f8fb; color: #0c1b2e; font-family: 'DM Sans', system-ui, sans-serif;
+    padding: 40px; min-height: 100vh;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0d1419; color: #dce8f2; }
+    .card { background: #16202a; border-color: rgba(255,255,255,0.06); }
+    .zoom-btn { background: #1c2836; color: #dce8f2; border-color: rgba(255,255,255,0.08); }
+  }
+  .card { max-width: 1100px; margin: 0 auto; background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px; padding: 32px; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+  .label { font-family: 'DM Sans', monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #0891b2; margin-bottom: 6px; }
+  .zoom-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.07); }
+  .zoom-btn { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 6px; padding: 6px 12px; font-size: 14px; cursor: pointer; line-height: 1; }
+  .zoom-btn:hover { background: rgba(8,145,178,0.07); border-color: #0891b2; }
+  .zoom-level { font-size: 12px; color: #6b7d92; min-width: 48px; text-align: center; }
+  .expand-btn { margin-left: auto; }
+  .mermaid-viewport { width: 100%; height: 500px; overflow: hidden; position: relative; border: 1px solid rgba(0,0,0,0.07); border-radius: 8px; cursor: grab; }
+  .mermaid-viewport:active { cursor: grabbing; }
+  .mermaid-canvas { transform-origin: 0 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .mermaid-canvas svg { display: block; margin: 0 auto; max-width: 100%; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">类图 — Class Diagram (UML)</div>
+  <h1>订单领域模型</h1>
+
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomIn()">+</button>
+    <button class="zoom-btn" onclick="zoomOut()">−</button>
+    <button class="zoom-btn" onclick="zoomReset()">↺</button>
+    <span class="zoom-level" id="zoomLevel">100%</span>
+    <button class="zoom-btn expand-btn" onclick="openMermaidInNewTab()">⛶</button>
+  </div>
+
+  <div class="mermaid-viewport" id="mermaidViewport">
+    <div class="mermaid-canvas" id="mermaidCanvas">
+      <pre class="mermaid">
+classDiagram
+    class User {
+        +String userId
+        +String name
+        +String email
+        +login(password) bool
+    }
+
+    class Order {
+        +String orderId
+        +float totalAmount
+        +String status
+        +confirm() void
+        +cancel() void
+    }
+
+    class OrderItem {
+        +String itemId
+        +int quantity
+        +float price
+        +calcSubtotal() float
+    }
+
+    class Product {
+        +String productId
+        +String name
+        +float price
+        +int stock
+    }
+
+    class Payment {
+        +String paymentId
+        +float amount
+        +String method
+        +process() bool
+    }
+
+    User "1" --> "*" Order : 创建
+    Order "1" --> "*" OrderItem : 包含
+    OrderItem "*" --> "1" Product : 引用
+    Order "1" --> "0..1" Payment : 支付
+      </pre>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    theme: 'base',
+    themeVariables: {
+      background: '#ffffff', primaryColor: '#0891b2', primaryTextColor: '#ffffff', primaryBorderColor: '#0369a1',
+      secondaryColor: '#d97706', secondaryTextColor: '#ffffff', secondaryBorderColor: '#b45309',
+      tertiaryColor: '#059669', tertiaryTextColor: '#ffffff', tertiaryBorderColor: '#047857',
+      lineColor: '#6b7d92', fontSize: '14px', fontFamily: 'DM Sans, sans-serif'
+    }
+  });
+
+  let scale=1,panX=0,panY=0,isPanning=false,startX,startY;
+  const vp=document.getElementById('mermaidViewport'),cv=document.getElementById('mermaidCanvas');
+  function apply(){cv.style.transform=`translate(${panX}px,${panY}px) scale(${scale})`;document.getElementById('zoomLevel').textContent=Math.round(scale*100)+'%';}
+  function zoomIn(){scale=Math.min(scale*1.3,5);apply();}
+  function zoomOut(){scale=Math.max(scale/1.3,0.2);apply();}
+  function zoomReset(){scale=1;panX=0;panY=0;apply();}
+  vp.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();e.deltaY<0?zoomIn():zoomOut();}});
+  vp.addEventListener('mousedown',e=>{if(e.button!==0)return;isPanning=true;startX=e.clientX-panX;startY=e.clientY-panY;vp.style.cursor='grabbing';});
+  window.addEventListener('mousemove',e=>{if(!isPanning)return;panX=e.clientX-startX;panY=e.clientY-startY;apply();});
+  window.addEventListener('mouseup',()=>{if(isPanning){isPanning=false;vp.style.cursor='grab';}});
+  function openMermaidInNewTab(){const svg=document.querySelector('.mermaid-canvas svg');if(!svg)return;window.open(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'})),'_blank');}
+</script>
+</body>
+</html>
