@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Darwin - api-gateway-add</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { display: flex; justify-content: center; background: #FAFAF5; font-family: 'Noto Sans SC', 'Inter', sans-serif; }
+  .card { width: 900px; background: #FAFAF5; color: #1A1A1A; }
+  .brand-bar { background: #1A1A1A; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; }
+  .brand-name { font-size: 22px; font-weight: 800; color: #fff; }
+  .brand-name .dot { color: #E8590C; }
+  .brand-date { font-size: 15px; color: #888; }
+  .hero-section { padding: 40px 48px; display: flex; gap: 48px; align-items: center; background: linear-gradient(180deg, #FAFAF5, #F5F0E8); }
+  .ring-wrap { position: relative; width: 200px; height: 200px; flex-shrink: 0; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: #E8E0D4; stroke-width: 14; }
+  .ring-progress { fill: none; stroke: url(#g); stroke-width: 14; stroke-linecap: round;
+    stroke-dasharray: 534; stroke-dashoffset: 43; }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-score { font-size: 52px; font-weight: 900; color: #E8590C; }
+  .ring-max { font-size: 18px; color: #999; }
+  .hero-title { font-size: 28px; font-weight: 900; line-height: 1.3; margin-bottom: 12px; }
+  .hero-journey { font-size: 16px; color: #555; margin-bottom: 16px; }
+  .delta-badge { display: inline-block; background: #E8590C; color: #fff; font-size: 28px; font-weight: 800; padding: 8px 20px; border-radius: 8px; }
+  .summary-section { padding: 32px 48px 48px; }
+  .summary-header { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+  .summary-item { padding: 12px 16px; background: #fff; border-left: 4px solid #E8590C; margin-bottom: 10px; font-size: 15px; line-height: 1.5; }
+  .footer { background: #1A1A1A; color: #888; padding: 20px 48px; font-size: 13px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand-bar">
+    <div class="brand-name">Darwin<span class="dot">.</span>skill</div>
+    <div class="brand-date">2026.05.20</div>
+  </div>
+  <div class="hero-section">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 200 200" width="200" height="200">
+        <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E8590C"/><stop offset="100%" stop-color="#FF8A4C"/></linearGradient></defs>
+        <circle cx="100" cy="100" r="85" class="ring-bg"/>
+        <circle cx="100" cy="100" r="85" class="ring-progress"/>
+      </svg>
+      <div class="ring-center">
+        <div><span class="ring-score">92</span><span class="ring-max">/100</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="hero-title">api-gateway-add<br>质量进化报告</div>
+      <div class="hero-journey">从 <strong>82</strong> 分 → <strong>92</strong> 分（round3-opt）<br><span style="color:#999;font-size:14px">eval_mode: mixed full_test</span></div>
+      <div class="delta-badge">+10 分</div>
+    </div>
+  </div>
+  <div class="summary-section">
+    <div class="summary-header">关键改进（round3 keep）</div>
+    <div class="summary-item">contract-read-checklist：新增接口前五步读契约</div>
+    <div class="summary-item">部分成功态表：解绑成功删除失败时不自动回绑</div>
+    <div class="summary-item">full_test #2/#3：with_skill 优于 baseline，防双 toast</div>
+  </div>
+  <div class="footer">
+    <span>nebula-skills/api-gateway-add</span>
+    <span>github.com/alchaincyf/darwin-skill</span>
+  </div>
+</div>
+</body>
+</html>

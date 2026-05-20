@@ -1,13 +1,15 @@
 # api-gateway-add
 
 ## 定位
-`api-gateway-add` 用于“新增接口接入”场景。
 
-它服务的是这类需求：
-- 新增一组或多组接口
-- 需要评估如何在 `api / types / gateway / business` 四层接入
-- 希望业务层只消费稳定类型和 gateway 方法
-- 希望原始类型名和契约保持一致，便于调试
+`api-gateway-add` 服务两类需求（可叠加）：
+
+1. **四层接入**：新增或变更契约接口，输出 `api / types / gateway / business` 最小改动。
+2. **两条 gateway 通则**（跨模块，非租户等业务专用）：
+   - **通则一**：仅原子 gateway 使用 `handleGatewayError`；集成 gateway 不包整段；集成内直接调 `api` 须下沉为原子。
+   - **通则二**：gateway 互引禁止顶层静态 import，改方法内 `await import()`。
+
+权威细则：`[[references/gateway-atomic-vs-integration.md]]`、`[[references/gateway-dynamic-import.md]]`
 
 ## frontmatter 模式
 本 skill 采用“本地中文模式”：
@@ -84,14 +86,30 @@ spec_path=F:\Documents\Repertory\Sieyuan\nebula\docs\api\seccenter.swagger.json�
 判断如果要接入新查询和更新接口，读链路和写链路分别应该怎么改。
 ```
 
+## 需求类型速查
+
+| 类型 | 示例 |
+|------|------|
+| A 新增接口 | 菜单功能项写接口 |
+| B 编排 | 删除前解绑、多项目循环导出 |
+| C 跨 gateway | 环依赖、动态 import |
+
+`tenant-delete-orchestration` 模板仅**印证**通则一+二，不代表 skill 只服务租户域。
+
+子节点：`[[feature-skills]]`；few-shot：`[[assets/few-shot-example/gateway-patterns-green.md]]`（菜单多项目导出）。
+
 ## agent 素材入口
 - `[[assets/few-shot-example]]`
 - `[[assets/skill-output-checklist.md]]`
 - `[[references/api-gateway-layering-core.md]]`
+- `[[references/gateway-orchestration.md]]`
+- `[[feature-skills]]`
+- `[[test-prompts.json]]`（Darwin / 受控试跑用例）
+- `[[evals/darwin-baseline-report.md]]`（Darwin 复评报告）
 
 ## 模板与素材
 - `[[template/README.md]]`
-- `[[template/before]]`
-- `[[template/after]]`
+- 新增接口示意：`[[template/menu-function-api-add/]]`
+- 编排真实样本：`[[template/tenant-delete-orchestration/]]`
 - `[[assets/few-shot-example]]`
 - `[[references/api-gateway-layering-core.md]]`

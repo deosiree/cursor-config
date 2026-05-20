@@ -1,5 +1,7 @@
 # API 分层接入规范
 
+新增 swagger 接口前，先走 `[[contract-read-checklist.md]]`。
+
 ## 分层职责
 - `src/api/**`
   - 只放原始接口与原始类型
@@ -21,6 +23,8 @@
 - 串行调用多个 API
 - 并行查询多个 API
 - 对参数和返回做归一化
+
+编排类需求（多 API 组合、删除前解绑等）的细则见 `[[gateway-orchestration.md]]` 与 `[[../feature-skills]]`。
 
 ## 常量放置规则
 - 跨 gateway/业务层复用：放 `src/enums/**`

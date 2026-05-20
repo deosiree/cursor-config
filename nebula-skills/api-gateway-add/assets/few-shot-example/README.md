@@ -1,3 +1,4 @@
-# few-shot：新增 API 分层接入
+# few-shot：api-gateway-add
 
-这个 few-shot 演示新增接口时，如何把原始类型、稳定类型、gateway 映射和业务替换点拆清楚。
+- **案例 1**：纯新增接口四层设计骨架（见 `SKILL.md`）
+- **案例 2**：租户删除前解绑编排（设计骨架见 `tenant-delete-orchestration.md`；真实源码见 `[[../../template/tenant-delete-orchestration/]]`）

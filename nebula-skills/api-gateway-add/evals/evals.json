@@ -14,6 +14,22 @@
         "描述 stableReq -> wireReq -> api -> wireRes -> stableRes",
         "给出映射命名规则"
       ]
+    },
+    {
+      "input": "删除租户前要先解绑该租户全部设备，gateway 怎么编排？避免 handleGatewayError 弹两次。",
+      "expect": [
+        "区分原子方法与集成方法",
+        "集成方法不再包 handleGatewayError",
+        "指向 tenant-delete-orchestration 或 feature-skills 编排节点"
+      ]
+    },
+    {
+      "input": "TenantGateway 和 DeviceGateway 互相 import 有循环依赖，api-gateway-add 怎么改？",
+      "expect": [
+        "禁止 gateway 顶层静态 import",
+        "方法体内 await import()",
+        "引用跨Gateway动态引用 feature-skill 或 template 样本"
+      ]
     }
   ],
   "should_not_trigger": [
@@ -27,6 +43,21 @@
       "input": "我只想看 seccenter swagger 里这个 schema 的字段。",
       "expect": [
         "应先改由 seccenter-api-contract 处理"
+      ]
+    },
+    {
+      "input": "只调整 showNotification 的 toast 样式，不改 gateway。",
+      "expect": [
+        "应改由 shownotification 处理",
+        "不应展开 api-gateway-add 四层设计"
+      ]
+    },
+    {
+      "input": "删除租户时解绑成功但 deleteV2 失败怎么办？",
+      "expect": [
+        "说明部分成功态",
+        "租户未删设备已解绑",
+        "默认不自动回绑"
       ]
     }
   ]

@@ -7,6 +7,8 @@
 - [ ] 存在 `assets/`
 - [ ] 存在 `references/`
 - [ ] 存在 `evals/`
+- [ ] 存在 `feature-skills/`（编排类子能力）
+- [ ] 存在 `test-prompts.json`（可选：Darwin 试跑）
 
 ## 分层边界
 - [ ] `src/api/**` 只承载原始接口与原始类型

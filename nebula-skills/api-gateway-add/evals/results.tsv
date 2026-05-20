@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-20T10:00	baseline	api-gateway-add	-	82.0	baseline	-	优化后首轮评估（template+feature-skills）	dry_run
+2026-05-20T11:00	round2-opt	api-gateway-add	82.0	87.8	keep	Frontmatter+检查点+test-prompts	description触发词、人类检查点、test-prompts.json	dry_run
+2026-05-20T12:00	round3-opt	api-gateway-add	87.8	91.8	keep	边界+具体性+实测	contract-read-checklist、部分成功态、full_test#2#3#6	mixed
+2026-05-20T14:00	post-refactor-generality	api-gateway-add	91.8	92.4	baseline	通用性+架构	通则一/二上提、A/B/C分型、租户样本降级；通用性86	dry_run
+2026-05-20T15:00	p1-deprecate-boundary	api-gateway-add	92.4	93.4	keep	边界条件	子能力路由+1行 api-gateway-deprecate	dry_run

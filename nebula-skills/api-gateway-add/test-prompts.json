@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "prompt": "使用 $api-gateway-add 为菜单功能项新增 3 个写接口，读链路保持不动，给我四层最小改动设计。",
+    "expected": "类型 A；GREEN 六段；契约清单；业务层只消费 gateway；通则一仅在新原子方法上 handleGatewayError。"
+  },
+  {
+    "id": 2,
+    "prompt": "删除租户前要先解绑该租户全部设备，gateway 怎么编排？避免 handleGatewayError 弹两次。",
+    "expected": "通则一；集成不包整段；仅 TenantAPI 删除包一层；tenant-delete 为印证样本而非专用 skill；可不新增 api。"
+  },
+  {
+    "id": 3,
+    "prompt": "TenantGateway 和 DeviceGateway 互相 import 有循环依赖，api-gateway-add 怎么改？",
+    "expected": "通则二；禁止顶层静态 import；方法体内 await import()；tenant-delete template 仅作示例。"
+  },
+  {
+    "id": 4,
+    "prompt": "菜单管理勾选多个项目批量导出菜单树，契约只有单项目 export，gateway 怎么设计？",
+    "expected": "类型 B；集成循环调原子 exportMenuTree；集成不包 handleGatewayError；勿误用 tenant-delete 业务逻辑。"
+  },
+  {
+    "id": 5,
+    "prompt": "旧版本接口已经下线，帮我删除旧 fallback 和旧 API。",
+    "expected": "不应由本 skill 展开；引导 api-gateway-deprecate。"
+  },
+  {
+    "id": 6,
+    "prompt": "集成 gateway 里既要 await DeviceGateway.getBind 又要直接调 DeviceAPI.list，错误通知怎么分层？",
+    "expected": "通则一 §4：getBind 不再套；DeviceAPI 须抽原子 gateway 或单点 handleGatewayError，禁止集成包整段。"
+  }
+]
