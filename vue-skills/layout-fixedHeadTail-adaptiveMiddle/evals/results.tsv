@@ -1,0 +1,8 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-21T12:00	baseline	布局-固定首尾，中间自适应	-	79.6	baseline	通用性	v1.0	dry_run
+2026-05-21T14:00	docs-v1.1	布局-固定首尾，中间自适应	79.6	89.1	keep	通用性+结构	形态A/B	dry_run
+2026-05-21T16:00	rename-v1.1.1	布局-固定首尾，中间自适应	89.1	90.3	keep	Frontmatter	固定首尾命名	dry_run
+2026-05-21T18:00	tenant-v1.2	布局-固定首尾，中间自适应	90.3	92.5	keep	通用性+样本	租户B落地+template	dry_run
+2026-05-21T22:00	user-v1.3	布局-固定首尾，中间自适应	92.5	93.5	keep	通用性+实测闭环	用户B落地+三页template	dry_run
+2026-05-21T23:30	fulltest-v1.3.1	布局-固定首尾，中间自适应	93.5	94.0	keep	维度8实测	#1#2子agent双臂对比	full_test
+2026-05-22T00:00	fulltest-v1.3.2	布局-固定首尾，中间自适应	94.0	94.5	keep	边界+#3#4	形态A正例+菜单负路由	full_test

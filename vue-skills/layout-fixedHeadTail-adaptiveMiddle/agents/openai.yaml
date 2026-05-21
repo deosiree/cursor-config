@@ -1,0 +1,4 @@
+interface:
+  display_name: "布局-固定首尾，中间自适应"
+  short_description: "固定列表页顶部与底部区域，中间 el-table 用 ResizeObserver 动态高度并内部滚动"
+  default_prompt: "使用 $布局-固定首尾中间自适应 修复当前列表页：先判定形态A/B，固定工具栏和分页，表格区域 useTableBodyHeight + 内部滚动。"

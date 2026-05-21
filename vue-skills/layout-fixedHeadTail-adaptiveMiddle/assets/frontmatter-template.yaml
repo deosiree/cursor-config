@@ -1,0 +1,11 @@
+# 本地中文模式（nebula vue-skills 默认）
+---
+name: 布局-固定首尾，中间自适应
+description: 当 Vue 列表页需要固定顶部工具栏与底部分页、中间 el-table 区域自适应并出现内部滚动条，尤其在浏览器缩放后分页被裁切或表格撑破视口时使用。
+---
+
+# 对外兼容模式（仅当明确要求英文 slug / 生态校验时使用）
+# ---
+# name: layout-fixedHeadTail-adaptiveMiddle
+# description: Use when a Vue list page needs a fixed toolbar and pagination with a scrollable el-table middle section, especially when zoom cuts off pagination or CSS max-height on the table fails.
+# ---

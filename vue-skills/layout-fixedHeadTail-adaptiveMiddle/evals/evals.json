@@ -1,0 +1,92 @@
+{
+  "skill": "布局-固定首尾，中间自适应",
+  "version": "1.3.2",
+  "cases": [
+    {
+      "id": "trigger-zoom-pagination",
+      "type": "should-trigger",
+      "prompt": "列表页浏览器放大到125%后底部分页被裁切，请修复布局让分页始终可见、表格内部滚动",
+      "expectedArtifacts": [
+        "useTableBodyHeight",
+        ":height=",
+        "flex-shrink: 0",
+        "min-height: 0"
+      ]
+    },
+    {
+      "id": "trigger-max-height-ineffective",
+      "type": "should-trigger",
+      "prompt": "el-table 设置了 style max-height 100% 但没有滚动条，怎么改",
+      "expectedArtifacts": [
+        "height prop",
+        "ResizeObserver",
+        "table-wrapper"
+      ]
+    },
+    {
+      "id": "trigger-fixed-head-tail",
+      "type": "should-trigger",
+      "prompt": "固定工具栏和分页，中间 el-table 区域自适应剩余高度",
+      "expectedArtifacts": [
+        "flex: 1",
+        "tableBodyHeight",
+        "overflow: hidden"
+      ]
+    },
+    {
+      "id": "not-trigger-page-tab-shell",
+      "type": "should-not-trigger",
+      "prompt": "把菜单管理页的工具栏和 Tab 抽成 PageTabShell 编排壳",
+      "expectedRoute": "extract-shell"
+    },
+    {
+      "id": "not-trigger-dialog-tab",
+      "type": "should-not-trigger",
+      "prompt": "角色编辑弹窗里权限树 max-height 不够，要加滚动",
+      "expectedBehavior": "固定 max-height，不套用列表页整链"
+    },
+    {
+      "id": "trigger-tenant-split-layout",
+      "type": "should-trigger",
+      "prompt": "租户列表缩放后分页被挡住，TenantTable 在子组件里",
+      "expectedArtifacts": [
+        "形态B",
+        "tenant/index.vue",
+        "min-height: 0",
+        "useTableBodyHeight",
+        "去掉 calc(100% - 106px)"
+      ]
+    },
+    {
+      "id": "trigger-user-split-layout",
+      "type": "should-trigger",
+      "prompt": "用户管理 el-table max-height 100% 无效，UserTable 在子组件",
+      "expectedArtifacts": [
+        "形态B",
+        "user/index.vue",
+        "user-list-page__body",
+        "useTableBodyHeight",
+        ":height="
+      ]
+    },
+    {
+      "id": "trigger-role-form-a",
+      "type": "should-trigger",
+      "prompt": "角色管理列表缩放后分页显示不全",
+      "expectedArtifacts": [
+        "形态A",
+        "RoleListTable",
+        "role-list-table__pagination",
+        "useTableBodyHeight",
+        "非形态B"
+      ]
+    },
+    {
+      "id": "not-trigger-menu-tab-height",
+      "type": "should-not-trigger",
+      "prompt": "菜单管理 Tab 里表格高度不对",
+      "expectedRoute": "PageTabShell",
+      "expectedBehavior": "contentHeight + resolveTableHeight，不触发本 skill"
+    }
+  ]
+}
