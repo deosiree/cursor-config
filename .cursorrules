@@ -76,10 +76,10 @@
   </skills>
 </plugin>
 
-<plugin name="文档转博客">
+<plugin name="文档转播客">
   <description>将技术文档转换为 U 型搭档播客（朗读稿+可选 MP3/SRT/详细解答）</description>
   <skills>
-    <skill>文档转博客</skill>
+    <skill>文档转播客</skill>
   </skills>
 </plugin>
 

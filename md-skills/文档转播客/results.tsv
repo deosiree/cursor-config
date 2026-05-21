@@ -1,0 +1,12 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-21T12:00	baseline	tech-doc-to-podcast	-	51.8	baseline	-	主SKILL单人脚本与reference双人双轨	dry_run
+2026-05-21T12:30	optimize-r1	tech-doc-to-podcast	51.8	81.1	keep	工作流+角色+边界	合并双人播客为唯一主流程；reference降级为延伸阅读；新增test-prompts	full_test
+2026-05-21T18:00	optimize-r2	tech-doc-to-podcast	81.1	88.5	keep	U型+面经钩子+费曼+三件套	U型卷首卷尾、铺垫苏格拉底、MP3+SRT+详细解答、时长弹性N驱动	full_test
+2026-05-21T20:00	eval-v2.1	tech-doc-to-podcast	88.5	85.4	eval	通用性+检查点	Darwin复评：结构稳、面经域实测优；非面经/无TTS/短文档通用性扣分	dry_run
+2026-05-21T22:00	optimize-r3	tech-doc-to-podcast	85.4	90.2	keep	创建型few-shot	场景钩子+交付模式+validate；template/mvp+snapshot真实摘录；检查点ABC	full_test
+2026-05-21T23:00	rename	文档转播客	-	-	keep	SkillID	目录与name改为文档转播客；原tech-doc-to-podcast保留于历史行	-
+2026-05-21T24:00	eval-rename	文档转播客	90.2	85.8	eval	通用性+主文档瘦身	创建型MVP/Snapshot齐全；doc_type四分类+5条test；名称播客与播客产出易混淆；SKILL压缩丢失部分边界/费曼细则	dry_run
+2026-05-21T25:00	optimize-r4	文档转播客	85.8	90.1	keep	边界+检查点+命名	命名说明表；边界五条件；检查点B决策树；费曼口播表；产物命名；步骤4-5插入B/A	dry_run
+2026-05-21T26:00	optimize-r5	文档转播客	90.1	91.6	keep	实测表现+资源整合	教程体snapshot+校验稿；任务输入教程/超长；检查点A等确认话术；validate教程稿通过	dry_run
+2026-05-21T27:00	full_test	文档转播客	91.6	92.9	eval	实测表现	test#2 skill通过validate baseline失败四段标签；test#4 skill仅检查点A baseline静默10章；见test-run/full_test-report.md	full_test
+2026-05-21T28:00	tool-node	文档转播客	92.9	92.9	keep	架构	子agent退化默认main_agent_dual_track；TTS升格Tool节点references/tools.md	script_gated
