@@ -35,7 +35,7 @@
 
 ### 文档与协作插件
 - **conversation-summary**: 快速总结对话内容并生成迁移文档
-- **tech-doc-to-podcast**: 将技术文档转换为双人播客脚本
+- **文档转博客**: 将技术文档转换为 U 型搭档播客（朗读稿+可选 MP3/SRT/详细解答）
 - **trans-skills**: 将Markdown文档或目录翻译为中文
 - **post-mortem**: 总结开发经验为结构化文档
 - **translate**: CSV词条批量翻译工具

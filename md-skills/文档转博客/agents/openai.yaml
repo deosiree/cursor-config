@@ -1,0 +1,4 @@
+interface:
+  display_name: "文档转博客"
+  short_description: "中文技术MD→U型搭档播客；朗读稿+可选MP3/SRT/详细解答"
+  default_prompt: "使用 $文档转博客 将指定 Markdown 转为 U 型搭档播客（自动判定面经/方案/教程），生成朗读稿；默认含 MP3、SRT 与详细解答。"

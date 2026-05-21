@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "prompt": "把面经 md 转播客，要 MP3+字幕+详细解答，搭档聊天",
+    "expected": "完整四件套；doc_type面经；场景钩子来自源文；无四段标签"
+  },
+  {
+    "id": 2,
+    "prompt": "把 Vue useEffect 技术说明 md 转播客，不要提面试",
+    "expected": "doc_type教程；读真实输出-教程朗读稿摘录；学习者卡点；validate通过",
+    "few_shot": "template/snapshot/任务输入-教程示例.md"
+  },
+  {
+    "id": 3,
+    "prompt": "仅 2 个知识点的短 md，只要朗读稿",
+    "expected": "轻量模式；N=2；K=3；卷首1-2结论；不跑TTS"
+  },
+  {
+    "id": 4,
+    "prompt": "源文 10 个章节的技术方案，转播客",
+    "expected": "触发检查点A；询问合并或拆集；勿静默生成超长稿",
+    "few_shot": "template/snapshot/任务输入-超长方案.md"
+  },
+  {
+    "id": 5,
+    "prompt": "源文无公司名",
+    "expected": "钩子用泛称；skill未写死公司"
+  }
+]
