@@ -32,7 +32,7 @@ python -c "from pydub import AudioSegment; print('pydub ok')"
 | 失败 | 打印缺项（frontmatter、卷首、快问、双人、禁四段标签等）→ 修稿后重跑 |
 
 ```powershell
-python ".cursor/md-skills/文档转博客/scripts/validate-podcast-md.py" `
+python ".cursor/md-skills/文档转播客/scripts/validate-podcast-md.py" `
   "path\to\播客朗读稿-主题.md"
 ```
 
@@ -50,7 +50,7 @@ python ".cursor/md-skills/文档转博客/scripts/validate-podcast-md.py" `
 | 角色行 | `**主播**` / `**嘉宾**`（兼容 考官/答题者） |
 
 ```powershell
-python ".cursor/md-skills/文档转博客/scripts/md-podcast-to-mp3.py" `
+python ".cursor/md-skills/文档转播客/scripts/md-podcast-to-mp3.py" `
   "path\to\播客朗读稿-主题.md" `
   -o "path\to\完整版-主题-搭档聊天.mp3" `
   --srt
