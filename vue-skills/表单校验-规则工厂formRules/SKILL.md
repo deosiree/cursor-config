@@ -59,8 +59,8 @@ fields:
 
 ### 消息约定
 
-- 校验器使用稳定 **messageKey**（≤12 汉字）或项目既有 `t(key)`
-- **禁止**把 locale 文件列入默认改动集
+- 新增/修改 messageKey 前必读 [`references/message-key-constraints.md`](references/message-key-constraints.md)（≤12 字、可读、语义复用）
+- 校验器使用稳定 **messageKey** 或项目既有 `t(key)`；**禁止**把 locale 文件列入默认改动集
 
 ## 实施步骤（父级，必先按序）
 
@@ -77,7 +77,7 @@ fields:
 | Step | 动作 | 产出 |
 |------|------|------|
 | **1** | 解析 `componentPath` 或 `repoRoot`+`moduleHint` | `resolvedRepoRoot`、`componentPath` |
-| **2** | 项目发现：rules 模块、Element Plus、`messageStrategy` | 见 [`project-discovery.md`](references/project-discovery.md) |
+| **2** | 项目发现：rules 模块、Element Plus、`messageStrategy`；扩展 rules 前读 [`formRules-module-map.md`](references/formRules-module-map.md)；改 messageKey 前读 [`message-key-constraints.md`](references/message-key-constraints.md) | 见 [`project-discovery.md`](references/project-discovery.md) |
 | **3** | 读取目标组件现有 `rules` / `@blur` / submit；核对每个 field 的 `ruleStyle` 与 maxlength 分离 | 字段清单 |
 | **4** | **多字段编排**（下节）→ 按风格委派子 skill | rules 模块 + 页面改动计划 |
 | **5** | 子 skill 完成后验收（单测、eslint、无 locale diff） | 可提交改动 |

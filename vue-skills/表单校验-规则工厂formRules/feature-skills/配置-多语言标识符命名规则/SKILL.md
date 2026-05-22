@@ -1,11 +1,13 @@
 ---
 name: 配置-多语言标识符命名规则
-description: 配置 nameIdentifier 风格：createNameValidator、normName、trimNameOnBlur、createXxxNameRules。
+description: 配置 nameIdentifier 风格：createNameValidator、normName、trimFieldOnBlur、createXxxNameRules。
 ---
 
 # 配置-多语言标识符命名规则
 
 父级：[`../../SKILL.md`](../../SKILL.md)。`ruleStyle=nameIdentifier`。
+
+messageKey：[`message-key-constraints.md`](../../references/message-key-constraints.md)。
 
 ## 何时使用
 
@@ -21,9 +23,10 @@ description: 配置 nameIdentifier 风格：createNameValidator、normName、tri
 ### 1. rules 模块
 
 1. 扩展 `NameFieldKind` 与 `NAME_MAX_LENGTH` 映射
-2. 确认 `createNameValidator({ label, maxLength })` 存在
+2. 确认 `createNameValidator({ label, maxLength })` 内 `createRuleFail({ label, maxLength })`
 3. 新增 `createXxxNameRules()`，内部 `label` 用 `fieldLabel` 字符串（**不**触发 i18n 任务）
-4. 导出 `normName`、`trimNameOnBlur`
+4. 导出 `normName`、`trimFieldOnBlur`（名称/路径失焦 trim 共用）
+5. 超长：`fail("{label}超过{maxLength}字")`；禁止 `"{label}不能超过 {maxLength} 个字符"` 类 key
 
 ### 2. 页面（通常再委派接入子 skill）
 
@@ -31,7 +34,7 @@ description: 配置 nameIdentifier 风格：createNameValidator、normName、tri
 <el-input
   v-model="formData.name"
   maxlength="8"
-  @blur="() => trimNameOnBlur(formData, 'name', formRef)"
+  @blur="() => trimFieldOnBlur(formData, 'name', formRef)"
 />
 ```
 
@@ -53,7 +56,7 @@ formData.name = normName(formData.name, NAME_MAX_LENGTH.menuName);
 
 ## 参考
 
-- **完整实现（优先拷贝对照）**：[`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts)
+- **样板片段**：[`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts)
 - 流程 few-shot：[`name-identifier-sample.md`](../../assets/few-shot-example/name-identifier-sample.md)
 
 ## 验收

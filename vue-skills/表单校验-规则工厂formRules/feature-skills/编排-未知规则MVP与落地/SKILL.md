@@ -5,7 +5,7 @@ description: 未命中已注册 ruleStyle 时：Web 调研 → Plan → template
 
 # 编排-未知规则MVP与落地
 
-父级：[`../../SKILL.md`](../../SKILL.md)。`ruleStyle=unknown` 或父路由未命中。
+父级：[`../../SKILL.md`](../../SKILL.md)。`ruleStyle=unknown` 或父路由未命中。messageKey：[`message-key-constraints.md`](../../references/message-key-constraints.md)。
 
 ## 流程
 
@@ -40,7 +40,7 @@ description: 未命中已注册 ruleStyle 时：Web 调研 → Plan → template
 ## ruleStyle 建议（新建或归入已有）
 ## 改动文件（禁止默认含 locale）
 ## API 设计（函数名、导出）
-## 消息 key 表（≤12 字）
+## 消息 key 表（见 message-key-constraints.md）
 ## 测试矩阵
 ```
 

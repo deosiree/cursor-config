@@ -9,7 +9,7 @@ description: 在已解析的表单组件上绑定 rules、blur trim、submit 规
 
 ## 何时使用
 
-- `createXxxRules` / `validateXxxSyntax` **已存在**
+- `createXxxRules` **已存在**
 - 仅需改目标 `componentPath` 的模板与 script
 
 ## 何时不要使用
@@ -30,10 +30,12 @@ description: 在已解析的表单组件上绑定 rules、blur trim、submit 规
 import {
   createMenuNameRules,
   createRoutePathRules,
+  createApiPathRules,
   normName,
-  trimNameOnBlur,
-  trimRoutePathOnBlur,
+  trimFieldOnBlur,
   NAME_MAX_LENGTH,
+  ROUTE_PATH_MAX_LENGTH,
+  API_PATH_MAX_LENGTH,
 } from "@/utils/formRules"; // 以探测结果为准
 ```
 
@@ -43,6 +45,7 @@ import {
 const formRules = reactive({
   name: createMenuNameRules(),
   routePath: [...createRoutePathRules(), /* 业务 validator */],
+  apiUrl: createApiPathRules(),
 });
 ```
 
@@ -52,23 +55,24 @@ const formRules = reactive({
 
 | hook | 绑定 |
 |------|------|
-| blurTrim 名称 | `@blur="() => trimNameOnBlur(model, prop, formRef)"` |
-| blurTrim 路径 | `@blur="() => trimRoutePathOnBlur(model, prop, formRef)"` |
-| UI 上限 | `maxlength` 与 `NAME_MAX_LENGTH` / `ROUTE_PATH_MAX_LENGTH` 区分时按用户确认 |
+| blurTrim（名称/路径/API） | `@blur="() => trimFieldOnBlur(model, prop, formRef)"` |
+| UI 上限 | `maxlength` 与 `NAME_MAX_LENGTH` / `ROUTE_PATH_MAX_LENGTH` / `API_PATH_MAX_LENGTH` 区分时按用户确认 |
 
 ### 4. submit
 
 ```ts
 payload.name = normName(formData.name, NAME_MAX_LENGTH.menuName);
 payload.routePath = String(formData.routePath ?? "").trim();
+payload.apiUrl = String(formData.apiUrl ?? "").trim();
 ```
 
 ### 5. 对照表（交付时填写）
 
 | prop | factory | blur | submit |
 |------|---------|------|--------|
-| name | createMenuNameRules | trimNameOnBlur | normName |
-| routePath | createRoutePathRules + unique | trimRoutePathOnBlur | trim |
+| name | createMenuNameRules | trimFieldOnBlur | normName |
+| routePath | createRoutePathRules + unique | trimFieldOnBlur | trim |
+| apiUrl | createApiPathRules | trimFieldOnBlur | trim |
 
 ## 参考
 

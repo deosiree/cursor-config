@@ -16,7 +16,7 @@
 
 | 函数 | 时机 |
 |------|------|
-| `trimNameOnBlur` | 失焦写回 model 并 `validateField` |
+| `trimFieldOnBlur` | 失焦写回 model 并 `validateField`（名称/路径等字段通用） |
 | `normName` | 提交前：trim → 去黑名单 → NFC → `slice(0, maxLength)` |
 
 ## 工厂
@@ -24,6 +24,8 @@
 ```ts
 createXxxNameRules() // 内部 createNameValidator({ label, maxLength })
 ```
+
+`createNameValidator` 内使用 `createRuleFail({ label, maxLength })`；超长统一 `fail("{label}超过{maxLength}字")`（展示如 `字段超过64字`）。见 [`message-key-constraints.md`](message-key-constraints.md)。
 
 `NameFieldKind` 映射各业务 `maxLength` 常量，避免魔法数散落。
 

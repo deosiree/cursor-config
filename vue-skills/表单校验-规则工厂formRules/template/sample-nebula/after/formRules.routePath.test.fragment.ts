@@ -1,28 +1,29 @@
 /**
- * sample-nebula — pathLike 单测矩阵参考（放到 rulesModule 同级 __tests__/）
- * 断言 message 为稳定 key 或项目翻译后文案，与 messageStrategy 一致
+ * sample-nebula — pathLike 单测 runner（放到 rulesModule 同级 __tests__/）
+ * 经 createRoutePathRules()[0].validator，不 import validate*
  */
 import { describe, expect, it } from "vitest";
-import { ROUTE_PATH_MAX_LENGTH, validateRoutePathSyntax } from "@/utils/formRules";
+import type { FormItemRule } from "element-plus";
+import { createRoutePathRules, ROUTE_PATH_MAX_LENGTH } from "@/utils/formRules";
 
-function expectRoutePathError(value: string): string | undefined {
-  try {
-    validateRoutePathSyntax(value);
-    return undefined;
-  } catch (error) {
-    return (error as Error).message;
-  }
+async function runRoutePathValidator(value: string): Promise<string | undefined> {
+  const rule = createRoutePathRules()[0];
+  const validator = rule.validator as NonNullable<FormItemRule["validator"]>;
+  return new Promise((resolve) => {
+    validator(rule, value, (error?: Error) => {
+      resolve(error?.message);
+    });
+  });
 }
 
-describe("validateRoutePathSyntax", () => {
-  it("accepts common paths", () => {
-    expect(() => validateRoutePathSyntax("/system/menu")).not.toThrow();
-    expect(() => validateRoutePathSyntax("/user?")).not.toThrow();
-    expect(() => validateRoutePathSyntax("/list?from=menu")).not.toThrow();
-    expect(() => validateRoutePathSyntax("/user/:id")).not.toThrow();
+describe("createRoutePathRules", () => {
+  it("accepts common paths", async () => {
+    for (const value of ["/system/menu", "/user?", "/list?from=menu", "/user/:id"]) {
+      expect(await runRoutePathValidator(value)).toBeUndefined();
+    }
   });
 
-  it("rejects invalid paths with short messages", () => {
+  it("rejects invalid paths with short messages", async () => {
     const cases: Array<[string, string]> = [
       ["/user:id#", "段中不要用冒号"],
       ["/?xxx", "段首不要片段符"],
@@ -30,7 +31,8 @@ describe("validateRoutePathSyntax", () => {
       ["/user?@", "拼参格式不对"],
     ];
     for (const [input, expected] of cases) {
-      expect(expectRoutePathError(input)).toBe(expected);
+      const message = await runRoutePathValidator(input);
+      expect(message).toBe(expected);
       expect(expected.length).toBeLessThanOrEqual(12);
     }
   });

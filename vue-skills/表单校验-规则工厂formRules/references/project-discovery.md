@@ -40,4 +40,4 @@
 | `i18nKey` | 存在 `i18n.global.t` 或 `useI18n` | validator 内 `fail("稳定中文key")`，**不**改 locale 文件 |
 | `plainText` | 无 i18n | `throw new Error("稳定中文文案")` |
 
-无论哪种，新建 key/文案须 **≤12 个汉字**（表单项旁展示上限）。
+无论哪种，新建 key/文案须遵守 [`message-key-constraints.md`](message-key-constraints.md)（≤12 字、可读、语义复用）。

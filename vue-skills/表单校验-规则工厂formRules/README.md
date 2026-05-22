@@ -37,7 +37,7 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 
 ## 样本说明
 
-`template/sample-nebula/` 与 `assets/few-shot-example/` 中的代码片段来自 nebula `apex_dev` 的一次实现，**仅作形态参考**；落地时以当前仓库的 `rulesModule` 与项目约定为准。
+`template/sample-nebula/` 与 `assets/few-shot-example/` 为编排与接入示意；**实现以仓库 `src/utils/formRules.ts` 为准**（2025 重构：路径分段 `chkSeg*` 原子 + `createRuleFail` + 统一 `trimFieldOnBlur`）。结构索引：[`references/formRules-module-map.md`](references/formRules-module-map.md)。
 
 ## 推荐顺序
 

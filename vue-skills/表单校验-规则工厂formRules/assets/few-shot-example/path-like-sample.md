@@ -1,8 +1,10 @@
 # Few-shot：路径类规则
 
+结构见 [`formRules-module-map.md`](../../references/formRules-module-map.md)。messageKey 见 [`message-key-constraints.md`](../../references/message-key-constraints.md)。
+
 ## 场景
 
-菜单路由 path：maxlength 64，允许 `/user?` 拼参，拒绝段中冒号。
+菜单路由 path：maxlength 64，允许 `/user?` 拼参，拒绝段中冒号。API `apiUrl` 用 `createApiPathRules`。
 
 ## 输入
 
@@ -14,9 +16,9 @@ fields:
 
 ## 实施对照
 
-1. 合并 [`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts) 到 `rulesModule`
-2. 页面接入 [`MenuFormDialog.wire.fragment.vue`](../../template/sample-nebula/after/MenuFormDialog.wire.fragment.vue)
-3. 单测 [`formRules.routePath.test.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.test.fragment.ts)
+1. 在仓库 `formRules.ts` 按 map 增改 `chkSeg*`（勿在页面重写 for 循环）
+2. 页面：`trimFieldOnBlur` + `createRoutePathRules` / `createApiPathRules`
+3. 单测经 `createRoutePathRules()[0].validator`（见 [`formRules.routePath.test.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.test.fragment.ts)）
 
 ## 测试矩阵（单测断言 message）
 
@@ -27,6 +29,8 @@ fields:
 | `/user/:id` | 通过 |
 | `/user:id#` `/user:#` `/?xxx` | 段中不要用冒号 / 段首不要片段符 |
 | `/:id#` | 动态段不要接#? |
+
+超长展示 `路径超过64字`（模板 `"{label}超过{maxLength}字"` + bind）。
 
 ## 页面组合唯一性
 

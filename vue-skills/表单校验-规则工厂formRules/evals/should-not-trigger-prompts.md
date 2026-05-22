@@ -5,3 +5,4 @@
 - 操作列折叠改成 OperationColumn
 - 修复表格高度自适应
 - 仅设计 SecCenter API 契约不写前端表单
+- 只改 zh_CN 翻译 formRules 校验报错文案，不动 formRules.ts

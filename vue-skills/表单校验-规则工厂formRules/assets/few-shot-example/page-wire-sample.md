@@ -14,9 +14,9 @@ fields:
 
 ## 改动清单
 
-1. import `createTenantNameRules`, `trimNameOnBlur`, `normName`, `NAME_MAX_LENGTH`
+1. import `createTenantNameRules`, `trimFieldOnBlur`, `normName`, `NAME_MAX_LENGTH`
 2. `rules.tenantName = createTenantNameRules()`
-3. `@blur="() => trimNameOnBlur(innerModel, 'tenantName', formRef)"`
+3. `@blur="() => trimFieldOnBlur(innerModel, 'tenantName', formRef)"`
 4. 父组件 submit：`normName(data.tenantName, NAME_MAX_LENGTH.tenantName)`
 
 **不**新增 validator 逻辑。

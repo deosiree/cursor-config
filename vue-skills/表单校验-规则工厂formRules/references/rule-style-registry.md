@@ -7,8 +7,8 @@
 | ruleStyle | 典型字段 | feature-skill | 核心 API 形态 |
 |-----------|----------|---------------|----------------|
 | `factoryGeneric` | 邮箱、手机、密码、验证码、必选下拉 | 新增-规则工厂与通用校验 | `requiredRule`、`patternRule`、`createXxxRules` |
-| `nameIdentifier` | 用户名、租户名、角色名、菜单名、权限名 | 配置-多语言标识符命名规则 | `createNameValidator`、`normName`、`trimNameOnBlur` |
-| `pathLike` | 路由 path、redirect path | 配置-路径类规则 | `validateXxxPathSyntax`、`createXxxPathRules`、`trimXxxOnBlur` |
+| `nameIdentifier` | 用户名、租户名、角色名、菜单名、权限名 | 配置-多语言标识符命名规则 | `createNameValidator`、`normName`、`trimFieldOnBlur` |
+| `pathLike` | 路由 path、API apiUrl | 配置-路径类规则 | `createRoutePathRules` / `createApiPathRules`、`ROUTE_PATH_MAX_LENGTH` / `API_PATH_MAX_LENGTH`、`trimFieldOnBlur`；分段原子见 [`formRules-module-map.md`](formRules-module-map.md)（`validate*` / `chk*` 模块内私有） |
 | `pageWireOnly` | 任意已有工厂字段 | 接入-页面表单字段规则 | `:rules`、`@blur`、submit 规范化 |
 | `unknown` | 未登记语义 | 编排-未知规则MVP与落地 | MVP validator → 评估是否升级为新风格 |
 
