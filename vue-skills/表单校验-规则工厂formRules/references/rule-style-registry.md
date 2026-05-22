@@ -22,3 +22,11 @@
 6. 可选：`template/sample-nebula/` 片段
 
 **禁止**把新风格长期堆在「未知」分支。
+
+## 全仓推进（非 ruleStyle）
+
+| 工作流 | 触发 | feature-skill |
+|--------|------|----------------|
+| 盘点推荐 | 仅 `repoRoot` / `moduleHint`，要下一项或覆盖度 | 盘点-推荐下一表单字段 |
+
+模型见 [`form-field-inventory-model.md`](form-field-inventory-model.md)。

@@ -20,12 +20,15 @@
 
 ```text
 SKILL.md（父级：定位 + 风格路由 + 验收）
+├── feature-skills/盘点-推荐下一表单字段      ← 只读扫描，推进全仓覆盖
 ├── feature-skills/新增-规则工厂与通用校验
 ├── feature-skills/配置-多语言标识符命名规则
 ├── feature-skills/配置-路径类规则
 ├── feature-skills/接入-页面表单字段规则
 └── feature-skills/编排-未知规则MVP与落地
 ```
+
+**持续落地闭环**：`repoRoot`（+ 可选 `moduleHint`）→ 盘点推荐下一项 → 父 skill 实施 → 再盘点，直至 `formFieldCoverage.needsWork === 0`。
 
 ## 输入方式（无需填写仓库名）
 
@@ -38,4 +41,4 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 
 ## 推荐顺序
 
-读父级 `SKILL.md`（Step 1–5）→ **多字段**：按 `ruleStyle` 去重，阶段 A 扩展 rules 模块 → 阶段 B 页面接入 → 对照 few-shot / template → `vitest` + `eslint`。
+不确定改哪一项时：先 **盘点-推荐下一表单字段** → 再读父级 `SKILL.md`（Step 1–5）→ **多字段**：按 `ruleStyle` 去重，阶段 A 扩展 rules 模块 → 阶段 B 页面接入 → 对照 few-shot / template → `vitest` + `eslint`。

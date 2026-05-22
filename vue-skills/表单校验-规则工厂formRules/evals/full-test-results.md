@@ -32,3 +32,14 @@
 
 - 命中 `何时不要使用` + `evals/should-not-trigger-prompts.md`
 - 不进入 Step 1–5，不改 `formRules.ts` / locale
+
+## Prompt 5 明细（盘点 feature，v1.0.3+）
+
+| 项 | 值 |
+|----|-----|
+| 子 skill | `feature-skills/盘点-推荐下一表单字段` |
+| 带 skill | 委派 I1–I5；输出 recommendScore + formFieldCoverage + suggestedFieldsYaml；不改码 |
+| apex_dev 湿扫 | `ApiConfigDialog.apiUrl` inlineDuplicated → pathLike 首选 |
+| vs baseline | 无评分模型、易直接改码 |
+| 得分 | **8.0** |
+| 归档 | [`darwin-inventory-feature-baseline.md`](darwin-inventory-feature-baseline.md) |

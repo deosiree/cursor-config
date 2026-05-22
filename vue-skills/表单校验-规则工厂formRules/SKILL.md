@@ -1,6 +1,6 @@
 ---
 name: 表单校验-规则工厂formRules
-description: formRules、表单校验、路由路径校验、标识符命名、ruleStyle。Vue+Element Plus 集中式 rules 模块扩展与页面接入；按风格路由工厂/命名/路径；componentPath 或 repoRoot+moduleHint；不含 i18n locale。
+description: formRules、表单校验、路由路径校验、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；按风格路由工厂/命名/路径；componentPath 或 repoRoot+moduleHint；可先盘点推荐再实施；不含 i18n locale。
 ---
 
 # 表单校验-规则工厂 formRules
@@ -13,6 +13,7 @@ description: formRules、表单校验、路由路径校验、标识符命名、r
 - 需要 `normName` / `trimOnBlur` / 分段 path 等可复用语义
 - 不确定应用哪种 `ruleStyle`，需要 agent 路由
 - 用户提到 **formRules**、**表单校验**、**路由路径校验**、**标识符命名**
+- 只给 **repoRoot**（或 **repoRoot + moduleHint**），要「最值得完善的表单元素 / 下一项 / 覆盖度」→ 先走盘点子 skill
 
 ## 何时不要使用
 
@@ -62,6 +63,16 @@ fields:
 - **禁止**把 locale 文件列入默认改动集
 
 ## 实施步骤（父级，必先按序）
+
+### 分支：仅盘点推荐（不改码）
+
+用户只要「扫仓库 / 扫模块 → 推荐下一表单项 / 覆盖度」，且**未**给出完整 `fields[]` 实施指令时：
+
+1. 委派 [`feature-skills/盘点-推荐下一表单字段`](feature-skills/盘点-推荐下一表单字段/SKILL.md)
+2. 交付推荐卡 + `formFieldCoverage` + 可复制 `fields[]`
+3. 用户确认后再从下方 **Step 1** 进入实施；`landingStatus: repo_done` 前可反复盘点
+
+### 分支：已知字段直接实施
 
 | Step | 动作 | 产出 |
 |------|------|------|
@@ -114,8 +125,9 @@ Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先�
 | `pathLike` / 路由 path / 分段 path | [`feature-skills/配置-路径类规则`](feature-skills/配置-路径类规则/SKILL.md) |
 | `pageWireOnly` / 仅绑定已有规则 | [`feature-skills/接入-页面表单字段规则`](feature-skills/接入-页面表单字段规则/SKILL.md) |
 | 未命中 / 新语义 | [`feature-skills/编排-未知规则MVP与落地`](feature-skills/编排-未知规则MVP与落地/SKILL.md) |
+| 仅 `repoRoot` / 要下一项推荐 / 覆盖度 | [`feature-skills/盘点-推荐下一表单字段`](feature-skills/盘点-推荐下一表单字段/SKILL.md) |
 
-判定口诀：**先定 ruleStyle，再进子 skill；语义已有只接入，语义没有先配置/新增工厂。**
+判定口诀：**先定 ruleStyle，再进子 skill；语义已有只接入，语义没有先配置/新增工厂。全仓推进时先盘点再实施。**
 
 ## 检查点（改码前暂停）
 
@@ -153,6 +165,13 @@ fields:
   - prop: tenantName, ruleStyle: nameIdentifier, validateMax: 128
 ```
 
+```text
+盘点下一项（只读）：
+repoRoot: ./apex_dev
+moduleHint: 菜单
+→ 输出推荐 prop + 覆盖度 + 建议 fields[]；确认后再实施
+```
+
 ## 参考索引
 
 | 文档 | 用途 |
@@ -161,6 +180,7 @@ fields:
 | [`name-identifier-model.md`](references/name-identifier-model.md) | 命名规则 |
 | [`route-path-segment-model.md`](references/route-path-segment-model.md) | 路径规则 |
 | [`known-issues.md`](references/known-issues.md) | 易错点 |
+| [`form-field-inventory-model.md`](references/form-field-inventory-model.md) | 盘点评分与覆盖度 |
 | [`assets/skill-output-checklist.md`](assets/skill-output-checklist.md) | 交付勾选 |
 
 ### Template 速查（改码时优先打开）
