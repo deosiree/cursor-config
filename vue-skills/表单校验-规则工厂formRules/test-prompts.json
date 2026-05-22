@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "prompt": "使用表单校验 skill，componentPath 是 src/views/system/menu/components/MenuFormDialog.vue，给 name 加标识符规则（展示 maxlength 8、校验 128），给 routePath 加路径规则，允许 /user? 拼参，要异步唯一性。",
+    "expected": "先 project-discovery；委派 nameIdentifier + pathLike + 页面接入；不改 locale；path 单测矩阵含 /user:id# 拒绝"
+  },
+  {
+    "id": 2,
+    "prompt": "repoRoot 是当前仓库，moduleHint 租户表单 tenantName，createTenantNameRules 已经有了，只要接上 blur 和提交 normName。",
+    "expected": "解析组件路径；ruleStyle=pageWireOnly；只改 TenantFormFields 绑定；不新增 validator"
+  },
+  {
+    "id": 3,
+    "prompt": "在新项目里给表单加一个「端口号」字段，1-65535 整数，还没有 formRules 工厂。",
+    "expected": "未命中已注册风格 → 编排-未知规则MVP：调研 → Plan（无 locale）→ mvp 骨架 → 评估是否新 feature"
+  },
+  {
+    "id": 4,
+    "prompt": "帮我把菜单路由校验相关的 zh_CN.json 英文都补上。",
+    "expected": "应拒绝或澄清：非本 skill；不应进入 formRules 改码流程"
+  }
+]

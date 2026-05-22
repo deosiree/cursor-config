@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-22T10:00	baseline	表单校验-规则工厂formRules	-	79.5	baseline	8维+通用性	v1.0.0 dry_run 4/4	dry_run
+2026-05-22T16:00	v1.0.1-p1	表单校验-规则工厂formRules	79.5	82.0	keep	编排+触发词	阶段A/B+Step1-5 估分	dry_run
+2026-05-22T17:00	v1.0.2-p2	表单校验-规则工厂formRules	82.0	85.0	keep	template	完整path/name片段 估分	dry_run
+2026-05-22T20:00	v1.0.3-p3	表单校验-规则工厂formRules	85.0	88.1	keep	实测表现	full_test 4/4 Pass dim8=8.5	full_test
+2026-05-22T22:00	baseline-inventory	盘点-推荐下一表单字段	-	85.3	baseline	8维+通用性	新增 feature evaluate-only full_test #5	full_test
+2026-05-22T23:00	p2-r1-inventory	盘点-推荐下一表单字段	85.3	87.2	keep	指令具体性+检查点	I2必跑rg+feature test-prompts #1-3	dry_run

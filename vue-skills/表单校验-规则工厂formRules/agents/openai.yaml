@@ -1,0 +1,4 @@
+interface:
+  display_name: "表单校验-规则工厂formRules"
+  short_description: "formRules、表单校验、路由路径、标识符命名、ruleStyle；先扩展 rules 模块再页面接入；不含 i18n。"
+  default_prompt: "使用 $表单校验-规则工厂formRules：提供 componentPath 或 repoRoot+moduleHint，以及 fields（prop、ruleStyle）。Step1-2 定位与发现 → Step4 按 style 去重：阶段A 配置工厂 → 阶段B 接入页面。未命中 style 则 MVP+Plan。不要改 locale。"

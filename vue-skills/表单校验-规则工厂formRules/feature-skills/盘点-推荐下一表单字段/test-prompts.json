@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "检查仓库 apex_dev，moduleHint 菜单，反馈最值得用 formRules 完善的一个表单元素，先不要改代码。",
+    "expected": "委派本 feature I1–I5；必跑 I2 rg；topRecommendation 倾向 ApiConfigDialog.apiUrl pathLike；含 formFieldCoverage 与 suggestedFieldsYaml；无业务源码 diff"
+  },
+  {
+    "id": 2,
+    "prompt": "componentPath 已是 src/views/system/user/components/UserFormFields.vue，fields 里 userName 要 nameIdentifier，直接接上规则，不要先盘点。",
+    "expected": "跳过本 feature；父 skill Step 4 阶段 A2+B；不输出 recommendScore 盘点卡"
+  },
+  {
+    "id": 3,
+    "prompt": "repoRoot 是当前前端仓库，moduleHint 租户，扫描下一项表单校验，并给覆盖度。",
+    "expected": "I1 收窄租户相关 views；识别 TenantFormFields 等；若 createTenantNameRules 已存在但未绑定则 pageWireOnlyReady 高分；只读交付"
+  }
+]
