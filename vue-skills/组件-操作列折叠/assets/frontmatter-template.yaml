@@ -1,0 +1,11 @@
+# 本地中文模式（nebula vue-skills 默认）
+---
+name: 组件-操作列折叠
+description: 当表格操作列按钮过多需折叠到「更多」、列宽需自适应，或需用 OperationColumn+OpItem 替换 el-button 操作列时使用。
+---
+
+# 对外兼容模式（仅当明确要求英文 slug / 生态校验时使用）
+# ---
+# name: operation-column-overflow
+# description: Use when table action columns need inline N items plus a More dropdown, auto column width, and OpItem instead of el-button.
+# ---

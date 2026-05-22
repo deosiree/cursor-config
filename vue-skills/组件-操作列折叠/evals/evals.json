@@ -1,0 +1,87 @@
+{
+  "skill": "组件-操作列折叠",
+  "version": "1.1.0",
+  "cases": [
+    {
+      "id": "trigger-overflow-more",
+      "type": "should-trigger",
+      "prompt": "列表操作列按钮太多，想行内只显示1个，其余放到更多菜单",
+      "expectedArtifacts": [
+        "OperationColumn",
+        "OpItem",
+        "inline-visible-count",
+        "更多"
+      ]
+    },
+    {
+      "id": "trigger-replace-el-button",
+      "type": "should-trigger",
+      "prompt": "把表格操作列的 el-button 换成全局 OperationColumn 组件",
+      "expectedArtifacts": [
+        "OpItem",
+        "perm=",
+        "list-data-length"
+      ]
+    },
+    {
+      "id": "trigger-new-component",
+      "type": "should-trigger",
+      "prompt": "仓库还没有 OpItem，需要新建 OperationColumn 溢出套件",
+      "expectedRoute": "新增-OperationColumn溢出套件",
+      "expectedArtifacts": [
+        "OperationCellOverflow",
+        "operationWidth",
+        "checkHasPerm"
+      ]
+    },
+    {
+      "id": "trigger-tenant-table",
+      "type": "should-trigger",
+      "prompt": "租户 TenantTable 操作列 width 200 不够，组件已有，请接入",
+      "expectedRoute": "更新-页面接入OperationColumn",
+      "expectedArtifacts": [
+        "TenantTable",
+        "icon-class",
+        "去掉 width=\"200\""
+      ]
+    },
+    {
+      "id": "not-trigger-layout-height",
+      "type": "should-not-trigger",
+      "prompt": "列表页放大后分页被挡住，表格要内部滚动",
+      "expectedRoute": "layout-fixedHeadTail-adaptiveMiddle"
+    },
+    {
+      "id": "not-trigger-i18n-migration",
+      "type": "should-not-trigger",
+      "prompt": "把整个项目的 i18n 迁到新插件",
+      "expectedRoute": "i18n-server"
+    },
+    {
+      "id": "trigger-user-table-cross",
+      "type": "should-trigger",
+      "prompt": "用户 UserTable 多 v-if 操作列接入 OperationColumn，不要改 i18n",
+      "expectedRoute": "更新-页面接入OperationColumn",
+      "expectedArtifacts": [
+        "样本B",
+        "UserTable",
+        "v-if on OpItem",
+        "optional-i18n",
+        "不复制 locale"
+      ]
+    },
+    {
+      "id": "trigger-menu-tree-table",
+      "type": "should-trigger",
+      "prompt": "菜单树表 row.type 不同按钮，行内3个+更多，权限/API弹窗也有操作列，不要手写探针表",
+      "expectedRoute": "更新-页面接入OperationColumn",
+      "expectedArtifacts": [
+        "menu-table-replace",
+        "getMenuChildren",
+        "inline-visible-count=3",
+        "list-data-length",
+        "禁止 probe-data-rows"
+      ]
+    }
+  ]
+}

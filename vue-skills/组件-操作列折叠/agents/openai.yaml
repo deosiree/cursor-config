@@ -1,0 +1,4 @@
+interface:
+  display_name: "组件-操作列折叠"
+  short_description: "表格操作列行内N个+更多溢出，OperationColumn+OpItem 替换 el-button，列宽自动估算"
+  default_prompt: "使用 $组件-操作列折叠：先判定新增或更新子 skill；组件从 template/mvp 拷贝，页面对照 template/before|after；业务只传 list-data-length。"
