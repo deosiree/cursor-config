@@ -56,7 +56,7 @@ formData.name = normName(formData.name, NAME_MAX_LENGTH.menuName);
 
 ## 参考
 
-- **样板片段**：[`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts)
+- **可合并片段**：[`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts)
 - 流程 few-shot：[`name-identifier-sample.md`](../../assets/few-shot-example/name-identifier-sample.md)
 
 ## 验收

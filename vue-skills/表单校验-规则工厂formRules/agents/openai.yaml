@@ -1,4 +1,4 @@
 interface:
   display_name: "表单校验-规则工厂formRules"
   short_description: "formRules、表单校验、routePath/apiUrl pathLike、trimFieldOnBlur、标识符命名、ruleStyle、盘点下一项；可先只读推荐再实施；不含 i18n。"
-  default_prompt: "使用 $表单校验-规则工厂formRules：若仅 repoRoot/moduleHint 且要推荐下一表单项，先走盘点-推荐下一表单字段（只读）；若已有 componentPath+fields，则 Step1-2 定位 → Step4 阶段A 配置工厂 → 阶段B 接入。未命中 style 则 MVP+Plan。不要改 locale。"
+  default_prompt: "使用 $表单校验-规则工厂formRules：若仅 repoRoot/moduleHint 且要推荐下一表单项，先走盘点-推荐下一表单字段（只读）；若已有 componentPath+fields，则 Step1-2 定位 → Step4 阶段A 配置工厂 → 阶段B 接入。未命中 style 则 MVP+Plan。无 formRules.ts 时仅 unknown→Plan，勿默认 factoryGeneric。不要改 locale。"

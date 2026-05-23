@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "prompt": "检查仓库 apex_dev，moduleHint 菜单，反馈最值得用 formRules 完善的一个表单元素，先不要改代码。",
+    "prompt": "检查仓库 ./my-app，moduleHint 菜单，反馈最值得用 formRules 完善的一个表单元素，先不要改代码。",
     "expected": "委派本 feature I1–I5；必跑 I2 rg；topRecommendation 倾向 ApiConfigDialog.apiUrl pathLike；含 formFieldCoverage 与 suggestedFieldsYaml；无业务源码 diff"
   },
   {

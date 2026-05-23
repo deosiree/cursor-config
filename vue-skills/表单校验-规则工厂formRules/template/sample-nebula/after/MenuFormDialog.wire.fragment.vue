@@ -1,4 +1,4 @@
-<!-- sample-nebula — 阶段 B 接入参考：name + routePath + apiUrl -->
+<!-- sample-nebula — 阶段 B 接入：import 路径以 project-discovery 为准（如 @/utils/formRules） -->
 <template>
   <el-form-item label="名称" prop="name">
     <el-input

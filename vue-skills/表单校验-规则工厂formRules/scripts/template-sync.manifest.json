@@ -1,0 +1,72 @@
+{
+  "source": "template/sample-nebula/after/formRules.ts",
+  "fragments": {
+    "formRules.routePath.fragment.ts": {
+      "imports": [
+        "import type { FormInstance, FormItemRule } from \"element-plus\";",
+        "import i18n from \"@/i18n\";"
+      ],
+      "footerNote": "合并到 rulesModule 时与 name fragment 去重 createRuleFail / trimFieldOnBlur / RULE_TRIGGER。",
+      "symbols": [
+        { "name": "INVISIBLE_PATTERN", "kind": "const" },
+        { "name": "INVISIBLE_REGEX", "kind": "const" },
+        { "name": "PATH_SCHEME_RE", "kind": "const" },
+        { "name": "RULE_TRIGGER", "kind": "const" },
+        { "name": "ROUTE_PATH_MAX_LENGTH", "kind": "exportConst" },
+        { "name": "API_PATH_MAX_LENGTH", "kind": "exportConst" },
+        { "name": "ROUTE_PATH_STATIC_SEGMENT_REGEX", "kind": "const" },
+        { "name": "ROUTE_PATH_VUE_DYNAMIC_SEGMENT_REGEX", "kind": "const" },
+        { "name": "ROUTE_PATH_PARAM_SUFFIX_SEGMENT_REGEX", "kind": "const" },
+        { "name": "API_PATH_STATIC_SEGMENT_REGEX", "kind": "const" },
+        { "name": "API_PATH_PARAM_SUFFIX_SEGMENT_REGEX", "kind": "const" },
+        { "name": "ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE", "kind": "const" },
+        { "name": "API_PATH_SEGMENT_ILLEGAL_CHAR_RE", "kind": "const" },
+        { "name": "RuleFail", "kind": "type" },
+        { "name": "createRuleFail", "kind": "function" },
+        { "name": "ChkPathCoreOpts", "kind": "type" },
+        { "name": "chkPathCore", "kind": "function" },
+        { "name": "chkPathFrag", "kind": "function" },
+        { "name": "chkSegFrag", "kind": "function" },
+        { "name": "chkSegVoid", "kind": "function" },
+        { "name": "ChkSegLeadOpts", "kind": "type" },
+        { "name": "chkSegLead", "kind": "function" },
+        { "name": "chkSegIllegalChars", "kind": "function" },
+        { "name": "chkSegRouteColon", "kind": "function" },
+        { "name": "chkSegApiColon", "kind": "function" },
+        { "name": "validateRoutePathSyntax", "kind": "function" },
+        { "name": "validateApiPathSyntax", "kind": "function" },
+        { "name": "wrapPathSyntaxValidator", "kind": "function" },
+        { "name": "createRoutePathValidator", "kind": "function" },
+        { "name": "createApiPathValidator", "kind": "function" },
+        { "name": "createRoutePathRules", "kind": "exportFunction" },
+        { "name": "createApiPathRules", "kind": "exportFunction" },
+        { "name": "trimFieldOnBlur", "kind": "exportFunction" }
+      ]
+    },
+    "formRules.name.fragment.ts": {
+      "imports": [
+        "import type { FormInstance, FormItemRule } from \"element-plus\";",
+        "import i18n from \"@/i18n\";"
+      ],
+      "footerNote": "合并到 rulesModule 时与 path fragment 去重 createRuleFail / trimFieldOnBlur。",
+      "symbols": [
+        { "name": "INVISIBLE_PATTERN", "kind": "const" },
+        { "name": "INVISIBLE_REGEX", "kind": "const" },
+        { "name": "DANGEROUS_REGEX", "kind": "const" },
+        { "name": "PATH_TRAVERSAL_REGEX", "kind": "const" },
+        { "name": "WHITELIST_CHAR_REGEX", "kind": "const" },
+        { "name": "FIRST_CHAR_REGEX", "kind": "const" },
+        { "name": "RULE_TRIGGER", "kind": "const" },
+        { "name": "NameFieldKind", "kind": "exportType" },
+        { "name": "NAME_MAX_LENGTH", "kind": "exportConst" },
+        { "name": "RuleFail", "kind": "type" },
+        { "name": "createRuleFail", "kind": "function" },
+        { "name": "formatCodePoint", "kind": "function" },
+        { "name": "normName", "kind": "exportFunction" },
+        { "name": "trimFieldOnBlur", "kind": "exportFunction" },
+        { "name": "createNameValidator", "kind": "exportFunction" },
+        { "name": "createMenuNameRules", "kind": "exportFunction" }
+      ]
+    }
+  }
+}

@@ -1,16 +1,18 @@
 ---
 name: 表单校验-规则工厂formRules
-description: formRules、表单校验、路由路径校验、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；按风格路由工厂/命名/路径；componentPath 或 repoRoot+moduleHint；可先盘点推荐再实施；不含 i18n locale。
+description: formRules、表单校验、routePath、apiUrl、pathLike、trimFieldOnBlur、createApiPathRules、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；componentPath 或 repoRoot+moduleHint；可先盘点；不含 i18n locale。
 ---
 
 # 表单校验-规则工厂 formRules
 
 在集中式 **rules 模块**（如 `formRules.ts`）扩展校验工厂，并在目标表单组件接入。跨项目通用；样本代码见 `template/sample-nebula/` 与 `assets/few-shot-example/`。
 
+**TL;DR**：只盘点 → 盘点 feature；有 `fields[]` → Step1–5 + 阶段 A/B；**无 `rulesModule`** → 仅 unknown→Plan；读样本 → `formRules.ts` 通读 / fragment 增量；改 skill 样本 pathLike/name → **只改** [`formRules.ts`](template/sample-nebula/after/formRules.ts) → [`node scripts/sync-samples.js`](scripts/sync-samples.js)（见 [`scripts/README.md`](scripts/README.md)）。
+
 ## 何时使用
 
 - 为表单字段新增或统一校验（名称、路径、邮箱、密码等）
-- 需要 `normName` / `trimOnBlur` / 分段 path 等可复用语义
+- 需要 `normName` / `trimFieldOnBlur` / 分段 path 等可复用语义
 - 不确定应用哪种 `ruleStyle`，需要 agent 路由
 - 用户提到 **formRules**、**表单校验**、**路由路径校验**、**标识符命名**
 - 只给 **repoRoot**（或 **repoRoot + moduleHint**），要「最值得完善的表单元素 / 下一项 / 覆盖度」→ 先走盘点子 skill
@@ -82,7 +84,11 @@ fields:
 | **4** | **多字段编排**（下节）→ 按风格委派子 skill | rules 模块 + 页面改动计划 |
 | **5** | 子 skill 完成后验收（单测、eslint、无 locale diff） | 可提交改动 |
 
+**改 skill 样本时**（非业务 `apex_dev`）：动过 [`template/sample-nebula/after/formRules.ts`](template/sample-nebula/after/formRules.ts) 的 pathLike/name 后，在 skill 根目录执行 `node scripts/sync-samples.js`（维护说明 [`scripts/README.md`](scripts/README.md)）。
+
 Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先向用户确认**再进入 Step 4。
+
+**绿场门禁**：若 Step 2 未找到 `rulesModule`（仓库内无 `formRules.ts`）→ Step 4 **仅**委派 `编排-未知规则MVP与落地`；**禁止**因「像 pattern/必填」直接走 `factoryGeneric` 跳过 Plan。
 
 ## 多字段编排（Step 4 核心）
 
@@ -147,6 +153,7 @@ Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先�
 3. `eslint` 无报错
 4. 默认 diff **无** `locales/*.json`
 5. 新语义若可复用 → [`references/扩展-新规则风格.md`](references/扩展-新规则风格.md)
+6. 若改了 skill 内 `formRules.ts` 样本 → `node scripts/sync-samples.js` 通过
 
 ## 使用示例
 
@@ -167,7 +174,7 @@ fields:
 
 ```text
 盘点下一项（只读）：
-repoRoot: ./apex_dev
+repoRoot: ./my-app
 moduleHint: 菜单
 → 输出推荐 prop + 覆盖度 + 建议 fields[]；确认后再实施
 ```
@@ -181,13 +188,17 @@ moduleHint: 菜单
 | [`route-path-segment-model.md`](references/route-path-segment-model.md) | 路径规则 |
 | [`known-issues.md`](references/known-issues.md) | 易错点 |
 | [`form-field-inventory-model.md`](references/form-field-inventory-model.md) | 盘点评分与覆盖度 |
+| [`formRules-module-map.md`](references/formRules-module-map.md) | 模块分区与原子编排 |
+| [`message-key-constraints.md`](references/message-key-constraints.md) | 校验文案约束 |
 | [`assets/skill-output-checklist.md`](assets/skill-output-checklist.md) | 交付勾选 |
+| [`scripts/README.md`](scripts/README.md) | 样本维护：extract / verify / sync-samples |
 
-### Template 速查（改码时优先打开）
+### Template 速查（skill 内自包含 — 合并到 rulesModule）
 
-| ruleStyle | 完整片段 |
-|-----------|----------|
-| `pathLike` | [`template/sample-nebula/after/formRules.routePath.fragment.ts`](template/sample-nebula/after/formRules.routePath.fragment.ts) |
-| `nameIdentifier` | [`template/sample-nebula/after/formRules.name.fragment.ts`](template/sample-nebula/after/formRules.name.fragment.ts) |
+| 场景 | 打开 |
+|------|------|
+| **通读 / 绿场新建** | [`formRules.ts`](template/sample-nebula/after/formRules.ts)（完整成品） |
+| pathLike 增量 | [`formRules.routePath.fragment.ts`](template/sample-nebula/after/formRules.routePath.fragment.ts) |
+| nameIdentifier 增量 | [`formRules.name.fragment.ts`](template/sample-nebula/after/formRules.name.fragment.ts) |
 | 单测矩阵 | [`formRules.routePath.test.fragment.ts`](template/sample-nebula/after/formRules.routePath.test.fragment.ts) |
 | 阶段 B 接入 | [`MenuFormDialog.wire.fragment.vue`](template/sample-nebula/after/MenuFormDialog.wire.fragment.vue) |

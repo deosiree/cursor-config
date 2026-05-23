@@ -7,6 +7,8 @@ description: 在 rules 模块新增或扩展 requiredRule、patternRule、create
 
 父级：[`../../SKILL.md`](../../SKILL.md)。`ruleStyle=factoryGeneric`。
 
+**绿场互斥**：`project-discovery` 未找到已有 `rulesModule` 时，**不得**用本子 skill 直接新建通用工厂；须先走 [`编排-未知规则MVP与落地`](../编排-未知规则MVP与落地/SKILL.md) 产出 Plan，再视情况落地。
+
 ## 何时使用
 
 - 需要 `required` + `pattern` / `min` 组合

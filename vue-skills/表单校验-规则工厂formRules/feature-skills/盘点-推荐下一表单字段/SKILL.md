@@ -23,7 +23,7 @@ description: 提供 repoRoot 或 repoRoot+moduleHint，扫描表单校验缺口�
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| `repoRoot` | 是 | 仓库根目录（如 `apex_dev` 绝对或相对路径） |
+| `repoRoot` | 是 | 仓库根目录（相对或绝对路径，如 `./my-app`） |
 | `moduleHint` | 否 | 模块关键词，如 `菜单`、`租户`、`设备`；用于缩小 `src/views` |
 | `scopeGlob` | 否 | 默认 `src/views/**/*.vue`；用户可收窄 |
 | `rulesModule` | 否 | 默认自动发现 `**/formRules.ts` |
@@ -102,7 +102,7 @@ rg ":rules=|rules\\s*[:=]" --glob "*.vue" <scanScope>
 ## 与父 skill 衔接
 
 ```text
-用户: 扫 apex_dev，推荐下一项
+用户: 扫 ./my-app，推荐下一项
   → 本 feature I1–I5
   → 用户确认
   → 父 skill: componentPath + suggestedFieldsYaml → Step 4 阶段 A/B
@@ -141,13 +141,13 @@ rg ":rules=|rules\\s*[:=]" --glob "*.vue" <scanScope>
 ```text
 使用 $表单校验-规则工厂formRules
 盘点下一项：
-repoRoot: F:/Documents/Repertory/Sieyuan/nebula/apex_dev
+repoRoot: /path/to/my-app
 moduleHint: 菜单
 只推荐，先不改代码。
 ```
 
 ```text
-repoRoot: ./apex_dev
+repoRoot: ./my-app
 （无 moduleHint，全仓 views 扫描）
 反馈最值得增加 formRules 的一个表单元素，并给覆盖度。
 ```

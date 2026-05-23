@@ -1,0 +1,26 @@
+{
+  "html.validate.scripts": false,
+  "html.validate.styles": false,
+  "css.validate": true,
+  "less.validate": true,
+  "scss.validate": true,
+  "php.validate.executablePath": "",
+  // 禁用 TS/JS 语法验证
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false,
+
+  // 彻底禁用 Markdown 语法、链接和片段验证
+  "markdown.validate.enabled": false,
+  "markdownlint.run": "onType",
+  "markdown.validate.fileLinks.enabled": "ignore",
+  "markdown.validate.fragmentLinks.enabled": "ignore",
+  "markdown.validate.referenceLinks.enabled": "ignore",
+  "markdown.validate.ignoredLinks": [
+    "*"
+  ],
+  "markdownlint.severityForError": "Ignore",
+  "markdownlint.lintWorkspaceGlobs": [],
+  "markdownlint.config": {
+
+  }
+}

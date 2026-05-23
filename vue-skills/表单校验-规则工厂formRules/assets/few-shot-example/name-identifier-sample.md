@@ -16,7 +16,7 @@ fields:
 
 ## 实施顺序
 
-1. **配置-多语言标识符命名规则**：仓库 `formRules.ts` + [`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts) 要点
+1. **配置-多语言标识符命名规则**：合并 [`formRules.name.fragment.ts`](../../template/sample-nebula/after/formRules.name.fragment.ts) 到 `rulesModule`
 2. **接入-页面表单字段规则**：`trimFieldOnBlur` + `normName` 提交
 
 ## 片段

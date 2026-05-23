@@ -12,7 +12,7 @@
   {
     "id": 3,
     "prompt": "在新项目里给表单加一个「端口号」字段，1-65535 整数，还没有 formRules 工厂。",
-    "expected": "未命中已注册风格 → 编排-未知规则MVP：调研 → Plan（无 locale）→ mvp 骨架 → 评估是否新 feature"
+    "expected": "未命中已注册风格 → 编排-未知规则MVP：调研 → Plan（无 locale）→ mvp 骨架；无 formRules.ts 时禁止 factoryGeneric 跳过 Plan"
   },
   {
     "id": 4,
@@ -21,7 +21,7 @@
   },
   {
     "id": 5,
-    "prompt": "检查仓库 apex_dev，或者 apex_dev 菜单模块，反馈最值得用 formRules skill 增加或完善规则的一个表单元素，先不要改代码。",
+    "prompt": "检查当前仓库（repoRoot: ./my-app），moduleHint 菜单，反馈最值得用 formRules 完善的一个表单元素，先不要改代码。",
     "expected": "委派盘点-推荐下一表单字段；输出 recommendScore、formFieldCoverage、suggestedFieldsYaml；无源码 diff；高分项倾向 pathLike apiUrl 或 perm"
   }
 ]

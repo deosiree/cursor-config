@@ -8,8 +8,8 @@
 |----|-----|
 | skill | 表单校验-规则工厂formRules |
 | 路径 | `.cursor/vue-skills/表单校验-规则工厂formRules` |
-| 版本 | **v1.0.3（当前）** |
-| 评估模式 | **`full_test`**（4/4 test-prompts，双臂推演 + explore 子 agent 复核） |
+| 版本 | **v1.0.5（当前）** |
+| 评估模式 | **dry_run + 湿跑佐证**；v1.0.3 曾 full_test 4/4 |
 | 明细 | [`full-test-results.md`](full-test-results.md) |
 | 对照样本 | 同级 `组件-操作列折叠` v1.2.1（Darwin 90.6，full_test） |
 
@@ -21,6 +21,28 @@
 | v1.0.1 | **~82** | **~88** | P1：触发词 + 阶段 A/B + Step 1–5 |
 | v1.0.2 | **~85** | **~90** | P2：完整 template 片段 |
 | **v1.0.3** | **88.1** | **92** | P3：full_test 4/4 Pass，维度 8 → 8.5 |
+| v1.0.4 | **91.4** | **94** | 双轨成品 formRules.ts + 自包含样本 + 湿跑 |
+| **v1.0.5** | **~92.0** | **94** | extract/verify 脚本 + P1 绿场/术语 + TL;DR |
+| v1.0.6 | **~92.3** | **94** | sync-samples 一键维护 + 父 SKILL 链 scripts/README |
+
+---
+
+## v1.0.5 — 8 维 Rubric（估）
+
+| # | 维度 | 权重 | 得分 | 加权 | 相对 v1.0.4 |
+|---|------|------|------|------|-------------|
+| 1 | Frontmatter | 8 | 9 | 7.2 | +trimFieldOnBlur/apiUrl 触发词 |
+| 2 | 工作流 | 15 | 9.5 | 14.3 | +TL;DR、绿场门禁、extract 流 |
+| 3 | 边界 | 10 | 9 | 9.0 | 持平 |
+| 4 | 检查点 | 7 | 8.5 | 6.0 | +绿场硬门禁 |
+| 5 | 指令具体性 | 15 | 9.5 | 14.3 | +可执行 extract/verify |
+| 6 | 资源整合 | 5 | 9.5 | 4.8 | +scripts/README、manifest |
+| 7 | 整体架构 | 15 | 9.5 | 14.3 | 单源双轨固化 |
+| 8 | 实测表现 | 25 | 9 | 22.5 | #3 绿场澄清；湿跑已归档 |
+
+**Darwin 总分：~92.0 / 100**
+
+维护：`node scripts/extract-fragments.js` → `node scripts/verify-template-sync.js`。
 
 ---
 
@@ -68,18 +90,15 @@
 
 ---
 
-## 剩余短板（非 P3 范围）
+## 剩余短板（v1.0.5 后）
 
 | 项 | 说明 |
 |----|------|
-| #3 绿场仓库 | 父 skill 可补一句：「无 formRules 文件时仍先 unknown→Plan，勿默认 factoryGeneric」 |
-| 湿跑改码 | full_test 为推演，未在真实会话中改 MenuFormDialog 验证 |
-| vs 操作列折叠 | 88.1 vs 90.6，差在缺少 before/after 全文件湿跑样本 |
+| `factory.fragment.ts` | 未纳入 extract；与 formRules.ts §4 通用工厂仍可能 drift |
+| CI 接入 | verify 脚本需在改 skill 样本时人工执行（可后续接 husky） |
 
 ---
 
 ## 结论
 
-**v1.0.3 达到「推荐默认使用」水准（≥85）**，full_test 4/4 通过。可与 `组件-操作列折叠` 同级用于 nebula 表单校验类需求。
-
-P1–P3 已完成；后续可选：补 #3 绿场澄清一句、或真实会话湿跑归档为 v1.0.4。
+**v1.0.5 推荐默认使用**（Darwin ~92，通用性 94）。改 pathLike/name 时只编辑 `formRules.ts` 并跑 extract/verify。

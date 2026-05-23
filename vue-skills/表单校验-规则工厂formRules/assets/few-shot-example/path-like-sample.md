@@ -16,7 +16,7 @@ fields:
 
 ## 实施对照
 
-1. 在仓库 `formRules.ts` 按 map 增改 `chkSeg*`（勿在页面重写 for 循环）
+1. 合并 [`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts) 到 `rulesModule`（去重 `createRuleFail` / `trimFieldOnBlur`）
 2. 页面：`trimFieldOnBlur` + `createRoutePathRules` / `createApiPathRules`
 3. 单测经 `createRoutePathRules()[0].validator`（见 [`formRules.routePath.test.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.test.fragment.ts)）
 

@@ -1,6 +1,6 @@
 /**
  * sample-nebula — 通用规则工厂片段（email 等）
- * pathLike / nameIdentifier 分区与原子见 references/formRules-module-map.md
+ * pathLike / nameIdentifier 可合并片段见 template/sample-nebula/after/
  */
 export function requiredRule(message: string, triggerOrOptions?: string | object) {
   // required + 可选 pattern / min

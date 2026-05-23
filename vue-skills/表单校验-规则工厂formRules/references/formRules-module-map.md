@@ -1,6 +1,6 @@
 # formRules.ts 模块地图
 
-扩展或阅读集中式 rules 模块（如 `apex_dev/src/utils/formRules.ts`）前的结构索引。**实现以仓库源码为准**；本文档描述分区、导出面与路径原子编排。
+集中式 rules 模块的结构索引。**完整成品**见 [`template/sample-nebula/after/formRules.ts`](../template/sample-nebula/after/formRules.ts)；**增量改码**见同目录 `*.fragment.ts`。
 
 messageKey 规则见 [`message-key-constraints.md`](message-key-constraints.md)。
 
@@ -90,7 +90,7 @@ const validator = createRoutePathRules()[0].validator!;
 // 或 createApiPathRules()[0].validator!
 ```
 
-pathLike 矩阵断言稳定 `error.message`；超长展示如 `路径超过64字`（模板 + bind）。
+pathLike 矩阵断言稳定 `error.message`；runner 见 [`formRules.routePath.test.fragment.ts`](../template/sample-nebula/after/formRules.routePath.test.fragment.ts)。
 
 ## 相关文档
 

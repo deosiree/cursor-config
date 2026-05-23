@@ -6,7 +6,7 @@
 - [ ] 含 RED / 路由表 / 检查点 / 使用示例
 - [ ] 6 个 `feature-skills/` 齐全（含盘点-推荐下一表单字段，且含 `test-prompts.json`）
 - [ ] `references/` 含 project-discovery、rule-style-registry、formRules-module-map、message-key-constraints、两种 model、form-field-inventory-model、known-issues
-- [ ] `template/sample-nebula/after/` 为编排/接入示意（非完整 validate 副本）
+- [ ] `template/sample-nebula/after/formRules.ts` 完整成品 + `*.fragment.ts` 增量段并存且语义一致
 - [ ] `template/mvp/`
 - [ ] `assets/few-shot-example/` 至少 5 篇（含 inventory-recommendation-sample）
 - [ ] `agents/openai.yaml` display_name 为「表单校验-规则工厂formRules」
@@ -26,6 +26,12 @@
 - [ ] messageKey 遵守 [`message-key-constraints.md`](../references/message-key-constraints.md)
 - [ ] 无文档要求 export `validateRoutePathSyntax` / `validateApiPathSyntax`
 - [ ] 全套件无 `trimNameOnBlur` / `trimRoutePathOnBlur`（统一 `trimFieldOnBlur`）
+
+## 维护（改 pathLike / name 后）
+
+- [ ] 只改 [`formRules.ts`](../template/sample-nebula/after/formRules.ts)
+- [ ] skill 根目录：`node scripts/sync-samples.js` exit 0（或 extract + verify 分步）
+- [ ] 流程见 [`scripts/README.md`](../scripts/README.md)
 
 ## 触发边界
 

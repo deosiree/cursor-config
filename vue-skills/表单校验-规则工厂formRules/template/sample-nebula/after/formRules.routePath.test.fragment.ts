@@ -1,10 +1,13 @@
 /**
- * sample-nebula — pathLike 单测 runner（放到 rulesModule 同级 __tests__/）
- * 经 createRoutePathRules()[0].validator，不 import validate*
+ * sample-nebula — pathLike 单测矩阵（skill 内可对照 formRules.routePath.fragment.ts）
+ *
+ * 落地到目标仓库后：
+ * - import 改为 project-discovery 得到的 rulesModule（如 `@/utils/formRules`）
+ * - 仍经 createRoutePathRules()[0].validator，不直接 import validate*
  */
 import { describe, expect, it } from "vitest";
 import type { FormItemRule } from "element-plus";
-import { createRoutePathRules, ROUTE_PATH_MAX_LENGTH } from "@/utils/formRules";
+import { createRoutePathRules, ROUTE_PATH_MAX_LENGTH } from "./formRules.routePath.fragment";
 
 async function runRoutePathValidator(value: string): Promise<string | undefined> {
   const rule = createRoutePathRules()[0];

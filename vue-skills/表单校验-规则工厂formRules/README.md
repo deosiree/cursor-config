@@ -37,7 +37,7 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 
 ## 样本说明
 
-`template/sample-nebula/` 与 `assets/few-shot-example/` 为编排与接入示意；**实现以仓库 `src/utils/formRules.ts` 为准**（2025 重构：路径分段 `chkSeg*` 原子 + `createRuleFail` + 统一 `trimFieldOnBlur`）。结构索引：[`references/formRules-module-map.md`](references/formRules-module-map.md)。
+`template/sample-nebula/after/formRules.ts` 为**唯一编辑入口**；改完后在 skill 根目录执行 **`node scripts/sync-samples.js`**（或分步 extract + verify）。详见 [`scripts/README.md`](scripts/README.md)。
 
 ## 推荐顺序
 

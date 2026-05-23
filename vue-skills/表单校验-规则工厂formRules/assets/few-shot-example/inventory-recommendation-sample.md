@@ -1,22 +1,22 @@
 # Few-shot：盘点推荐输出（形态样本）
 
-来源形态参考 nebula `apex_dev`；**不含 commit ID**，落地时以当前仓库扫描为准。
+**形态参考**（非执行依赖）：某次全仓扫描的归档数字；落地时以**当前** `repoRoot` 扫描为准，**不**绑定特定 monorepo 子目录名。
 
-## 湿跑归档（apex_dev 全仓 views，2026-05-22）
+## 归档示例（历史湿跑，仅供对照输出格式）
 
 | 项 | 值 |
 |----|-----|
 | formFieldCoverage | totalProps **81** / factoryWired **28** / needsWork **53** / **35%** |
-| topRecommendation | `ApiConfigDialog.vue` · `apiUrl` · `inlineDuplicated` · **pathLike 派生 apiPath** · score **92** |
-| 备选 | `PermissionConfigDialog.perm`(86)、`MenuFormDialog.perm`(84)、`system/api/index.path`(83) |
+| topRecommendation | `ApiConfigDialog.vue` · `apiUrl` · `inlineDuplicated` · **pathLike** · score **92** |
+| 备选 | `PermissionConfigDialog.perm`(86)、`MenuFormDialog.perm`(84) |
 | landingStatus | `in_progress` |
 
-**下一项实施注意**：API 路径为 pathLike 派生（`validateApiPathSyntax`）：**允许 `?`/`#` 拼参**（同 routePath）、**禁止 Vue 动态段 `:`**、`validateMax` **512**。
+**下一项实施注意**：API 路径用 `createApiPathRules`：**允许 `?`/`#` 拼参**、**禁止 Vue 动态段 `:`**、`validateMax` **512**；合并见 [`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts)。
 
 ## 输入
 
 ```text
-repoRoot: apex_dev
+repoRoot: ./my-app
 moduleHint: 菜单
 只盘点，不改代码
 ```

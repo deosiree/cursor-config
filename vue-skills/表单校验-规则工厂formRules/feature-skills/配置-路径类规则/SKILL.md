@@ -25,7 +25,7 @@ messageKey：[`message-key-constraints.md`](../../references/message-key-constra
 
 1. 常量：`ROUTE_PATH_MAX_LENGTH`、`API_PATH_MAX_LENGTH`（与 UI `maxlength` 对齐）
 2. **禁止** export `validateRoutePathSyntax` / `validateApiPathSyntax`；二者模块内私有，由 `createRoutePathRules` / `createApiPathRules` 对外
-3. 在 `// --- 路径校验原子 ---` 增改 `chkPath*` / `chkSeg*`；**禁止**在 skill 或页面手写整段 for 循环，按 map 在聚合内编排
+3. 在 `rulesModule` 的 `// --- 路径校验原子 ---` 增改 `chk*`（可对照 [`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts)）；聚合内只做编排，勿在页面重写 for 循环
 4. route 与 apiUrl **共用**原子；差异：`chkSegRouteColon` vs `chkSegApiColon`；route 多一次 `chkSegLead({ onlyDigitUnderscoreLead: true })`
 5. 导出 `createRoutePathRules()`、`createApiPathRules()`、`trimFieldOnBlur`
 6. 超长：`fail("{label}超过{maxLength}字")` + `createRuleFail({ label, maxLength })`；禁止「路径超过64个字符」类裸 key
@@ -66,7 +66,7 @@ const validator = createRoutePathRules()[0].validator!;
 
 ## 参考
 
-- **编排示意（非完整实现）**：[`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts)
+- **可合并片段**：[`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts)
 - **单测 runner**：[`formRules.routePath.test.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.test.fragment.ts)
 - 流程 few-shot：[`path-like-sample.md`](../../assets/few-shot-example/path-like-sample.md)
 
