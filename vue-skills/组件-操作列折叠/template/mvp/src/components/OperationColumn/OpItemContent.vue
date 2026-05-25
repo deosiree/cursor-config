@@ -133,6 +133,11 @@ watch(
   color: var(--el-color-danger);
 }
 
+/* 行内项：与 el-button type="primary|danger" link 的过渡节奏对齐 */
+.operation-column-op-item__content--inline {
+  transition: color var(--el-transition-duration-fast);
+}
+
 .operation-column-op-item__content--menu {
   width: 100%;
 }

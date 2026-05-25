@@ -110,6 +110,32 @@ function handleKeyActivate(event: KeyboardEvent) {
   height: 32px;
   vertical-align: middle;
   outline: none;
+  border-radius: var(--el-border-radius-base);
+}
+
+/* hover / focus / active 挂在外层 span，保证整格 32px 热区与「更多」link 按钮一致 */
+.operation-column-op-item:hover:not(.operation-column-op-item--hidden)
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--primary),
+.operation-column-op-item:focus-visible
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--primary) {
+  color: var(--el-color-primary-light-5);
+}
+
+.operation-column-op-item:active:not(.operation-column-op-item--hidden)
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--primary) {
+  color: var(--el-color-primary-dark-2);
+}
+
+.operation-column-op-item:hover:not(.operation-column-op-item--hidden)
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--danger),
+.operation-column-op-item:focus-visible
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--danger) {
+  color: var(--el-color-danger-light-5);
+}
+
+.operation-column-op-item:active:not(.operation-column-op-item--hidden)
+  :deep(.operation-column-op-item__content--inline.operation-column-op-item__content--danger) {
+  color: var(--el-color-danger-dark-2);
 }
 
 .operation-column-op-item.operation-column-op-item--hidden {
