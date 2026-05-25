@@ -1,4 +1,0 @@
-interface:
-  display_name: "路由内容技能"
-  short_description: "路由总结复盘与内容改写类需求，推荐最匹配的知识沉淀与内容加工 skill"
-  default_prompt: "使用 $route-knowledge-content-skills 根据我的产出目标推荐最合适的内容类 skill。"
