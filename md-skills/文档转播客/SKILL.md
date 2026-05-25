@@ -50,18 +50,15 @@ description: 创建型：中文技术MD→U型搭档播客听记稿（非静态�
 
 `[技术文档.md]`、`[输出目录]`（默认 `podcast/`）、`交付模式`、`文档类型`（可自动判定）。
 
+**N/K / doc_type / 检查点 A**：以 [`../../_shared/references/技术文档-NK与doc_type契约.md`](../../_shared/references/技术文档-NK与doc_type契约.md) 为准（下文不重复长表）。
+
 ## 文档类型 → 场景钩子
 
-| doc_type | 钩子 |
-| --- | --- |
-| 面经 | 源文面试张力 |
-| 技术方案 | 线上问题/需求冲突 |
-| 教程 | 学习者卡点 |
-| 参考 | 照文档仍踩坑 |
+见契约「doc_type 与场景钩子」表。
 
 ## U 型 + 时长弹性
 
-- **N** → `knowledge_points`；**K**=`min(max(3,N),7)` → `quick_qa_count`
+- **N** → `knowledge_points`；**K** → `quick_qa_count`（公式见契约）
 - 卷首：1–2 条结论 + **场景钩子**（泛称，不写死公司）
 - 正文：铺垫 → 嘉宾解释 → 主播追问（苏格拉底）→ 块末金句
 - 卷尾：**快问快答** K 题，与 N 对齐；不写死秒数，由 N/K 自然伸缩
@@ -78,7 +75,7 @@ description: 创建型：中文技术MD→U型搭档播客听记稿（非静态�
 
 | 条件 | 动作 |
 | --- | --- |
-| N>7 | **检查点 A**：先问用户合并章节或拆多集，禁止静默超长单稿；话术见 [`template/snapshot/任务输入-超长方案.md`](template/snapshot/任务输入-超长方案.md) |
+| N>7 | **检查点 A**（契约 + [`template/snapshot/任务输入-超长方案.md`](template/snapshot/任务输入-超长方案.md)） |
 | N≤2 或用户要「只要稿」 | 默认 **轻量** + 读 MVP；跳过 TTS（**检查点 B** 已选轻量时） |
 | 源文 <500 字 | 建议轻量；K=3，卷首 1 条结论即可 |
 | 无 edge-tts / TTS 失败 | **检查点 C**：交付稿+解答，见 [`references/tools.md`](references/tools.md) |

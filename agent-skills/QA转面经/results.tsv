@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-25T12:00	baseline	QA转面经	-	74.0	baseline	-	结构补齐后基线	dry_run
+2026-05-25T14:00	trial-mcp	QA转面经	74.0	74.0	keep	实测表现	MCP路由试跑无回落	dry_run
+2026-05-25T15:00	trial-frontend	QA转面经	74.0	76.5	keep	实测表现	前端with_skill 7.5 vs baseline 6.5	controlled_trial_dry
+2026-05-25T16:00	optimize-frontend-interview-r1	QA转面经	82.0	86.0	superseded	资源整合+具体性	前端组件默认已删除	v2结构型
+2026-05-25T18:00	structure-refactor-v2	QA转面经	-	-	keep	框架结构库+推荐选择	见darwin-trial-results.md	implemented
+2026-05-25T20:00	retrial-v2-cleanup	QA转面经	74.0	89.6	keep	检查点+资源整合+实测推演	清废弃路径；4/4 test-prompt pass	dry_run

@@ -1,0 +1,93 @@
+{
+  "skill_name": "QA转面经",
+  "evals": [
+    {
+      "id": "should-trigger-1",
+      "category": "should_trigger",
+      "prompt": "使用 $QA转面经 把 MCP 和 SDK 区别讨论沉淀成面经，用面试钩子-对比递进-答题收束，输出到 test-run/面经.md",
+      "expected_output": "加载框架结构库/面试钩子-对比递进-答题收束/框架说明.md；步骤1.5 N/K；快问快答与区分度",
+      "assertions": [
+        "提到框架结构库或面试钩子-对比递进-答题收束",
+        "提到框架说明或structureId",
+        "提到快问快答或K",
+        "提到背答案与做过的人或区分度"
+      ]
+    },
+    {
+      "id": "should-trigger-2",
+      "category": "should_trigger",
+      "prompt": "提炼某 Agent 面经 md，结构归入面试钩子-对比递进-答题收束，原文不改名",
+      "expected_output": "提炼-文档参考框架；copy到结构目录；更新框架结构库README",
+      "assertions": [
+        "提到提炼-文档参考框架",
+        "提到框架结构库",
+        "提到不改名或原文件名",
+        "不应进入完整编排写作"
+      ]
+    },
+    {
+      "id": "should-trigger-recommend",
+      "category": "should_trigger",
+      "prompt": "使用 $QA转面经 把前端表格组件讨论沉淀成面试面经，输出到 out.md",
+      "expected_output": "未指定时推荐2～3个structureId表格；等待选择；可选用面试钩子结构写前端",
+      "assertions": [
+        "提到推荐行文框架或推荐",
+        "提到2或3或二或三",
+        "提到面试钩子或背景-实现",
+        "不应提到前端组件-面经或领域默认框架"
+      ]
+    },
+    {
+      "id": "should-trigger-3",
+      "category": "should_trigger",
+      "prompt": "面经写完后帮我转成播客朗读稿",
+      "expected_output": "步骤6询问后文档转播客",
+      "assertions": [
+        "提到文档转播客",
+        "提到用户确认或询问",
+        "提到stem或同目录"
+      ]
+    },
+    {
+      "id": "should-not-trigger-1",
+      "category": "should_not_trigger",
+      "prompt": "修复 Login.vue 登录按钮点击无响应",
+      "expected_output": "不应触发QA转面经",
+      "assertions": [
+        "不应输出框架结构库编排或步骤1推荐"
+      ]
+    },
+    {
+      "id": "should-not-trigger-2",
+      "category": "should_not_trigger",
+      "prompt": "用 post-mortem 总结这次租户模块开发的经验和弯路",
+      "expected_output": "应使用post-mortem",
+      "assertions": [
+        "应提到post-mortem",
+        "不应要求QA上下文沉淀面经"
+      ]
+    },
+    {
+      "id": "boundary-checkpoint-a",
+      "category": "should_trigger",
+      "prompt": "把这10个独立技术概念全部写进一篇面经，不要拆篇，现在就要",
+      "expected_output": "检查点A；须用户确认后再写",
+      "assertions": [
+        "提到检查点A或N>7",
+        "提到合并或拆篇或确认",
+        "不应直接开始写完整正文"
+      ]
+    },
+    {
+      "id": "boundary-await-choice",
+      "category": "should_trigger",
+      "prompt": "沉淀这段QA成面经，输出 a.md，不说用哪个框架",
+      "expected_output": "status awaiting_choice；推荐表；未选不写",
+      "assertions": [
+        "提到推荐",
+        "提到选一或选择或structureId",
+        "不应在未说明选择的情况下直接输出完整面经正文"
+      ]
+    }
+  ]
+}

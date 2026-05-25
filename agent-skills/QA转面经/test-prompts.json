@@ -1,0 +1,25 @@
+[
+  {
+    "id": "happy-path-mcp",
+    "prompt": "使用 $QA转面经 把 MCP vs Function Calling vs SDK 的讨论沉淀成面经，用面试钩子-对比递进-答题收束，输出到 ./test-run/面经-MCP.md",
+    "expected": "加载框架结构库/面试钩子-对比递进-答题收束/框架说明.md",
+    "mode": "controlled-trial"
+  },
+  {
+    "id": "framework-recommend",
+    "prompt": "使用 $QA转面经 把 OperationColumn 讨论沉淀成面试面经，输出到 ./test-run/面经-OpCol.md",
+    "expected": "未指定structureId时输出2～3个推荐表并awaiting_choice",
+    "mode": "controlled-trial"
+  },
+  {
+    "id": "extract-inplace",
+    "prompt": "提炼某.md 归入面试钩子-对比递进-答题收束，原文不改名入库",
+    "expected": "copy到框架结构库/面试钩子-对比递进-答题收束/原文件名.md",
+    "mode": "controlled-trial"
+  },
+  {
+    "id": "boundary-n8",
+    "prompt": "QA里有8个独立知识点，全部写进一篇面经",
+    "mode": "controlled-trial"
+  }
+]

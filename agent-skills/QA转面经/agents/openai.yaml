@@ -1,0 +1,4 @@
+interface:
+  display_name: "QA转面经"
+  short_description: "将技术QA对话沉淀为面经；按框架结构库选行文结构，未指定时推荐2～3个供选择"
+  default_prompt: "使用 $QA转面经 把这段技术讨论沉淀成面经经验贴，说明输出路径；若未指定 structureId 请先推荐行文框架。"
