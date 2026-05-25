@@ -25,5 +25,10 @@
     "id": 5,
     "prompt": "源文无公司名",
     "expected": "钩子用泛称；skill未写死公司"
+  },
+  {
+    "id": 6,
+    "prompt": "$文档转播客 F:/docs/在字节食堂打饭，我问同事 Memory 爆了怎么办….md",
+    "expected": "delivery_mode完整；输出目录为源文stem子目录；不询问交付模式；读Snapshot；禁止podcast目录名"
   }
 ]

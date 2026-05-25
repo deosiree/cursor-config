@@ -1,4 +1,4 @@
 interface:
   display_name: "文档转播客"
   short_description: "中文技术MD→U型搭档播客；朗读稿+可选MP3/SRT/详细解答"
-  default_prompt: "使用 $文档转播客 将指定 Markdown 转为 U 型搭档播客（自动判定面经/方案/教程），生成朗读稿；默认含 MP3、SRT 与详细解答。"
+  default_prompt: "使用 $文档转播客 将指定 Markdown 转为 U 型搭档播客（自动判定面经/方案/教程）。产物写入源文同目录下与文件名同名的子目录（stem，勿用 podcast/）；默认完整模式（朗读稿+详细解答+MP3+SRT），无需再确认交付模式；仅当用户明确要求只要稿或不要音频时才改模式。"
