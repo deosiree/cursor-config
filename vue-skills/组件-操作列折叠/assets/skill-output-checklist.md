@@ -4,31 +4,27 @@
 
 ## 结构
 
-- [ ] `SKILL.md` 含中文 `name` / `description`
-- [ ] `SKILL.md` 含 RED / 路由表 / 验收清单 / 使用示例
-- [ ] `template/mvp/` 含 OperationColumn 五件套（与目标仓库实现对齐）
-- [ ] `template/before/` 与 `template/after/` 含租户 + 用户双表样本；菜单含 after 操作列片段
-- [ ] `references/optional-i18n.md` 存在且子 skill 不强制拷 locale
-- [ ] `feature-skills/` 含新增、更新两个子 skill
-- [ ] `references/` 含 `column-width-probe`、`op-item-api`、`anti-patterns`
-- [ ] `assets/few-shot-example/` 含 `operation-column-mvp`、`tenant-table-replace`、`user-table-replace`、`menu-table-replace`
-- [ ] `evals/` 齐全（归档用，非执行依赖）
+- [ ] `SKILL.md` 含中文 `name` / `description`、槽位语义指针
+- [ ] `template/mvp/` 五件套 + `__tests__/operationWidth.test.ts` 与 apex_dev 一致
+- [ ] `template/mvp/operationWidth.ts` 含 `calcOpStrip`、`mkWidthCoord`，无 `reserveMoreSlot`
+- [ ] `template/after/`：tenant、user 全表；menu 两 fragment；role fragment
+- [ ] `references/slot-semantics.md`、`column-width-probe.md`、`anti-patterns.md`
+- [ ] `assets/few-shot-example/` 含 role-table-replace
+- [ ] `evals/` 与 `test-prompts.json` 槽位数已更新
 
-## 内容质量（反空心化）
+## 内容质量
 
-- [ ] 主 `SKILL.md` 可独立完成「新增 vs 更新」判定与委派
-- [ ] 子 skill 可独立执行，不依赖通读 README
-- [ ] 明确「何时不要使用」与关联 skill
-- [ ] 无「活源码 / 冻结 commit / v1.x 差异表」作为执行路径
+- [ ] 无「行内个数不含更多」作为当前语义
+- [ ] 无 `collectProbeRowsFromTableData` 等旧 API 作为现行路径（代码样本中）
+- [ ] 子 skill 可独立执行
 
 ## 触发边界
 
-- [ ] should-trigger 覆盖：操作列折叠、更多、OperationColumn、OpItem
-- [ ] should-not-trigger 覆盖：纯布局高度、i18n 全量迁移
+- [ ] should-trigger：槽位、`calcOpStrip`、启用用户后操作列刷新
+- [ ] should-not-trigger：纯布局高度、i18n 全量迁移
 
 ## 技术一致性
 
-- [ ] 强调 `OpItem` 而非 slot 内 `el-button`
-- [ ] `list-data-length` 必填；业务不传 `probe-data-rows`
-- [ ] `template/mvp/index.vue` 含 inject，无 `PROBE_ROWS`
-- [ ] `column-width-probe.md` 指向 `template/mvp` 而非仓库外链
+- [ ] `OpItem` 而非 slot 内 `el-button`
+- [ ] 仅 `list-data-length`；无 `probe-data-rows`
+- [ ] grep skill：`OPERATION_COLUMN_WIDTH_KEY`、`globalMaxBtn`、`reserveMoreSlot` 仅出现在 anti-pattern「勿恢复」类表述（如有）

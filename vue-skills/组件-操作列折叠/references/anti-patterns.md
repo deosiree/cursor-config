@@ -54,13 +54,7 @@
 
 ## 6. 沿用旧版 OperationColumn
 
-若 `index.vue` 仍含：
-
-```vue
-<div v-auto-width class="operation-buttons">
-  <slot :row="row"></slot>
-</div>
-```
+若 `index.vue` 仍含 `v-auto-width` + `operation-buttons`，或 `OperationCellOverflow` 仍 `inject(OPERATION_COLUMN_WIDTH_KEY)`，或 `operationWidth.ts` 仍含 `reserveMoreSlot` / `createOperationColumnWidthCoordinator`：
 
 → 走 **新增** 子 skill，从 `template/mvp/` 整体替换，而非只改业务页。
 
@@ -91,7 +85,7 @@ const PROBE_ROWS = [{}, { showResendActivation: true }];
 ```
 
 问题：与真实 `:data` 脱节，换表要维护第二套 if-else；`inline≥2` 时易列宽裁切。  
-正解：由 `inject(ElTable)` + `collectProbeRowsFromTableData` 从表数据取样。见 [`column-width-probe.md`](column-width-probe.md)。
+正解：由 `inject(ElTable)` + `pickProbeRows` 从表数据取样。见 [`column-width-probe.md`](column-width-probe.md)。
 
 ## 11. 业务页传 probe-data-rows
 
@@ -106,3 +100,12 @@ const PROBE_ROWS = [{}, { showResendActivation: true }];
 
 - 控制台 `probeRowCount: 0` 且表数据随后才加载 → 属竞态，**不要**加假行或弹错补丁到业务页
 - 确认 `:data` 与 `list-data-length` 同步；数据到达后应自动重探针
+
+## 13. 槽位语义误配
+
+```vue
+<!-- 反模式：想要「编辑 + 更多」，却按「行内个数」设 1 -->
+<OperationColumn :inline-visible-count="1" />
+```
+
+正解：槽位 **2** = 1 行内 + 1 槽「更多」。见 [`slot-semantics.md`](slot-semantics.md) 与 `template/after/.../user/UserTable.vue`（`:inline-visible-count="2"`）。

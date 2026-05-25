@@ -71,16 +71,8 @@ const contentClass = computed(() => [
 
 // ========== 方法 ==========
 
-/**
- * 更新 Tooltip 的显示状态。
- *
- * 该函数仅在组件 variant 为 "menu" 且标签元素存在文本溢出时显示 Tooltip。(下拉菜单项，显示不全就隐藏，悬浮显示tooltip)
- * 如果 variant 不为 "menu" 或标签元素不存在，则隐藏 Tooltip。
- *
- * @returns {void}
- */
+/** menu 变体下，文案溢出时启用 tooltip。 */
 function updateTooltipState() {
-  // 非菜单模式下不显示 Tooltip
   if (props.variant !== "menu") {
     showTooltip.value = false;
     return;

@@ -1,18 +1,18 @@
 [
   {
     "id": 1,
-    "prompt": "租户 TenantTable 操作列写了 width=200，6 个 el-button 挤在一起，OperationColumn 组件已有，请接入行内 1 个 + 更多",
-    "expected": "路由更新子 skill：OperationColumn+OpItem、inline-visible-count=1、perm 替代 v-hasPerm、去掉 width=200，参考 template/before|after TenantTable"
+    "prompt": "租户 TenantTable 操作列写了 width=200，6 个 el-button 挤在一起，OperationColumn 组件已有，请 6 个操作全行内",
+    "expected": "路由更新子 skill：OperationColumn+OpItem、inline-visible-count=6、perm、去掉 width=200，参考 template/after/tenant/TenantTable、slot-semantics"
   },
   {
     "id": 2,
-    "prompt": "仓库还没有 OpItem.vue，需要新建支持更多折叠和自动列宽的全局操作列组件",
-    "expected": "路由新增子 skill：从 template/mvp 落地五件套+checkHasPerm+i18n更多，不改业务表"
+    "prompt": "仓库还没有 OpItem.vue，需要新建 OperationColumn 溢出套件（calcOpStrip 列宽探针）",
+    "expected": "路由新增子 skill：从 template/mvp 落地五件套+__tests__+checkHasPerm，无 OPERATION_COLUMN_WIDTH_KEY"
   },
   {
     "id": 3,
     "prompt": "新模块列表页从零开始，操作列要多按钮折叠，仓库是空白前端",
-    "expected": "组合：先新增套件（template/mvp）再更新页面（template/before|after）；委派顺序明确"
+    "expected": "组合：先新增套件（template/mvp）再更新页面；委派顺序明确"
   },
   {
     "id": 4,
@@ -21,12 +21,12 @@
   },
   {
     "id": 5,
-    "prompt": "用户管理 UserTable 操作列有停用/启用/解锁多个 v-if，组件已有，请接入行内1个+更多，不要改 i18n",
-    "expected": "更新子 skill 样本B：保留硬编码 label 与 v-if；OpItem+perm；参考 user before/after；不复制 locale"
+    "prompt": "用户管理 UserTable 操作列：编辑行内+其余更多，多 v-if，启用停用后操作列要刷新，不要改 i18n",
+    "expected": "更新子 skill：inline-visible-count=2（槽位语义）、UserTable after、tblProbeFp/status、不复制 locale"
   },
   {
     "id": 6,
-    "prompt": "菜单管理树表 directory/page 操作不同，行内要 3 个+更多，权限配置和 API 弹窗里也有操作列，组件已有，不要手写 MenuType 探针表",
-    "expected": "更新子 skill 样本菜单：menu-table-replace；list-data-length=getMenuChildren(tab.key).length；inline-visible-count=3；v-if 在 OpItem；参考 template/after/.../menu/*.fragment.vue；禁止 probe-data-rows"
+    "prompt": "菜单树表 row.type 不同按钮，权限弹窗3槽、API弹窗4槽，组件已有，不要手写 MenuType 探针表",
+    "expected": "更新子 skill：menu-table-replace；list-data-length 与 Tab 子集一致；inline-visible-count 3/4；禁止 probe-data-rows"
   }
 ]

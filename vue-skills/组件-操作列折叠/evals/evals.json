@@ -1,6 +1,7 @@
 {
   "skill": "组件-操作列折叠",
-  "version": "1.1.0",
+  "version": "1.3.0",
+  "truthCommit": "5cc2e14311c9a503ee22540459c70ccb49d0b2ef",
   "cases": [
     {
       "id": "trigger-overflow-more",
@@ -9,7 +10,8 @@
       "expectedArtifacts": [
         "OperationColumn",
         "OpItem",
-        "inline-visible-count",
+        "inline-visible-count=2",
+        "slot-semantics",
         "更多"
       ]
     },
@@ -29,20 +31,22 @@
       "prompt": "仓库还没有 OpItem，需要新建 OperationColumn 溢出套件",
       "expectedRoute": "新增-OperationColumn溢出套件",
       "expectedArtifacts": [
+        "calcOpStrip",
+        "mkWidthCoord",
         "OperationCellOverflow",
         "operationWidth",
-        "checkHasPerm"
+        "__tests__"
       ]
     },
     {
       "id": "trigger-tenant-table",
       "type": "should-trigger",
-      "prompt": "租户 TenantTable 操作列 width 200 不够，组件已有，请接入",
+      "prompt": "租户 TenantTable 6 个操作要全行内，组件已有",
       "expectedRoute": "更新-页面接入OperationColumn",
       "expectedArtifacts": [
         "TenantTable",
-        "icon-class",
-        "去掉 width=\"200\""
+        "inline-visible-count=6",
+        "去掉 width"
       ]
     },
     {
@@ -60,26 +64,24 @@
     {
       "id": "trigger-user-table-cross",
       "type": "should-trigger",
-      "prompt": "用户 UserTable 多 v-if 操作列接入 OperationColumn，不要改 i18n",
+      "prompt": "用户 UserTable 多 v-if，编辑+更多，启用后操作列要刷新",
       "expectedRoute": "更新-页面接入OperationColumn",
       "expectedArtifacts": [
-        "样本B",
         "UserTable",
-        "v-if on OpItem",
-        "optional-i18n",
-        "不复制 locale"
+        "inline-visible-count=2",
+        "tblProbeFp",
+        "v-if on OpItem"
       ]
     },
     {
       "id": "trigger-menu-tree-table",
       "type": "should-trigger",
-      "prompt": "菜单树表 row.type 不同按钮，行内3个+更多，权限/API弹窗也有操作列，不要手写探针表",
+      "prompt": "菜单树表 row.type 不同，权限弹窗3槽 API4槽，不要手写探针表",
       "expectedRoute": "更新-页面接入OperationColumn",
       "expectedArtifacts": [
         "menu-table-replace",
-        "getMenuChildren",
         "inline-visible-count=3",
-        "list-data-length",
+        "inline-visible-count=4",
         "禁止 probe-data-rows"
       ]
     }

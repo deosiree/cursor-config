@@ -5,13 +5,15 @@
 1. 「表格操作列按钮太多，挤在一起，想折叠到更多」
 2. 「用 OperationColumn / OpItem 替换操作列 el-button」
 3. 「操作列 width 写死 200，想自动算列宽」
-4. 「行内显示 1 个操作，其余进更多下拉」
+4. 「行内显示 1 个操作，其余进更多下拉」（槽位 `inline-visible-count=2`）
 5. 「新建全局 OperationColumn 组件，支持权限和图标」
 6. 「租户表 TenantTable 操作列迁移」（组件已存在 → 更新子 skill）
 7. 「用户 UserTable 多 v-if 操作列接入，不要改 i18n」
 8. 「菜单管理树表 directory/page 操作不同，行内 3 个+更多，弹窗内表也要接入」（→ 更新子 skill + menu few-shot）
 9. 「inline-visible-count=2 时更多按钮被裁切 / 列宽不够」
 10. 「OperationColumn 离屏探针未扫描到 OpItem / probeRowCount 0」
+11. 「启用用户后操作列仍显示停用 / calcOpStrip / 槽位语义」
+12. 「inline-visible-count 是槽位总数含更多」
 
 ## should-not-trigger（不应激活本 skill）
 
@@ -28,7 +30,7 @@
 ## 期望产物关键词
 
 - `OperationColumn`、`OpItem`
-- `inline-visible-count`、`list-data-length`
+- `inline-visible-count`（槽位语义）、`calcOpStrip`、`list-data-length`
 - `perm=`（替代 `v-hasPerm` on 按钮）
 - `template/mvp`（新增）、`template/before|after`（更新）
 - 无 slot 内 `el-button` 操作列（更新场景）

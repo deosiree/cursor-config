@@ -3,3 +3,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-22T14:00	v1.1-cross-table	组件-操作列折叠	87.7	88.5	keep	通用性+i18n边界	用户表样本B+optional-i18n	dry_run
 2026-05-22T18:00	v1.2-menu-sample	组件-操作列折叠	88.5	89.2	baseline	8维+通用性	v1.2菜单few-shot+fragment+test#6	dry_run
 2026-05-22T19:00	901a96b	组件-操作列折叠	89.2	90.6	keep	检查点	改码前门禁+样本速查表	dry_run
+2026-05-25T15:40	5cc2e143	组件-操作列折叠	90.6	92.7	baseline	8维+通用性	v1.3.0-re再评估6/6+#1#5子agent	mixed
+2026-05-25T16:00	phase2-r1	组件-操作列折叠	92.7	93.5	keep	实测表现+跨表	更新子skill补tblProbeFp链#5yes	dry_run

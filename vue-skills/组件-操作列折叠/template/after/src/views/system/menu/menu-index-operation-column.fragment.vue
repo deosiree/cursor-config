@@ -5,7 +5,7 @@
 <OperationColumn
   label="操作"
   fixed="right"
-  align="left"
+  align="center"
   :list-data-length="getMenuChildren(tab.key).length"
   :inline-visible-count="3"
 >

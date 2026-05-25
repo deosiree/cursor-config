@@ -40,14 +40,16 @@
           label="操作"
           fixed="right"
           :list-data-length="data.length"
-          :inline-visible-count="1"
+          :inline-visible-count="2"
         >
           <template #default="{ row }">
+            <OpItem label="编辑" icon="edit" perm="sys:user:edit" @click="emit('edit', row)" />
             <OpItem
               v-if="row.status === 'active' && !isCurrentUser(row.id)"
               label="停用用户"
               icon-class="i-svg:unlock-user"
               perm="sys:user:lock"
+              type="danger"
               @click="emit('disable', row)"
             />
             <OpItem
@@ -70,12 +72,6 @@
               icon-class="i-svg:reset-password"
               perm="sys:user:resendActivation"
               @click="emit('resendActivation', row)"
-            />
-            <OpItem
-              label="编辑"
-              icon="edit"
-              perm="sys:user:edit"
-              @click="emit('edit', row)"
             />
             <OpItem
               v-if="!isCurrentUser(row.id)"
@@ -128,7 +124,6 @@ const emit = defineEmits<{
   unlock: [row: UserListItem];
   resendActivation: [row: UserListItem];
   resetPassword: [row: UserListItem];
-  subscribe: [row: UserListItem];
 }>();
 
 const tableWrapperRef = ref<HTMLElement | null>(null);

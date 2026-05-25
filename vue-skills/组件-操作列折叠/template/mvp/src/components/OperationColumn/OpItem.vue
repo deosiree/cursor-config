@@ -8,9 +8,9 @@
     :data-op-icon="icon || undefined"
     :data-op-icon-class="iconClass || undefined"
     :data-op-type="type"
-    @click="handleClick"
-    @keydown.enter.prevent="handleKeyActivate"
-    @keydown.space.prevent="handleKeyActivate"
+    @click="emitActivate"
+    @keydown.enter.prevent="emitActivate"
+    @keydown.space.prevent="emitActivate"
   >
     <!-- 按钮布局壳，此处应用于：行内外露项 -->
     <OpItemContent
@@ -83,20 +83,9 @@ function resolveVisible(perm?: string | string[]): boolean {
   return checkHasPerm(perm);
 }
 
-/**
- * 向业务侧派发点击事件。
- * @param event - 原生鼠标事件
- */
-function handleClick(event: MouseEvent) {
-  emit("click", event);
-}
-
-/**
- * 键盘 Enter/Space 激活时派发点击（与鼠标点击语义一致）。
- * @param event - 键盘事件
- */
-function handleKeyActivate(event: KeyboardEvent) {
-  emit("click", event as unknown as MouseEvent);
+/** 鼠标或键盘激活时向业务侧派发 click。 */
+function emitActivate(event: MouseEvent | KeyboardEvent) {
+  emit("click", event as MouseEvent);
 }
 </script>
 

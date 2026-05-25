@@ -2,34 +2,40 @@
 
 ## 用户诉求
 
-「用户列表操作列按钮多、有状态 v-if，接入 OperationColumn，不要改 i18n。」
+「用户列表操作列：编辑行内显示，其余进『更多』；多 `v-if` 与启用/停用切换后操作列要刷新。」
 
 ## 前置条件
 
 `OperationColumn` 套件已存在（见 [`operation-column-mvp.md`](operation-column-mvp.md)）。
 
-## Before 问题
-
-- `el-table-column` + 多个 `el-button`
-- 硬编码中文文案
-- `v-if` 依赖 `status`、`isCurrentUser` 等
-
 ## After 要点
 
+### 列壳
+
+```vue
+<OperationColumn
+  label="操作"
+  fixed="right"
+  :list-data-length="data.length"
+  :inline-visible-count="2"
+>
+```
+
+槽位 **2** = 最多 **1** 个行内 OpItem + **1** 槽「更多」。
+
+### 要点
+
 - 列壳：`OperationColumn` + `:list-data-length="data.length"`
-- 每个按钮 → `OpItem`，`v-if` 保留在 `OpItem` 上
-- **不**批量改 `$t()`（见 [`optional-i18n.md`](../../references/optional-i18n.md)）
+- `v-if` 保留在 `OpItem`（`status`、`showResendActivation` 等）
+- 探针覆盖 `status` / `showResendActivation`（`tblProbeFp`）；行内签名 watch 处理同位数 `v-if` 替换
 
-## 样本路径
+## 对照路径
 
-- Before：[`template/before/.../UserTable.vue`](../../template/before/src/views/system/user/components/UserTable.vue)
-- After：[`template/after/.../UserTable.vue`](../../template/after/src/views/system/user/components/UserTable.vue)
+- before：[`template/before/.../user/UserTable.vue`](../../template/before/src/views/system/user/components/UserTable.vue)
+- after：[`template/after/.../user/UserTable.vue`](../../template/after/src/views/system/user/components/UserTable.vue)
 
-## 列宽探针
+## 验收
 
-- 多 `v-if` 由组件从 `:data` 取样，业务不传 `probe-data-rows`
-- 见 [`references/column-width-probe.md`](../../references/column-width-probe.md)
-
-## 推广
-
-对照租户样本 [`tenant-table-replace.md`](tenant-table-replace.md) 同构替换；树表见 [`menu-table-replace.md`](menu-table-replace.md)。
+- 典型行：「编辑」+「更多」
+- 启用用户后：「停用用户」行内显示正确（非仍显示停用）
+- 不改业务 i18n

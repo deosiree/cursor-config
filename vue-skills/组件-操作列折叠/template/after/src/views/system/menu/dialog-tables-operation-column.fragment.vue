@@ -1,8 +1,8 @@
 <!--
-  弹窗内表操作列 after 片段（PermissionConfigDialog / ApiConfigDialog 同构）。
+  弹窗内表操作列 after 片段（PermissionConfigDialog / ApiConfigDialog）。
   仅作 skill 复制样本，非独立可运行组件。
 -->
-<!-- PermissionConfigDialog -->
+<!-- PermissionConfigDialog：3 槽位（2 行内 + 更多） -->
 <OperationColumn
   label="操作"
   fixed="right"
@@ -33,4 +33,27 @@
   </template>
 </OperationColumn>
 
-<!-- ApiConfigDialog：列壳与 inline-visible-count 相同，OpItem 文案/事件按业务替换 -->
+<!-- ApiConfigDialog：4 槽位（3 行内 + 更多） -->
+<OperationColumn
+  label="操作"
+  fixed="right"
+  align="center"
+  :list-data-length="tableData.length"
+  :inline-visible-count="4"
+>
+  <template #default="{ row }">
+    <OpItem
+      label="编辑"
+      icon="edit"
+      perm="sys:menu:configApi"
+      @click="handleEditApi(row)"
+    />
+    <OpItem
+      label="删除"
+      icon="delete"
+      type="danger"
+      perm="sys:menu:configApi"
+      @click="handleDeleteApi(row.id)"
+    />
+  </template>
+</OperationColumn>

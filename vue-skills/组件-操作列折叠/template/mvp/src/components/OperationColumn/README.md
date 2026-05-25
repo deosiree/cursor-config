@@ -1,94 +1,97 @@
+# OperationColumn
 
-# OperationColumn 溢出模式
-
-启用 **`enable-overflow-menu="true"`** 时，操作列采用固定槽位工具格布局，列宽由组件内部自动计算，无需配置 `width` / `min-width` / `max-width`，也不支持列宽拖拽。
+表格操作列：**行内固定槽位 +「更多」溢出**；列宽由离屏探针与逐字估宽自动计算。
 
 ## 目录结构
 
 | 文件 | 职责 |
 |------|------|
-| `index.vue` | `el-table-column` 壳；非溢出自适应宽；溢出模式 provide 列宽协调器 |
-| `OpItem.vue` | 业务声明式操作槽（权限、`data-op-*`、点击） |
-| `OpItemContent.vue` | 行内 / 「更多」菜单共用视觉（icon、文案、menu tooltip） |
-| `OperationCellOverflow.vue` | 行内与「更多」切分、下拉、行签名上报 |
-| `operationWidth.ts` | DOM 元数据、行扫描、Canvas 测宽、列宽协调器 |
+| `index.vue` | `el-table-column` 壳、离屏探针、列宽协调 |
+| `OpItem.vue` | 声明式操作槽 |
+| `OpItemContent.vue` | 行内 /「更多」菜单视觉 |
+| `OperationCellOverflow.vue` | 行内/「更多」切分（`calcOpStrip`） |
+| `operationWidth.ts` | 代表行、指纹、`calcOpStrip`、估宽 |
 
-权限判断与 `v-hasPerm` 共用 [`checkHasPerm`](../../directive/permission/index.ts)。
-
-## 推荐 import
+## 推荐用法
 
 ```ts
 import OperationColumn from "@/components/OperationColumn/index.vue";
 import OpItem from "@/components/OperationColumn/OpItem.vue";
 ```
 
-## 槽位约定（对齐原型）
-
-| 元素 | 尺寸 |
-|------|------|
-| 普通操作槽 | 高 32px，宽 min 32px（随按钮内容增长） |
-| 「更多」槽 | 高 32px，宽 min 40px |
-| 槽间距 | 8px |
-| icon 槽 | 14×14px，与文案间距 4px |
-| Cell 左右 padding | 各 8px（列宽 = 内容宽 + 16 + 2px 缓冲） |
-| 固定右列滚动条余量 | 8px（`FIXED_RIGHT_GUTTER`，`fixed="right"` 时自动加） |
-| 「更多」槽公式下限 | 40px（对齐 CSS `min-width`） |
-| 「更多」下拉菜单 | 最大宽度 200px，超长文案省略，悬浮 tooltip 显示全称 |
-
-## OpItem（声明式操作槽）
-
-业务侧使用 **`OpItem`** 定义每个操作，**不要**再嵌套 `el-button`。
-
-| Prop | 作用 |
-|------|------|
-| `label` | 文案（必填） |
-| `icon` | Element Plus 图标名，如 `edit`、`delete` |
-| `icon-class` | 自定义 `i-svg:*` 类名（与 `icon` 二选一） |
-| `type` | `primary`（默认）或 `danger` |
-| `perm` | 权限码，无权限时不渲染（同 `v-hasPerm`） |
-
-行内与「更多」下拉共用 `OpItemContent` 布局，保证 icon 左对齐、左侧留白一致。
-
 ```vue
 <OperationColumn
-  :label="$t('操作')"
+  label="操作"
   fixed="right"
   :list-data-length="data.length"
-  :inline-visible-count="1"
-  :enable-overflow-menu="true"
+  :inline-visible-count="2"
 >
   <template #default="{ row }">
-    <OpItem
-      :label="$t('编辑')"
-      icon="edit"
-      perm="sys:example:edit"
-      @click="onEdit(row)"
-    />
+    <OpItem label="编辑" icon="edit" @click="onEdit(row)" />
+    <!-- 其余 OpItem -->
   </template>
 </OperationColumn>
 ```
 
-## 核心 Props（OperationColumn）
+## `inline-visible-count`（槽位语义）
 
-| Prop | 作用 | 默认 |
+表示行内条上占用的**槽位总数**，其中 **「更多」按钮占 1 个槽**（需要溢出菜单时）。
+
+| 值 | 含义示例 |
+|----|----------|
+| `1` | 仅显示「更多」，全部操作在下拉（0 个行内 OpItem + 更多） |
+| `2` | 最多 **1 个行内** OpItem + **更多** |
+| `5` | 最多 **4 个行内** + **更多**（总槽位 5） |
+| `6` | 最多 **5 个行内** + **更多**；若溢出仅 1 个则**不显示更多**，6 个全行内 |
+
+归一化：`Math.max(inline-visible-count, 1)`。
+
+### 折叠规则
+
+当 `N` 个 OpItem、`slots` 为传入值（≥1）：
+
+1. `N ≤ slots` → 全部行内，无「更多」
+2. `N > slots` → 预留 1 槽给「更多」，行内 `slots - 1` 个
+3. 若下拉里只剩 **1** 个 → 不显示「更多」，**N 个全行内**
+
+示例：`slots=5`，`N=7` → 4 行内 + 更多（下拉 3 个）。
+
+实现统一由 [`calcOpStrip`](operationWidth.ts) 计算，行内切分与列宽估宽共用，避免漂移。
+
+## 其它 Props
+
+| Prop | 默认 | 作用 |
 |------|------|------|
-| **`inline-visible-count`** | 行内最多外露几个 `OpItem`，其余收进「更多」 | `1` |
-| **`enable-overflow-menu`** | 启用固定槽位 + 溢出菜单 | `false` |
-| **`cell-padding`** | 列宽补偿的 cell 左右 padding 总和（px） | `16` |
-| **`action-gap`** | 槽间距（px） | `8` |
-| **`list-data-length`** | 数据行数变化时重置签名缓存 | 必填 |
+| `list-data-length` | — | **必填**；与 `:data` 行数同步，参与重探针 |
+| `action-gap` | `8` | 槽间距（px） |
+| `cell-padding` | `16` | 列宽补偿左右 padding |
+| `cell-max-height` | `32` | 操作区最大高度 |
+| `min-width` | `80` | 探针完成前列宽 |
 
-## 列宽如何计算（溢出模式）
+## 列宽与重探针
 
-1. **slot 离屏探针（必须）**：`inject(ElTable)` 读取表数据（`store.states.data`，挂载早期若仍为空则回退 `props.data`），经 `collectProbeRowsFromTableData` 选取代表行，再离屏 render、`scanOpButtons` 读 DOM。表数据尚未就绪时不弹错，待 `list-data-length` / 表数据长度变化后自动重探针。
-2. **估宽**：`inline-visible-count ≥ 2` 时按单按钮累加（对齐 `min-width:32px`）；跨场景 `globalMaxBtn > inline` 时各场景均预留「更多」槽。
-3. **多场景取 max**：取最宽作为列宽；`list-data-length` 变化时清行签名并**重跑**离屏探针。
-4. **行签名**：行 mount 后仅登记可见按钮组合签名，**不**用行 DOM 修正列宽（避免先宽后窄闪烁）。`userInfo.perms` 变化时重跑离屏探针。
+1. 离屏探针代表行 → `scanOpButtons` → `maxFromSlots`（内部 `calcOpStrip`）
+2. 触发：`reprobeTrig`（行数 + `tblProbeFp` 表指纹）、`perms` 变化；32ms 合并（`schedReprobe`）
+3. 仅改 `inline-visible-count` / 更多文案：`bumpStored` 公式重算 + `rowWidthEpoch`，不跑离屏 DOM
 
-## 不用溢出菜单时
+表指纹字段：`status`、`type`、`showResendActivation`（`tblProbeFp` / `pickProbeRows`）。
 
-关闭 `:enable-overflow-menu="true"` 时，行为与旧版一致，仍可用 slot 包裹任意内容，`width` 为固定列宽：
+### `operationWidth.ts` 主要符号（≤12 字符）
 
-```vue
-<OperationColumn :width="200" :list-data-length="data.length" />
-```
+| 短名 | 职责 |
+|------|------|
+| `calcOpStrip` | 槽位切分（行内个数 + 是否「更多」） |
+| `pickProbeRows` | 从表数据选代表行 |
+| `tblProbeFp` | 表数据轻量指纹 |
+| `maxFromSlots` | 多场景列宽上限 |
+| `mkWidthCoord` | 列宽协调器 |
+| `normProbeVn` | 规范化 slot VNode |
+| `probeDomSlots` | index 内离屏 DOM 探针（非导出） |
+
+## 排障
+
+| 现象 | 处理 |
+|------|------|
+| 6 操作仍出现「更多」且仅 1 项 | 提高 `inline-visible-count`（如 6）以触发折叠 |
+| 只想「编辑 + 更多」 | 使用 `inline-visible-count="2"` |
+| 列宽偏窄 | 确认探针代表行覆盖各 `status` 分支 |

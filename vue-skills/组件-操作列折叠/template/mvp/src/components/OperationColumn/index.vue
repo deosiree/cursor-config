@@ -9,9 +9,9 @@
   >
     <template #default="{ row }">
       <OperationCellOverflow
-        :inline-visible-count="normalizedInlineCount"
+        :inline-visible-count="normSlotCnt"
         :gap="actionGap"
-        :cell-max-height="effectiveCellMaxHeight"
+        :cell-max-height="cellMaxH"
         :width-epoch="rowWidthEpoch"
       >
         <slot :row="row"></slot>
@@ -22,62 +22,46 @@
 
 <script setup lang="ts">
 /**
- * @file 操作列表格列：固定槽位 + 更多溢出。
+ * @file 操作列表格列：行内固定槽位 +「更多」溢出；列宽由离屏探针与估宽公式决定。
  * @module OperationColumn/index
  */
 
-// ========== 依赖 ==========
-
-import {
-  h,
-  render,
-  inject,
-  getCurrentInstance,
-  type ComponentInternalInstance,
-  type VNode,
-  type VNodeChild,
-} from "vue";
+import { h, render, inject, getCurrentInstance, type ComponentInternalInstance } from "vue";
 import { TABLE_INJECTION_KEY } from "element-plus/es/components/table/src/tokens";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/store";
 import { handleApiError } from "@/utils/notification";
 import OperationCellOverflow from "./OperationCellOverflow.vue";
 import {
-  collectProbeRowsFromTableData,
-  createOperationColumnWidthCoordinator,
-  dedupeDescsByLabel,
-  FIXED_RIGHT_GUTTER,
-  OPERATION_COLUMN_WIDTH_KEY,
+  tblProbeFp,
+  pickProbeRows,
+  mkWidthCoord,
+  dedupeByLbl,
+  RIGHT_GUT,
+  normProbeVn,
   scanOpButtons,
   type OpButtonDesc,
 } from "./operationWidth";
 
-// ========== 类型 / Props / Emits ==========
-
 interface Props {
+  /** 与 el-table :data 行数同步的变更信号（必填） */
   listDataLength: number;
-  prop?: string;
   label?: string;
   fixed?: string;
   align?: string;
-  width?: number;
   showOverflowTooltip?: boolean;
   minWidth?: number;
-  /** 行内外露操作个数；负数按 0 处理 */
+  /** 行内条总槽位数（含「更多」占 1 槽）；小于 1 按 1 处理 */
   inlineVisibleCount?: number;
-  /** 操作格内槽间距（px） */
   actionGap?: number;
-  /** 列宽补偿的 cell 左右 padding（px） */
   cellPadding?: number;
-  /** 操作区内最大高度（px）；默认 32 */
   cellMaxHeight?: number;
 }
 
-/** cell 内边距外的渲染缓冲（px） */
-const CELL_RENDER_BUFFER = 2;
-
-/** 探针失败时操作列内容区兜底宽度（px） */
-const FALLBACK_CONTENT_WIDTH = 150;
+const CELL_BUF = 2;
+const FB_COL_W = 150;
+/** 批量触发的离屏重探针 trailing 合并窗口（ms） */
+const REPROBE_MS = 32;
 
 const props = withDefaults(defineProps<Props>(), {
   label: "操作",
@@ -88,8 +72,6 @@ const props = withDefaults(defineProps<Props>(), {
   actionGap: 8,
   cellPadding: 16,
 });
-
-// ========== 注入 / 上下文 ==========
 
 type InjectedElTable = ComponentInternalInstance & {
   store?: { states: { data: { value: unknown[] } } };
@@ -102,60 +84,36 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const slots = useSlots();
 
-// ========== 状态 ==========
-
 const moreLabel = computed(() => t("更多"));
-const compactWidthMax = ref(0);
+const colWMax = ref(0);
 const rowWidthEpoch = ref(0);
 const widthReady = ref(false);
 
-/** inlineVisibleCount 归一化：负数按 0 处理 */
-const normalizedInlineCount = computed(() => Math.max(props.inlineVisibleCount, 0));
+const normSlotCnt = computed(() => Math.max(props.inlineVisibleCount, 1));
 
-const widthCoordinator = createOperationColumnWidthCoordinator({
-  getInlineVisibleCount: () => normalizedInlineCount.value,
+const wCoord = mkWidthCoord({
+  getSlotCnt: () => normSlotCnt.value,
   getActionGap: () => props.actionGap,
-  compactWidthMax,
+  colWMax,
   getMoreLabel: () => moreLabel.value,
 });
 
-provide(OPERATION_COLUMN_WIDTH_KEY, widthCoordinator);
+const cellMaxH = computed(() => props.cellMaxHeight ?? 32);
 
-// ========== 计算属性 ==========
-
-const effectiveCellMaxHeight = computed(() => {
-  if (props.cellMaxHeight != null) return props.cellMaxHeight;
-  return 32;
-});
-
-const overflowContentWidth = computed(() => {
-  const gutter = props.fixed === "right" ? FIXED_RIGHT_GUTTER : 0;
-  return Math.ceil(compactWidthMax.value + props.cellPadding + CELL_RENDER_BUFFER + gutter);
+const ovrContentW = computed(() => {
+  const gutter = props.fixed === "right" ? RIGHT_GUT : 0;
+  return Math.ceil(colWMax.value + props.cellPadding + CELL_BUF + gutter);
 });
 
 const resolvedWidth = computed(() => {
   if (!widthReady.value) return props.minWidth;
-  return overflowContentWidth.value;
+  return ovrContentW.value;
 });
 
-// ========== 方法 ==========
+const childKey = computed(() => elTable?.props?.treeProps?.children ?? "children");
 
-function isVNode(value: unknown): value is VNode {
-  return typeof value === "object" && value !== null && "type" in value;
-}
-
-/** 将 slot 返回值规范为 VNode 子节点列表，供离屏 render 使用 */
-function normalizeSlotVnodes(content: unknown): VNodeChild[] {
-  if (content == null) return [];
-  if (Array.isArray(content)) return content.filter(isVNode);
-  if (isVNode(content)) return [content];
-  return [];
-}
-
-/**
- * 读取与 el-table :data 同源的原始行（store 优先；挂载早期 store 可能仍为空，回退 props.data）。
- */
-function resolveRawTableRows(): unknown[] {
+/** 读取与 el-table :data 同源的行（store 优先，早期回退 props.data）。 */
+function rawTblRows(): unknown[] {
   if (!elTable) {
     console.error("[OperationColumn] 未注入 ElTable，无法读取表数据作离屏探针");
     return [];
@@ -170,21 +128,21 @@ function resolveRawTableRows(): unknown[] {
   return Array.isArray(storeRows) ? storeRows : Array.isArray(propRows) ? propRows : [];
 }
 
-/** 从表数据选取离屏探针代表行 */
-function resolveProbeRows(): unknown[] {
-  const tableRows = resolveRawTableRows();
-  const childrenKey = elTable?.props?.treeProps?.children ?? "children";
-  return collectProbeRowsFromTableData(tableRows, childrenKey);
+/** 离屏探针代表行（复用 childKey，避免与指纹选取漂移）。 */
+function probeRows(): unknown[] {
+  return pickProbeRows(rawTblRows(), childKey.value);
 }
 
-const probeSourceLength = computed(() => resolveRawTableRows().length);
+const reprobeTrig = computed(
+  () => `${props.listDataLength}\x1f${tblProbeFp(rawTblRows(), childKey.value)}`
+);
 
-/**
- * 离屏渲染 slot → 扫描最终可见 OpItem DOM → 按 label 去重，作为列宽公式输入。
- */
-async function probeSlotScenariosViaDom(): Promise<OpButtonDesc[][]> {
-  const probeRows = resolveProbeRows();
-  if (probeRows.length === 0) return [];
+let reprobeTmr: ReturnType<typeof setTimeout> | null = null;
+
+/** 离屏 render 各代表行 slot，扫描可见 OpItem DOM 作为列宽公式输入。 */
+async function probeDomSlots(): Promise<OpButtonDesc[][]> {
+  const rows = probeRows();
+  if (rows.length === 0) return [];
 
   const instance = getCurrentInstance();
   const container = document.createElement("div");
@@ -196,8 +154,8 @@ async function probeSlotScenariosViaDom(): Promise<OpButtonDesc[][]> {
   const scenarios: OpButtonDesc[][] = [];
 
   try {
-    for (const row of probeRows) {
-      const children = normalizeSlotVnodes(slots.default?.({ row }));
+    for (const row of rows) {
+      const children = normProbeVn(slots.default?.({ row }));
       if (children.length === 0) continue;
 
       const vnode = h("div", { class: "operation-column-probe-row" }, children);
@@ -209,7 +167,7 @@ async function probeSlotScenariosViaDom(): Promise<OpButtonDesc[][]> {
       await nextTick();
       await nextTick();
 
-      const descs = dedupeDescsByLabel(scanOpButtons(container));
+      const descs = dedupeByLbl(scanOpButtons(container));
       if (descs.length > 0) {
         scenarios.push(descs);
       }
@@ -223,12 +181,10 @@ async function probeSlotScenariosViaDom(): Promise<OpButtonDesc[][]> {
   return scenarios;
 }
 
-/**
- * 从 default slot 离屏探针采集可见 OpItem 场景并写入协调器；失败则报错。
- */
-async function initWidthFromSlot() {
-  const probeRowCount = resolveProbeRows().length;
-  const scenarios = await probeSlotScenariosViaDom();
+/** 离屏探针写入协调器；无可见 OpItem 时回退固定列宽并提示。 */
+async function initColW() {
+  const probeRowCount = probeRows().length;
+  const scenarios = await probeDomSlots();
 
   if (scenarios.length === 0) {
     if (probeRowCount === 0) {
@@ -241,7 +197,7 @@ async function initWidthFromSlot() {
       listDataLength: props.listDataLength,
       hasElTable: !!elTable,
     });
-    compactWidthMax.value = FALLBACK_CONTENT_WIDTH;
+    colWMax.value = FB_COL_W;
     widthReady.value = true;
     handleApiError(
       new Error("OperationColumn: 离屏探针未扫描到 OpItem，请检查 #default 是否使用 OpItem"),
@@ -250,54 +206,56 @@ async function initWidthFromSlot() {
     return;
   }
 
-  widthCoordinator.setSlotScenarios(scenarios);
+  wCoord.setSlotScn(scenarios);
   widthReady.value = true;
 }
 
-// ========== 生命周期 ==========
-
-onMounted(() => {
-  nextTick(() => void initWidthFromSlot());
-});
-
-// ========== 侦听 ==========
-
-function scheduleWidthReprobe() {
-  widthCoordinator.resetSignatures();
+/** 立即离屏重探针并 bump rowWidthEpoch（探针前/后各一次）。 */
+function runReprobe() {
   rowWidthEpoch.value++;
   nextTick(() => {
-    void initWidthFromSlot().then(() => {
+    void initColW().then(() => {
       rowWidthEpoch.value++;
     });
   });
 }
 
-watch(() => props.listDataLength, scheduleWidthReprobe);
+/** 32ms trailing 合并：短时间多次触发只吃最后一次离屏探针。 */
+function schedReprobe() {
+  if (reprobeTmr != null) clearTimeout(reprobeTmr);
+  reprobeTmr = setTimeout(() => {
+    reprobeTmr = null;
+    runReprobe();
+  }, REPROBE_MS);
+}
 
-watch(probeSourceLength, (len, prev) => {
-  if (len === 0 && prev === 0) return;
-  if (len === prev) return;
-  scheduleWidthReprobe();
+/** 仅按已存场景重算列宽公式并 bump epoch，不跑离屏 DOM。 */
+function bumpStored() {
+  wCoord.recalcStored();
+  rowWidthEpoch.value++;
+}
+
+onMounted(() => {
+  schedReprobe();
 });
 
-watch(normalizedInlineCount, () => {
-  nextTick(() => void initWidthFromSlot());
+onUnmounted(() => {
+  if (reprobeTmr != null) {
+    clearTimeout(reprobeTmr);
+    reprobeTmr = null;
+  }
 });
 
-watch(moreLabel, () => {
-  nextTick(() => void initWidthFromSlot());
-});
+watch(reprobeTrig, schedReprobe);
+
+watch(normSlotCnt, bumpStored);
+watch(moreLabel, bumpStored);
 
 watch(
   () => userStore.userInfo?.perms,
   () => {
     if (!widthReady.value) return;
-    widthCoordinator.resetSignatures();
-    nextTick(() => {
-      void initWidthFromSlot().then(() => {
-        rowWidthEpoch.value++;
-      });
-    });
+    schedReprobe();
   },
   { deep: true }
 );
