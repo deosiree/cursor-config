@@ -1,4 +1,5 @@
 import type { FormInstance, FormItemRule } from "element-plus";
+import { nextTick } from "vue";
 import i18n from "@/i18n";
 
 /**
@@ -6,9 +7,7 @@ import i18n from "@/i18n";
  * §1 常量与类型（规则常量 | 业务常量）
  * §2 工具函数（仅 export 非校验器纯函数）
  * §3 规则工厂（通用 | 名称 builder | 路径原子 | 路径聚合 | 路径 Element 校验器）
- * §4 预定义规则集（通用字段 | 名称字段 | 组合字段 | routePath | apiUrl）
- *
- * skill 样本（自包含成品）：人类通读 / 绿场复制用本文件；增量改 pathLike/name 见同目录 *.fragment.ts
+ * §4 预定义规则集（ | 密码对 pwdPair）
  */
 
 // ============ 常量与类型 ============
@@ -29,11 +28,6 @@ const PATH_SCHEME_RE = /^[a-zA-Z][a-zA-Z\d+\-.]*:/;
 const EMAIL_PATTERN = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/; //邮箱格式:符合邮箱格式
 const PHONE_PATTERN = /^1[3|4|5|6|7|8|9][0-9]\d{8}$/; //手机号码格式:11位数字，以1开头，第二位为3-9之间的数字
 const CAPTCHA_PATTERN = /^\d{4,6}$/; //验证码格式:4-6位数字
-
-/**
- * 表单项校验规则统一触发时机：失焦（blur）与值变化（change）
- */
-const RULE_TRIGGER: FormItemRule["trigger"] = ["blur", "change"];
 
 const ROUTE_PATH_STATIC_SEGMENT_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]*$/; // 静态段 如：user
 const ROUTE_PATH_VUE_DYNAMIC_SEGMENT_REGEX = /^:[a-zA-Z_][a-zA-Z0-9_]*(\([^)]+\))?[*+]?\??$/; // 动态段 如：:id
@@ -59,8 +53,79 @@ export const NAME_MAX_LENGTH: Record<NameFieldKind, number> = {
   menuName: 128,
 }; // 名称最大长度
 
-export const ROUTE_PATH_MAX_LENGTH = 64;
-export const API_PATH_MAX_LENGTH = 512;
+export type PathFieldKind = "routePath" | "apiPath";
+
+export const PATH_MAX_LENGTH: Record<PathFieldKind, number> = {
+  routePath: 64,
+  apiPath: 512,
+}; // 路径最大长度
+
+// --- 密码对类型 ---
+
+/**
+ * 密码 + 确认密码成对校验上下文。
+ *
+ * 场景：ElForm 内 password / confirmPassword 联动校验。
+ *
+ * @example
+ * const ctx: PwdCtx = {
+ *   getPassword: () => form.password,
+ *   getConfirmPassword: () => form.confirmPassword,
+ *   getFormRef: () => formRef.value,
+ * };
+ */
+export interface PwdCtx {
+  getPassword: () => string;
+  getConfirmPassword: () => string;
+  getFormRef: () => FormInstance | null | undefined;
+  /** 联动 validateField 的 prop，默认 confirmPassword */
+  confirmProp?: string;
+}
+
+/**
+ * 密码复杂度策略（由 ConfigGateway.getPwdPolicy 注入）。
+ *
+ * @example
+ * { minLength: 8, requireDigit: true }
+ */
+export interface PwdPolicy {
+  minLength: number;
+  requireUppercase?: boolean;
+  requireLowercase?: boolean;
+  requireDigit?: boolean;
+  requireSpecial?: boolean;
+}
+
+/** pwdPair 可选参数 */
+export interface PwdPairOpt {
+  policy?: PwdPolicy;
+  trigger?: FormItemRule["trigger"];
+}
+
+/**
+ * 根据策略生成密码字段 label/tooltip 说明（与 pwdPair 同源）。
+ *
+ * @example
+ * pwdPlcyTip({ minLength: 7, requireDigit: true, requireUppercase: true, requireLowercase: true })
+ */
+export function pwdPlcyTip(plcy?: PwdPolicy): string {
+  const { t } = i18n.global;
+  const p = plcy ?? { minLength: 6 };
+  const parts: string[] = [];
+  if (p.requireDigit) parts.push(t("数字"));
+  if (p.requireUppercase && p.requireLowercase) {
+    parts.push(t("大小写字母"));
+  } else {
+    if (p.requireUppercase) parts.push(t("大写字母"));
+    if (p.requireLowercase) parts.push(t("小写字母"));
+  }
+  if (p.requireSpecial) parts.push(t("特殊字符"));
+  const extra = parts.length ? t("，包括{items}", { items: parts.join("、") }) : "";
+  return t("密码为必填项，至少{minLength}位{extra}", {
+    minLength: p.minLength,
+    extra,
+  });
+}
 
 // ============ 工具函数 ============
 
@@ -118,9 +183,9 @@ export function normName(value: string | null | undefined, maxLength: number): s
  *
  * **示例**：`@blur="() => trimFieldOnBlur(formData, 'routePath', formRef)"`
  */
-export function trimFieldOnBlur(
-  model: Record<string, unknown>,
-  field: string,
+export function trimFieldOnBlur<T extends object>(
+  model: T,
+  field: keyof T & string,
   formRef?: FormInstance | null
 ): void {
   const raw = model[field];
@@ -130,8 +195,9 @@ export function trimFieldOnBlur(
   const next = raw.trim(); // 去除空格
   if (next !== raw) {
     // 如果去除空格后与原值不同
-    model[field] = next; // 更新模型值
-    void formRef?.validateField(field); // 重新触发校验
+    (model as Record<string, unknown>)[field] = next;
+    // validateField 失败时会 reject 携带 fields，需吞掉以免控制台未处理 Promise
+    void formRef?.validateField(field).catch(() => undefined);
   }
 }
 
@@ -501,9 +567,9 @@ function chkSegApiColon(segment: string, fail: RuleFail): void {
  * **职责**：组合路径原子 + 菜单 routePath 分段规则（含 `:id` 动态段）。
  */
 function validateRoutePathSyntax(raw: string): void {
-  const fail = createRuleFail({ label: "路径", maxLength: ROUTE_PATH_MAX_LENGTH });
+  const fail = createRuleFail({ label: "路由路径", maxLength: PATH_MAX_LENGTH.routePath });
 
-  const trimmed = chkPathCore(raw, { maxLength: ROUTE_PATH_MAX_LENGTH }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
+  const trimmed = chkPathCore(raw, { maxLength: PATH_MAX_LENGTH.routePath }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
   chkPathFrag(trimmed, fail); // 检查 ?/# 连用、?/# 数量、?/# 位置
 
   if (trimmed === "/") {
@@ -513,8 +579,12 @@ function validateRoutePathSyntax(raw: string): void {
   const segments = trimmed.split("/").slice(1);
   for (let index = 0; index < segments.length; index++) {
     const segment = segments[index];
+    // 黑名单拦截
     chkSegVoid(segment, index, segments, trimmed, fail); // 拒绝 // 连续空段；拒绝除根路径 / 外的尾部 /
     chkSegLead(segment, fail); // 拒绝段首为 ?/#&= 的字符
+    chkSegIllegalChars(segment, ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    chkSegLead(segment, fail, { onlyDigitUnderscoreLead: true });
+    // 白名单放行
     if (chkSegRouteColon(segment, fail)) {
       continue;
     }
@@ -524,8 +594,7 @@ function validateRoutePathSyntax(raw: string): void {
     if (chkSegFrag(segment, ROUTE_PATH_PARAM_SUFFIX_SEGMENT_REGEX, fail)) {
       continue;
     }
-    chkSegIllegalChars(segment, ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
-    chkSegLead(segment, fail, { onlyDigitUnderscoreLead: true });
+    // 报错兜底
     fail("路径段格式不对");
   }
 }
@@ -536,9 +605,9 @@ function validateRoutePathSyntax(raw: string): void {
  * **职责**：组合路径原子 + API apiUrl 分段规则（禁止 `:` 动态段）。
  */
 function validateApiPathSyntax(raw: string): void {
-  const fail = createRuleFail({ label: "路径", maxLength: API_PATH_MAX_LENGTH });
+  const fail = createRuleFail({ label: "API路径", maxLength: PATH_MAX_LENGTH.apiPath });
 
-  const trimmed = chkPathCore(raw, { maxLength: API_PATH_MAX_LENGTH }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
+  const trimmed = chkPathCore(raw, { maxLength: PATH_MAX_LENGTH.apiPath }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
   chkPathFrag(trimmed, fail); // 检查 ?/# 连用、?/# 数量、?/# 位置
 
   if (trimmed === "/") {
@@ -548,16 +617,19 @@ function validateApiPathSyntax(raw: string): void {
   const segments = trimmed.split("/").slice(1);
   for (let index = 0; index < segments.length; index++) {
     const segment = segments[index];
+    // 黑名单拦截
     chkSegVoid(segment, index, segments, trimmed, fail); // 拒绝 // 连续空段；拒绝除根路径 / 外的尾部 /
     chkSegLead(segment, fail); // 拒绝段首为 ?/#&= 的字符
     chkSegApiColon(segment, fail);
+    chkSegIllegalChars(segment, API_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    // 白名单放行
     if (API_PATH_STATIC_SEGMENT_REGEX.test(segment)) {
       continue;
     }
     if (chkSegFrag(segment, API_PATH_PARAM_SUFFIX_SEGMENT_REGEX, fail)) {
       continue;
     }
-    chkSegIllegalChars(segment, API_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    // 报错兜底
     fail("路径段格式不对");
   }
 }
@@ -619,19 +691,6 @@ export function createPasswordRules() {
   return asRuleArray(requiredRule(t("密码不能为空")));
 }
 
-/** 密码（必填 + 最少 6 位）用于用户管理等 */
-export function createPasswordWithMin6Rules() {
-  const { t } = i18n.global;
-  return [
-    ...createPasswordRules(),
-    {
-      min: 6,
-      message: t("密码至少需要6位"),
-      trigger: RULE_TRIGGER,
-    } as FormItemRule,
-  ];
-}
-
 /** 邮箱格式（无必填） */
 export function createEmailRules() {
   const { t } = i18n.global;
@@ -669,7 +728,7 @@ export function createCaptchaRules() {
     requiredRule(t("验证码不能为空"), {
       pattern: CAPTCHA_PATTERN,
       patternMessage: t("验证码格式不正确"),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     })
   );
 }
@@ -685,7 +744,7 @@ export function createUserNameRules(): FormItemRule[] {
         label: t("用户名"),
         maxLength: NAME_MAX_LENGTH.username,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -699,7 +758,7 @@ export function createTenantNameRules(): FormItemRule[] {
         label: t("租户名"),
         maxLength: NAME_MAX_LENGTH.tenantName,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -713,7 +772,7 @@ export function createRoleNameRules(): FormItemRule[] {
         label: t("角色名称"),
         maxLength: NAME_MAX_LENGTH.roleName,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -727,7 +786,7 @@ export function createMenuNameRules(): FormItemRule[] {
         label: t("菜单名"),
         maxLength: NAME_MAX_LENGTH.menuName,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -741,7 +800,7 @@ export function createPermissionNameRules(): FormItemRule[] {
         label: t("权限名称"),
         maxLength: NAME_MAX_LENGTH.menuName,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -754,7 +813,7 @@ export function createPermissionNameRules(): FormItemRule[] {
 export function createConfirmPasswordRules(getPassword: () => string) {
   const { t } = i18n.global;
   return [
-    requiredRule(t("请再次输入密码")),
+    ...asRuleArray(requiredRule(t("请再次输入密码"), { trigger: ["blur", "change"] })),
     {
       validator: (_: unknown, value: string, callback: (error?: Error) => void) => {
         if (!value) {
@@ -765,33 +824,147 @@ export function createConfirmPasswordRules(getPassword: () => string) {
           callback();
         }
       },
-      trigger: "blur",
+      trigger: ["blur", "change"],
     },
   ];
 }
 
 /**
- * 创建「确认密码」校验规则（用户管理：最少 6 位 + 一致性）
+ * 创建「确认密码」校验规则（用户管理：最少 minLen 位 + 一致性）
+ *
+ * 场景：pwdPair 内 confirmPassword 字段；需与 password 最短长度一致。
+ *
+ * @example
+ * cfmPwdRules(() => form.password, 8)
  */
-export function createConfirmPasswordRulesWithMin(
+export function cfmPwdRules(
   getPassword: () => string,
-  minLen: number = 6
+  minLen: number = 6,
+  trigger: FormItemRule["trigger"] = ["blur", "change"]
 ): FormItemRule[] {
   const { t } = i18n.global;
   return [
-    { required: true, message: t("请再次输入密码"), trigger: "blur" },
-    { min: minLen, message: t("密码至少需要6位"), trigger: RULE_TRIGGER },
+    { required: true, message: t("请再次输入密码"), trigger },
+    { min: minLen, message: t(`密码不能少于 ${minLen} 位`), trigger },
     {
       validator: (_: unknown, value: string, callback: (error?: Error) => void) => {
-        if (value !== getPassword()) {
+        const val = String(value ?? "");
+        if (!val) return callback();
+        if (val.length < minLen) {
+          return callback(new Error(t(`密码不能少于 ${minLen} 位`)));
+        }
+        if (val !== getPassword()) {
           callback(new Error(t("两次输入的密码不一致")));
         } else {
           callback();
         }
       },
-      trigger: RULE_TRIGGER,
+      trigger,
     },
   ];
+}
+
+// ============ §4 预定义规则集 · 密码对 ============
+
+/**
+ * 密码必填 + 最短长度（供 pwdPair 使用）。
+ *
+ * @example
+ * pwdMinRules(7)
+ */
+export function pwdMinRules(
+  minLen: number,
+  trigger: FormItemRule["trigger"] = ["blur", "change"]
+): FormItemRule[] {
+  const { t } = i18n.global;
+  return [
+    { required: true, message: t("密码不能为空"), trigger },
+    { min: minLen, message: t(`密码不能少于 ${minLen} 位`), trigger },
+  ];
+}
+
+interface PwdSyncLink {
+  confirmProp?: string;
+  getConfirmValue: () => string;
+  getFormRef: () => FormInstance | null | undefined;
+}
+
+/** password blur/change 且确认密码已有值时，nextTick 重校 confirmPassword */
+function appendPwdSync(pwdRules: FormItemRule[], link: PwdSyncLink): FormItemRule[] {
+  const confirmProp = link.confirmProp ?? "confirmPassword";
+  return [
+    ...pwdRules,
+    {
+      validator: (_rule, _value, callback) => {
+        callback();
+        const confirmValue = link.getConfirmValue();
+        if (!confirmValue) return;
+        void nextTick(() => {
+          void link
+            .getFormRef()
+            ?.validateField(confirmProp)
+            .catch(() => undefined);
+        });
+      },
+      trigger: ["blur", "change"],
+    },
+  ];
+}
+
+/**
+ * 预定义「密码 + 确认密码」规则对（含 policy 最小长度/复杂度、password→confirm 联动）。
+ *
+ * 场景：
+ * - 表单仅有密码对：`rules = computed(() => ({ ...pwdPair(ctx) }))`
+ * - 另有业务字段：`rules = computed(() => ({ ...props.rules, ...pwdPair(ctx) }))`
+ *
+ * 不包含 baseRules；业务层自行 spread 合并。
+ *
+ * @example
+ * const rules = computed(() => ({ ...props.rules, ...pwdPair(ctx, { policy: plcy.value }) }));
+ */
+export function pwdPair(
+  ctx: PwdCtx,
+  options?: PwdPairOpt
+): { password: FormItemRule[]; confirmPassword: FormItemRule[] } {
+  const { t } = i18n.global;
+  const plcy = options?.policy ?? { minLength: 6 };
+  const trigger = options?.trigger ?? ["blur", "change"];
+  const minLen = Math.max(1, plcy.minLength);
+
+  const pwdRules: FormItemRule[] = [...pwdMinRules(minLen, trigger)];
+  const needCplx =
+    plcy.requireUppercase || plcy.requireLowercase || plcy.requireDigit || plcy.requireSpecial;
+  if (needCplx) {
+    pwdRules.push({
+      validator: (_: unknown, value: string, callback: (error?: Error) => void) => {
+        const val = String(value ?? "");
+        if (!val) return callback();
+        if (plcy.requireUppercase && !/[A-Z]/.test(val)) {
+          return callback(new Error(t("密码须包含大写字母")));
+        }
+        if (plcy.requireLowercase && !/[a-z]/.test(val)) {
+          return callback(new Error(t("密码须包含小写字母")));
+        }
+        if (plcy.requireDigit && !/\d/.test(val)) {
+          return callback(new Error(t("密码须包含数字")));
+        }
+        if (plcy.requireSpecial && !/[^A-Za-z0-9]/.test(val)) {
+          return callback(new Error(t("密码须包含特殊字符")));
+        }
+        callback();
+      },
+      trigger,
+    });
+  }
+
+  const password = appendPwdSync(pwdRules, {
+    getConfirmValue: ctx.getConfirmPassword,
+    getFormRef: ctx.getFormRef,
+    confirmProp: ctx.confirmProp,
+  });
+  const confirmPassword = cfmPwdRules(ctx.getPassword, minLen, trigger);
+  return { password, confirmPassword };
 }
 
 /** 手机号码和邮箱的上下文 */
@@ -837,7 +1010,7 @@ export function createRoutePathRules(): FormItemRule[] {
   return [
     {
       validator: createRoutePathValidator(),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -849,7 +1022,7 @@ export function createApiPathRules(): FormItemRule[] {
   return [
     {
       validator: createApiPathValidator(),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }

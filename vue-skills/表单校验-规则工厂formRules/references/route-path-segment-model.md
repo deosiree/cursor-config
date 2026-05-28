@@ -12,31 +12,28 @@
 
 由 `chkPathCore`、`chkPathFrag` 统一实现（`validateRoutePathSyntax` / `validateApiPathSyntax` 共用）。
 
-- 非空；长度 ≤ `ROUTE_PATH_MAX_LENGTH` 或 `API_PATH_MAX_LENGTH`；超长见 message-key-constraints + 下表
+- 非空；长度 ≤ `PATH_MAX_LENGTH.routePath` 或 `PATH_MAX_LENGTH.apiPath`；超长见 message-key-constraints + 下表
 - 禁止协议头、`//` 开头、空格、不可见字符
 - 必须以 `/` 开头；除根路径 `/` 外禁止尾部 `/`
 - **片段符**：禁止 `??`、`##`、`?#`、`#?`；至多各一个 `?` 与 `#`；若有则 `?` 在 `#` 前
 
-## 分段规则（原子调用顺序）
+## 分段规则（推荐：黑名单 → 白名单 continue → 兜底）
 
-for 循环内按行顺序调用；`true` 表示本段已处理完毕（`continue`）。
+for 循环内结构（nebula apex_dev@80da1ae 后）：先全员黑名单，再白名单 `continue`，最后 `fail("路径段格式不对")`。
 
-| 步骤 | route | API | 原子 / 说明 |
+| 阶段 | route | API | 原子 / 说明 |
 |------|-------|-----|-------------|
-| 1 | ✓ | ✓ | `chkSegVoid` — 空段、尾 `/` |
-| 2 | ✓ | ✓ | `chkSegLead` — 段首 `?#&=` |
-| 3 | ✓ | — | `chkSegRouteColon` — Vue 动态段；含 `:` 处理完 → continue |
-| 3 | — | ✓ | `chkSegApiColon` — 禁止 `:` 动态段 |
-| 4 | ✓ | ✓ | 纯静态段正则 → continue |
-| 5 | ✓ | ✓ | `chkSegFrag` — 拼参后缀；合法 → continue |
-| 6 | ✓ | ✓ | `chkSegIllegalChars` — 白名单外 → `包含非法字符` |
-| 7 | ✓ | — | `chkSegLead({ onlyDigitUnderscoreLead: true })` — 段首仅数字/下划线 |
-| 8 | ✓ | ✓ | `fail("路径段格式不对")` — 兜底 |
+| 黑名单 | ✓ | ✓ | `chkSegVoid` — 空段、尾 `/` |
+| 黑名单 | ✓ | ✓ | `chkSegLead` — 段首 `?#&=` |
+| 黑名单 | ✓ | ✓ | `chkSegIllegalChars` |
+| 黑名单 | ✓ | — | `chkSegLead({ onlyDigitUnderscoreLead: true })` |
+| 黑名单 | — | ✓ | `chkSegApiColon` — 禁止 `:` |
+| 白名单 | ✓ | — | `chkSegRouteColon` — Vue 动态段 → continue |
+| 白名单 | ✓ | ✓ | 纯静态段正则 → continue |
+| 白名单 | ✓ | ✓ | `chkSegFrag` — 拼参后缀 → continue |
+| 兜底 | ✓ | ✓ | `fail("路径段格式不对")` |
 
-文字补充（与上表对照）：
-
-- 含 `:` 的 route 段须整段匹配 Vue 动态段正则，否则按场景返回 `段中不要用冒号`、`动态段不要接#?` 等
-- API **无** `chkSegRouteColon`、**无** 第二次 `chkSegLead(onlyDigitUnderscoreLead)`
+旧顺序（白名单后再 `chkSegIllegalChars`）与上表语义等价；新顺序可读性更好。
 
 ## 动态段正则（整段）
 
@@ -80,7 +77,7 @@ for 循环内按行顺序调用；`true` 表示本段已处理完毕（`continue
 
 | 分区 | 内容 | 对外 export |
 |------|------|-------------|
-| §1 常量与类型 | 分段 regex、`PATH_SCHEME_RE`、`ROUTE/API_PATH_MAX_LENGTH` | `ROUTE_PATH_MAX_LENGTH`、`API_PATH_MAX_LENGTH` 等 |
+| §1 常量与类型 | 分段 regex、`PATH_SCHEME_RE`、`PATH_MAX_LENGTH` | `PATH_MAX_LENGTH`（`routePath` / `apiPath`）等 |
 | §2 工具函数 | 非校验器纯函数 | `trimFieldOnBlur`、`normName`、`asRuleArray` 等 |
 | §3 规则工厂 | `chkPath*` / `chkSeg*`、聚合 `validate*`、`wrapPathSyntaxValidator` | **不 export** 原子/聚合；页面用 `createRoutePathRules` / `createApiPathRules` |
 | §4 预定义规则集 | `createRoutePathRules`、`createApiPathRules` | `FormItemRule[]` 工厂 |

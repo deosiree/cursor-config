@@ -2,15 +2,15 @@
 
 集中式 rules 模块的结构索引。**完整成品**见 [`template/sample-nebula/after/formRules.ts`](../template/sample-nebula/after/formRules.ts)；**增量改码**见同目录 `*.fragment.ts`。
 
-messageKey 规则见 [`message-key-constraints.md`](message-key-constraints.md)。
+messageKey 规则见 [`message-key-constraints.md`](message-key-constraints.md)。密码对见 [`password-pair-model.md`](password-pair-model.md)。
 
 ## 文件头分区（§1–§4）
 
 ```text
-§1 常量与类型（规则常量 | 业务常量）
+§1 常量与类型（规则常量 | 业务常量 | 密码对类型）
 §2 工具函数（仅 export 非校验器纯函数）
 §3 规则工厂（通用 | 名称 builder | 路径原子 | 路径聚合 | 路径 Element 校验器）
-§4 预定义规则集（通用字段 | 名称字段 | 组合字段 | routePath | apiUrl）
+§4 预定义规则集（通用字段 | 名称字段 | 组合字段 | 密码对 pwdPair | routePath | apiUrl）
 ```
 
 ## 对外 export（页面 / 单测常用）
@@ -19,81 +19,77 @@ messageKey 规则见 [`message-key-constraints.md`](message-key-constraints.md)�
 |------|-------------|
 | 工具 | `asRuleArray`、`collectFormValidationErrors`、`formatValidationMessages`、`normName`、`trimFieldOnBlur` |
 | 工厂 | `requiredRule`、`patternRule`、`createNameValidator`、各 `create*Rules` |
-| 常量 | `NameFieldKind`、`NAME_MAX_LENGTH`、`ROUTE_PATH_MAX_LENGTH`、`API_PATH_MAX_LENGTH` |
+| 密码对 | `pwdPair`（microfb：`pwdConfirmPair`）、`PwdCtx`/`PwdPolicy`/`PwdPairOpt`；辅助 `pwdMinRules`/`cfmPwdRules` 可 export |
+| 常量 | `NameFieldKind`、`NAME_MAX_LENGTH`、`PATH_MAX_LENGTH`（`routePath` / `apiPath`） |
 
-**不 export**（模块内私有）：`createRuleFail`、`chkPath*`、`chkSeg*`、`validateRoutePathSyntax`、`validateApiPathSyntax`、`createRoutePathValidator`、`createApiPathValidator`。
+**不 export**：`appendPwdSync`、`createRuleFail`、`chkPath*`、`chkSeg*`、`validateRoutePathSyntax`、`validateApiPathSyntax`。
+
+**不 export 默认策略常量**：用 `options?.policy ?? { minLength: 6 }` 内联。
 
 ## createRuleFail(bind?)
 
-模块内工厂，名称/路径校验共用：
+模块内工厂，名称/路径校验共用（略，见旧版）。
+
+## trigger 约定
+
+预定义规则 **内联** `trigger: ["blur", "change"]`；**不**维护模块级 `RULE_TRIGGER` 常量（nebula 样本已对齐 microfb）。
+
+## 路径长度常量
 
 ```ts
-function createRuleFail(bind?: Record<string, unknown>): RuleFail
+export type PathFieldKind = "routePath" | "apiPath";
+export const PATH_MAX_LENGTH: Record<PathFieldKind, number> = {
+  routePath: 64,
+  apiPath: 512,
+};
 ```
 
-- 有 `bind` 或 `extra` 时：`t(messageKey, { ...bind, ...extra })`
-- 否则：`t(messageKey)`
-- 超长统一：`fail("{label}超过{maxLength}字")`（见 message-key-constraints）
-
-## RULE_TRIGGER
-
-```ts
-const RULE_TRIGGER: FormItemRule["trigger"] = ["blur", "change"];
-```
-
-预定义 `create*Rules` 与名称 validator 共用，避免分散写 `["blur", "change"]`。
+页面 `:maxlength` 用 `PATH_MAX_LENGTH.apiPath` 等；**勿**再 export `ROUTE_PATH_MAX_LENGTH` / `API_PATH_MAX_LENGTH` 双常量。
 
 ## 路径校验原子
 
-### 整路径（先于分段）
+（整路径 / 分段原子表同前，略）
 
-| 函数 | 职责 |
-|------|------|
-| `chkPathCore` | 非空、超长、协议头、`/`、`//`、空白、不可见字符 |
-| `chkPathFrag` | 整路径 `?`/`#` 连用、个数、顺序 |
+## 聚合编排（for 循环 — 黑名单 → 白名单 continue → 兜底）
 
-### 分段（for 循环内）
-
-| 函数 | 职责 |
-|------|------|
-| `chkSegVoid` | 空段、尾 `/` |
-| `chkSegLead` | 段首 `?#&=`；可选 `{ onlyDigitUnderscoreLead: true }`（route 尾链） |
-| `chkSegRouteColon` | route：Vue 动态段；含 `:` 处理完 → `true` |
-| `chkSegApiColon` | API：禁 `:` 动态段 |
-| `chkSegFrag` | 段内 `?#` 拼参后缀；合法 → `true` |
-| `chkSegIllegalChars` | 段内字符白名单外 → `包含非法字符` |
-
-常量：`ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE`、`API_PATH_SEGMENT_ILLEGAL_CHAR_RE` 等见 §1 规则常量。
-
-## 聚合编排（for 循环清单）
-
-**route**（`validateRoutePathSyntax`，模块内私有）：
+**route**（`validateRoutePathSyntax`）：
 
 ```text
-chkSegVoid → chkSegLead → chkSegRouteColon? → static? → chkSegFrag? → chkSegIllegalChars → chkSegLead(onlyDigitUnderscoreLead) → 路径段格式不对
+// 黑名单（全员）
+chkSegVoid → chkSegLead → chkSegIllegalChars → chkSegLead(onlyDigitUnderscoreLead)
+// 白名单（命中 continue）
+chkSegRouteColon → static regex → chkSegFrag
+// 兜底
+fail("路径段格式不对")
 ```
 
 **API**（`validateApiPathSyntax`）：
 
 ```text
-chkSegVoid → chkSegLead → chkSegApiColon → static? → chkSegFrag? → chkSegIllegalChars → 路径段格式不对
+chkSegVoid → chkSegLead → chkSegApiColon → chkSegIllegalChars
+→ static regex → chkSegFrag → fail("路径段格式不对")
 ```
 
-页面只使用 `createRoutePathRules()` / `createApiPathRules()`；失焦 trim 用 `trimFieldOnBlur`。
+页面只使用 `createRoutePathRules()` / `createApiPathRules()`。
+
+## 密码对 §4
+
+唯一出口 `pwdPair(ctx, { policy })` → `{ password, confirmPassword }`。
+
+- 策略由网关 `getPwdPolicy` 注入；默认 `{ minLength: 6 }` 内联
+- `appendPwdSync` 私有；password 变更时 `nextTick` → `validateField(confirmProp)`
+- 页面动态 `computed` rules 须 `:validate-on-rule-change="false"`
+
+片段：[`formRules.pwdPair.fragment.ts`](../template/sample-nebula/after/formRules.pwdPair.fragment.ts)
 
 ## 单测约定
 
-不直接 import `validate*`。经预定义规则取 validator：
-
-```ts
-const validator = createRoutePathRules()[0].validator!;
-// 或 createApiPathRules()[0].validator!
-```
-
-pathLike 矩阵断言稳定 `error.message`；runner 见 [`formRules.routePath.test.fragment.ts`](../template/sample-nebula/after/formRules.routePath.test.fragment.ts)。
+- pathLike：经 `createRoutePathRules()[0].validator`
+- pwdPair：[`formRules.pwdConfirm.test.fragment.ts`](../template/sample-nebula/after/formRules.pwdConfirm.test.fragment.ts)
 
 ## 相关文档
 
-- 分段语义与 message 表：[`route-path-segment-model.md`](route-path-segment-model.md)
+- 分段语义：[`route-path-segment-model.md`](route-path-segment-model.md)
+- 密码对：[`password-pair-model.md`](password-pair-model.md)
 - 名称风格：[`name-identifier-model.md`](name-identifier-model.md)
 - 风格路由：[`rule-style-registry.md`](rule-style-registry.md)

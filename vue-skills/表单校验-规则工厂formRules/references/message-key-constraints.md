@@ -28,7 +28,7 @@
 
 ```ts
 // 名称、路径聚合内
-const fail = createRuleFail({ label: "路径", maxLength: ROUTE_PATH_MAX_LENGTH });
+const fail = createRuleFail({ label: "路径", maxLength: PATH_MAX_LENGTH.routePath });
 fail("{label}超过{maxLength}字");
 
 // 无占位符的 key：可不传 bind，或 bind 存在但 key 无 `{…}`（t 忽略多余插值）

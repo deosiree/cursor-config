@@ -16,8 +16,6 @@ const WHITELIST_CHAR_REGEX = /^[\p{sc=Han}\p{sc=Latin}0-9_]+$/u;
 
 const FIRST_CHAR_REGEX = /^[\p{sc=Han}\p{sc=Latin}]/u;
 
-const RULE_TRIGGER: FormItemRule["trigger"] = ["blur", "change"];
-
 export type NameFieldKind = "username" | "tenantName" | "roleName" | "menuName";
 
 export const NAME_MAX_LENGTH: Record<NameFieldKind, number> = {
@@ -55,9 +53,9 @@ export function normName(value: string | null | undefined, maxLength: number): s
   return cleaned.normalize("NFC").slice(0, maxLength); // 返回规范化后的名称
 }
 
-export function trimFieldOnBlur(
-  model: Record<string, unknown>,
-  field: string,
+export function trimFieldOnBlur<T extends object>(
+  model: T,
+  field: keyof T & string,
   formRef?: FormInstance | null
 ): void {
   const raw = model[field];
@@ -67,8 +65,9 @@ export function trimFieldOnBlur(
   const next = raw.trim(); // 去除空格
   if (next !== raw) {
     // 如果去除空格后与原值不同
-    model[field] = next; // 更新模型值
-    void formRef?.validateField(field); // 重新触发校验
+    (model as Record<string, unknown>)[field] = next;
+    // validateField 失败时会 reject 携带 fields，需吞掉以免控制台未处理 Promise
+    void formRef?.validateField(field).catch(() => undefined);
   }
 }
 
@@ -85,7 +84,7 @@ export function createMenuNameRules(): FormItemRule[] {
         label: t("菜单名"),
         maxLength: NAME_MAX_LENGTH.menuName,
       }),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }

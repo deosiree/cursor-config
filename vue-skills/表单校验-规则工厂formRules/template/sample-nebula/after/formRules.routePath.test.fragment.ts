@@ -7,7 +7,7 @@
  */
 import { describe, expect, it } from "vitest";
 import type { FormItemRule } from "element-plus";
-import { createRoutePathRules, ROUTE_PATH_MAX_LENGTH } from "./formRules.routePath.fragment";
+import { createRoutePathRules, PATH_MAX_LENGTH } from "./formRules.routePath.fragment";
 
 async function runRoutePathValidator(value: string): Promise<string | undefined> {
   const rule = createRoutePathRules()[0];
@@ -41,6 +41,6 @@ describe("createRoutePathRules", () => {
   });
 
   it("aligns max length with form maxlength", () => {
-    expect(ROUTE_PATH_MAX_LENGTH).toBe(64);
+    expect(PATH_MAX_LENGTH.routePath).toBe(64);
   });
 });

@@ -1,0 +1,15 @@
+{
+  "canonicalRepo": {
+    "label": "apex_dev",
+    "root": "F:/Documents/Repertory/Sieyuan/nebula/apex_dev",
+    "formRulesRelative": "src/utils/formRules.ts"
+  },
+  "compareRepos": [
+    {
+      "label": "microfb",
+      "root": "F:/Documents/Repertory/Sieyuan/nebula/microfb",
+      "formRulesRelative": "src/utils/formRules.ts"
+    }
+  ],
+  "skillTargetRelative": "template/sample-nebula/after/formRules.ts"
+}

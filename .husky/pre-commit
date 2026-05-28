@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# formRules-skill-samples BEGIN
+node "vue-skills/表单校验-规则工厂formRules/scripts/pre-commit-skill-samples.js"
+# formRules-skill-samples END
+

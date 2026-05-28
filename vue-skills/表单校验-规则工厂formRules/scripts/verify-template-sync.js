@@ -21,11 +21,12 @@ function walkFiles(dir, acc = []) {
   return acc;
 }
 
+const NEGATION_ALLOW =
+  /勿|禁止|不要|不\s*维护|不\s*export|无\s*|已删除|删除\/|勿再|勿新增|薄包装|对齐|统一|等价|不得|勿在|内联|替代|旧\s*`?passwordConfirm/;
+
 function grepGate() {
   const skillRoot = SKILL_ROOT;
-  const files = walkFiles(skillRoot).filter(
-    (p) => !p.includes(path.join("scripts", "")) && !p.includes("formRules.ts")
-  );
+  const files = walkFiles(skillRoot).filter((p) => !p.includes(path.join("scripts", "")));
   const banned = [
     { pattern: /\btrimNameOnBlur\b/, label: "trimNameOnBlur", allow: /无\s*`?trimNameOnBlur|禁止|不要|统一\s*`?trimFieldOnBlur/ },
     { pattern: /\btrimRoutePathOnBlur\b/, label: "trimRoutePathOnBlur", allow: /无\s*|禁止|不要/ },
@@ -33,6 +34,28 @@ function grepGate() {
       pattern: /export\s+function\s+validateRoutePathSyntax/,
       label: "export validateRoutePathSyntax",
       allow: /禁止|不\s*export|模块内私有/,
+    },
+    { pattern: /\bconst\s+RULE_TRIGGER\b/, label: "const RULE_TRIGGER", allow: NEGATION_ALLOW },
+    {
+      pattern: /export\s+const\s+ROUTE_PATH_MAX_LENGTH\b/,
+      label: "export const ROUTE_PATH_MAX_LENGTH",
+      allow: NEGATION_ALLOW,
+    },
+    {
+      pattern: /export\s+const\s+API_PATH_MAX_LENGTH\b/,
+      label: "export const API_PATH_MAX_LENGTH",
+      allow: NEGATION_ALLOW,
+    },
+    { pattern: /\bcreatePasswordWithMin6Rules\b/, label: "createPasswordWithMin6Rules", allow: NEGATION_ALLOW },
+    {
+      pattern: /\bcreateConfirmPasswordRulesWithMin\b/,
+      label: "createConfirmPasswordRulesWithMin",
+      allow: NEGATION_ALLOW,
+    },
+    {
+      pattern: /\bformRules\.passwordConfirm\.fragment/,
+      label: "formRules.passwordConfirm.fragment",
+      allow: NEGATION_ALLOW,
     },
   ];
   let failed = false;

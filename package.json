@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "formrules:install-hook": "node vue-skills/表单校验-规则工厂formRules/scripts/install-cursor-pre-commit.js",
+    "formrules:sync-samples": "node vue-skills/表单校验-规则工厂formRules/scripts/sync-samples.js",
+    "formrules:sync-from-repos": "node vue-skills/表单校验-规则工厂formRules/scripts/sync-from-repos.js"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

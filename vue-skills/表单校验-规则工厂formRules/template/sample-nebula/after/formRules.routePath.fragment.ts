@@ -10,11 +10,12 @@ const INVISIBLE_REGEX = new RegExp(INVISIBLE_PATTERN, "u");
 
 const PATH_SCHEME_RE = /^[a-zA-Z][a-zA-Z\d+\-.]*:/;
 
-const RULE_TRIGGER: FormItemRule["trigger"] = ["blur", "change"];
+export type PathFieldKind = "routePath" | "apiPath";
 
-export const ROUTE_PATH_MAX_LENGTH = 64;
-
-export const API_PATH_MAX_LENGTH = 512;
+export const PATH_MAX_LENGTH: Record<PathFieldKind, number> = {
+  routePath: 64,
+  apiPath: 512,
+};
 
 const ROUTE_PATH_STATIC_SEGMENT_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
 
@@ -170,9 +171,9 @@ function chkSegApiColon(segment: string, fail: RuleFail): void {
 }
 
 function validateRoutePathSyntax(raw: string): void {
-  const fail = createRuleFail({ label: "路径", maxLength: ROUTE_PATH_MAX_LENGTH });
+  const fail = createRuleFail({ label: "路由路径", maxLength: PATH_MAX_LENGTH.routePath });
 
-  const trimmed = chkPathCore(raw, { maxLength: ROUTE_PATH_MAX_LENGTH }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
+  const trimmed = chkPathCore(raw, { maxLength: PATH_MAX_LENGTH.routePath }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
   chkPathFrag(trimmed, fail); // 检查 ?/# 连用、?/# 数量、?/# 位置
 
   if (trimmed === "/") {
@@ -182,8 +183,12 @@ function validateRoutePathSyntax(raw: string): void {
   const segments = trimmed.split("/").slice(1);
   for (let index = 0; index < segments.length; index++) {
     const segment = segments[index];
+    // 黑名单拦截
     chkSegVoid(segment, index, segments, trimmed, fail); // 拒绝 // 连续空段；拒绝除根路径 / 外的尾部 /
     chkSegLead(segment, fail); // 拒绝段首为 ?/#&= 的字符
+    chkSegIllegalChars(segment, ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    chkSegLead(segment, fail, { onlyDigitUnderscoreLead: true });
+    // 白名单放行
     if (chkSegRouteColon(segment, fail)) {
       continue;
     }
@@ -193,16 +198,15 @@ function validateRoutePathSyntax(raw: string): void {
     if (chkSegFrag(segment, ROUTE_PATH_PARAM_SUFFIX_SEGMENT_REGEX, fail)) {
       continue;
     }
-    chkSegIllegalChars(segment, ROUTE_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
-    chkSegLead(segment, fail, { onlyDigitUnderscoreLead: true });
+    // 报错兜底
     fail("路径段格式不对");
   }
 }
 
 function validateApiPathSyntax(raw: string): void {
-  const fail = createRuleFail({ label: "路径", maxLength: API_PATH_MAX_LENGTH });
+  const fail = createRuleFail({ label: "API路径", maxLength: PATH_MAX_LENGTH.apiPath });
 
-  const trimmed = chkPathCore(raw, { maxLength: API_PATH_MAX_LENGTH }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
+  const trimmed = chkPathCore(raw, { maxLength: PATH_MAX_LENGTH.apiPath }, fail); // trim 后检查非空、长度上限、禁协议头、必须以 / 开头、禁 //、禁空白与不可见字符
   chkPathFrag(trimmed, fail); // 检查 ?/# 连用、?/# 数量、?/# 位置
 
   if (trimmed === "/") {
@@ -212,16 +216,19 @@ function validateApiPathSyntax(raw: string): void {
   const segments = trimmed.split("/").slice(1);
   for (let index = 0; index < segments.length; index++) {
     const segment = segments[index];
+    // 黑名单拦截
     chkSegVoid(segment, index, segments, trimmed, fail); // 拒绝 // 连续空段；拒绝除根路径 / 外的尾部 /
     chkSegLead(segment, fail); // 拒绝段首为 ?/#&= 的字符
     chkSegApiColon(segment, fail);
+    chkSegIllegalChars(segment, API_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    // 白名单放行
     if (API_PATH_STATIC_SEGMENT_REGEX.test(segment)) {
       continue;
     }
     if (chkSegFrag(segment, API_PATH_PARAM_SUFFIX_SEGMENT_REGEX, fail)) {
       continue;
     }
-    chkSegIllegalChars(segment, API_PATH_SEGMENT_ILLEGAL_CHAR_RE, fail);
+    // 报错兜底
     fail("路径段格式不对");
   }
 }
@@ -251,7 +258,7 @@ export function createRoutePathRules(): FormItemRule[] {
   return [
     {
       validator: createRoutePathValidator(),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
@@ -260,14 +267,14 @@ export function createApiPathRules(): FormItemRule[] {
   return [
     {
       validator: createApiPathValidator(),
-      trigger: RULE_TRIGGER,
+      trigger: ["blur", "change"],
     },
   ];
 }
 
-export function trimFieldOnBlur(
-  model: Record<string, unknown>,
-  field: string,
+export function trimFieldOnBlur<T extends object>(
+  model: T,
+  field: keyof T & string,
   formRef?: FormInstance | null
 ): void {
   const raw = model[field];
@@ -277,7 +284,8 @@ export function trimFieldOnBlur(
   const next = raw.trim(); // 去除空格
   if (next !== raw) {
     // 如果去除空格后与原值不同
-    model[field] = next; // 更新模型值
-    void formRef?.validateField(field); // 重新触发校验
+    (model as Record<string, unknown>)[field] = next;
+    // validateField 失败时会 reject 携带 fields，需吞掉以免控制台未处理 Promise
+    void formRef?.validateField(field).catch(() => undefined);
   }
 }

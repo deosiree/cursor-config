@@ -1,6 +1,6 @@
 # Template 说明
 
-**唯一编辑入口**：[`sample-nebula/after/formRules.ts`](sample-nebula/after/formRules.ts)（pathLike / name 行为）。
+**唯一编辑入口**：[`sample-nebula/after/formRules.ts`](sample-nebula/after/formRules.ts)（pathLike / name / pwdPair；真源 `apex_dev/src/utils/formRules.ts`）。
 
 **维护命令**（在 skill 根目录执行）：
 
@@ -27,6 +27,12 @@ node scripts/sync-samples.js
 | `formRules.routePath.fragment.ts` | pathLike（extract 生成） |
 | `formRules.name.fragment.ts` | nameIdentifier（extract 生成） |
 | `formRules.routePath.test.fragment.ts` | 单测 runner |
+| `formRules.pwdPair.fragment.ts` | pwdPair + `pwdPlcyTip`（extract 生成） |
+| `formRules.pwdConfirm.test.fragment.ts` | 密码对单测 |
+| `PwdPairForm.wire.fragment.vue` | pwdPair 页面接入（无 tips） |
+| `PwdPolicyTip.apex.wire.fragment.vue` | apex：label 旁 tooltip |
+| `PwdPolicyTip.microfb.wire.fragment.vue` | microfb：标题下副标题 |
+| `ForgotPwdWithTips.wire.fragment.vue` | microfb：ForgotStepPanel + policy tips |
 | `MenuFormDialog.wire.fragment.vue` | 页面接入 |
 | `formRules.factory.fragment.ts` | 通用工厂示意（手写） |
 

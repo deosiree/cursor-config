@@ -23,7 +23,7 @@ messageKey：[`message-key-constraints.md`](../../references/message-key-constra
 
 ### 1. rules 模块
 
-1. 常量：`ROUTE_PATH_MAX_LENGTH`、`API_PATH_MAX_LENGTH`（与 UI `maxlength` 对齐）
+1. 常量：`PATH_MAX_LENGTH.routePath` / `.apiPath`（与 UI `maxlength` 对齐；勿再 export 双常量名）
 2. **禁止** export `validateRoutePathSyntax` / `validateApiPathSyntax`；二者模块内私有，由 `createRoutePathRules` / `createApiPathRules` 对外
 3. 在 `rulesModule` 的 `// --- 路径校验原子 ---` 增改 `chk*`（可对照 [`formRules.routePath.fragment.ts`](../../template/sample-nebula/after/formRules.routePath.fragment.ts)）；聚合内只做编排，勿在页面重写 for 循环
 4. route 与 apiUrl **共用**原子；差异：`chkSegRouteColon` vs `chkSegApiColon`；route 多一次 `chkSegLead({ onlyDigitUnderscoreLead: true })`
@@ -35,7 +35,7 @@ messageKey：[`message-key-constraints.md`](../../references/message-key-constra
 ```vue
 <el-input
   v-model="formData.routePath"
-  :maxlength="ROUTE_PATH_MAX_LENGTH"
+  :maxlength="PATH_MAX_LENGTH.routePath"
   @blur="() => trimFieldOnBlur(formData, 'routePath', formRef)"
 />
 ```

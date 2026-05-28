@@ -34,8 +34,7 @@ import {
   normName,
   trimFieldOnBlur,
   NAME_MAX_LENGTH,
-  ROUTE_PATH_MAX_LENGTH,
-  API_PATH_MAX_LENGTH,
+  PATH_MAX_LENGTH,
 } from "@/utils/formRules"; // 以探测结果为准
 ```
 
@@ -49,14 +48,14 @@ const formRules = reactive({
 });
 ```
 
-`:rules="formRules"` 或 computed 返回；`validate-on-rule-change` 按项目惯例。
+`:rules="formRules"` 或 computed 返回；**动态 rules**（如 `pwdPair` + 异步 policy）须 `:validate-on-rule-change="false"`（见 [`password-pair-model.md`](../../references/password-pair-model.md)）。
 
 ### 3. 模板
 
 | hook | 绑定 |
 |------|------|
 | blurTrim（名称/路径/API） | `@blur="() => trimFieldOnBlur(model, prop, formRef)"` |
-| UI 上限 | `maxlength` 与 `NAME_MAX_LENGTH` / `ROUTE_PATH_MAX_LENGTH` / `API_PATH_MAX_LENGTH` 区分时按用户确认 |
+| UI 上限 | `maxlength` 与 `NAME_MAX_LENGTH` / `PATH_MAX_LENGTH.*` 区分时按用户确认 |
 
 ### 4. submit
 
@@ -77,6 +76,7 @@ payload.apiUrl = String(formData.apiUrl ?? "").trim();
 ## 参考
 
 - **双字段接入样板**：[`MenuFormDialog.wire.fragment.vue`](../../template/sample-nebula/after/MenuFormDialog.wire.fragment.vue)
+- **密码对接入**：[`PwdPairForm.wire.fragment.vue`](../../template/sample-nebula/after/PwdPairForm.wire.fragment.vue)
 - [`page-wire-sample.md`](../../assets/few-shot-example/page-wire-sample.md)
 
 ## 验收

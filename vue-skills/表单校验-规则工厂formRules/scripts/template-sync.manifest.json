@@ -6,14 +6,13 @@
         "import type { FormInstance, FormItemRule } from \"element-plus\";",
         "import i18n from \"@/i18n\";"
       ],
-      "footerNote": "合并到 rulesModule 时与 name fragment 去重 createRuleFail / trimFieldOnBlur / RULE_TRIGGER。",
+      "footerNote": "合并到 rulesModule 时与 name/pwdPair fragment 去重 createRuleFail / trimFieldOnBlur。路径长度用 PATH_MAX_LENGTH；trigger 内联。",
       "symbols": [
         { "name": "INVISIBLE_PATTERN", "kind": "const" },
         { "name": "INVISIBLE_REGEX", "kind": "const" },
         { "name": "PATH_SCHEME_RE", "kind": "const" },
-        { "name": "RULE_TRIGGER", "kind": "const" },
-        { "name": "ROUTE_PATH_MAX_LENGTH", "kind": "exportConst" },
-        { "name": "API_PATH_MAX_LENGTH", "kind": "exportConst" },
+        { "name": "PathFieldKind", "kind": "exportType" },
+        { "name": "PATH_MAX_LENGTH", "kind": "exportConst" },
         { "name": "ROUTE_PATH_STATIC_SEGMENT_REGEX", "kind": "const" },
         { "name": "ROUTE_PATH_VUE_DYNAMIC_SEGMENT_REGEX", "kind": "const" },
         { "name": "ROUTE_PATH_PARAM_SUFFIX_SEGMENT_REGEX", "kind": "const" },
@@ -48,7 +47,7 @@
         "import type { FormInstance, FormItemRule } from \"element-plus\";",
         "import i18n from \"@/i18n\";"
       ],
-      "footerNote": "合并到 rulesModule 时与 path fragment 去重 createRuleFail / trimFieldOnBlur。",
+      "footerNote": "合并到 rulesModule 时与 path/pwdPair fragment 去重 createRuleFail / trimFieldOnBlur。",
       "symbols": [
         { "name": "INVISIBLE_PATTERN", "kind": "const" },
         { "name": "INVISIBLE_REGEX", "kind": "const" },
@@ -56,7 +55,6 @@
         { "name": "PATH_TRAVERSAL_REGEX", "kind": "const" },
         { "name": "WHITELIST_CHAR_REGEX", "kind": "const" },
         { "name": "FIRST_CHAR_REGEX", "kind": "const" },
-        { "name": "RULE_TRIGGER", "kind": "const" },
         { "name": "NameFieldKind", "kind": "exportType" },
         { "name": "NAME_MAX_LENGTH", "kind": "exportConst" },
         { "name": "RuleFail", "kind": "type" },
@@ -66,6 +64,26 @@
         { "name": "trimFieldOnBlur", "kind": "exportFunction" },
         { "name": "createNameValidator", "kind": "exportFunction" },
         { "name": "createMenuNameRules", "kind": "exportFunction" }
+      ]
+    },
+    "formRules.pwdPair.fragment.ts": {
+      "imports": [
+        "import type { FormInstance, FormItemRule } from \"element-plus\";",
+        "import { nextTick } from \"vue\";",
+        "import i18n from \"@/i18n\";"
+      ],
+      "footerNote": "合并到 rulesModule 时与主文件去重 asRuleArray / requiredRule / nextTick import。microfb 等价 export 名为 pwdConfirmPair。",
+      "symbols": [
+        { "name": "PwdCtx", "kind": "exportType" },
+        { "name": "PwdPolicy", "kind": "exportType" },
+        { "name": "PwdPairOpt", "kind": "exportType" },
+        { "name": "pwdPlcyTip", "kind": "exportFunction" },
+        { "name": "asRuleArray", "kind": "exportFunction" },
+        { "name": "requiredRule", "kind": "exportFunction" },
+        { "name": "createConfirmPasswordRules", "kind": "exportFunction" },
+        { "name": "cfmPwdRules", "kind": "exportFunction" },
+        { "name": "pwdMinRules", "kind": "exportFunction" },
+        { "name": "pwdPair", "kind": "exportFunction" }
       ]
     }
   }

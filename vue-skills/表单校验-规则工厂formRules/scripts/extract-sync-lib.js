@@ -55,6 +55,13 @@ function extractFromIndex(source, startIndex) {
     return source.slice(startIndex, semi + 1);
   }
 
+  if (/^\s*export\s+interface\b/.test(head) || /^\s*interface\b/.test(head)) {
+    const brace = source.indexOf("{", startIndex);
+    if (brace === -1) throw new Error("No interface body near " + startIndex);
+    const end = findBalanced(source, brace, "{", "}");
+    return source.slice(startIndex, end);
+  }
+
   if (/^\s*export\s+function\b/.test(head) || /^\s*function\b/.test(head)) {
     const brace = source.indexOf("{", startIndex);
     if (brace === -1) throw new Error("No function body for " + startIndex);
@@ -86,7 +93,10 @@ function extractFromIndex(source, startIndex) {
 
 function indexOfDeclaration(source, name, kind) {
   const tries = [];
-  if (kind === "exportType") tries.push(`export type ${name}`);
+  if (kind === "exportType") {
+    tries.push(`export type ${name}`);
+    tries.push(`export interface ${name}`);
+  }
   if (kind === "type") tries.push(`type ${name}`);
   if (kind === "exportConst") tries.push(`export const ${name}`);
   if (kind === "const") tries.push(`const ${name}`);

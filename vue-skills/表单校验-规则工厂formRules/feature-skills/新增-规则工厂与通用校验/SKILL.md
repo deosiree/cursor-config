@@ -12,13 +12,14 @@ description: 在 rules 模块新增或扩展 requiredRule、patternRule、create
 ## 何时使用
 
 - 需要 `required` + `pattern` / `min` 组合
-- 邮箱、手机、密码、验证码、必选 ID 等**可参数化**规则集
-- 与 `nameIdentifier` / `pathLike` **无关**的字段
+- 邮箱、手机、验证码、必选 ID 等**可参数化**规则集
+- 与 `nameIdentifier` / `pathLike` / **pwdPair** **无关**的字段
 
 ## 何时不要使用
 
 - 标识符命名黑白名单 → 配置-多语言标识符命名规则
 - 分段 path → 配置-路径类规则
+- **密码 + 确认密码 + 租户策略** → 配置-密码对规则
 - 仅页面绑定已有 `createXxxRules` → 接入-页面表单字段规则
 
 ## RED
@@ -44,9 +45,9 @@ export function asRuleArray(rule: FormItemRule | FormItemRule[]): FormItemRule[]
 | `createEmailRules` | 邮箱 pattern |
 | `createEmailRequiredRules` | 必填 + 邮箱 |
 | `createPhoneRules` / `createPhoneRequiredRules` | 手机 |
-| `createPasswordRules` / `createPasswordWithMin6Rules` | 密码 |
+| `createPasswordRules` | 单字段密码 min（**无确认密码时**） |
+| `createConfirmPasswordRules(getPassword)` | 单字段确认一致（**无 policy 时**） |
 | `createCaptchaRules` | 验证码 |
-| `createConfirmPasswordRules(getPassword)` | 确认密码一致 |
 
 常量：`EMAIL_PATTERN`、`PHONE_PATTERN`、`CAPTCHA_PATTERN` 与工厂同文件导出。
 

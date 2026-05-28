@@ -1,21 +1,22 @@
 ---
 name: 表单校验-规则工厂formRules
-description: formRules、表单校验、routePath、apiUrl、pathLike、trimFieldOnBlur、createApiPathRules、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；componentPath 或 repoRoot+moduleHint；可先盘点；不含 i18n locale。
+description: formRules、表单校验、routePath、apiUrl、pathLike、pwdPair、密码策略、同步 skill 样本、formRules 样本对齐、trimFieldOnBlur、createApiPathRules、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；componentPath 或 repoRoot+moduleHint；可先盘点；不含 i18n locale。
 ---
 
 # 表单校验-规则工厂 formRules
 
 在集中式 **rules 模块**（如 `formRules.ts`）扩展校验工厂，并在目标表单组件接入。跨项目通用；样本代码见 `template/sample-nebula/` 与 `assets/few-shot-example/`。
 
-**TL;DR**：只盘点 → 盘点 feature；有 `fields[]` → Step1–5 + 阶段 A/B；**无 `rulesModule`** → 仅 unknown→Plan；读样本 → `formRules.ts` 通读 / fragment 增量；改 skill 样本 pathLike/name → **只改** [`formRules.ts`](template/sample-nebula/after/formRules.ts) → [`node scripts/sync-samples.js`](scripts/sync-samples.js)（见 [`scripts/README.md`](scripts/README.md)）。
+**TL;DR**：只盘点 → 盘点 feature；**apex 改了 formRules 要更新 skill** → [维护-从业务仓同步样本](feature-skills/维护-从业务仓同步样本/SKILL.md)；有 `fields[]` → Step1–5 + 阶段 A/B；**无 `rulesModule`** → 仅 unknown→Plan；改 skill 样本 → **只改** [`formRules.ts`](template/sample-nebula/after/formRules.ts) → [`sync-samples.js`](scripts/sync-samples.js)（`.cursor` 提交时 pre-commit 自动跑，见 [`scripts/README.md`](scripts/README.md)）。
 
 ## 何时使用
 
 - 为表单字段新增或统一校验（名称、路径、邮箱、密码等）
 - 需要 `normName` / `trimFieldOnBlur` / 分段 path 等可复用语义
 - 不确定应用哪种 `ruleStyle`，需要 agent 路由
-- 用户提到 **formRules**、**表单校验**、**路由路径校验**、**标识符命名**
+- 用户提到 **formRules**、**表单校验**、**路由路径校验**、**标识符命名**、**pwdPair**、**密码策略**、**密码对**
 - 只给 **repoRoot**（或 **repoRoot + moduleHint**），要「最值得完善的表单元素 / 下一项 / 覆盖度」→ 先走盘点子 skill
+- **apex_dev / microfb 的 `formRules.ts` 已落地，要对齐 skill 样本** → 走 [维护-从业务仓同步样本](feature-skills/维护-从业务仓同步样本/SKILL.md)
 
 ## 何时不要使用
 
@@ -74,6 +75,14 @@ fields:
 2. 交付推荐卡 + `formFieldCoverage` + 可复制 `fields[]`
 3. 用户确认后再从下方 **Step 1** 进入实施；`landingStatus: repo_done` 前可反复盘点
 
+### 分支：业务仓 → skill 样本同步（不改业务源码）
+
+用户给出 **apex_dev**（必填）与可选 **microfb** 根路径，要求 skill `template/.../formRules.ts` 与 fragment 对齐落地态时：
+
+1. 委派 [`feature-skills/维护-从业务仓同步样本`](feature-skills/维护-从业务仓同步样本/SKILL.md)
+2. 默认 `dryRun` → 用户确认后再 `apply`
+3. **不**进入 Step 1–5 页面接入
+
 ### 分支：已知字段直接实施
 
 | Step | 动作 | 产出 |
@@ -103,7 +112,8 @@ Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先�
 | A1 | `factoryGeneric` | 新增-规则工厂与通用校验 |
 | A2 | `nameIdentifier` | 配置-多语言标识符命名规则 |
 | A3 | `pathLike` | 配置-路径类规则 |
-| A4 | `unknown` | 编排-未知规则MVP与落地（先 Plan） |
+| A4 | `pwdPair` | 配置-密码对规则 |
+| A5 | `unknown` | 编排-未知规则MVP与落地（先 Plan） |
 
 - 同一 style 多个 prop（如两个 `nameIdentifier` 字段）→ **只跑一次**对应子 skill，在工厂内用不同 `createXxxRules({ label, maxLength })` 区分。
 - `unknown` 若评估为可复用的新风格 → 登记 [`rule-style-registry.md`](references/rule-style-registry.md)（见扩展文档）。
@@ -129,9 +139,11 @@ Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先�
 | `factoryGeneric` / 邮箱手机密码验证码 | [`feature-skills/新增-规则工厂与通用校验`](feature-skills/新增-规则工厂与通用校验/SKILL.md) |
 | `nameIdentifier` / 标识符命名 | [`feature-skills/配置-多语言标识符命名规则`](feature-skills/配置-多语言标识符命名规则/SKILL.md) |
 | `pathLike` / 路由 path / 分段 path | [`feature-skills/配置-路径类规则`](feature-skills/配置-路径类规则/SKILL.md) |
+| `pwdPair` / 密码+确认 / 密码策略 | [`feature-skills/配置-密码对规则`](feature-skills/配置-密码对规则/SKILL.md) |
 | `pageWireOnly` / 仅绑定已有规则 | [`feature-skills/接入-页面表单字段规则`](feature-skills/接入-页面表单字段规则/SKILL.md) |
 | 未命中 / 新语义 | [`feature-skills/编排-未知规则MVP与落地`](feature-skills/编排-未知规则MVP与落地/SKILL.md) |
 | 仅 `repoRoot` / 要下一项推荐 / 覆盖度 | [`feature-skills/盘点-推荐下一表单字段`](feature-skills/盘点-推荐下一表单字段/SKILL.md) |
+| apex/microfb `formRules` drift / 同步 skill 样本 | [`feature-skills/维护-从业务仓同步样本`](feature-skills/维护-从业务仓同步样本/SKILL.md) |
 
 判定口诀：**先定 ruleStyle，再进子 skill；语义已有只接入，语义没有先配置/新增工厂。全仓推进时先盘点再实施。**
 
@@ -173,6 +185,14 @@ fields:
 ```
 
 ```text
+componentPath: src/views/system/user/components/UserResetPasswordDialog.vue
+fields:
+  - prop: password, ruleStyle: pwdPair, fieldLabel: 新密码
+  - prop: confirmPassword, ruleStyle: pwdPair, fieldLabel: 确认密码
+→ 阶段 A4 配置-密码对规则 → 阶段 B 接入（validate-on-rule-change=false）
+```
+
+```text
 盘点下一项（只读）：
 repoRoot: ./my-app
 moduleHint: 菜单
@@ -186,12 +206,15 @@ moduleHint: 菜单
 | [`rule-style-registry.md`](references/rule-style-registry.md) | 风格登记 |
 | [`name-identifier-model.md`](references/name-identifier-model.md) | 命名规则 |
 | [`route-path-segment-model.md`](references/route-path-segment-model.md) | 路径规则 |
+| [`password-pair-model.md`](references/password-pair-model.md) | 密码对 + 策略网关 + tips UI |
+| [`assets/few-shot-example/pwd-pair-tips-sample.md`](assets/few-shot-example/pwd-pair-tips-sample.md) | 密码对 tips（apex tooltip / microfb 副标题） |
 | [`known-issues.md`](references/known-issues.md) | 易错点 |
 | [`form-field-inventory-model.md`](references/form-field-inventory-model.md) | 盘点评分与覆盖度 |
 | [`formRules-module-map.md`](references/formRules-module-map.md) | 模块分区与原子编排 |
 | [`message-key-constraints.md`](references/message-key-constraints.md) | 校验文案约束 |
 | [`assets/skill-output-checklist.md`](assets/skill-output-checklist.md) | 交付勾选 |
-| [`scripts/README.md`](scripts/README.md) | 样本维护：extract / verify / sync-samples |
+| [`scripts/README.md`](scripts/README.md) | 样本维护：sync-samples / sync-from-repos / pre-commit |
+| [`sample-source.config.example.json`](references/sample-source.config.example.json) | 业务仓路径配置模板 |
 
 ### Template 速查（skill 内自包含 — 合并到 rulesModule）
 
@@ -202,3 +225,6 @@ moduleHint: 菜单
 | nameIdentifier 增量 | [`formRules.name.fragment.ts`](template/sample-nebula/after/formRules.name.fragment.ts) |
 | 单测矩阵 | [`formRules.routePath.test.fragment.ts`](template/sample-nebula/after/formRules.routePath.test.fragment.ts) |
 | 阶段 B 接入 | [`MenuFormDialog.wire.fragment.vue`](template/sample-nebula/after/MenuFormDialog.wire.fragment.vue) |
+| pwdPair 增量 | [`formRules.pwdPair.fragment.ts`](template/sample-nebula/after/formRules.pwdPair.fragment.ts) |
+| pwdPair 单测 | [`formRules.pwdConfirm.test.fragment.ts`](template/sample-nebula/after/formRules.pwdConfirm.test.fragment.ts) |
+| pwdPair 接入 | [`PwdPairForm.wire.fragment.vue`](template/sample-nebula/after/PwdPairForm.wire.fragment.vue) |

@@ -23,5 +23,10 @@
     "id": 5,
     "prompt": "检查当前仓库（repoRoot: ./my-app），moduleHint 菜单，反馈最值得用 formRules 完善的一个表单元素，先不要改代码。",
     "expected": "委派盘点-推荐下一表单字段；输出 recommendScore、formFieldCoverage、suggestedFieldsYaml；无源码 diff；高分项倾向 pathLike apiUrl 或 perm"
+  },
+  {
+    "id": 6,
+    "prompt": "apex_dev 刚改了 src/utils/formRules.ts，请把 formRules skill 样本对齐，apex 路径 F:/Documents/Repertory/Sieyuan/nebula/apex_dev，先 dry-run。",
+    "expected": "委派维护-从业务仓同步样本；sync-from-repos --dry-run；有 drift 再经用户确认 --apply；不改 locale；microfb 仅 diff 报告"
   }
 ]
