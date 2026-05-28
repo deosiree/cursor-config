@@ -43,5 +43,15 @@
     "id": 9,
     "prompt": "request 已经处理了 401 跳登录与状态错误通知，但 gateway catch 里仍然无差别 handleApiError(error, '操作失败')。使用 $shownotification 判断是否会重复弹窗，并给出最小修复方向。",
     "expected": "能识别 request / gateway 对同一错误重复通知的风险，建议保留 request 对 status != 200 的处理，并把 gateway 收紧为只消费 type === 'business' 的业务错误。"
+  },
+  {
+    "id": 10,
+    "prompt": "device.gateway 里 fetchAllDevicePages 用 Promise.all 拉第 2～N 页，第 3 页和第 8 页可能同时 business 失败。使用 $shownotification 应如何错误通知？",
+    "expected": "应进入 feature-skills/并发HTTP错误通知，推荐 newConcurLock + 每路 concurApiErr(lock, error, 页码 errMsg)；禁止每路 handleGatewayError；说明 toast 一次、console 按失败页多条。"
+  },
+  {
+    "id": 11,
+    "prompt": "fetchAllDevicePages 内部已用 concurApiErr，getBind 仍外包 handleGatewayError(() => fetchAllDevicePages(...))。用 $shownotification 评审是否会重复弹窗。",
+    "expected": "应指出第 1 页失败时 concurApiErr 与外层 handleGatewayError 可能双 toast，建议去掉 getBind 外层 handleGatewayError，由 fetchAllDevicePages 内统一 concurApiErr。"
   }
 ]

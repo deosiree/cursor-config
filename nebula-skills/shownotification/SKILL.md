@@ -5,7 +5,9 @@ description: >-
   helper、治理 [code]message、401/403/500 状态错误提示、status!=200 与
   code!=0 分层、或排查 request/gateway/view 重复弹窗；触发词包括 通知收口、
   错误提示 helper、重复弹窗、[code]message、handleApiError、handleStatusError、
-  handleGatewayError、business error、duplicate notification、toast/popup error
+  handleGatewayError、business error、duplicate notification、toast/popup error、
+  concurApiErr、newConcurLock、并发 HTTP、Promise.all 分页、并行 gateway、
+  多页失败只弹一次
 ---
 
 # shownotification
@@ -25,6 +27,7 @@ description: >-
 - 新增前端提示逻辑，需要判断该用 `showNotification` 还是错误提示 helper
 - 旧代码存在 `ElMessage`、手写 `[code]message` 拼接、或后端错误提示口径不一致
 - gateway / request / view 多层都在 `catch` 提示，怀疑存在重复弹窗
+- gateway 内 `Promise.all`、分页拉全量、多路并行 API 失败需只弹一次 toast
 - 其它微服务准备首次接入统一错误提示 helper
 
 ## 何时不要使用
@@ -132,6 +135,24 @@ export async function handleGatewayError<T>(
 - `handleGatewayError` 只消费 `type === "business"` 的结构化业务错误
 - 不要靠 `message`、`status` 或“所有错误都统一提示”来猜错误类型
 
+### 规则 4：并发 HTTP 错误（摘要）
+
+同一 gateway 批次内多路并行/分页请求失败时：
+
+- 读 `[[feature-skills/并发HTTP错误通知/SKILL.md]]`（可执行 checklist，勿只读本节）
+- 批次前 `newConcurLock()`；每路 `concurApiErr(lock, error, errMsg?)`
+- **禁止**每路 `handleGatewayError`；**禁止**内层已 `concurApiErr` 外层再包 `handleGatewayError`
+
+细则：`[[references/concur-api-err.md]]`；样本：`[[assets/mvp-samples/sample-07-concur-api-err-device-pagination.md]]`
+
+## 子能力路由
+
+| 场景 | 读取 |
+|------|------|
+| 单次 gateway / 原子方法 | `handleGatewayError` + sample-04 / sample-06 |
+| 并发 HTTP / 分页并行 / 多路 catch | `[[feature-skills/并发HTTP错误通知/SKILL.md]]` → `[[references/concur-api-err.md]]` |
+| helper 检测 / 重复弹窗总则 | `[[references/existing-error-helper-detection.md]]`、`[[references/repeated-notification-avoidance.md]]` |
+
 ## 通知边界
 
 ### request 层
@@ -227,9 +248,9 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 
 只有在用户或仓库现状明确要求时，才允许在这个 helper 上额外增加职责。
 
-默认不允许额外增加的职责：
+默认不允许在 **通用** 错误 helper 上额外增加的职责：
 
-- 重复弹窗自动去重标记
+- 黑盒式重复弹窗自动去重标记（`showNotificationError` 等）
 - 私有解析函数拆分
 - 埋点、监控、日志上报
 - 错误类型枚举分流
@@ -239,7 +260,8 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
 
 - request 已提示，则 view 不再提示
 - gateway 已提示，则上层只阻断不再提示
-- 只有边界治理无法落地时，才单独说明为何必须扩 helper
+- 并行 HTTP 批次：用 `notification.ts` 的 `concurApiErr`（显式锁，见 feature-skill）
+- 只有边界治理与 `concurApiErr` 均不适用时，才单独说明为何必须扩通用 helper
 
 ### 现成 helper 复用门禁
 
@@ -312,7 +334,8 @@ export function showNotificationError(err: any, fallbackMessage?: string) {
     - `status == 200 && code != 0` 包装成 `type === "business"`
 
     - 若命中检查点 2 或检查点 3，先输出分层方案，再等待确认
-12. 回归关键交互，确认 `[code]message` 展示正常
+12. 若 gateway 存在并行/分页多路 `catch`，确认是否应进入 `[[feature-skills/并发HTTP错误通知/SKILL.md]]`，而非每路 `handleGatewayError`
+13. 回归关键交互，确认 `[code]message` 展示正常；并行场景确认 toast 仅一次、console 按路数多条
 
 推荐搜索命令：
 
@@ -328,7 +351,11 @@ rg -n $pattern src
 ```
 
 ```powershell
-rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
+rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(|concurApiErr\(|newConcurLock\(" src
+```
+
+```powershell
+rg -n "Promise\.all" src/gateway
 ```
 
 ## MVP 样本
@@ -347,9 +374,16 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
 - `[[assets/mvp-samples/sample-05-handleStatusError-http-boundary.md]]`
 - `[[assets/mvp-samples/`
   `sample-06-business-error-tagging-with-handleGatewayError.md]]`
+- `[[assets/mvp-samples/sample-07-concur-api-err-device-pagination.md]]`
+
+## feature-skills
+
+- `[[feature-skills/README.md]]`
+- `[[feature-skills/并发HTTP错误通知/SKILL.md]]`
 
 ## references
 
+- `[[references/concur-api-err.md]]`
 - `[[references/error-notification-boundary.md]]`
 - `[[references/business-error-tagging-protocol.md]]`
 - `[[references/code-message-display.md]]`
@@ -367,6 +401,8 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
 - 若仓库采用结构化业务错误协议，gateway 只消费 `type === "business"`
 - skill 示例全部使用普通字符串 fallback，不包 `t()`
 - 若仓库已有等价 helper，不会机械新增第二个同类函数
+- 并行 HTTP business 失败：toast 一次；`console.error` 可按失败路数多条
+- 并发场景已读 `feature-skills/并发HTTP错误通知`，未每路误用 `handleGatewayError`
 
 ## 样本阅读顺序
 
@@ -383,6 +419,9 @@ rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
   `assets/mvp-samples/`
   `sample-06-business-error-tagging-with-handleGatewayError.md`
   解决“业务错误如何稳定进入 gateway 统一提示”
+
+- 再读 `assets/mvp-samples/sample-07-concur-api-err-device-pagination.md`
+  解决“分页/并行多路失败如何只弹一次 toast”
 
 - 最后读 `assets/mvp-samples/sample-01...`、`sample-02...`
   和 `sample-04...`

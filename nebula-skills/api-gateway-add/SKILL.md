@@ -47,6 +47,7 @@ description: 为 nebula 前端输出 api/types/gateway/business 四层最小改�
 | 多步写操作失败顺序 | `[[references/gateway-orchestration.md]]` |
 | 印证样本索引 | `[[template/README.md]]` |
 | 错误 helper 协议 | `[[../shownotification/SKILL.md]]` |
+| 集成 gateway 内并行多原子 API 错误通知 | `[[../shownotification/feature-skills/并发HTTP错误通知/SKILL.md]]` |
 | 分层总则 | `[[references/api-gateway-layering-core.md]]` |
 | 旧接口下线、删 fallback/旧 API | **停止**：引导 `[[../api-gateway-deprecate/SKILL.md]]`；不展开本 skill 的 GREEN 四层设计 |
 

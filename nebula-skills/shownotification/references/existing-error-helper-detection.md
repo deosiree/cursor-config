@@ -16,7 +16,7 @@
 推荐搜索：
 
 ```powershell
-rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(" src
+rg -n "handleApiError\(|showNotificationError\(|handleGatewayError\(|concurApiErr\(|newConcurLock\(" src
 ```
 
 ```powershell
@@ -39,6 +39,15 @@ rg -n "err\?\.error\?\.code|err\?\.response\?\.data\?\.code|showNotification\(.*
 - 领域内的 `notifyRequestError`
 
 都可能是等价 helper。
+
+### 结论 D：并发批次错误（专用，非 handleGatewayError 替代）
+
+同一 gateway 方法内多路并行 HTTP 失败时，使用：
+
+- `newConcurLock()`：创建 `{ notified: false }`
+- `concurApiErr(lock, error, errMsg?)`：每路 console，business 整批 toast 一次
+
+入口：`[[../feature-skills/并发HTTP错误通知/SKILL.md]]`。不要与单次 `handleGatewayError` 混用。
 
 ## 复用优先级
 - 已有一个稳定 helper：优先复用

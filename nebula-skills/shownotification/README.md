@@ -27,6 +27,7 @@ nebula 历史上同时存在这些通知问题：
 - 统一 `[code]message` 展示规则
 - 限制同一错误只在约定边界提示一次
 - 说明何时需要把 HTTP 状态错误与业务错误继续分层
+- 并发 HTTP（`Promise.all`、分页拉全量）：`newConcurLock` + `concurApiErr`，每路 console、toast 一次
 
 ## 本套件不解决什么
 
@@ -50,7 +51,14 @@ handleApiError(err, "加载失败");
 handleApiError(err, "密码重置失败");
 ```
 
-这里的 `handleApiError` 只是示例。
+并发 HTTP（gateway 内多路并行）：
+
+```ts
+const lock = newConcurLock();
+concurApiErr(lock, error, `加载设备列表第 ${page} 页失败:`);
+```
+
+这里的 `handleApiError` / `concurApiErr` 只是示例。
 本套件不强制 helper 名称，判断标准是职责：
 
 - 能从错误对象中读取 `code/message` 或 `message`
@@ -141,8 +149,11 @@ if ((error as any)?.type === "business") {
 - `SKILL.md`
   主入口与执行规则
 
+- `feature-skills/`
+  跨 gateway 子能力（当前：`并发HTTP错误通知`）
+
 - `references/`
-  长说明与职责边界
+  长说明与职责边界（含 `concur-api-err.md`）
 
 - `assets/mvp-samples/`
   来自真实仓库变更的 MVP 样本，当前同时覆盖 `microfb` 与 `apex_dev`
@@ -180,6 +191,7 @@ if ((error as any)?.type === "business") {
 
 - `sample-05` 解决“HTTP 状态错误应该收在哪里”
 - `sample-06` 解决“业务错误如何稳定进入 gateway 统一提示”
+- `feature-skills/并发HTTP错误通知` + `sample-07` 解决“并行/分页多路失败只弹一次 toast”
 
 ## 适用方式
 

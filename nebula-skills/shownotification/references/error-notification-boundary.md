@@ -19,6 +19,8 @@
   优先复用现成 helper，而不是机械新增 `showNotificationError`
 - gateway 上收场景同样适用这条规则：
   优先复用现成 helper，再视需要包装成 `handleGatewayError(() => action(), "...")`
+- **单次**原子 gateway 方法：用 `handleGatewayError`
+- **同方法内多路并行/分页** HTTP：用 `newConcurLock` + `concurApiErr`，见 `[[../feature-skills/并发HTTP错误通知/SKILL.md]]`
 
 ## 状态错误与业务错误的进一步拆层
 

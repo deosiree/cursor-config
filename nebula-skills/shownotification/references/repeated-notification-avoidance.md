@@ -15,8 +15,9 @@
 - 谁最了解该错误语义，谁负责提示
 - 下层已经提示并继续抛错时，上层只负责阻断流程，不再重复提示
 - view 层只处理本地校验与成功提示；后端错误优先交给 request / gateway
-- 默认先做“边界去重”，不默认在 `notification.ts` 内加入“已弹过标记”
-- 只有当仓库确实无法通过 request / gateway / view 边界消重时，才考虑额外机制；这属于例外方案，不写入默认模板
+- 默认先做“边界去重”，不默认在 `showNotificationError` 等通用 helper 内加入黑盒“已弹过标记”
+- **并行 HTTP 例外**：同一 gateway 批次内多路 `Promise.all` / 分页并行失败时，使用 `notification.ts` 已导出的 `newConcurLock` + `concurApiErr`（显式锁，非黑盒）。细则：`[[../feature-skills/并发HTTP错误通知/SKILL.md]]`、`[[concur-api-err.md]]`
+- 仅当边界治理与 `concurApiErr` 均不适用时，才单独论证其它例外机制
 
 ## 最小示例
 
