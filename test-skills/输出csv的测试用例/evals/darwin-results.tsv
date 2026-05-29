@@ -1,0 +1,4 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-29T12:00	baseline	输出csv的测试用例	-	77.0	baseline	-	初始评估；runtime_warn=0	dry_run
+2026-05-29T12:30	round1	输出csv的测试用例	77.0	83.1	keep	检查点+指令具体性	README链路与写入前确认表	dry_run
+2026-05-29T13:00	round2	输出csv的测试用例	83.1	85.6	keep	边界条件+资源整合	execution-fallback.md+test-prompts根目录；SKILL体积收敛至137%	dry_run

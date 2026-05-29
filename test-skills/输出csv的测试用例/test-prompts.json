@@ -1,0 +1,38 @@
+[
+  {
+    "id": "csv-menu-gateway",
+    "prompt": "整理 apex_dev 菜单相关 gateway 和 api 的 test.ts，生成可导入测试系统的 CSV，模块名菜单管理，创建人员惠岩。",
+    "expect": {
+      "intention": "基于test.ts生成",
+      "features": ["gateway-基于test.ts生成", "api-基于test.ts生成"],
+      "caseCountApprox": 36,
+      "scripts": ["generate_test_csv.py"]
+    }
+  },
+  {
+    "id": "csv-api-only",
+    "prompt": "只有 menu-system-only.test.ts，输出 api 层用例并生成 CSV。",
+    "expect": {
+      "intention": "基于test.ts生成",
+      "features": ["api-基于test.ts生成"],
+      "caseCountApprox": 3
+    }
+  },
+  {
+    "id": "config-from-nl",
+    "prompt": "租户管理模块，子系统8，创建人员惠岩，参考 tenant 模板 CSV，生成 tenant-unit 的 config.json，还没有 test.ts。",
+    "expect": {
+      "intention": "沉淀模块配置",
+      "scripts": ["csv_to_test_config.py"],
+      "darwin": "oral_only_gap if user asks for cases without test.ts"
+    }
+  },
+  {
+    "id": "oral-only",
+    "prompt": "根据口述整理租户管理 UI 用例录入测试系统，没有 test 文件。",
+    "expect": {
+      "pause": true,
+      "darwin": "propose 基于源码+口述生成"
+    }
+  }
+]

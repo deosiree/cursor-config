@@ -1,0 +1,102 @@
+---
+name: 输出csv的测试用例
+description: >-
+  将 Vitest test.ts、模块 JSON 配置沉淀为可导入测试系统的 CSV 用例。
+  通用脚本 generate_test_csv.py + config/cases JSON；支持从参考 CSV 或自然语言生成 config。
+  触发词：输出csv测试用例、test.ts转CSV、测试系统导入、测试用例整理、红绿测试、正向反向预期、沉淀模块配置。
+---
+
+# 输出 CSV 测试用例（Agent）
+
+## 目标
+
+把单元测试 / 模块默认值收敛为 **测试系统可导入 CSV**，并通过 **config + cases + 通用脚本** 支持多模块复用。
+
+## 何时使用
+
+- 需要把 `*.test.ts` 整理为手工可执行用例并录入测试系统
+- 新模块只需换 `*.config.json` / `*.cases.json`，不重写 `generate_*_csv.py`
+- 从参考 CSV 或口述固定默认值，生成模块 config
+
+## 何时不要使用
+
+- 仅运行 Vitest 自动化（无需 CSV）
+- 纯后端 API 契约用例已由 Swagger/Postman 覆盖且不需要前端步骤
+
+## Agent 工作循环
+
+每轮输出：
+
+- `currentUnderstanding`
+- `selectedIntentionSkill` / `selectedFeatureSkills`
+- `csvOutputPlan` / `missingFacts` / `nextIterationAction`
+
+### RED（先判）
+
+1. 输入类型：`test.ts` 路径 / 仅要 config / 仅口述默认值 / 已有 cases 只要生成 CSV
+2. `repoRoot`（默认 nebula 根）
+3. CSV 模板路径（默认 `docs/问题单/模板/menu.csv` 表头）
+4. 模块名、子系统、创建人员等是否覆盖 `fieldDefaults`
+5. 交付物：config / cases / CSV / README
+
+### GREEN（意图路由）
+
+| 信号 | 路由 |
+|------|------|
+| 有 `*.test.ts` 或 glob | `[[intention-skills/基于test.ts生成/SKILL.md]]` |
+| 要新建/更新模块 config（参考 CSV 或自然语言） | `[[intention-skills/沉淀模块配置/SKILL.md]]` |
+| 已有 config + cases，仅生成 CSV | 直接执行 `scripts/generate_test_csv.py` |
+| 无 test.ts、仅口述业务场景 | **暂停** → `[[feature-skills/darwin拓展发现/SKILL.md]]` 提议 `基于源码+口述生成` |
+
+### REFACTOR（强制）
+
+每轮 CSV / config 产出或路由结束后 → `[[feature-skills/darwin拓展发现/SKILL.md]]`
+
+## 脚本速查
+
+在 skill 根目录执行：
+
+```bash
+# 1. 从 legacy 或手写 cases 已有后，生成 CSV
+python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.json
+
+# 2. 参考 CSV → config 骨架
+python scripts/csv_to_test_config.py \
+  --reference-csv ../../../docs/问题单/模板/menu.csv \
+  --module-id tenant-unit \
+  --output-config configs/tenant-unit.config.json \
+  --overrides-json "{\"模块名\":\"租户管理\",\"创建人员\":\"惠岩\"}"
+
+# 3. 一次性：从 docs/0529/generate_menu_unit_csv.py 提取 cases
+python scripts/bootstrap_menu_cases.py
+```
+
+## 子 skill 地图
+
+| 节点 | 职责 |
+|------|------|
+| `intention-skills/基于test.ts生成` | 扫描 test.ts → 撰写 cases.json → 路由 api/gateway feature |
+| `intention-skills/沉淀模块配置` | 参考 CSV / 自然语言 → config.json |
+| `feature-skills/api-基于test.ts生成` | `src/api/**/__tests__/**` 用例撰写 |
+| `feature-skills/gateway-基于test.ts生成` | `src/gateway/**/__tests__/**` 用例撰写 |
+| `feature-skills/darwin拓展发现` | 能力缺口 → 新子 skill 沉淀方案 |
+
+## 参考
+
+- `[[references/csv-field-convention.md]]`
+- `[[references/test-case-writing-rules.md]]`
+- `[[references/config-json-schema.md]]`
+- `[[references/skill-expansion-roadmap.md]]`
+- 菜单样本：`configs/menu-unit-gateway.*`、`[[assets/few-shot-example/menu-gateway-session.md]]`
+
+## 使用示例
+
+```text
+整理 apex_dev 菜单 gateway/api 的 test.ts，生成可导入测试系统的 CSV，
+模块名菜单管理，创建人员惠岩。
+```
+
+```text
+租户管理模块，参考 docs/问题单/模板/tenant.csv，口述：子系统 8、创建人员惠岩，
+生成 tenant-unit.config.json。
+```
