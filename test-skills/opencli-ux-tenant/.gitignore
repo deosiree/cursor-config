@@ -1,0 +1,8 @@
+# 本地敏感配置（真实密码）
+config/ux-test.config.local.json
+*.local.json
+
+# 运行产物
+*.log
+screenshots/
+.ux-run.env

@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "cloud": {
+      "password": "your-real-password"
+    },
+    "t-cloud": {
+      "password": "your-real-password"
+    },
+    "ip-47": {
+      "password": "your-real-password"
+    }
+  }
+}

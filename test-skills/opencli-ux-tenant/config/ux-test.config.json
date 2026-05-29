@@ -1,0 +1,54 @@
+{
+  "defaultProfile": "local",
+  "sessionName": "nebula-ux",
+  "profiles": {
+    "local": {
+      "baseUrl": "http://localhost:8080",
+      "loginPath": "/cloud/login",
+      "tenantPath": "/cloud/Apex/tenant",
+      "account": "admin@system.local",
+      "password": "123456",
+      "captchaMode": "auto"
+    },
+    "cloud": {
+      "baseUrl": "https://cloud.lanniu.top",
+      "loginPath": "/cloud/login",
+      "tenantPath": "/cloud/Apex/tenant",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME",
+      "captchaMode": "manual"
+    },
+    "t-cloud": {
+      "baseUrl": "https://t-cloud.lanniu.top",
+      "loginPath": "/cloud/login",
+      "tenantPath": "/cloud/Apex/tenant",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME",
+      "captchaMode": "manual"
+    },
+    "ip-47": {
+      "baseUrl": "http://47.103.23.246",
+      "loginPath": "/cloud/login",
+      "tenantPath": "/cloud/Apex/tenant",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME",
+      "captchaMode": "manual"
+    },
+    "phone-user": {
+      "baseUrl": "https://cloud.lanniu.top",
+      "loginPath": "/cloud/login",
+      "tenantPath": "/cloud/Apex/tenant",
+      "account": "13813815913",
+      "password": "123456",
+      "captchaMode": "bind-only"
+    }
+  },
+  "tenantData": {
+    "tenantName": "tenant0529",
+    "ownerUser": "tenant0529",
+    "ownerPassword": "123456",
+    "phone": "13813810529",
+    "email": "tenant0529@qq.com",
+    "projectName": "test_plat"
+  }
+}
