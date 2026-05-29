@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue3-virtual-scroll-list": "^0.2.1"
+  }
+}

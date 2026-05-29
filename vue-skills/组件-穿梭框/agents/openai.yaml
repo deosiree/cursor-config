@@ -1,0 +1,4 @@
+interface:
+  display_name: "组件-穿梭框"
+  short_description: "Transfer 虚拟滚动穿梭框 + 页面接入；先判定新增套件或 el-table/el-transfer 迁移"
+  default_prompt: "使用 $组件-穿梭框：先判定新增/更新；无 transfer 目录走 template/mvp；BindDeviceDialog 与 DeviceTab 对照 template/before|after；大数据开 virtual-scroll。"

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "prompt": "租户绑定设备 Dialog 数据几千条很卡，gateway getBind 还在用 pageSize 999999，Transfer 组件已有",
+    "expected": "路由更新子 skill 样本 A：fetchAllDevicePages + PAGE_SIZE_MAX=50；BindDeviceDialog virtual-scroll=true；对照 template/after gateway + BindDeviceDialog（HEAD）"
+  },
+  {
+    "id": 2,
+    "prompt": "仓库还没有 src/components/transfer，要在新模块做双列表选型",
+    "expected": "路由新增子 skill：从 template/mvp 落地 transfer + vue3-virtual-scroll-list；不改业务页；完成后委派更新"
+  },
+  {
+    "id": 3,
+    "prompt": "角色编辑 DeviceTab 还是 el-table 多选加外部搜索框，要改成穿梭框",
+    "expected": "路由更新子 skill 样本 B：对照 before/after DeviceTab；virtual-scroll=false；filterable 内置；.el-panel 样式；保留 defineExpose"
+  },
+  {
+    "id": 4,
+    "prompt": "列表页表格高度不够分页被裁切，和穿梭框无关",
+    "expected": "不触发本 skill，路由 layout-fixedHeadTail-adaptiveMiddle"
+  },
+  {
+    "id": 5,
+    "prompt": "新仓库从零：要绑定设备穿梭框，前后端都是空白 Vue 项目",
+    "expected": "组合路径：先新增 template/mvp → 再更新；若 gateway 非设备域需抽象 fetchAllPages 模式而非硬抄 getBind"
+  },
+  {
+    "id": 6,
+    "prompt": "绑定设备点确定没改任何设备也调了 deviceActivate 接口",
+    "expected": "更新样本 A HEAD 增量：devicesToBind/unbind 非空才调 deviceActivate；对照 after BindDeviceDialog"
+  },
+  {
+    "id": 7,
+    "prompt": "绑定设备穿梭框列表很长但没有纵向滚动条，面板头还显示 0/100",
+    "expected": "更新子 skill + transfer-page-ui：外层高度上限、列表 overflow-y auto、format 空格隐藏计数、单元格 :title"
+  },
+  {
+    "id": 8,
+    "prompt": "租户创建 ProjectDeviceConfigDialog 穿梭框优化：不要标题设备数量、列表要能纵向滚动、列宽 100% 放不下用省略号和 tooltip，不要横向滚动条",
+    "expected": "读 transfer-page-ui + dom-class-map；fork BindDevice .transfer-container/.el-panel 宽度；titles 无 count、format 空格；:title 或 TransferOverflowText.vue SFC；禁止 defineComponent 字符串 template 与 overflow-x 横滚；可参考 project-device-config-regression few-shot"
+  },
+  {
+    "id": 9,
+    "prompt": "ProjectDeviceConfigDialog 穿梭框搜索框跑到全选上面了，checkbox 和设备名贴在一起，改了好几轮 CSS 页面没变化",
+    "expected": "transfer-page-ui §⑤ + dom-class-map：filter order:2；行间距写在 .transfer-container :deep(.el-transfer-panel__item)；勿照抄 EP padding:15px；DevTools 验收 Computed；对照 project-device-config-regression 第二波与 apex 成品"
+  }
+]
