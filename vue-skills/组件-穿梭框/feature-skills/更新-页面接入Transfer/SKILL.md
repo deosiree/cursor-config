@@ -1,20 +1,24 @@
 ---
 name: 更新-页面接入Transfer
-description: 当 Transfer 套件已存在，目标页仍用 el-transfer、el-table 多选或 gateway 反模式时，按 template/before|after 接入 customTransfer；含 UI 四必选（数量/纵向滚动/tooltip/CSS）。
+description: 【非默认】仅当人类指定 Transfer v1/customTransfer，或 v2 布局壳不适配时，按 template/before|after 接入 customTransfer；多列设备 Dialog 默认走 Transfer_v2。
 ---
 
-# 更新-页面接入Transfer
+# 更新-页面接入Transfer（v1）
 
-父级 agent：[`../../SKILL.md`](../../SKILL.md)。本节点只负责 **业务页与 gateway 接入**。
+父级 agent：[`../../SKILL.md`](../../SKILL.md)。**非默认**路径：v1 `customTransfer` + **页内**布局与 gateway 接入。
+
+> **默认**多列设备页请用 [`更新-页面接入Transfer_v2`](../更新-页面接入Transfer_v2/SKILL.md)（`DeviceTransfer` + `columns`）。仅当人类明确「用 Transfer / customTransfer / 不用 DeviceTransfer」，或布局与 v2 壳差异过大时使用本 skill。
 
 ## 何时使用
 
-- 已存在 `src/components/transfer/src/transfer.vue`
-- 目标页仍为 `el-transfer` / `el-table type="selection"` / gateway `pageSize: 999999`
-- 穿梭框无纵向滚动、面板仍显示 `0/N`、截断无 tooltip
+- **人类明确要求** Transfer v1 / `customTransfer`，或声明 v2 布局壳不适用
+- 目标页布局强定制，无法收敛到 `DeviceTransfer` 多列 grid
+- 已存在 v1 `transfer.vue`，且任务为 `el-transfer` / `el-table` 迁移到 **页内 slot** 写法（非 v2）
+- gateway `pageSize: 999999` 等（可与 v2 页并行，gateway 样本仍在本目录 after）
 
 ## 何时不要使用
 
+- 未获人类 v1 指令，且 `transfer_v2/DeviceTransfer.vue` 已存在、页面为标准多列设备穿梭 → [`../更新-页面接入Transfer_v2/SKILL.md`](../更新-页面接入Transfer_v2/SKILL.md)
 - 组件不存在 → [`../新增-Transfer穿梭框套件/SKILL.md`](../新增-Transfer穿梭框套件/SKILL.md)
 
 ## UI 接入四必选（改页必过）

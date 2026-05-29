@@ -6,8 +6,10 @@
 
 - [ ] `SKILL.md` 含中文 `name` / `description`、路由表
 - [ ] `template/mvp/` transfer 全量 + `package.json.fragment` + d.ts
-- [ ] `template/before|after/`：BindDeviceDialog、DeviceTab、gateway 配套
-- [ ] `references/`：transfer-api、**transfer-page-ui**（含 §⑤）、**dom-class-map**、virtual-scroll、gateway-full-fetch、tab-embedded-layout、anti-patterns
+- [ ] `template/v2-mvp/`、`template/v2-before|v2-after/`（`a609804^` / `a609804`）
+- [ ] `template/before|after/`：v1 样本（gateway 等）；设备页勿被 v2 误覆盖
+- [ ] `feature-skills/更新-页面接入Transfer_v2/` 存在且为默认更新路径
+- [ ] `references/`：transfer-api、**transfer-v2-layout**、transfer-page-ui、dom-class-map、virtual-scroll、gateway-full-fetch、tab-embedded-layout、anti-patterns
 - [ ] 交叉引用指向 `nebula-skills`（无 `mySkills` 断链）
 - [ ] `assets/few-shot-example/`：bind-device、role-device-tab、**project-device-config-regression**（含第二波）、el-transfer 扩展
 - [ ] `agents/openai.yaml` 已注册
@@ -31,4 +33,6 @@
 - [ ] Tab 样本使用 `.el-panel` 而非误用 Dialog 面板选择器
 - [ ] UI 四必选：format 空格隐藏计数、纵向滚动、`:title`、CSS 容器链
 - [ ] UI §⑤：filter order、`.transfer-container` 行间距、DevTools 验收、勿机械抄 EP 四边 15px
-- [ ] test-prompt #8/#9 与 regression 第二波一致
+- [ ] test-prompt #9 v2 沉淀、#10 人类 v1、#11 间距回归、#12 域外非设备双列表
+- [ ] 父 SKILL / README 含域外对照表；`cross-domain-transfer-migration.md`
+- [ ] 父级路由：默认 Transfer_v2；人类指定才 v1

@@ -32,6 +32,19 @@
 
 产品若要求纯文案标题，勿在 `titles` 拼接 `(total)`。面板头用 `format: { noChecked: " ", hasChecked: " " }` 隐藏 `0/N`（**勿**用 `''`，空串会回退默认计数）。
 
+## v2 布局壳（DeviceTransfer）
+
+| 反模式 | 原因 | 正确做法 |
+|--------|------|----------|
+| `width: max-content` + 列 `minmax(80px,1fr)` | 宽屏横滚、列被撑宽 | `width:100%` + `minmax(0,1fr)` |
+| 每行 `label { overflow-x:auto }` | N 条横滚条 | 无横滚；`SpanByTipsFill` + ellipsis |
+| `table-viewport` + JS scroll 同步 | dialog min-width 下无收益 | footer/body 为 `.el-panel` 直接子节点 |
+| `--device-transfer-col-count` + min-width calc | 同上 | 删除；靠 dialog 下限 |
+| 有 v2 壳仍在业务页抄 `:deep(.el-panel)` 布局 | 三页漂移 | 样式只在 `DeviceTransfer.vue`；走 **Transfer_v2** 更新 skill |
+| 人类指定 v1 仍改 `DeviceTransfer` | 违背路由 | [`更新-页面接入Transfer`](../feature-skills/更新-页面接入Transfer/SKILL.md) |
+
+详见 [`transfer-v2-layout.md`](transfer-v2-layout.md)。
+
 ## 历史扩展（非主 before）
 
 `456e761^` 的 `el-transfer` → 见 [`el-transfer-migration.md`](../assets/few-shot-example/el-transfer-migration.md)，不作为 template/before 主样本。

@@ -270,6 +270,60 @@ grep 红灯扫描 SKILL.md README.md → 0 命中
 
 ---
 
+## v2.0.0 — Transfer v2 沉淀（2026-05-28）
+
+| 项 | 值 |
+|----|-----|
+| 评估模式 | dry_run（11/11 test-prompts） |
+| 变更 | v2-mvp/v2-before/v2-after；新增 GREEN-2；**更新-页面接入Transfer_v2** 默认；父级路由口诀 |
+
+**Darwin 总分：95.0** | **通用性：88** | runtime_warn=0
+
+短板：test-prompts #1–8 的 `expected` 仍写 v1 路径（自动评测会低估）。
+
+---
+
+## v2.0.1 — Darwin Phase 2 Round 1（2026-05-28）
+
+| 项 | 值 |
+|----|-----|
+| 改进维度 | P2 资源整合 + 指令具体性 + 实测口径 |
+| 改动 | `test-prompts.json` #1–8 `expected` 对齐 v2 默认路由；`should-trigger` #7/#8；README「域外 5 步」 |
+
+### 8 维 Δ（相对 v2.0.0）
+
+| # | 维度 | Δ | 说明 |
+|---|------|---|------|
+| 5 | 指令具体性 | +0.5 | test-prompt expected 与子 skill 一致 |
+| 6 | 资源整合 | +0.5 | evals + README 域外指引 |
+| 8 | 实测表现 | +0.3 | dry_run **11/11 matches**（原 9/11 partial） |
+
+**Darwin 总分：95.8**（+0.8） | **通用性：90**（+2，域外 5 步）
+
+### test-prompt 干跑（11/11）
+
+| id | matches |
+|----|---------|
+| 1–8 | **yes**（#1 gateway 仍引用 after gateway 样本，页面 v2-after） |
+| 9–11 | yes |
+
+### 仍可选（P3）
+
+- #9、#10 各 1 次 full_test 双臂对比
+- `darwin-generality-baseline` 与 `test-prompts` 随 apex HEAD 变更时同步
+
+---
+
+## v2.0.2 — 最小域外包（2026-05-28）
+
+| 项 | 值 |
+|----|-----|
+| 改动 | 父 SKILL §域外对照表；README 对照；`cross-domain-transfer-migration.md`；test-prompt #12 |
+
+**通用性专项：92**（+2，相对 v2.0.1） | Darwin 总分维持 **~96.0**（dry_run 12/12）
+
+---
+
 ## results.tsv 行（可复制）
 
 ```tsv
@@ -278,4 +332,7 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-28T-phase2	-	组件-穿梭框	85.8	89.2	keep	资源整合+UI四必选	P1+transfer-page-ui	dry_run
 2026-05-28T-v1.2	-	组件-穿梭框	89.2	93.5	keep	边界+实测	ProjectDeviceConfig回归沉淀	dry_run
 2026-05-28T-v1.3	-	组件-穿梭框	93.5	94.8	keep	间距+order+DevTools	第二波湿跑沉淀	dry_run
+2026-05-28T-v2.0	-	组件-穿梭框	94.8	95.0	keep	架构+v2路由	v2沉淀	dry_run
+2026-05-28T-v2.0.1-r1	-	组件-穿梭框	95.0	95.8	keep	test-prompts+域外5步	Phase2 round1	dry_run
+2026-05-28T-v2.0.2	-	组件-穿梭框	95.8	96.0	keep	域外对照+#12	最小域外包	dry_run
 ```

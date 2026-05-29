@@ -2,17 +2,17 @@
   {
     "id": 1,
     "prompt": "租户绑定设备 Dialog 数据几千条很卡，gateway getBind 还在用 pageSize 999999，Transfer 组件已有",
-    "expected": "路由更新子 skill 样本 A：fetchAllDevicePages + PAGE_SIZE_MAX=50；BindDeviceDialog virtual-scroll=true；对照 template/after gateway + BindDeviceDialog（HEAD）"
+    "expected": "默认 更新-页面接入Transfer_v2：v2-after BindDeviceDialog + virtual-scroll=true；gateway 对照 template/after device.gateway（fetchAllDevicePages、PAGE_SIZE_MAX=50）；勿 999999"
   },
   {
     "id": 2,
     "prompt": "仓库还没有 src/components/transfer，要在新模块做双列表选型",
-    "expected": "路由新增子 skill：从 template/mvp 落地 transfer + vue3-virtual-scroll-list；不改业务页；完成后委派更新"
+    "expected": "新增套件 GREEN-1：template/mvp + vue3-virtual-scroll-list；不改业务页；完成后 GREEN-2 v2-mvp（若多列设备）并委派 更新-页面接入Transfer_v2"
   },
   {
     "id": 3,
     "prompt": "角色编辑 DeviceTab 还是 el-table 多选加外部搜索框，要改成穿梭框",
-    "expected": "路由更新子 skill 样本 B：对照 before/after DeviceTab；virtual-scroll=false；filterable 内置；.el-panel 样式；保留 defineExpose"
+    "expected": "默认 更新-页面接入Transfer_v2：对照 v2-before|v2-after DeviceTab；DeviceTransfer + columns；virtual-scroll=false；保留 defineExpose；勿默认 v1 before|after"
   },
   {
     "id": 4,
@@ -22,26 +22,41 @@
   {
     "id": 5,
     "prompt": "新仓库从零：要绑定设备穿梭框，前后端都是空白 Vue 项目",
-    "expected": "组合路径：先新增 template/mvp → 再更新；若 gateway 非设备域需抽象 fetchAllPages 模式而非硬抄 getBind"
+    "expected": "组合：新增 GREEN-1 mvp → GREEN-2 v2-mvp → 默认 更新-页面接入Transfer_v2；gateway 非设备域时抽象 fetchAllPages，勿硬抄 getBind"
   },
   {
     "id": 6,
     "prompt": "绑定设备点确定没改任何设备也调了 deviceActivate 接口",
-    "expected": "更新样本 A HEAD 增量：devicesToBind/unbind 非空才调 deviceActivate；对照 after BindDeviceDialog"
+    "expected": "默认 更新-页面接入Transfer_v2：对照 v2-after BindDeviceDialog，devicesToBind/unbind 非空才 deviceActivate"
   },
   {
     "id": 7,
     "prompt": "绑定设备穿梭框列表很长但没有纵向滚动条，面板头还显示 0/100",
-    "expected": "更新子 skill + transfer-page-ui：外层高度上限、列表 overflow-y auto、format 空格隐藏计数、单元格 :title"
+    "expected": "默认 更新-页面接入Transfer_v2 + transfer-page-ui：host-height/高度链、virtual-scroll（Dialog）；format 空格隐藏 0/N；v2 勿在业务页重复 :deep 纵滚"
   },
   {
     "id": 8,
     "prompt": "租户创建 ProjectDeviceConfigDialog 穿梭框优化：不要标题设备数量、列表要能纵向滚动、列宽 100% 放不下用省略号和 tooltip，不要横向滚动条",
-    "expected": "读 transfer-page-ui + dom-class-map；fork BindDevice .transfer-container/.el-panel 宽度；titles 无 count、format 空格；:title 或 TransferOverflowText.vue SFC；禁止 defineComponent 字符串 template 与 overflow-x 横滚；可参考 project-device-config-regression few-shot"
+    "expected": "默认 更新-页面接入Transfer_v2 + v2-after ProjectDeviceConfigDialog；titles 无 count、format 空格；transfer-v2-layout 禁止 max-content/行级横滚；壳内 SpanByTipsFill；人类指定 v1 才走 transfer-page-ui 页内 fork"
   },
   {
     "id": 9,
+    "prompt": "transfer.vue 有了，三处绑定设备页各自一大段穿梭框 CSS，想收成 DeviceTransfer",
+    "expected": "有 v1 无 v2 壳 → 新增套件 GREEN-2 + template/v2-mvp；页面 → 默认 更新-页面接入Transfer_v2 + v2-before|v2-after；禁止恢复 max-content/行级横滚/table-viewport"
+  },
+  {
+    "id": 10,
+    "prompt": "请用 Transfer customTransfer 页内布局，不要用 DeviceTransfer，布局壳变化大",
+    "expected": "人类指定 v1 → 更新-页面接入Transfer + template/before|after；禁止改 DeviceTransfer；勿默认走 Transfer_v2"
+  },
+  {
+    "id": 11,
     "prompt": "ProjectDeviceConfigDialog 穿梭框搜索框跑到全选上面了，checkbox 和设备名贴在一起，改了好几轮 CSS 页面没变化",
-    "expected": "transfer-page-ui §⑤ + dom-class-map：filter order:2；行间距写在 .transfer-container :deep(.el-transfer-panel__item)；勿照抄 EP padding:15px；DevTools 验收 Computed；对照 project-device-config-regression 第二波与 apex 成品"
+    "expected": "若仍 v1 页内路径：transfer-page-ui §⑤ + dom-class-map；若已有 v2 壳：改 DeviceTransfer 壳内而非业务页重复 :deep；DevTools 验收"
+  },
+  {
+    "id": 12,
+    "prompt": "新系统里要做用户-角色双列表授权，不是设备，gateway 还在用 999999 拉全量，已有 transfer 组件",
+    "expected": "仍触发本 skill；域外对照表：抽象 fetchAllPages、自定义 columns/getValue；默认 更新-页面接入Transfer_v2（多列）；禁止硬抄 getBind/BindDeviceDialog/deviceActivate；gateway 见 gateway-full-fetch"
   }
 ]
