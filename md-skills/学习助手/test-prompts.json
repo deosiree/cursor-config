@@ -8,7 +8,7 @@
   {
     "id": "happy-precipitate",
     "prompt": "使用学习助手，解读第3节 craft-agents-oss，源码在 C:\\Repertory\\craft-agents-oss",
-    "expected": "编排-读文档加项目沉淀 → CP1/CP2 → 00-架构总览+分析篇 → 回写双链",
+    "expected": "编排-读文档加项目沉淀 → CP1 → 00-架构总览 → 步骤5必交付清单(顺序自选) → CP2 → 回写双链",
     "category": "happy_path"
   },
   {
