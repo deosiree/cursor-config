@@ -1,0 +1,23 @@
+[
+  {
+    "id": "method-select-hierarchy",
+    "prompt": "解释 Agent Loop、Tool、Memory、Context 四个概念的关系",
+    "source": "evals.json → method-select-hierarchy",
+    "expected_route": "references/费曼-统合叙事.md",
+    "category": "happy_path"
+  },
+  {
+    "id": "method-select-decision",
+    "prompt": "为什么选择 AsyncGenerator 而不是 Promise 作为 chat() 的返回类型？",
+    "source": "evals.json → method-select-decision",
+    "expected_route": "references/苏格拉底-追问链.md",
+    "category": "happy_path"
+  },
+  {
+    "id": "method-select-conflict",
+    "prompt": "解释微服务架构中 API Gateway、Service Mesh、Load Balancer三个组件各自的作用和关系",
+    "source": "evals.json → method-select-conflict",
+    "expected_route": "冲突解决：顶层金字塔·结论先行 + 子节费曼·统合叙事",
+    "category": "edge_case"
+  }
+]

@@ -1,0 +1,2 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-30T20:00	baseline	方法论skills	-	63.8	baseline	-	Phase1 基线评估，9维全部 dry_run	dry_run
