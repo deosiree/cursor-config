@@ -1,0 +1,26 @@
+[
+  {
+    "id": "happy-answer",
+    "prompt": "使用学习助手，回答文档第1节概念扫盲",
+    "expected": "入口决策 → 编排-读文档解答 → 写答案到文档 → 小结含方法论计数",
+    "category": "happy_path"
+  },
+  {
+    "id": "happy-precipitate",
+    "prompt": "使用学习助手，解读第3节 craft-agents-oss，源码在 C:\\Repertory\\craft-agents-oss",
+    "expected": "编排-读文档加项目沉淀 → CP1/CP2 → 00-架构总览+分析篇 → 回写双链",
+    "category": "happy_path"
+  },
+  {
+    "id": "edge-no-repo-path",
+    "prompt": "使用学习助手，解读第2节 learn-claude-code，没有本地源码",
+    "expected": "web_search 推断 owner/repo → GitHub 探索 → 落盘 → 远程探索须在小结标注",
+    "category": "edge_case"
+  },
+  {
+    "id": "edge-no-project-notes",
+    "prompt": "使用学习助手，回答第2节理解Agent Loop（有推荐项目但无笔记目录）",
+    "expected": "CP 提示 [是/否/跳过] → 跳过则答案与小结含 ⚠️ 未结合项目源码分析",
+    "category": "edge_case"
+  }
+]
