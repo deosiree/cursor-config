@@ -1,0 +1,31 @@
+[
+  {
+    "id": "remotion-dub",
+    "prompt": "给 C:\\Users\\huiyan\\Documents\\Repertory\\agent-loop-video 的 DetailedIntro 加男声配音和字幕",
+    "expected": "走 编排-为Remotion视频配音 → 确认旁白稿 → edge-tts 生成 MP3+SRT → 无声渲染 → moviepy 合成 → 输出带音频 MP4",
+    "category": "happy_path",
+    "tested": true,
+    "result": "few-shot-detailed-intro.mp4 (5.7MB, 6min, with audio)"
+  },
+  {
+    "id": "ai-video-dub",
+    "prompt": "用 AI 生成一个 30 秒产品演示视频，加解说配音",
+    "expected": "走 编排-AI视频配音 → muapi video generate → 获取时长 → 写旁白(120字) → edge-tts → moviepy",
+    "category": "happy_path",
+    "tested": false
+  },
+  {
+    "id": "slideshow-dub",
+    "prompt": "把这 5 张截图做成图文视频，每张配一句解说",
+    "expected": "走 编排-图文幻灯片配音 → npx create-video → 生成 SlideShow 组件 → edge-tts → Remotion → moviepy",
+    "category": "happy_path",
+    "tested": false
+  },
+  {
+    "id": "edge-no-tts",
+    "prompt": "给视频加配音（但 edge-tts 未安装）",
+    "expected": "检测到 edge-tts 不可用 → pip install edge-tts → 重试 → 仍失败 → 降级为输出无声视频+SRT",
+    "category": "edge_case",
+    "tested": false
+  }
+]

@@ -1,0 +1,2 @@
+eval_id	test_mode	steps_total	steps_passed	duration	has_audio	size_mb	fps	resolution
+video-audio-subtitle	full_test	5	5	33.0	True	2.5	30	1920x1080

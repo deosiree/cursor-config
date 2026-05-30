@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-30T23:50	baseline	生图路由	-	81.0	baseline	基线评估	结构评分 + dry_run 效果推演	dry_run
+2026-05-30T23:55	opt-r1	生图路由	81.0	82.2	keep	Dim4检查点	加 🔴 CHECKPOINT + 🛑 停视觉标记，3个检查点全部显性化	full_test
+2026-05-30T23:57	opt-r2	生图路由	82.2	83.4	keep	Dim9反例	RED升级为7行🚫反例黑名单表	dry_run
+2026-05-30T23:59	opt-r3	生图路由	83.4	85.7	keep	Dim8实测	边界条件+GREEN表→few-shot链接；Mermaid→PNG实测通过	full_test

@@ -3,24 +3,50 @@
     "id": "happy-answer",
     "prompt": "使用学习助手，回答文档第1节概念扫盲",
     "expected": "读到文档 → 定位章节 → 提取7个概念 → 为每个概念选方法论 → 写答案到文档 → 输出小结含方法论计数",
-    "category": "happy_path"
+    "category": "happy_path",
+    "passCriteria": [
+      "定位：read_file 调用且章节定位正确",
+      "提取：概念/问题列表 ≥ 3 项",
+      "写作：每概念正文≥1 段（非仅双链），方法论名称已标注",
+      "注入：edit_file 被调用并指向主文档",
+      "小结：完成率、方法论计数均出现；⚠️ 标注按需（仅当有推荐项目且跳过时）"
+    ]
   },
   {
     "id": "happy-precipitate",
     "prompt": "使用学习助手，解读第3节 craft-agents-oss，源码在 C:\\Repertory\\craft-agents-oss",
     "expected": "读文档→探索本地仓库→创建3.拆解完整项日/目录→写00-架构总览+6篇分析→回写双链到主文档",
-    "category": "happy_path"
+    "category": "happy_path",
+    "passCriteria": [
+      "探索：探索skills 被调用（本地模式），输出目录结构+关键文件",
+      "CP1：人工确认点出现，用户选择[继续]",
+      "落盘：create_directory + write_file ≥ 3 篇，每篇≥2KB",
+      "回写：edit_file 注入主文档，双链为 [[相对路径/文件|显示名]] 格式",
+      "小结：篇目完成率、回写处数、方法论计数均出现"
+    ]
   },
   {
     "id": "edge-no-repo-path",
     "prompt": "使用学习助手，解读第2节 learn-claude-code，没有本地源码",
     "expected": "读文档→提取项目名→web_search推断owner/repo→探索GitHub仓库→若无README回退→创建目录→标注"来自GitHub远程探索"→回写双链",
-    "category": "edge_case"
+    "category": "edge_case",
+    "passCriteria": [
+      "推断：web_search 被调用，owner/repo 推断合理",
+      "探索：GitHub 远程探索路径，README 缺失时有降级说明",
+      "标注：小结含「来自 GitHub 远程探索」或 ⚠️",
+      "回写：无本地仓库 ≠ 不回写，双链仍注入"
+    ]
   },
   {
     "id": "edge-no-project-notes",
     "prompt": "使用学习助手，回答第2节理解Agent Loop（该章节有推荐项目但无项目笔记目录）",
     "expected": "读文档→定位章节→发现推荐项目但无笔记→提示用户[是/否/跳过]→用户选跳过→答案中标注"未结合项目源码分析"",
-    "category": "edge_case"
+    "category": "edge_case",
+    "passCriteria": [
+      "检测：read_file 后判断推荐项目存在但无笔记目录",
+      "门禁：用户确认点出现（是/否/跳过），非静默跳过",
+      "标注：每个涉及概念的小结或整体小结含 ⚠️ 标注",
+      "不阻塞：用户选跳过不影响其他概念的写作"
+    ]
   }
 ]

@@ -1,0 +1,3 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-25T20:00	controlled-trial	探索skills	86.7	86.7	trial	全维度	受控试跑 dry_run：4 条测试提示词追踪完成，实测表现 8/10 确认	dry_run
+2026-05-25T20:00	controlled-trial	探索skills	86.7	86.7	trial	实测表现	逐条评分：本地 95%/GitHub 90%/SPA edge 80%/网站 normal 95%	dry_run

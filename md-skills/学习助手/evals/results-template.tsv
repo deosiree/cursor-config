@@ -1,0 +1,9 @@
+# 学习助手 — 评估结果记录模板
+# 每轮评估记录一行。eval_mode: full_test | dry_run
+# round 记录达尔文优化轮次；revision 记录该轮内的版本迭代
+
+round	revision	eval_mode	test_id	pass_count	total_criteria	result	score_impact	notes
+1	0	dry_run	happy-answer	5	5	PASS	+0	baseline
+1	0	dry_run	happy-precipitate	5	5	PASS	+0	baseline
+1	0	dry_run	edge-no-repo-path	4	4	PASS	+0	baseline
+1	0	dry_run	edge-no-project-notes	4	4	PASS	+0	baseline

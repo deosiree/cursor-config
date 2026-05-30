@@ -1,3 +1,7 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-30T12:00	baseline	学习助手	-	75.2	baseline	-	Darwin Phase1 仅评估	dry_run
+2026-05-30T23:55	optimize	语音tts-skills	71.1	88.0	keep	4轮优化+实测试跑	full_test
+2026-05-31T00:07	full_test	语音tts-skills	88.0	88.5	keep	实测表现 10.0/10, 全链路10/10通过	full_test
+2026-05-31T00:10	full_test	语音tts-skills	88.5	88.5	keep	全链路实测试跑: 10项10/10, 空格语法bug确认已修复	full_test
 2026-05-30T14:00	optimize	学习助手	75.2	-	keep	入口决策+路径+CP+编排器定位	用户确认开始优化	dry_run
+2026-05-31T12:00	30c667b	学习助手	75.2	82.8	baseline	-	Darwin Phase1 仅评估；runtime_warn=0；4/4 dry_run PASS	dry_run

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ai-image-gen",
+    "prompt": "生成一张赛博朋克城市的概念图",
+    "expected": "检查 muapi key → 若不可用则降级预览 → 否则 muapi image generate --model flux-dev",
+    "category": "happy_path"
+  },
+  {
+    "id": "mermaid-to-png",
+    "prompt": "把这张 Mermaid 架构图导出为 PNG",
+    "expected": "确认 Mermaid 渲染正常 → npx playwright screenshot → 输出 PNG",
+    "category": "happy_path"
+  },
+  {
+    "id": "ambiguous-request",
+    "prompt": "画个微服务架构的图",
+    "expected": "暂停追问：精确架构图(Mermaid)还是创意概念图(AI生图)？",
+    "category": "edge_case"
+  },
+  {
+    "id": "no-api-key",
+    "prompt": "用 Midjourney 生成一张产品海报（无 muapi key）",
+    "expected": "降级：展示命令预览 + 引导免费替代（Replicate/HuggingFace/Mermaid→PNG）",
+    "category": "edge_case"
+  }
+]

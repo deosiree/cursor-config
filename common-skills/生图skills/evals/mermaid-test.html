@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html><head>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:white;}</style>
+</head><body>
+<div class="mermaid">
+graph TD
+    A[User Input] --> B[Agent Core]
+    B --> C{Tool Selection}
+    C --> D[Web Search]
+    C --> E[Code Interpreter]
+    C --> F[File I/O]
+    D --> G[Merge Results]
+    E --> G
+    F --> G
+    G --> H[Output]
+</div>
+<script>mermaid.initialize({startOnLoad:true});</script>
+</body></html>

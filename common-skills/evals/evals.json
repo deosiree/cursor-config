@@ -1,0 +1,185 @@
+[
+  {
+    "id": "method-select-hierarchy",
+    "prompt": "解释 Agent Loop、Tool、Memory、Context 四个概念的关系",
+    "expected": "多术语+层级关系 → 费曼统合叙事。用一个场景串联四个概念。",
+    "category": "happy_path",
+    "target": "方法论skills"
+  },
+  {
+    "id": "method-select-decision",
+    "prompt": "为什么选择 AsyncGenerator 而不是 Promise 作为 chat() 的返回类型？",
+    "expected": "决策点/选型 → 苏格拉底追问链。递进追问暴露 Promise 的局限。",
+    "category": "happy_path",
+    "target": "方法论skills"
+  },
+  {
+    "id": "method-select-clear",
+    "prompt": "什么是 JSONL？",
+    "expected": "知识点已清晰 → 不嵌入。直接定义 + 示例。",
+    "category": "edge_case",
+    "target": "方法论skills"
+  },
+  {
+    "id": "render-mermaid-flowchart",
+    "prompt": "画 Agent Loop 的流程图",
+    "expected": "简单流程图 → Mermaid flowchart TD。窄版竖排、节点≤15字。",
+    "category": "happy_path",
+    "target": "渲染图skills"
+  },
+  {
+    "id": "render-html-table",
+    "prompt": "对比 CLI、Desktop、WebUI、Viewer 四种入口的能力矩阵，6列8行的对比表",
+    "expected": "复杂表格(>4行3列) → output-html data-table 模板。",
+    "category": "edge_case",
+    "target": "渲染图skills"
+  },
+  {
+    "id": "explore-local-repo",
+    "prompt": "探索 C:\\Repertory\\craft-agents-oss 的目录结构",
+    "expected": "本地路径 → directory_tree(maxDepth=3) + read README + package.json。输出分层架构。",
+    "category": "happy_path",
+    "target": "探索skills"
+  },
+  {
+    "id": "method-select-conflict",
+    "prompt": "解释微服务架构中 API Gateway、Service Mesh、Load Balancer三个组件各自的作用和关系",
+    "expected": "多术语+层级关系(费曼) 且 章首缺全局(金字塔)。按边界条件规则：优先金字塔先建全局认知，再在子节用费曼统合叙事串联术语。",
+    "category": "edge_case",
+    "target": "方法论skills"
+  },
+  {
+    "id": "render-unspecified-type",
+    "prompt": "画个图",
+    "expected": "未指定图类型 → 暂停追问'你想要流程图、架构图、时序图还是数据表？'。不可直接默认选流程图。",
+    "category": "edge_case",
+    "target": "渲染图skills"
+  },
+  {
+    "id": "render-mermaid-fallback",
+    "prompt": "画 Agent Loop 的流程图",
+    "expected": "通用-Mermaid绘图 skill 不可达时 → 回退：基于本SKILL.md的窄版布局规则自行生成 Mermaid 代码，且输出标注'⚠️ 通用-Mermaid绘图 skill 不可达，基于规则自行生成'。",
+    "category": "resilience",
+    "target": "渲染图skills"
+  },
+  {
+    "id": "tts-short-text",
+    "prompt": "把'你好，欢迎使用 Reasonix Code'转成 MP3",
+    "expected": "edge-tts --voice zh-CN-XiaoxiaoNeural --text \"你好，欢迎使用 Reasonix Code\" --write-media output.mp3",
+    "category": "happy_path",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-long-text-8000",
+    "prompt": "请把这篇 8000 字的文章转成 MP3：[文章内容太长，正文省略]",
+    "expected": "触发长文本策略：分段预览(前3段+预估时长)→用户确认→逐段edge-tts→moviepy合并→确认最终时长",
+    "category": "edge_case",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-edge-tts-not-found",
+    "prompt": "把'这是一段测试文字'转成 MP3（模拟 edge-tts 未安装）",
+    "expected": "先检测 edge-tts --help 返回非0→提示 pip install edge-tts→不静默失败，不生成空文件",
+    "category": "resilience",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-with-subtitles",
+    "prompt": "把'分布式系统的核心挑战在于一致性'转成 MP3，要带字幕",
+    "expected": "edge-tts --voice zh-CN-XiaoxiaoNeural --text \"分布式系统的核心挑战在于一致性\" --write-media output.mp3 --write-subtitles output.srt",
+    "category": "happy_path",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-voice-rate-pitch",
+    "prompt": "用男声慢速朗读这段技术文档：先下载依赖，再配置环境变量",
+    "expected": "选男声(Yunxi/Yunjian/Yunyang任一) + edge-tts --voice zh-CN-YunxiNeural --rate -10% --text \"先下载依赖，再配置环境变量\" --write-media output.mp3",
+    "category": "happy_path",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-voice-selection",
+    "prompt": "用 Xiaoyi 活泼女声把'欢迎来到我们的频道'转成 MP3",
+    "expected": "edge-tts --voice zh-CN-XiaoyiNeural --text \"欢迎来到我们的频道\" --write-media output.mp3",
+    "category": "happy_path",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-to-podcast-route",
+    "prompt": "把这篇 5000 字的技术文档转成播客",
+    "expected": "内容>2000字且关键词'播客'→路由到 [[../../../md-skills/文档转播客/SKILL.md]]，不走简单 edge-tts",
+    "category": "edge_case",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "tts-long-text-cancel",
+    "prompt": "请把这篇 6000 字的文章转成 MP3（用户在看到分段预览后取消）",
+    "expected": "Agent 展示分段预览→用户说'取消'→Agent 不生成任何文件，回复'已取消，需要调整分段或缩短内容时随时告诉我'",
+    "category": "edge_case",
+    "target": "语音tts-skills"
+  },
+  {
+    "id": "video-animation-remotion",
+    "prompt": "把 Agent Loop 的流程做成动画视频",
+    "expected": "判断优先级第7条→Remotion。确认 fps/分辨率/时长→npx remotion render。产出 mp4",
+    "category": "happy_path",
+    "target": "视频skills",
+    "tested": true,
+    "result": "dry_run PASS — 推演路径与 few-shot-remotion-命令.md 一致",
+    "test_mode": "dry_run"
+  },
+  {
+    "id": "video-audio-subtitle",
+    "prompt": "把这个演讲稿做成带字幕的视频",
+    "expected": "判断优先级第1条→路由到 subskills/生成有声字幕视频/SKILL.md。先确认演讲稿内容→写旁白稿→edge-tts→Remotion无声渲染→moviepy合成",
+    "category": "happy_path",
+    "target": "视频skills",
+    "tested": true,
+    "result": "full_test PASS — 191字旁白→edge-tts(6.0s)→moviepy无声视频(2140KB)→merge合成→输出33s/1080p/2.5MB有声字幕视频",
+    "test_mode": "full_test"
+  },
+  {
+    "id": "video-ambiguous-request",
+    "prompt": "帮我做个视频",
+    "expected": "暂停追问：时长（多少秒）、内容（文字稿/图片素材/AI生成）、风格（教程动画/产品演示/短视频/播客）、是否需要配音+字幕。不可直接默认选Remotion",
+    "category": "edge_case",
+    "target": "视频skills",
+    "tested": true,
+    "result": "dry_run PASS — RED 追问模板拦截模糊需求，不走默认 Remotion",
+    "test_mode": "dry_run"
+  },
+  {
+    "id": "video-ai-gen",
+    "prompt": "用 AI 生成一段 15 秒的产品展示视频，描述文案：我们的产品是一款智能水杯...",
+    "expected": "判断优先级第4条→muapi + Kling/Seedance。先检查 muapi key→可用则 muapi video generate --model kling-master→展示命令预览确认",
+    "category": "happy_path",
+    "target": "视频skills",
+    "tested": true,
+    "result": "dry_run PASS — muapi key 检测+降级兜底均覆盖",
+    "test_mode": "dry_run"
+  },
+  {
+    "id": "video-openmontage-fallback",
+    "prompt": "用 OpenMontage 做一个复杂的多场景解说视频（模拟 OpenMontage 未安装）",
+    "expected": "检测到 OpenMontage 不可用→降级为 Remotion 手动实现核心动画，提示'OpenMontage 不可用，已切换 Remotion 免费路径'。不静默失败",
+    "category": "resilience",
+    "target": "视频skills",
+    "tested": true,
+    "result": "dry_run PASS — 依赖预检检测到缺失→降级策略表触发→透明降级",
+    "test_mode": "dry_run"
+  },
+  {
+    "id": "explore-github-remote",
+    "prompt": "探索 Octane0411/the-claude-code",
+    "expected": "web_fetch raw.githubusercontent.com/Octane0411/the-claude-code/main/README.md → 输出项目简介+目录结构+局限性提示",
+    "category": "happy_path",
+    "target": "探索skills"
+  },
+  {
+    "id": "explore-website-spa",
+    "prompt": "看看 https://react-spectrum.adobe.com 的组件列表",
+    "expected": "web_fetch 拿到 SPA 空壳HTML → 回退到 OpenCLI JS 渲染 → 再不行走 web_search。明确展示三级回退链路。",
+    "category": "edge_case",
+    "target": "探索skills"
+  }
+]

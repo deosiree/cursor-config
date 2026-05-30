@@ -1,0 +1,34 @@
+[
+  {
+    "id": "explore-local-repo-happy",
+    "prompt": "探索 C:\\Repertory\\craft-agents-oss 的目录结构",
+    "source": "evals.json → explore-local-repo",
+    "target_type": "本地仓库",
+    "expected_route": "references/探索-本地仓库.md",
+    "category": "happy_path"
+  },
+  {
+    "id": "explore-github-happy",
+    "prompt": "探索 Octane0411/the-claude-code",
+    "source": "evals.json → explore-github-remote",
+    "target_type": "GitHub 仓库",
+    "expected_route": "references/探索-GitHub仓库.md",
+    "category": "happy_path"
+  },
+  {
+    "id": "explore-website-spa-edge",
+    "prompt": "看看 https://react-spectrum.adobe.com 的组件列表",
+    "source": "evals.json → explore-website-spa",
+    "target_type": "网站",
+    "expected_route": "references/探索-网站.md",
+    "category": "edge_case"
+  },
+  {
+    "id": "explore-website-normal",
+    "prompt": "看看 https://hello-agents.datawhale.cc 讲了什么",
+    "source": "template/few-shot-网站.md",
+    "target_type": "网站",
+    "expected_route": "references/探索-网站.md",
+    "category": "happy_path"
+  }
+]

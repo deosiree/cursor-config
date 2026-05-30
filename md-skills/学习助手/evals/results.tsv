@@ -1,0 +1,5 @@
+round	revision	eval_mode	test_id	pass_count	total_criteria	result	score_impact	notes
+0	1	dry_run	happy-answer	5	5	PASS	0	入口5步→编排-读文档解答；清单/注入/小结均有明文
+0	1	dry_run	happy-precipitate	5	5	PASS	0	CP1/CP2+探索+落盘≥2KB+回写双链；失败表含探索超时兜底
+0	1	dry_run	edge-no-repo-path	4	4	PASS	0	web_search推断+GitHub探索+远程标注+CP2可仅保留笔记
+0	1	dry_run	edge-no-project-notes	4	4	PASS	0	步骤2🔴CHECKPOINT+⚠️勾选+while不阻塞
