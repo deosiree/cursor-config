@@ -4,3 +4,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-30T20:30	optimize-r2	方法论skills	68.0	72.8	keep	Dim2+Dim3	RED三段式 + 判断优先级Q流程 + 使用方法输入/输出规格	dry_run
 2026-05-30T20:45	optimize-r3	方法论skills	72.8	76.2	keep	Dim5	完整示例 + 方法表参考模板列	dry_run
 2026-05-30T21:00	optimize-r4	方法论skills	76.2	86.7	keep	Dim1+Dim7+Dim4+Dim8+Dim3	触发词+GREAN瘦身+🔴第4个+速查表+Q判断要点+冲突兜底+Step4回退	dry_run
+2026-05-30T21:30	full_test	方法论skills	86.7	86.7	full_test	Dim8验证	3个子agent独立实测：Dim8确认9/10 ✅。发现bug：「命中即停」vs「同时命中→冲突表」矛盾，T1路由偏差源自此。总可信分维持86.7。	full_test
+2026-05-30T21:35	bugfix	方法论skills	86.7	87.3	keep	Dim2+Dim8	修复「命中即停→逐Q独立判断」歧义；Dim2 +0.5 Dim8 +0.5	验证后修复
