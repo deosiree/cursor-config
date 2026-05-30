@@ -2,3 +2,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-30T20:00	baseline	方法论skills	-	63.8	baseline	-	Phase1 基线评估，9维全部 dry_run	dry_run
 2026-05-30T20:15	81c603b	方法论skills	63.8	68.0	keep	Dim4+Dim9	加🔴检查点×2 + 反例黑名单表×5条	dry_run
 2026-05-30T20:30	optimize-r2	方法论skills	68.0	72.8	keep	Dim2+Dim3	RED三段式 + 判断优先级Q流程 + 使用方法输入/输出规格	dry_run
+2026-05-30T20:45	optimize-r3	方法论skills	72.8	76.2	keep	Dim5	完整示例 + 方法表参考模板列	dry_run
+2026-05-30T21:00	optimize-r4	方法论skills	76.2	86.7	keep	Dim1+Dim7+Dim4+Dim8+Dim3	触发词+GREAN瘦身+🔴第4个+速查表+Q判断要点+冲突兜底+Step4回退	dry_run
