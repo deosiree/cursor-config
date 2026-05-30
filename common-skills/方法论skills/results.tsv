@@ -6,3 +6,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-30T21:00	optimize-r4	方法论skills	76.2	86.7	keep	Dim1+Dim7+Dim4+Dim8+Dim3	触发词+GREAN瘦身+🔴第4个+速查表+Q判断要点+冲突兜底+Step4回退	dry_run
 2026-05-30T21:30	full_test	方法论skills	86.7	86.7	full_test	Dim8验证	3个子agent独立实测：Dim8确认9/10 ✅。发现bug：「命中即停」vs「同时命中→冲突表」矛盾，T1路由偏差源自此。总可信分维持86.7。	full_test
 2026-05-30T21:35	bugfix	方法论skills	86.7	87.3	keep	Dim2+Dim8	修复「命中即停→逐Q独立判断」歧义；Dim2 +0.5 Dim8 +0.5	验证后修复
+2026-05-31T10:00	full_test2	方法论skills	87.3	87.3	full_test	Dim8验证+few-shot模板		3子agent独立实测+baseline对比：Dim8确认9/10 ✅。bugfix生效(T1路由正确)。T3选费曼(速查表优先)而非冲突表，输出质量9分。新few-shot模板无退化。仍有Dim5+Dim6≈+1空间但HL-4触顶建议收手。	full_test
