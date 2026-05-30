@@ -74,7 +74,7 @@ description: 根据知识点特征路由到费曼/苏格拉底/金字塔/不嵌�
 |------|---------|---------|---------|
 | **费曼 · 统合叙事** | 多术语、层级/派生关系、易混淆 | [[../../agent-skills/QA转面经/references/方法论库/references/费曼-统合叙事.md]] | `template/few-shot-费曼-统合叙事.md` |
 | **费曼 · 理解校验** | 写后自检：命名≠理解、cargo cult | [[../../agent-skills/QA转面经/references/方法论库/references/费曼-理解校验.md]] | （校验用，无输出模板） |
-| **费曼 · 概念解释** | 对术语做通俗解释 | [[../../agent-skills/QA转面经/references/方法论库/references/费曼-术语通俗解释.md]] | （暂未归档，见费曼角色 skill） |
+| **费曼 · 概念解释** | 对术语做通俗解释 | [[../../agent-skills/QA转面经/references/方法论库/references/费曼-术语通俗解释.md]] | `template/few-shot-费曼-概念解释.md` |
 | **苏格拉底 · 追问链** | 决策点、选型、读者易「但是…」 | [[../../agent-skills/QA转面经/references/方法论库/references/苏格拉底-追问链.md]] | `template/few-shot-苏格拉底-追问链.md` |
 | **金字塔 · 结论先行** | 章首需全局认知、层级知识展开 | [[../../agent-skills/QA转面经/references/方法论库/references/金字塔-结论先行.md]] | `template/few-shot-金字塔-结论先行.md` |
 | **不嵌入** | 知识点已够清晰 | 直接定义 + 示例 | `template/few-shot-不嵌入.md` |
