@@ -1,0 +1,8 @@
+{
+  "defaultSessionName": "feishu-dl",
+  "pageWaitSec": 1,
+  "chunkSize": 20000,
+  "scrollStepPx": 700,
+  "maxPages": 15,
+  "maxConsecutiveSkips": 2
+}

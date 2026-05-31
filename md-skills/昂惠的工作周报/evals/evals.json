@@ -1,0 +1,1 @@
+{"evals":[{"id":"baseline-2026-05-31","mode":"evaluate-only","files":6,"score":53.6,"实测":17.5,"total":71.1,"notes":"初始基线，6文件套件。读取-输出文档落盘最弱(38.5)"},{"id":"final-2026-05-31","mode":"optimize","rounds":12,"files":5,"score":62.3,"实测":"23.75","total":86.0,"notes":"12轮迭代后突破85。读取并入编排消除弱文件，双锚点提取支持历史周，full_test双周湿跑通过"}]}

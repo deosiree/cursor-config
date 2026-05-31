@@ -1,7 +1,7 @@
 # CC-Switch Skill 中文索引大全
 
-> 共 274 个 skill，按场景分类。
-> 更新日期：2026-05-25
+> 共 276 个 skill，按场景分类。
+> 更新日期：2026-05-31
 
 ---
 
@@ -280,6 +280,7 @@
 | **opencli-browser** | 通过 OpenCLI 驱动真实 Chrome 浏览器 |
 | **antigravity** | 通过 OpenCLI 控制 Electron 桌面应用 |
 | **smart-search** | 智能搜索路由器，路由到最佳 opencli 命令 |
+| **OpenCLI下载飞书文档** | 用 OpenCLI browser 打开任意飞书文档 URL，提取全文内容 |
 
 ## 13. 代码 Review 与质量
 
@@ -372,6 +373,7 @@
 | **create-mock-module** | 创建模块级 Mock（nebula 仓库） |
 | **tech-doc-to-podcast** | 技术文档转播客脚本 |
 | **jsdoc-cn-uncommitted** | 为未提交代码补中文 JSDoc 注释 |
+| **昂惠的工作周报** | 基于飞书文档《达人BD每日工作记录》自动生成本周工作周报 |
 
 ## 17. 简历与求职
 

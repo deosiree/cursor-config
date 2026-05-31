@@ -5,3 +5,14 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-31T00:10	full_test	语音tts-skills	88.5	88.5	keep	全链路实测试跑: 10项10/10, 空格语法bug确认已修复	full_test
 2026-05-30T14:00	optimize	学习助手	75.2	-	keep	入口决策+路径+CP+编排器定位	用户确认开始优化	dry_run
 2026-05-31T12:00	30c667b	学习助手	75.2	82.8	baseline	-	Darwin Phase1 仅评估；runtime_warn=0；4/4 dry_run PASS	dry_run
+2026-07-16T00:00	baseline	昂惠的工作周报-编排	-	72.4	baseline	-	Darwin Phase1: 5-skill package, avg 77.6; runtime_warn=0	dry_run
+2026-07-16T00:05	5481cf8	昂惠的工作周报-编排	72.4	74.0	keep	D1	Frontmatter 补充触发词 (6.0→8.0)	dry_run
+2026-07-16T00:10	79a16fd	昂惠的工作周报-编排	74.0	75.0	keep	D6	添加资源索引表 (6.0→8.0)	dry_run
+2026-07-16T00:15	25d5d9d	昂惠的工作周报-Agent	73.4	75.5	keep	D4	添加运行时检查点 (5.0→8.0)	dry_run
+2026-07-16T00:20	9694e0f	昂惠的工作周报-编排	75.0	76.0	keep	D3	添加集中式边界条件表 (7.0→8.0)	dry_run
+2026-07-16T00:25	7d7686b	昂惠的工作周报-Agent	75.5	76.5	keep	D3	扩展边界条件 4→8条 (7.0→8.0)	dry_run
+2026-07-16T00:30	6fffc1c	昂惠的工作周报-生成	76.0	79.0	keep	D2	Phase重构+CP内联+流程图 (7.0→9.0)	dry_run
+2026-07-16T00:35	91aa964	昂惠的工作周报-编排	76.0	78.3	keep	D5	步骤表格化+输入输出表 (7.0→8.5)	dry_run
+2026-07-16T00:40	a885fb3	昂惠的工作周报-Agent	76.5	78.8	keep	D5	触发规则表+精确匹配逻辑 (7.0→8.5)	dry_run
+2026-07-16T00:45	8dd013a	昂惠的工作周报-生成	79.0	80.5	keep	D7	添加资源索引表 (7.0→8.0)	dry_run
+2026-07-16T00:50	e1bdf94	昂惠的工作周报-聚合	84.8	85.8	keep	D6	添加资源索引表 (6.0→8.0)	dry_run

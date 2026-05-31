@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "用 feishu2md 下载飞书文档 https://zru9fxhvq5.feishu.cn/wiki/IbuLwEv7fituvMkrSaWc86CjncX 到 D:\\FILE\\Obsidian Vault\\昂惠的工作周报\\feishu2md，文件命名为 达人 BD 每日工作记录",
+    "expected": "在目标目录生成 达人 BD 每日工作记录.md，文件 > 10KB，内容包含'达人BD每日工作记录'标题，static/ 下有 32 张图片"
+  },
+  {
+    "id": 2,
+    "prompt": "feishu2md 下载一个不存在的文档 https://zru9fxhvq5.feishu.cn/wiki/NotExistToken",
+    "expected": "feishu2md 报错退出，Agent 捕获错误并展示原因（权限不足或文档不存在），不生成空文件"
+  },
+  {
+    "id": 3,
+    "prompt": "下载飞书文档到不存在的目录 D:\\temp\\newdir\\output",
+    "expected": "自动创建父目录，下载成功，文件出现在目标路径"
+  }
+]
