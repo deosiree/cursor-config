@@ -160,6 +160,17 @@ node ../../scripts/embed-fewshot.js     # → few-shot prompt block（内嵌到 
 | 聚合项的 `text` 为空 | 跳过该条，警告并继续 |
 | "下周计划"无法从飞书文档提取 | 留空并标注 `* 待补充` |
 
+## 资源索引
+
+| 路径 | 用途 |
+|------|------|
+| `[[../../scripts/embed-template.js]]` | 内嵌模板为 prompt block |
+| `[[../../scripts/embed-fewshot.js]]` | 内嵌 few-shot 为 prompt block |
+| `[[../../template/snapshot/周报模板结构.md]]` | 四段结构约束 |
+| `[[../../template/mvp/weekly-report-output.md]]` | 期望输出样本 |
+| `[[../../template/snapshot/section-rules.md]]` | 拼装规则详解 |
+| `[[../../references/聚合原则.md]]` | 领域分组关键词 |
+
 ## 关键约束
 
 - **资深BD口吻**：避免"了解""学习""构思"，使用"推进""梳理""产出""完成"
