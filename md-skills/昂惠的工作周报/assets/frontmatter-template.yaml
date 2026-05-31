@@ -1,0 +1,8 @@
+# frontmatter 模板
+
+```yaml
+---
+name: {skill-name}
+description: {≤120字中文描述}
+---
+```

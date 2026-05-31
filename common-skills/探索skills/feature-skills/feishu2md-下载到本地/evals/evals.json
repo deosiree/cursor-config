@@ -1,0 +1,18 @@
+{
+  "skill": "feishu2md-下载到本地",
+  "rubric": {
+    "dimensions": [
+      {"id": 1, "name": "Frontmatter质量", "weight": 8},
+      {"id": 2, "name": "工作流清晰度", "weight": 15},
+      {"id": 3, "name": "边界条件覆盖", "weight": 10},
+      {"id": 4, "name": "检查点设计", "weight": 7},
+      {"id": 5, "name": "指令具体性", "weight": 15},
+      {"id": 6, "name": "资源整合度", "weight": 5},
+      {"id": 7, "name": "整体架构", "weight": 15},
+      {"id": 8, "name": "实测表现", "weight": 25}
+    ]
+  },
+  "testPromptsCount": 3,
+  "maxRounds": 3,
+  "targetScore": 85
+}
