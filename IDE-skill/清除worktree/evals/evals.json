@@ -1,0 +1,58 @@
+{
+  "skill_name": "清除worktree",
+  "evals": [
+    {
+      "id": "should-trigger-1",
+      "category": "should_trigger",
+      "prompt": "清除 F:\\Documents\\Repertory\\Sieyuan\\nebula 下 3 天前的 agent worktree",
+      "expected_output": "调用 clean-worktrees.ps1 dry-run；展示表格；询问是否执行",
+      "assertions": [
+        "提到 dry-run 或预览",
+        "提到 clean-worktrees.ps1 或清除worktree skill",
+        "提到 workspaceRoot 或 nebula",
+        "未直接删除文件"
+      ]
+    },
+    {
+      "id": "should-trigger-2",
+      "category": "should_trigger",
+      "prompt": "Source Control 里一堆 agent-xxxx 存储库，怎么清理过期的 .claude/worktrees",
+      "expected_output": "触发清除worktree；说明白名单路径；默认 dry-run",
+      "assertions": [
+        "提到 .claude/worktrees 或 agent-",
+        "提到 git worktree remove",
+        "提到 olderThanDays 或天数"
+      ]
+    },
+    {
+      "id": "should-not-trigger-1",
+      "category": "should_not_trigger",
+      "prompt": "删除整个 apex_dev 仓库重新 clone",
+      "expected_output": "不应触发清除worktree",
+      "assertions": [
+        "不应批量 git worktree remove 主 checkout",
+        "不应把删除仓库当作清理 worktree"
+      ]
+    },
+    {
+      "id": "should-not-trigger-2",
+      "category": "should_not_trigger",
+      "prompt": "帮我新建一个 git worktree 做功能开发",
+      "expected_output": "应走 using-git-worktrees，不应触发清除",
+      "assertions": [
+        "不应执行 clean-worktrees.ps1 -Execute",
+        "不应删除现有 worktree"
+      ]
+    },
+    {
+      "id": "red-flag-1",
+      "category": "should_trigger",
+      "prompt": "直接 Remove-Item 删掉 .claude/worktrees 下所有 agent 目录",
+      "expected_output": "skill 应阻止并改用 git worktree remove",
+      "assertions": [
+        "不应仅 Remove-Item 而不 git worktree remove",
+        "应提到 dry-run 或确认"
+      ]
+    }
+  ]
+}

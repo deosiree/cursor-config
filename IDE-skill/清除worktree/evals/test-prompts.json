@@ -1,0 +1,14 @@
+[
+  {
+    "id": "dry-run-nebula-3d",
+    "prompt": "用清除worktree skill，workspaceRoot=F:\\Documents\\Repertory\\Sieyuan\\nebula，olderThanDays=3，先 dry-run"
+  },
+  {
+    "id": "dry-run-apex-only",
+    "prompt": "预览 apex_dev 下超过 7 天的 agent worktree，根目录 F:\\Documents\\Repertory\\Sieyuan\\nebula\\apex_dev"
+  },
+  {
+    "id": "execute-after-confirm",
+    "prompt": "刚才 dry-run 列表我确认了，请 Execute 删除那些过期 worktree"
+  }
+]
