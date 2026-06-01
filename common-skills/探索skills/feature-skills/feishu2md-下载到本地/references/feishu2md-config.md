@@ -45,6 +45,6 @@ feishu2md.exe config --appId <APP_ID> --appSecret <APP_SECRET>
 ## feishu2md 版本
 
 - 版本：v2.4.5
-- 二进制：`D:\FILE\Repository\feishu2md-v2.4.5-windows-amd64\feishu2md.exe`
-- 源码：`D:\FILE\Repository\feishu2md\`
+- 主二进制：`../../script/feishu2md-v2.4.5-windows-amd64/feishu2md.exe`（相对于 SKILL.md 所在目录）
+- 也支持通过 `%FEISHU2MD_PATH%` 环境变量或 `feishu2mdPath` 参数指定自定义路径
 - 发布页：https://github.com/Wsine/feishu2md/releases

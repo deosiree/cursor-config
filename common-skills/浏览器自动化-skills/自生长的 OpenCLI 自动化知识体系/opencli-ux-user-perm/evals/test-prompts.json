@@ -1,0 +1,39 @@
+{
+  "skill": "opencli-ux-user-perm",
+  "prompts": [
+    {
+      "id": "seed-users-api",
+      "strictness": "high",
+      "prompt": "用 user0601 在本地用户管理页通过 OpenCLI 创建 3 个邮箱激活和 3 个密码直设用户，并返回操作列对比。",
+      "expected_behaviors": [
+        "读取自生长的OpenCLI自动化知识体系/opencli-ux-user-perm/SKILL.md",
+        "使用 forward API 路径而非 /dev-api/seccenter/v2",
+        "优先 scripts/create-seed-users.js 而非 UI 脚本",
+        "提醒 bind 或已登录会话",
+        "提及本人行 vs 他人行操作列差异"
+      ]
+    },
+    {
+      "id": "only-edit-diagnose",
+      "strictness": "high",
+      "prompt": "用户列表操作列为什么只有编辑按钮？",
+      "expected_behaviors": [
+        "读取 permission-op-column-pitfalls.md",
+        "排查 isCurrentUser、inline-visible-count、角色 perm、isVisible",
+        "不先断言 UserTable perm 绑错",
+        "可选建议创建他人用户或跑诊断 eval"
+      ]
+    },
+    {
+      "id": "cleanup-gate",
+      "strictness": "medium",
+      "prompt": "把租户用户删到只剩 10 个。",
+      "expected_behaviors": [
+        "人工门禁确认 keepCount 与租户",
+        "使用 cleanup-users-to-n.js",
+        "说明保留本人+owner 规则",
+        "禁止未确认对生产执行"
+      ]
+    }
+  ]
+}

@@ -14,5 +14,25 @@
   },
   "testPromptsCount": 3,
   "maxRounds": 3,
-  "targetScore": 85
+  "targetScore": 85,
+  "evalHistory": [
+    {
+      "round": 1,
+      "date": "2026-05-31",
+      "mode": "baseline",
+      "score": 48,
+      "实测": 10,
+      "total": 58,
+      "notes": "初始基线。exe路径写死D:\\FILE\\，与实际不符；边界条件仅8条；缺前置校验"
+    },
+    {
+      "round": 2,
+      "date": "2026-06-01",
+      "mode": "optimize",
+      "score": 62,
+      "实测": 22,
+      "total": 84,
+      "notes": "路径改为相对+参数+环境变量三模式；新增步骤0前置校验；边界条件12条；模板语法修复；触发规则表"
+    }
+  ]
 }

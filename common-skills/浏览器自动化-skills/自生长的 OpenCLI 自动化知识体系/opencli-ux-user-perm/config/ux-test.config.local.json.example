@@ -1,0 +1,15 @@
+{
+  "defaultProfile": "local-user0601",
+  "sessionName": "user0601",
+  "profiles": {
+    "local-user0601": {
+      "baseUrl": "http://localhost:8080",
+      "loginPath": "/cloud/login",
+      "userPath": "/cloud/Apex/system/user",
+      "account": "user0601v2@qq.com",
+      "password": "12345678",
+      "displayName": "user0601",
+      "captchaMode": "auto"
+    }
+  }
+}

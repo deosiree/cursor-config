@@ -1,0 +1,35 @@
+{
+  "defaultProfile": "local-user0601",
+  "sessionName": "user0601",
+  "profiles": {
+    "local-user0601": {
+      "baseUrl": "http://localhost:8080",
+      "loginPath": "/cloud/login",
+      "userPath": "/cloud/Apex/system/user",
+      "account": "user0601v2@qq.com",
+      "password": "CHANGE_ME",
+      "displayName": "user0601",
+      "captchaMode": "auto"
+    },
+    "local-admin": {
+      "baseUrl": "http://localhost:8080",
+      "loginPath": "/cloud/login",
+      "userPath": "/cloud/Apex/system/user",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME",
+      "captchaMode": "auto"
+    }
+  },
+  "seedUsers": {
+    "emailCount": 3,
+    "passwordCount": 3,
+    "plainPassword": "Test@123456",
+    "usernamePrefix": {
+      "email": "u0601_mail_",
+      "password": "u0601_pwd_"
+    }
+  },
+  "cleanup": {
+    "keepCount": 10
+  }
+}
