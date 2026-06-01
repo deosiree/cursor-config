@@ -1,0 +1,11 @@
+[
+  {
+    "id": "oral-tenant-ui",
+    "prompt": "根据口述整理租户管理页面 UI 用例录入测试系统，没有 test 文件。页面功能：列表加载、搜索过滤、分页、新增弹窗。",
+    "expect": {
+      "intention": "基于源码+口述生成",
+      "action": "追问 moduleId/模块名/outputPath/创建人员",
+      "output": "config + cases + CSV"
+    }
+  }
+]

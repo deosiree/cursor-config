@@ -1,0 +1,20 @@
+[
+  {
+    "id": "config-from-nl",
+    "prompt": "租户管理模块，子系统8，创建人员惠岩，参考 tenant 模板 CSV，生成 tenant-unit 的 config.json，还没有 test.ts。",
+    "expect": {
+      "intention": "沉淀模块配置",
+      "scripts": ["csv_to_test_config.py"],
+      "output": "configs/tenant-unit.config.json"
+    }
+  },
+  {
+    "id": "config-oral-only",
+    "prompt": "角色管理模块，只口述：模块名角色管理，子系统8，创建人员张三，无参考 CSV。",
+    "expect": {
+      "intention": "沉淀模块配置",
+      "action": "用 menu.csv 表头 + 口述 fieldDefaults",
+      "not": "猜测模板文件名"
+    }
+  }
+]

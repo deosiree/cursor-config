@@ -1,0 +1,19 @@
+{
+  "moduleId": "menu-unit-gateway",
+  "cases": [
+    {
+      "name": "编辑回显时 v2 树节点字段映射为稳定模型",
+      "precondition": "已登录；菜单树中存在 type=page 的节点，含 projectId、perm、params",
+      "steps": "1. 进入菜单管理，加载菜单树\n2. 编辑含 perm 与 params 的页面节点\n3. 查看表单回显的 projectId、权限标识、路由参数",
+      "expected": "正向：projectId 显示为 PROJECT--51 形态；perm 与 params 正确解析为键值对\n反向：projectId 仍为 wire 数字串；params 未解析或回显为空",
+      "remark": "menu.gateway.test.ts > maps projectId, perm and params from v2 tree nodes for edit backfill"
+    },
+    {
+      "name": "后端 isVisible=false 时节点显示为隐藏",
+      "precondition": "已登录；后端树节点 isVisible=false",
+      "steps": "1. 进入菜单管理加载菜单树\n2. 打开 isVisible=false 的页面节点编辑弹窗\n3. 查看「显示」开关状态",
+      "expected": "正向：表单「显示」为关闭/否\n反向：「显示」仍为开启",
+      "remark": "menu.gateway.test.ts > prefers isVisible when mapping hidden state from v2 tree nodes"
+    }
+  ]
+}

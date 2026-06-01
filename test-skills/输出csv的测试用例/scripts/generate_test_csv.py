@@ -47,7 +47,7 @@ def read_header(template_path: Path) -> list[str]:
     return header
 
 
-def generate(config_path: Path, output_override: str | None = None) -> tuple[Path, int]:
+def generate(config_path: Path, output_override: str | None = None, force: bool = False) -> tuple[Path, int]:
     config = load_json(config_path)
     skill_root = SKILL_ROOT
     repo_root = resolve_path(config.get("repoRoot", "../../.."), skill_root)
@@ -56,6 +56,10 @@ def generate(config_path: Path, output_override: str | None = None) -> tuple[Pat
     cases_path = resolve_path(cases_rel, skill_root)
     cases_data = load_json(cases_path)
     cases = cases_data.get("cases", cases_data) if isinstance(cases_data, dict) else cases_data
+
+    if not cases:
+        print(f"No cases found in {cases_path}. Stopping — empty CSV would be meaningless.", file=sys.stderr)
+        return output_path, 0
 
     template_path = resolve_path(config["csvTemplatePath"], repo_root)
     if output_override:
@@ -67,6 +71,12 @@ def generate(config_path: Path, output_override: str | None = None) -> tuple[Pat
 
     header = read_header(template_path)
     rows = [build_row(field_defaults, case) for case in cases]
+
+    # G3 CSV 覆盖确认
+    if output_path.exists() and not force:
+        print(f"G3: Output already exists: {output_path} ({len(output_path.read_text(encoding='utf-8-sig').splitlines())} existing lines)", file=sys.stderr)
+        print(f"G3: About to write {len(rows)} new rows. Pass --force to skip this check.", file=sys.stderr)
+        return output_path, -1
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8-sig", newline="") as f:
@@ -85,6 +95,7 @@ def main() -> int:
         help="模块 config.json 路径（相对 skill 根或绝对路径）",
     )
     parser.add_argument("--output", default="", help="覆盖 outputPath（可选）")
+    parser.add_argument("--force", action="store_true", help="跳过 G3 CSV 覆盖确认")
     args = parser.parse_args()
 
     config_path = resolve_path(args.config, SKILL_ROOT)
@@ -92,7 +103,10 @@ def main() -> int:
         print(f"Config not found: {config_path}", file=sys.stderr)
         return 1
 
-    out_path, count = generate(config_path, args.output or None)
+    out_path, count = generate(config_path, args.output or None, force=args.force)
+    if count == -1:
+        print(f"G3: Skipped. Re-run with --force to overwrite {out_path}", file=sys.stderr)
+        return 2
     print(f"Wrote {count} rows to {out_path}")
     return 0
 

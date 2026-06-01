@@ -37,6 +37,27 @@ cd .cursor/test-skills/输出csv的测试用例
 python scripts/generate_test_csv.py --config configs/<module>.config.json
 ```
 
+## UI 追加模式（append_ui_cases_to_csv.py）
+
+不依赖 `config.json`；用 `cases.json` + `--domain` + `--date` 追加到 `docs/问题单/{MMDD}/`。
+
+```bash
+python scripts/append_ui_cases_to_csv.py \
+  --domain role \
+  --date 0601 \
+  --cases configs/role-ui-tab.cases.json
+```
+
+| 行为 | 说明 |
+|------|------|
+| 输出文件不存在 | 从 `docs/问题单/模板/{domain}.csv` **整表复制** 再追加 |
+| 输出文件已存在 | 保留全部已有行，**仅末尾追加** |
+| 功能集合 | 新增行强制留空 |
+| develop结果 | 默认等于 **预期结果** |
+| domain 映射 | 见 `references/domain-template-map.md` |
+
+cases.json 可含 `fieldDefaultsOverrides`；也可用 `--overrides-json '{"创建人员":"惠岩"}'`。
+
 ## 逆向生成 config
 
 ```bash

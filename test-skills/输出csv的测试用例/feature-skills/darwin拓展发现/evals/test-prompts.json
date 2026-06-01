@@ -1,0 +1,29 @@
+[
+  {
+    "id": "darwin-oral-detection",
+    "prompt": "根据口述整理租户管理 UI 用例录入测试系统，没有 test 文件。",
+    "expect": {
+      "feature": "darwin拓展发现",
+      "signal": "intention_oral",
+      "proposal": "基于源码+口述生成"
+    }
+  },
+  {
+    "id": "darwin-views-path",
+    "prompt": "测试用例生成完毕，但路由来源是 src/views/ 目录，不在现有 feature 覆盖范围内。",
+    "expect": {
+      "feature": "darwin拓展发现",
+      "signal": "feature_views",
+      "proposal": "views-基于源码生成"
+    }
+  },
+  {
+    "id": "darwin-quality-signal",
+    "prompt": "生成 cases 后发现 3 条用例步骤 > 7，且 1 条名称含「同 TC」。",
+    "expect": {
+      "feature": "darwin拓展发现",
+      "quality_signals": ["steps>7", "name_reference"],
+      "proposal": "用例质量自检优化方案"
+    }
+  }
+]

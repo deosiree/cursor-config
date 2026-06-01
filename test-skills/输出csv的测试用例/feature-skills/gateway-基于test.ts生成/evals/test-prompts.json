@@ -1,0 +1,19 @@
+[
+  {
+    "id": "gateway-menu-full",
+    "prompt": "把 menu.gateway.test.ts 的 14 条 it 转为 cases.json 条目，gateway 层。涉及 F12 Network 请求体验证。",
+    "expect": {
+      "feature": "gateway-基于test.ts生成",
+      "verify_points": ["F12 Network→请求体字段", "表单回显", "灰禁状态"],
+      "caseCountApprox": 14
+    }
+  },
+  {
+    "id": "gateway-route-normalization",
+    "prompt": "把 menu-route-normalization.test.ts 的 11 条 it 转为 cases（路由 trim/Apex 前缀/外部URL/空串），gateway 层。",
+    "expect": {
+      "feature": "gateway-基于test.ts生成",
+      "caseCountApprox": 11
+    }
+  }
+]

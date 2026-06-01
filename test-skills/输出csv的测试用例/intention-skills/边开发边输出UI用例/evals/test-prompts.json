@@ -1,0 +1,21 @@
+[
+  {
+    "id": "ui-role-tab-append",
+    "prompt": "角色新增 Tab 校验失败要录入测试系统：domain role，date 0601，4 条 UI 用例（空名跳回基础信息/合法提交/Tab阻断），直接追加到问题单 CSV 不要覆盖已有 API 行。",
+    "expect": {
+      "intention": "边开发边输出UI用例",
+      "scripts": ["append_ui_cases_to_csv.py"],
+      "checkpoint": "展示2条样例",
+      "output": "docs/问题单/0601/role.csv +4 行"
+    }
+  },
+  {
+    "id": "ui-unknown-domain",
+    "prompt": "把菜单页面的 UI 交互用例录入测试系统，不知道 domain 填什么。",
+    "expect": {
+      "pause": true,
+      "action": "列出 docs/问题单/模板/ 下 CSV 文件请用户指定 domain",
+      "not": "猜测文件名"
+    }
+  }
+]

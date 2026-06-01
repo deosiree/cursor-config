@@ -1,0 +1,20 @@
+[
+  {
+    "id": "quality-check-ui",
+    "prompt": "检查 configs/role-ui-tab.cases.json 质量，path_type=ui，输出报告。",
+    "expect": {
+      "feature": "用例质量自检",
+      "output_format": "质量检查报告",
+      "check_items": ["A单验证点", "C步骤≤7", "G develop结果=预期结果", "H功能集合留空"]
+    }
+  },
+  {
+    "id": "quality-check-api",
+    "prompt": "检查 configs/menu-unit-gateway.cases.json 质量，path_type=api，输出报告。",
+    "expect": {
+      "feature": "用例质量自检",
+      "check_items": ["A单验证点", "J正向：格式"],
+      "not_check": ["G develop结果", "H功能集合"]
+    }
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "id": "csv-menu-gateway-full",
+    "prompt": "整理 apex_dev 菜单相关 gateway 和 api 的 test.ts，生成可导入测试系统的 CSV，模块名菜单管理，创建人员惠岩。",
+    "expect": {
+      "intention": "基于test.ts生成",
+      "features": ["gateway-基于test.ts生成", "api-基于test.ts生成"],
+      "caseCountApprox": 36,
+      "quality_check": true
+    }
+  },
+  {
+    "id": "csv-api-only",
+    "prompt": "只有 menu-system-only.test.ts，输出 api 层用例并生成 CSV。",
+    "expect": {
+      "intention": "基于test.ts生成",
+      "features": ["api-基于test.ts生成"],
+      "caseCountApprox": 3
+    }
+  }
+]

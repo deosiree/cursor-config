@@ -1,0 +1,19 @@
+{
+  "moduleId": "menu-unit-gateway",
+  "cases": [
+    {
+      "name": "写入菜单缓存时不注入衍生字段",
+      "precondition": "已登录；触发菜单缓存写入（如同步侧栏）",
+      "steps": "1. F12 Application 查看 localStorage subAppMenuList\n2. 对比写入前后节点字段",
+      "expected": "正向：缓存与原始 v2 树一致；无 menuName、visible、sort 注入字段\n反向：出现衍生字段或结构被改写",
+      "remark": "menu-repo-cache.test.ts > writes raw v2 menu trees without injecting derived fields"
+    },
+    {
+      "name": "清会话时清除 navbar 同步状态键",
+      "precondition": "已登录；localStorage 存在 MENU_NAVBAR_SYNC_STATUS_KEY",
+      "steps": "1. 执行登出或清会话\n2. Application 查看该键",
+      "expected": "正向：MENU_NAVBAR_SYNC_STATUS_KEY 已清除\n反向：键仍存在",
+      "remark": "menu-repo-cache.test.ts > clearMenuCache removes navbar sync status key on session teardown"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ui-case-writing-role",
+    "prompt": "把以下交互转为 cases.json 条目：新增角色弹窗，切换到菜单权限 Tab，不填角色名点确定，应跳回基础信息并提示必填。",
+    "expect": {
+      "feature": "撰写UI交互cases",
+      "output_fields": ["name", "precondition", "steps", "expected"],
+      "not_in_output": ["功能集合", "用例ID", "remark", "正向："]
+    }
+  }
+]

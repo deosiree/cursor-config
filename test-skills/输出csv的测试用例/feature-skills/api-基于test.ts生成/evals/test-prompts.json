@@ -1,0 +1,11 @@
+[
+  {
+    "id": "api-menu-system-only",
+    "prompt": "把 menu-system-only.test.ts 的 3 条 it 转为 cases.json 条目，api 层。",
+    "expect": {
+      "feature": "api-基于test.ts生成",
+      "verify_points": ["localStorage→F12 Application", "项目默认值→选中项"],
+      "output_fields": ["name", "precondition", "steps", "expected", "remark"]
+    }
+  }
+]

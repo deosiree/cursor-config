@@ -7,12 +7,13 @@ Agent skill 套件：将 Vitest `test.ts` 与模块配置沉淀为测试系统�
 | 路径 | 说明 |
 |------|------|
 | `SKILL.md` | Agent 主入口 |
-| `scripts/generate_test_csv.py` | 通用：config + cases → CSV |
+| `scripts/generate_test_csv.py` | 通用：config + cases → CSV（覆盖写） |
+| `scripts/append_ui_cases_to_csv.py` | UI 交互：复制模板 + 追加行 |
 | `scripts/csv_to_test_config.py` | 参考 CSV → config.json |
 | `scripts/bootstrap_menu_cases.py` | 从 `docs/问题单/0529/generate_menu_unit_csv.py` 迁移 cases |
 | `configs/` | 模块 config / cases |
-| `intention-skills/` | 基于test.ts生成、沉淀模块配置 |
-| `feature-skills/` | api/gateway 撰写、darwin拓展发现 |
+| `intention-skills/` | 基于test.ts生成、沉淀模块配置、边开发边输出UI用例 |
+| `feature-skills/` | api/gateway 撰写、撰写UI交互cases、darwin拓展发现 |
 
 ## 快速开始（菜单样本）
 
@@ -50,6 +51,7 @@ python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.js
 - 「用 **输出 csv 测试用例** skill …」
 - 「把 test.ts **整理成测试系统 CSV** / **录入测试系统**」
 - 「**test.ts 转 CSV**，正向反向写在预期结果」
+- 「**边开发输出 UI 用例** / **追加问题单 CSV**」
 - 「**沉淀模块配置**，生成 config.json」
 
 未点名 skill 时，只要语义是「单元测试 → 可导入 CSV 用例」，也会匹配本套件。
@@ -61,6 +63,7 @@ python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.js
 | 从 test 文件生成用例 | 仓库路径（如 `apex_dev`）、`*.test.ts` 路径或 glob |
 | 新模块第一次接入 | **模块 ID**、**模块名**、**输出 CSV 路径**、**固定默认值**（见下表） |
 | 已有 config/cases，只要 CSV | `config` 路径，或说「用 menu-unit-gateway 配置生成」 |
+| UI 交互用例追加到问题单 | **domain**（role/menu/…）、**date**（MMDD）、用例步骤与预期 |
 | 参考旧 CSV 推断默认值 | 参考文件路径，如 `docs/问题单/模板/tenant.csv` |
 
 ### 新模块：自然语言里建议写清的字段
@@ -176,13 +179,38 @@ Agent 会补全未说的固定列，并走 gateway feature 撰写步骤与预期
 
 ---
 
-### 示例 6：目前不支持、会提示拓展（口述 UI 无 test）
+### 示例 6：UI 交互 — 角色 Tab 校验追加到问题单
 
 ```text
-根据口述整理租户管理页面 UI 用例录入测试系统，没有 test 文件。
+用「输出 csv 测试用例」skill 边开发边输出 UI 用例：
+domain：role
+date：0601
+cases 参考 configs/role-ui-tab.cases.json（4 条 Tab 校验）
+创建人员惠岩，功能集合留空，develop结果 与预期结果同文。
+追加到 docs/问题单/0601/role.csv，不要覆盖模板里已有 API 用例。
 ```
 
-Agent 应暂停并走 `darwin拓展发现`，建议后续沉淀 `基于源码+口述生成` intention-skill。
+Agent 预期：校对 cases → 运行 `append_ui_cases_to_csv.py` → 回报输出路径与追加条数。
+
+本地执行：
+
+```bash
+cd .cursor/test-skills/输出csv的测试用例
+python scripts/append_ui_cases_to_csv.py \
+  --domain role \
+  --date 0601 \
+  --cases configs/role-ui-tab.cases.json
+```
+
+---
+
+### 示例 7：目前不支持、会提示拓展（口述 UI 无 domain）
+
+```text
+根据口述整理某页面 UI 用例，不知道用哪个模板 CSV。
+```
+
+Agent 应列出 `docs/问题单/模板/` 下文件，请用户指定 `domain` 或新建模板。
 
 ---
 

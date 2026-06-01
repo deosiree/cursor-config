@@ -45,8 +45,11 @@ description: 扫描 Vitest test.ts，按路径路由 api/gateway feature 撰写 
 }
 ```
 
-5. **生成 CSV**：`python scripts/generate_test_csv.py --config configs/{moduleId}.config.json`
-6. **Darwin**：`[[../../feature-skills/darwin拓展发现/SKILL.md]]`
+5. **G2：Cases 预览**：展示 2 条样例 + 总条数，等待用户确认。用户说「跳过确认」可一次执行，须在 `currentUnderstanding` 注明。
+6. **质量自检**：`[[../../feature-skills/用例质量自检/SKILL.md]]`（检查单验证点/步骤动词/预期红绿格式等，路径类型=api）
+7. **G3：CSV 覆盖确认**：若目标 CSV 已存在，展示「已有 N 行 + 新增 M 行」，等待确认。可通过 `--force` 跳过。
+8. **生成 CSV**：`python scripts/generate_test_csv.py --config configs/{moduleId}.config.json`
+9. **Darwin**：`[[../../feature-skills/darwin拓展发现/SKILL.md]]`
 
 ## 输出契约
 
