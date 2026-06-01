@@ -12,6 +12,7 @@
 
 ```text
 write-skill/
+├── write-skill-lite/        # 5 分钟上手入口（新用户优先读此）
 ├── README.md
 ├── SKILL.md
 ├── intention-skills/
@@ -23,6 +24,10 @@ write-skill/
 ```
 
 ## 目录职责
+- `write-skill-lite/`
+  - 5 分钟上手入口，≤200 字触发到行动的决策表。
+  - 新用户、忘记流程时的快速查阅点。
+  - 完整版路由仍走 `SKILL.md`。
 - `SKILL.md`
   - 父级 agent 入口。
   - 只负责分类、路由、人工门禁、Darwin 入口。
