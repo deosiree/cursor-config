@@ -12,12 +12,14 @@
 | 🖼️ 生成图片 | [[生图skills/SKILL.md]] | image-gen · Mermaid→PNG · HTML截图 |
 | 🎬 生成视频 | [[视频skills/SKILL.md]] | Remotion · OpenMontage · TikTok模板 |
 | 🔊 文字转语音 | [[语音tts-skills/SKILL.md]] | edge-tts（免费）· 文档转播客 · OpenAI TTS |
+| 🌐 浏览器自动化 | [[浏览器自动化-skills/OpenCLI/SKILL.md]] | OpenCLI 驱动真实 Chrome · 自动化测试 · 手动操作模拟 · SPA 爬虫 |
 
 ## 目录结构
 
 ```
 common-skills/
 ├── README.md              ← 你在这里
+├── 浏览器自动化-skills/     ← OpenCLI 驱动真实 Chrome（自动化测试/手动操作/爬虫）
 ├── 方法论skills/           ← 费曼/苏格拉底/金字塔 路由
 │   ├── SKILL.md
 │   ├── README.md
@@ -53,6 +55,9 @@ common-skills/
 | `md-skills/通用-Mermaid绘图/` | 渲染图skills |
 | `md-skills/文档转播客/` | 语音tts-skills（MP3 脚本） |
 | `html-skills/output-html/subskills/image-gen/` | 生图skills |
+| `test-skills/opencli-ux-role-tab-validation/` | 浏览器自动化-skills/OpenCLI |
+| `test-skills/opencli-ux-tenant/` | 浏览器自动化-skills/OpenCLI |
+| `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 浏览器自动化-skills/OpenCLI |
 
 ## 外部工具生态
 

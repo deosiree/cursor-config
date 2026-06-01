@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-# OpenCLI 包装、断言与日志。
+#===============================================================================
+# OpenCLI 租户管理 UX 自动化测试 — 公共函数库
+# 功能：OpenCLI 包装、断言、日志、失败自动截屏 + DOM dump
+#
+# 来源：.cursor/test-skills/opencli-ux-tenant/
+# 注意：本文件由 login.sh / tenant-create-delete.sh 等 source 加载
+#===============================================================================
 
 UX_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/config.sh
@@ -7,6 +13,13 @@ source "${UX_LIB_DIR}/config.sh"
 
 set -euo pipefail
 
+#===============================================================================
+# 依赖检查
+#===============================================================================
+
+# 检查命令是否安装，缺失则报错退出
+# @param $1  命令名（如 opencli / jq / python3）
+# @param $2  安装提示文字（可选）
 require_cmd() {
   local cmd="$1"
   local hint="${2:-}"
@@ -16,6 +29,8 @@ require_cmd() {
   fi
 }
 
+# 检查 opencli 是否安装且 browser 桥接正常
+# 依赖：require_cmd
 require_opencli() {
   require_cmd opencli "请安装: npm install -g @jackwener/opencli"
   opencli doctor >/dev/null 2>&1 || {
@@ -25,13 +40,41 @@ require_opencli() {
   }
 }
 
+#===============================================================================
+# 日志与错误处理
+#===============================================================================
+
+# 输出步骤日志（空行 + 双箭头标签）
+# @param $1  步骤编号/标签，如 "1" / "auth" / "data"
+# @param $2  步骤描述文字
 log_step() {
   echo ""
   echo "==> [$1] $2"
 }
 
+# 致命错误退出，自动保存现场（截屏 + URL + 页面关键 DOM）
+# 保存到 screenshots/die-{时间戳}.png + .txt
+# @param $*  错误描述
+# @exit 1
 die() {
-  echo "ERROR: $*" >&2
+  local msg="$*"
+  echo "ERROR: ${msg}" >&2
+  # 自动保存失败现场供后续排查
+  if command -v oc_plain >/dev/null 2>&1 && [[ -n "${SESSION:-}" ]]; then
+    local ts
+    ts="$(date +%Y%m%d-%H%M%S 2>/dev/null || echo fail)"
+    mkdir -p "${UX_SUITE_ROOT:-.}/screenshots"
+    oc_plain screenshot "${UX_SUITE_ROOT}/screenshots/die-${ts}.png" >/dev/null 2>&1 || true
+    {
+      echo "=== FAILURE: ${msg} ==="
+      echo "时间: $(date 2>/dev/null || echo unknown)"
+      echo "Profile: ${UX_PROFILE:-unknown}"
+      oc_plain get url 2>/dev/null || echo "URL: 不可获取"
+      oc_plain eval 'document.title' 2>/dev/null || echo "标题: 不可获取"
+      oc_plain eval 'document.querySelector(".el-dialog")?.innerText?.slice(0,500) || "无弹窗"' 2>/dev/null || true
+    } > "${UX_SUITE_ROOT}/screenshots/die-${ts}.txt" 2>/dev/null || true
+    echo "  -> 现场已保存: screenshots/die-${ts}.png + .txt" >&2
+  fi
   exit 1
 }
 
@@ -89,6 +132,11 @@ wait_leave_login() {
   die "登录超时（${timeout}ms 内未离开 /login）"
 }
 
+#===============================================================================
+# 验证码 / MFA 处理
+#===============================================================================
+
+# 检测页面中是否有图形验证码
 has_captcha_visible() {
   local state
   state="$(oc_plain state 2>/dev/null || true)"
@@ -96,6 +144,11 @@ has_captcha_visible() {
   return 1
 }
 
+# 根据配置的 captchaMode 处理验证码
+#   auto      — 无验证码则继续；有则报错退出
+#   skip      — 跳过验证码检查
+#   manual    — 暂停等待人工输入（120s 超时，超时则报错）
+#   bind-only — 提示人工绑定后退出
 handle_captcha_mode() {
   case "${CAPTCHA_MODE}" in
     auto)
@@ -108,8 +161,8 @@ handle_captcha_mode() {
     manual)
       if has_captcha_visible; then
         echo ""
-        echo "请在浏览器中输入图形验证码，完成后按 Enter 继续..."
-        read -r _
+        echo "请在浏览器中输入图形验证码，完成后按 Enter 继续...（120s 超时）"
+        read -r -t 120 _ || die "等待验证码输入超时（120s），请重试或切换 captchaMode"
       fi
       ;;
     bind-only)
@@ -232,7 +285,15 @@ _tenant_match_count() {
   echo "$json" | "${UX_PYTHON_BIN:-python}" -c "import sys,json; print(json.load(sys.stdin).get('count',-1))"
 }
 
-# 步骤 7 / 10：搜索 tenant0529 并断言行数（创建后 expected=1 会轮询重试）
+#===============================================================================
+# 断言：搜索租户名并校验列表行数
+#===============================================================================
+
+# 搜索指定租户名并断言行数，创建后 (expected=1) 使用指数退避轮询
+# @param $1  搜索关键词（租户名）
+# @param $2  期望行数（1=创建后应有结果，0=删除后应为空）
+# @param $3  最大重试次数（默认：expected=1 时 15 次，expected=0 时 1 次）
+# @return 0-断言通过，1-断言失败
 assert_tenant_list_count() {
   local keyword="$1"
   local expected="$2"
@@ -261,8 +322,10 @@ assert_tenant_list_count() {
     fi
 
     if [[ "$try" -lt "$max_tries" ]]; then
-      echo "  当前 ${count} 条，期望 ${expected} 条，2s 后重试…" >&2
-      sleep 2
+      # 指数退避：第 1 次等 1s，第 2 次等 2s，第 3 次等 4s…
+      local wait_time=$((2 ** (try - 1)))
+      echo "  当前 ${count} 条，期望 ${expected} 条，${wait_time}s 后重试…" >&2
+      sleep "$wait_time"
     fi
   done
 
@@ -273,7 +336,11 @@ assert_tenant_list_count() {
   return 1
 }
 
-# 创建提交后等待列表可查询
+#===============================================================================
+# 等待辅助：创建/删除后等待列表刷新
+#===============================================================================
+
+# 创建提交后等待弹窗消失并回到列表页
 wait_after_tenant_created() {
   log_step "wait" "等待创建完成并回到列表"
   set +e

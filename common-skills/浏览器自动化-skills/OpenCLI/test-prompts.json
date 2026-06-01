@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我自动化测试角色管理页面的 Tab 校验功能，这个页面在 http://localhost:8080/cloud/Apex/system/role，需要测试不填角色名称就切换 Tab 时能否正确拦截",
+    "expected": "Agent 应路由到「自动化测试」场景 → 引用 opencli-ux-role-tab-validation skill → 给出 run-e2e.sh 或 role-tab-validation.sh 的调用命令"
+  },
+  {
+    "id": 2,
+    "prompt": "我想每天自动登录公司后台导出销售报表，后台 URL 是 https://sales.company.com，需要填写日期范围、选择「导出 Excel」、点确定，最好能定时执行",
+    "expected": "Agent 应路由到「手动点击自动化」场景 → 给出多步编排脚本 → 提及定时任务方案（cron / 任务计划程序）→ 提供 scaffold 或模板参考"
+  },
+  {
+    "id": 3,
+    "prompt": "帮我下载这个飞书文档的内容到本地文件：https://xxx.feishu.cn/wiki/IbuLwEv7fituvMkrSaWc86CjncX，并保存为 Markdown",
+    "expected": "Agent 应路由到「爬虫与数据提取」场景 → 引用 OpenCLI-下载飞书文档 skill → 给出 download.js 的具体调用命令"
+  }
+]

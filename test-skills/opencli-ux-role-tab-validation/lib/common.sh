@@ -152,13 +152,13 @@ click_dialog_footer_button() {
   local label="$1"
   set +e
   oc_plain eval "(function(){
-    const label = '${label}';
+    const label = '${label}'.replace(/\\s+/g, '');
     const footer = document.querySelector('.el-dialog .dialog-footer')
       || document.querySelector('.el-dialog__footer')
       || document.querySelector('.el-dialog');
     if (!footer) return JSON.stringify({ ok: false, reason: 'no-footer' });
     const btn = [...footer.querySelectorAll('button')].find(
-      b => (b.innerText || '').trim() === label
+      b => (b.innerText || '').replace(/\\s+/g, '').trim() === label
     );
     if (!btn) return JSON.stringify({ ok: false, reason: 'no-btn', label });
     btn.click();
@@ -176,7 +176,7 @@ click_dialog_confirm() {
 }
 
 click_dialog_cancel() {
-  click_dialog_footer_button "取 消"
+  click_dialog_footer_button "取消"
 }
 
 # 读取角色编辑弹窗 Tab 与表单校验状态
@@ -221,23 +221,27 @@ assert_role_dialog_tab() {
   local expected_tab="$1"
   local case_id="${2:-assert-tab}"
   local raw json actual
-  sleep 1
-  raw="$(get_role_dialog_state || true)"
-  json="$(echo "$raw" | extract_eval_json 2>/dev/null || echo "")"
-  if [[ -z "$json" ]]; then
-    echo "无法读取弹窗状态: ${raw}" >&2
-    oc_plain screenshot "${UX_SUITE_ROOT}/screenshots/fail-${case_id}.png" 2>/dev/null || true
-    return 1
-  fi
-  actual="$(echo "$json" | "${UX_PYTHON_BIN:-python}" -c "import sys,json; print(json.load(sys.stdin).get('activeTab',''))")"
-  if [[ "$actual" != *"$expected_tab"* ]]; then
-    echo "断言失败 [${case_id}]: 期望 Tab「${expected_tab}」，实际「${actual}」" >&2
-    echo "详情: ${json}" >&2
-    oc_plain screenshot "${UX_SUITE_ROOT}/screenshots/fail-${case_id}.png" 2>/dev/null || true
-    return 1
-  fi
-  log_step "assert" "[${case_id}] activeTab=${actual}"
-  return 0
+  local try max_tries=5
+  for ((try = 1; try <= max_tries; try++)); do
+    sleep 1
+    raw="$(get_role_dialog_state || true)"
+    json="$(echo "$raw" | extract_eval_json 2>/dev/null || echo "")"
+    if [[ -z "$json" ]]; then
+      continue
+    fi
+    actual="$(echo "$json" | "${UX_PYTHON_BIN:-python}" -c "import sys,json; print(json.load(sys.stdin).get('activeTab',''))")"
+    if [[ "$actual" == *"$expected_tab"* ]]; then
+      log_step "assert" "[${case_id}] activeTab=${actual}"
+      return 0
+    fi
+    if [[ "$try" -lt "$max_tries" ]]; then
+      echo "  [${case_id}] 第 ${try} 次: 当前 Tab「${actual}」，期望「${expected_tab}」，重试…" >&2
+    fi
+  done
+  echo "断言失败 [${case_id}]: 期望 Tab「${expected_tab}」，实际「${actual}」" >&2
+  echo "详情: ${json}" >&2
+  oc_plain screenshot "${UX_SUITE_ROOT}/screenshots/fail-${case_id}.png" 2>/dev/null || true
+  return 1
 }
 
 assert_role_form_error() {
