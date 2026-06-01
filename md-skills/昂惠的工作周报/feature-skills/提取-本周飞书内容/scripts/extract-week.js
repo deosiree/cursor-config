@@ -172,7 +172,12 @@ function extractWeek(fullText, dateRange) {
 
   // 4. 截取文本范围
   // 从起始锚点匹配结束位置到终止锚点起始位置（或文档末尾）
-  const startPos = startAnchor.pos + startAnchor.fullMatch.length;
+  let startPos = startAnchor.pos + startAnchor.fullMatch.length;
+  // 跳过锚点行剩余文本（如 ## 6.1-6.5 第一周 6 月中 " 第一周 6 月"），从下一行开始提取
+  const nextLineBreak = fullText.indexOf('\n', startPos);
+  if (nextLineBreak !== -1) {
+    startPos = nextLineBreak + 1;
+  }
   const endPos = endAnchor ? endAnchor.pos : fullText.length;
 
   const weekText = fullText.slice(startPos, endPos).trim();
@@ -215,7 +220,12 @@ function parseWorkItems(weekText) {
     if (!trimmed || imageRe.test(trimmed)) continue;
 
     // 检测终止分隔线（下周计划 / 挂车起号思路）— 最优先
-    if (/^(?:#{1,3}\s+)?(下周计划|挂车起号思路)/.test(trimmed)) break;
+    // 兼容加粗变体：**下周计划**、下周计划、### 下周计划
+    if (/^(?:#{1,3}\s+|\*{0,2})?(下周计划|挂车起号思路)/.test(trimmed)) break;
+
+    // 跳过加粗子段落标签（如 **梳理工作时间：**、**绩效考核：**）
+    // 特征：整行被 ** 包裹，以中文冒号结尾，没有其他内容
+    if (/^\*\*[^:*]+?[：:]\*\*$/.test(trimmed)) continue;
 
     // 检测日期标题（周一 ~ 周六）
     const dayMatch = dayHeaderRe.exec(trimmed);
@@ -231,18 +241,28 @@ function parseWorkItems(weekText) {
     if (/^\d{1,2}\.\d{1,2}[\s\-–—]+\d{1,2}\.\d{1,2}/.test(trimmed)) continue;
     if (/^第[一二三四五六七八九十]+周\s*$/.test(trimmed)) continue;
 
-    // 提取工作项文本（去除序号和 checkbox 标记）
+    // 检测 checkbox 勾选状态（在文本清理前捕获）
+    let checked = null;
+    const cbMatch = trimmed.match(/\[(x|X| )\]/);
+    if (cbMatch) checked = cbMatch[1] !== ' ';
+
+    // 检测删除线（飞书完成标记：~~文本~~）
+    const hasStrikethrough = /~~.+~~/.test(trimmed);
+    if (hasStrikethrough) checked = true;
+
+    // 提取工作项文本（去除序号、checkbox标记、删除线、加粗等）
     let text = trimmed
       .replace(/^\d+[、.，,]\s*/, '')          // 序号
       .replace(/^[*\-•]\s*/, '')               // 列表标记
       .replace(/\[x\]|\[ \]/gi, '')            // checkbox 标记
       .replace(/~~(.+?)~~/g, '$1')             // 飞书删除线
       .replace(/⏰\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}/g, '') // 提醒时间
+      .replace(/^\*+|\*+$/g, '')               // 去除首尾加粗标记
       .trim();
 
     // 过滤纯 Markdown 格式残片（仅含 # * - 空格等非内容字符）
     if (text && !/^[#*\-\s]+$/.test(text) && text.length > 1) {
-      items.push({ text, day: currentDay || '未标注' });
+      items.push({ text, day: currentDay || '未标注', checked });
     }
   }
 

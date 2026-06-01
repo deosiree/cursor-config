@@ -76,11 +76,16 @@ def format_headings(text: str) -> tuple[str, list[str]]:
             changes.append(f'L{i+1}: {m.group(1)} → ##')
             continue
         
-        # Rule 3: 星期几 → ###（兼容 **周一** 加粗格式）
-        m = re.match(r'^\*{0,2}(周[一二三四五六日](?:\s*\+\s*周[一二三四五六日])?)(?:：.*)?\*{0,2}$', stripped)
+        # Rule 3: 星期几 → ###（兼容 **周一** 加粗格式，保留冒号后内容）
+        m = re.match(r'^\*{0,2}(周[一二三四五六日](?:\s*\+\s*周[一二三四五六日])?)(?:[：:](.*))?\*{0,2}$', stripped)
         if m:
             output.append(f'### {m.group(1)}')
             changes.append(f'L{i+1}: {m.group(1)} → ###')
+            # 保留冒号后的内容作为独立工作项行（如 "周一：编辑抖音bd规划" → "### 周一" + "编辑抖音bd规划"）
+            after_colon = m.group(2)
+            if after_colon and after_colon.strip():
+                output.append(after_colon.strip())
+                changes.append(f'L{i+1}: 保留冒号后内容 → "{after_colon.strip()}"')
             # Rule 4: 第一个 ### 之前如果没有 ## 则插入 ## 入职第一周
             if not first_week_added:
                 # 检查前面所有 output 行中是否有 ## 
@@ -92,16 +97,18 @@ def format_headings(text: str) -> tuple[str, list[str]]:
                     first_week_added = True
             continue
         
-        # Rule 5: 下周计划 → ###
-        if stripped == '下周计划':
+        # Rule 5: 下周计划 → ###（兼容 **下周计划** 加粗变体）
+        m = re.match(r'^\*{0,2}下周计划\*{0,2}$', stripped)
+        if m:
             output.append('### 下周计划')
-            changes.append(f'L{i+1}: 下周计划 → ###')
+            changes.append(f'L{i+1}: {stripped} → ###')
             continue
         
-        # Rule 6: 挂车起号思路 → ##
-        if stripped == '挂车起号思路':
+        # Rule 6: 挂车起号思路 → ##（兼容 **挂车起号思路** 加粗变体）
+        m = re.match(r'^\*{0,2}挂车起号思路\*{0,2}$', stripped)
+        if m:
             output.append('## 挂车起号思路')
-            changes.append(f'L{i+1}: 挂车起号思路 → ##')
+            changes.append(f'L{i+1}: {stripped} → ##')
             continue
         
         # 保持原样

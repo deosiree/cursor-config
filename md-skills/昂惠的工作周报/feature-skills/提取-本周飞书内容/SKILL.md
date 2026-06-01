@@ -22,17 +22,12 @@ description: 从飞书文档《达人BD每日工作记录》中提取指定周�
 
 ### 1. 下载飞书文档 → 本地缓存
 
-调用 `feishu2md-下载到本地` skill：
+调用 `feishu2md-下载到本地` skill（路径：`../../common-skills/探索skills/feature-skills/feishu2md-下载到本地/SKILL.md`）：
 
 ```
 默认 URL：https://zru9fxhvq5.feishu.cn/wiki/IbuLwEv7fituvMkrSaWc86CjncX
 默认输出：D:\FILE\Obsidian Vault\昂惠的工作周报\feishu2md\达人 BD 每日工作记录.md
-```
-
-```bash
-D:\FILE\Repository\feishu2md-v2.4.5-windows-amd64\feishu2md.exe dl \
-  -o "D:\FILE\Obsidian Vault\昂惠的工作周报\feishu2md" \
-  "https://zru9fxhvq5.feishu.cn/wiki/IbuLwEv7fituvMkrSaWc86CjncX"
+默认 feishu2md 路径：本 skill 同级 script/ 下的 feishu2md.exe（如未安装，参见 feishu2md-下载到本地 skill 的 %FEISHU2MD_PATH% 环境变量配置）
 ```
 
 > 每次下载覆盖旧文件。图片自动存入 `feishu2md/static/`。
@@ -109,7 +104,7 @@ node scripts/extract-week.js \
 
 Agent 读取 `docSummary` 和 `llmPrompt`，根据标题结构找到最接近目标周的 `##` 区间，直接用 `read_file` 按行截取该段内容，手动解析为工作项 JSON。流程：脚本先跑 → 失败则 LLM 兜底。
 
-输出 JSON：
+输出 JSON（含 checked 状态，由 extract-week.js 直接输出，无需 agent 另行检测）：
 ```json
 {
   "dateRange": {"start": "5.25", "end": "5.29"},
@@ -117,7 +112,7 @@ Agent 读取 `docSummary` 和 `llmPrompt`，根据标题结构找到最接近目
   "anchorEnd": null,
   "count": 17,
   "items": [
-    {"text": "建联25位达人，寄样10位...", "day": "周二"},
+    {"text": "建联25位达人，寄样10位...", "day": "周二", "checked": true},
     ...
   ]
 }
@@ -125,27 +120,18 @@ Agent 读取 `docSummary` 和 `llmPrompt`，根据标题结构找到最接近目
 
 期望输出样本见 [[template/mvp/extract-result.json]]。
 
-### 4. 检测勾选状态
+### 4. 检测勾选状态（已由脚本内置）
 
-feishu2md 下载的 Markdown 中，勾选状态已通过以下格式体现：
+`extract-week.js` 已内置 checkbox 状态检测，直接输出 `checked` 字段（无需 agent 另行检测）：
 
-- `- [X]` → 已勾选 → `checked: true`
-- `- [ ]` → 未勾选 → `checked: false`
-- `~~文本~~`（删除线）→ 已完成 → `checked: true`
-
-Agent 对提取后的每条 `text` 按顺序检查：
-
-1. 原始文本含 `~~...~~` → 已完成 → `checked: true`，同时 strip 删除线
-2. 原始文本含 `- [x]` 或 `- [X]` → `checked: true`
-3. 原始文本含 `- [ ]` → `checked: false`
-4. 其他 → 保持 extract-week.js 输出的默认值
+| 原始格式 | 输出 `checked` |
+|----------|:--------------:|
+| `- [X]` / `- [x]` | `true` |
+| `- [ ]` | `false` |
+| `~~文本~~`（删除线） | `true`（同时 strip 删除线） |
+| 无 checkbox 标记 | `null` |
 
 > 旧方案（OpenCLI todo-line-through 检测）见 [[references/feishu-checkbox-detect.md]]，仅在 feishu2md 下载的 Markdown 无 checkbox 标记时降级使用。
-
-勾选态合并到步骤 3 的输出：
-```json
-{"text": "建联25位达人...", "checked": true, "day": "周二"}
-```
 
 ### 5. 输出（向下游传递）
 
@@ -185,13 +171,14 @@ Agent 对提取后的每条 `text` 按顺序检查：
 
 ### CP3：勾选态确认（步骤 4 之后，输出之前）
 
+> 勾选态已由 `extract-week.js` 内联输出，无需人工逐条确认。
+> 仅当脚本输出中 `checked` 字段大量异常时检查 Markdown 源格式。
+
 ```
-展示勾选态统计：
+展示勾选态统计（自动检测）：
 - 已勾选 (checked=true)：X 条
 - 未勾选 (checked=false)：Y 条
-
-确认无误后回复"继续"，输出最终 JSON。
-如勾选态明显不对 → 检查 Markdown 中 - [x] / - [ ] 格式是否完整。
+- 无标记 (checked=null)：Z 条
 ```
 
 ## 资源索引
