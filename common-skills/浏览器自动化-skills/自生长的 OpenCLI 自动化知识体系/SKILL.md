@@ -149,6 +149,22 @@ Agent 调用于 skill 前，自动按以下顺序检查：
 - 不拷贝被引用 skill 的脚本/config 到本目录
 - 遇到未覆盖的新场景 → 在 references/ 新增场景文件 + 更新路由规则表
 
+## 脚本落盘规则（强制）
+
+> ⚠️ **执行修复时产出的脚本/截图/日志必须直接写入本知识体系的对应位置，不允许散落在沙盒或项目根目录。**
+> 完整映射表见 `agent-skills/hermes-session-harvest/SKILL.md#脚本落盘规则强制`。
+
+| 产出类型 | 落盘路径 |
+|---------|---------|
+| OpenCLI 测试脚本 | `opencli-ux-{场景}/` 或 `opencli-ux-{场景}/scripts/` |
+| SSH 排查脚本 | `../ssh-skills/feature-skills/ssh-k8s-{功能}/` |
+| 踩坑记录 | `opencli-ux-{场景}/references/` |
+| Few-shot 示例 | `opencli-ux-{场景}/assets/few-shot-example/` |
+| 会话日志 | `session-log/` |
+| 截图 | `opencli-ux-{场景}/screenshots/` |
+
+**禁止落盘位置**：项目根目录、`docs/` 同级、沙盒临时目录、桌面。
+
 ## 常见反模式
 
 | 反模式 | 问题 | 正确做法 |
@@ -159,6 +175,7 @@ Agent 调用于 skill 前，自动按以下顺序检查：
 | `eval` 不返回 JSON | 输出是自由文本，后续断言困难 | eval 表达式始终包 `JSON.stringify(...)` 输出结构化结果 |
 | 忽略 `opencli doctor` 检查 | 浏览器桥接已断开，命令静默失败 | 脚本入口处调用 `opencli doctor >/dev/null` 前置检查 |
 | 脚本里硬编码密码 | 不小心提交 git | 用 config JSON 文件 + `.gitignore` 本地覆盖（参考子 skill 的 `config/ux-test.config.local.json`） |
+| **脚本散落在项目根目录** | 无法追溯、会话结束遗忘、知识碎片化 | **所有脚本直接写入对应 `opencli-ux-{场景}/` 或 `ssh-skills/` 目录** |
 
 遇到 OpenCLI 命令失败时，可调用全局 skill `opencli-autofix` 自动诊断修复：
 

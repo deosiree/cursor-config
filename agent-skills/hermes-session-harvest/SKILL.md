@@ -22,6 +22,36 @@ should-not-trigger:
 > **灵感来源**：`continuous-learning-v2.1` 的 atomic instinct + 置信度评分 + 防垃圾体系；`conversation-summary` 的对话沉淀模式。
 > **核心原则**：有价值的留下，废弃的删除，重复的不建——不做垃圾站。
 
+## 脚本落盘规则（强制）
+
+> ⚠️ **执行修复流程时，所有产出必须直接落盘到对应 skill 目录中，不允许散落在沙盒、文档同级或其他位置。**
+
+### 落盘映射表
+
+| 产出类型 | 落盘路径 | 示例 |
+|---------|---------|------|
+| OpenCLI E2E 测试脚本 | `opencli-ux-{场景}/` | `opencli-ux-user-perm/run-e2e.sh` |
+| OpenCLI 辅助脚本 (.js/.py) | `opencli-ux-{场景}/scripts/` | `opencli-ux-menu-import/scripts/` |
+| SSH 排查脚本 | `ssh-skills/feature-skills/ssh-k8s-{功能}/` | `ssh-skills/feature-skills/ssh-k8s-浏览后端日志/` |
+| 通用工具函数 | 对应 skill 的 `lib/` | `opencli-ux-{场景}/lib/common.sh` |
+| 踩坑记录 | 对应 skill 的 `references/` | `opencli-ux-menu/references/menu-route-dup-pitfalls.md` |
+| 会话记录 | `session-log/` | `session-log/2026-06-02-menu-import-ssh.md` |
+| Few-shot 示例 | 对应 skill 的 `assets/few-shot-example/` | `opencli-ux-menu-import/assets/few-shot-example/session-*.md` |
+| 截图 | 对应 skill 的 `screenshots/` | `opencli-ux-tenant/screenshots/fail-tenant-table.png` |
+
+### 禁止落盘位置
+
+| 位置 | 原因 |
+|------|------|
+| 项目根目录 | 散落无序，无法追溯 |
+| `docs/` 同级 | 与业务文档混杂 |
+| 沙盒临时目录 | 会话结束即丢失 |
+| 桌面 / Downloads | 非版本控制 |
+
+### Auditor 检测
+
+若 SCAN 阶段发现脚本位于禁止位置 → 标记为 `misplaced`，询问用户迁移或删除。
+
 ## 四步 Audit 流程
 
 ```
@@ -41,7 +71,8 @@ Agent 自动检查以下所有维度，不依赖用户提示：
 | **新命令序列** | 本次会话是否执行了新的 OpenCLI / shell / HTTP 命令组合？ | 对比 `session-log/` 目录已有记录 |
 | **新场景** | 是否存在自生长路由表未覆盖的操作场景？ | 对比 `SKILL.md` 路由规则表 |
 | **新踩坑** | 是否有新的失败模式（如特定错误码、库版本冲突）？ | 回顾本次会话中的错误与修复 |
-| **新脚本** | 是否在 `opencli-ux-*/` 下创建了新的 `.sh`/`.js`/`.ps1` 脚本？ | 检查 git status --porcelain |
+| **新脚本** | 是否在 `opencli-ux-*/` 等 skill 目录下创建了脚本？落盘位置是否符合映射表？ | 检查 git status --porcelain + 对比落盘映射表 |
+| **脚本错放** | 是否有脚本散落在项目根目录、`docs/` 同级、沙盒临时目录等禁止位置？ | 扫描本次会话的 `write_file` 目标路径 |
 | **废弃产物** | 是否有脚本从未成功跑通、超过 30 天未使用？ | 检查 run-e2e.sh 的执行记录 + 修改时间 |
 | **未提交变更** | 是否有 `write_file` 创建但未 `git add` 的文件？ | `git status --porcelain` |
 
@@ -56,12 +87,12 @@ Agent 自动检查以下所有维度，不依赖用户提示：
            │              │              │
     ┌──────┴──────┐  ┌───┴───┐    ┌────┴────┐
     ▼             ▼  ▼       ▼    ▼         ▼
- ≥3次复用    <3次 路由表  已有 从未成功  能跑通
-    │         │   未覆盖  覆盖 跑通+超期  +活跃
-    ▼         ▼    │       │    │         │
- 沉淀为    仅记录   ▼       ▼    ▼         ▼
- 场景      到log  新增    更新  候选删除  保留
-                  场景    references
+ ≥3次复用    <3次 路由表  已有 从未成功  能跑通  错放位置
+    │         │   未覆盖  覆盖 跑通+超期  +活跃  (禁止位)
+    ▼         ▼    │       │    │         │       │
+ 沉淀为    仅记录   ▼       ▼    ▼         ▼       ▼
+ 场景      到log  新增    更新  候选删除  保留  迁移到
+                  场景    references          正确位置
 ```
 
 #### 分类规则
@@ -74,6 +105,7 @@ Agent 自动检查以下所有维度，不依赖用户提示：
 | 操作场景 | 路由表有 ≥80% 重合 | → 更新已有 `references/场景-*.md` | — |
 | 脚本文件 | 从未成功跑通 + mtime > 30 天 | → 候选删除（需用户确认） | — |
 | 脚本文件 | 能跑通且近期使用 | → 保留，不操作 | — |
+| 脚本错放 | 位于禁止位置（根目录/`docs/`同级/沙盒临时目录） | → **迁移**到落盘映射表对应位置 → 删除原文件 | — |
 | 踩坑记录 | 新错误码/新失败模式 | → 追加到对应 `references/` 或 `session-log/` | — |
 
 ### Step 3 — HARVEST or DELETE（执行沉淀或清理）
