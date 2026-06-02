@@ -10,6 +10,8 @@
 | opencli-ux-tenant | `opencli-ux-tenant/` | 自动化测试：租户 CRUD 全流程 + config/profile 加载 | [[references/场景-自动化测试.md]] |
 | opencli-ux-user-perm | `opencli-ux-user-perm/` | 自动化测试：用户管理 E2E + 操作列权限 + isOwner/Header 诊断 | [[references/场景-自动化测试.md]]、[[references/场景-权限与登录态诊断.md]] |
 | opencli-ux-menu | `opencli-ux-menu/` | 自动化测试：菜单路由路径按项目判重 + Element Plus 弹窗表单 | [[references/场景-自动化测试.md]] |
+| opencli-ux-menu-import | `opencli-ux-menu-import/` | 菜单权限合并 YAML 预览导入 + HTTP dry_run + SSH ERRO 三联 | [[references/场景-菜单导入与SSH联调.md]] |
+| ssh-skills | `common-skills/ssh-skills/` | jump + kubectl 查 seccenter 后端日志（与 OpenCLI 互补） | [[references/场景-菜单导入与SSH联调.md]] |
 | OpenCLI-下载飞书文档 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 爬虫：SPA 滚动抓取 + 去重合并 + 结构化输出 | [[references/场景-爬虫与数据提取.md]] |
 
 ## 每个 skill 的核心贡献
@@ -42,6 +44,24 @@
 | 踩坑与 computed fix | `references/perm-bypass-isOwner-pitfalls.md` |
 | 可执行 checklist | `feature-skills/权限后门与Header诊断/SKILL.md` |
 | 会话 few-shot | `assets/few-shot-example/session-perm-bypass-header.md` |
+
+### opencli-ux-menu-import
+
+| 能力 | 文件 |
+|------|------|
+| HTTP dry_run 预览闭环 | `docs/menu/scripts/menu_import_preview_loop.py`（仓库内，skill 仅引用） |
+| 补丁 id 写回 | `docs/menu/scripts/ensure-patch-menu-ids.py` |
+| SSH 真实 ERRO 对照 | `common-skills/ssh-skills/feature-skills/ssh-k8s-浏览后端日志/SKILL.md` |
+| 三联场景说明 | `references/场景-菜单导入与SSH联调.md` |
+| 会话 few-shot | `assets/few-shot-example/session-menu-import-preview.md` |
+
+### ssh-skills（ssh-k8s-浏览后端日志）
+
+| 能力 | 文件 |
+|------|------|
+| kubectl logs + grep ERRO | `feature-skills/ssh-k8s-浏览后端日志/SKILL.md` |
+| plink 非交互 SSH | 同上 + `config/ssh.config.json` |
+| ERRO vs 100000 映射 | 同上 + `docs/menu/导入失败排查-100000.md` |
 
 ### opencli-ux-tenant
 

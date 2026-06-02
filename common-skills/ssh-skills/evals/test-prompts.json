@@ -1,0 +1,66 @@
+{
+  "skill": "ssh-skills",
+  "prompts": [
+    {
+      "id": "ssh-k8s-seccenter-logs",
+      "strictness": "high",
+      "prompt": "前端 toast 显示 [100000]未知错误，我需要查 seccenter 后端日志找到真实错误原因。",
+      "expected_behaviors": [
+        "读取 ssh-skills/SKILL.md 路由到 feature-skills/ssh-k8s-浏览后端日志",
+        "执行前置检查（集群/morbax/凭证/plink可用性）",
+        "kubectl get pods -n platform 获取当前 Running Pod 名",
+        "grep ERRO 行而非只看 toast 的 100000",
+        "提取 ERRO 原文与堆栈映射到修复方向",
+        "不把密码写入 skill 或 commit"
+      ]
+    },
+    {
+      "id": "menu-import-opencli-ssh-link",
+      "strictness": "high",
+      "prompt": "菜单 YAML 导入预览失败，toast 显示 [100000]，需要 SSH 查日志并修复 id 问题。",
+      "expected_behaviors": [
+        "读取 ssh-skills/SKILL.md 路由表 → 菜单导入+SSH联调 跨 skill 场景",
+        "引用 OpenCLI 子 skill opencli-ux-menu-import/SKILL.md",
+        "SSH kubectl logs grep ImportProjectMenuTree|ID 无效|ERRO",
+        "识别 'ID 无效: 0' 根因 → 补丁缺 id",
+        "提供修复方向（ensure-patch-menu-ids.py 或 UI 创建后写回）",
+        "HTTP dry_run 再验证期望 deleted/created 非零"
+      ]
+    },
+    {
+      "id": "multi-cluster-switch",
+      "strictness": "medium",
+      "prompt": "我需要查 cloudtest 集群的 seccenter 日志，不是 48 集群。",
+      "expected_behaviors": [
+        "读取 config/ssh.config.json → multiCluster.cloudtest",
+        "提示用户确认 cloudtest 的 jumpHost 与凭证",
+        "morbax 需切换到 cloudtest profile",
+        "按 ssh-k8s-浏览后端日志 流程执行，但使用 cloudtest 集群参数",
+        "不硬编码 48 集群的 IP/hostkey"
+      ]
+    },
+    {
+      "id": "port-forward-nonpod",
+      "strictness": "medium",
+      "prompt": "Nginx 返回 502，我 SSH 到 jump 机后想通过端口转发看 Nginx status 页面。",
+      "expected_behaviors": [
+        "读取 feature-skills/ssh-k8s-浏览后端日志 → 端口转发排障 节",
+        "使用 plink -L 或 ssh -L 建立本地转发",
+        "指定转发端口与目标地址（如 -L 9090:127.0.0.1:9090）",
+        "引导用户浏览器访问 http://localhost:9090",
+        "不试图通过 kubectl logs 查 Nginx"
+      ]
+    },
+    {
+      "id": "should-not-trigger-local-dev",
+      "strictness": "high",
+      "prompt": "本地 dev-api/direct 返回了完整的 JSON 错误体 {code: 400, message: '菜单名重复'}，不需要 SSH。",
+      "expected_behaviors": [
+        "不触发 SSH 路由",
+        "优先使用 HTTP/Network 面板的完整 JSON 错误体",
+        "不执行 kubectl 或 plink 命令",
+        "在回复中引用 should-not-trigger 条件说明原因"
+      ]
+    }
+  ]
+}

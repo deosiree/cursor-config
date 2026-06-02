@@ -48,5 +48,10 @@
     "id": 10,
     "prompt": "帮我在系统里批量给 50 个用户分配角色权限",
     "expected": "Agent 应匹配路由表 → 路由到 references/场景-批量用户角色分配.md → 给出对应的 OpenCLI 命令序列（eval 兜底模式）"
+  },
+  {
+    "id": 11,
+    "prompt": "菜单导入权限合并 YAML 预览失败，toast 显示 [100000]未知错误，帮我用 OpenCLI 和 SSH 查真实原因并修复直到预览成功",
+    "expected": "Agent 应路由到 opencli-ux-menu-import + references/场景-菜单导入与SSH联调.md → SSH skill ssh-k8s-浏览后端日志 查 ERRO → python docs/menu/scripts/menu_import_preview_loop.py → 补 patch id 后 PREVIEW OK"
   }
 ]

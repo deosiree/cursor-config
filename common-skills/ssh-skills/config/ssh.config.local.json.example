@@ -1,0 +1,5 @@
+{
+  "jumpPassword": "CHANGE_ME",
+  "hostKeySha256": "SHA256:Z+CYBD3iefUsG37uBk37bhQm0iVe65ULyRr/VquFsDI",
+  "podName": "seccenter-v2-<HASH>-<POD_SUFFIX>"
+}

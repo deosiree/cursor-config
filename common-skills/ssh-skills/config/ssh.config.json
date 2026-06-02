@@ -1,0 +1,45 @@
+{
+  "defaultCluster": "48",
+  "plinkPath": "C:\\Program Files\\PuTTY\\plink.exe",
+  "opensshPath": "ssh",
+  "jumpHost": "10.17.196.48",
+  "jumpPort": 22,
+  "jumpUser": "shr",
+  "namespace": "platform",
+  "podNamePrefix": "seccenter-v2",
+  "logTailDefault": 500,
+  "logTailImport": 10000,
+  "grepPatterns": {
+    "importMenu": "ImportProjectMenuTree|ID 无效|menu/project|ERRO",
+    "genericError": "ERRO|panic|error|validate"
+  },
+  "multiCluster": {
+    "48": {
+      "name": "48 集群（默认）",
+      "jumpHost": "10.17.196.48",
+      "jumpPort": 22,
+      "jumpUser": "shr",
+      "namespace": "platform",
+      "podNamePrefix": "seccenter-v2",
+      "morbaxProfile": "48"
+    },
+    "cloudtest": {
+      "name": "cloudtest 集群",
+      "jumpHost": "CHANGE_ME",
+      "jumpPort": 22,
+      "jumpUser": "shr",
+      "namespace": "platform",
+      "podNamePrefix": "seccenter-v2",
+      "morbaxProfile": "cloudtest"
+    },
+    "47": {
+      "name": "47 集群",
+      "jumpHost": "10.17.196.47",
+      "jumpPort": 22,
+      "jumpUser": "shr",
+      "namespace": "platform",
+      "podNamePrefix": "seccenter-v2",
+      "morbaxProfile": "47"
+    }
+  }
+}

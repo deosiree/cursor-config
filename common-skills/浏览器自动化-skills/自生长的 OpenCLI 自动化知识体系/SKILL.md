@@ -18,6 +18,7 @@ should-trigger:
   - prompt 含 "自动化回归" + 页面 / 浏览器
   - prompt 含 "OpenCLI" + session / 复用 / 绑定 / bind
   - prompt 含 isOwner / 权限后门 / 个人中心 / sessionStorage userInfo + OpenCLI
+  - prompt 含 菜单导入 / ImportProjectMenuTree / 权限合并 yaml / 100000 未知错误 + OpenCLI 或 SSH
   - prompt 含 "自动化操作" + 网页 / 填表 / 批量
 should-not-trigger:
   - 用户只想用 web_fetch 获取静态 HTML 页面
@@ -48,6 +49,7 @@ should-not-trigger:
 | **自动化测试-租户管理** | 租户创建/搜索/删除 CRUD 全流程 | → `opencli-ux-tenant/`（直接路由） |
 | **自动化测试-角色Tab校验** | 弹窗 Tab 切换 + 表单错误断言 | → `opencli-ux-role-tab-validation/`（直接路由） |
 | **自动化测试-菜单路由判重** | 项目切换 + 路由路径 blur 异步判重断言 | → `opencli-ux-menu/`（直接路由） |
+| **自动化测试-菜单权限合并导入** 🆕 | 权限合并 YAML 预览/导入、`ImportProjectMenuTree`、`[100000]未知错误`、SSH 查 ERRO、自动补 id | → `opencli-ux-menu-import/` + [[references/场景-菜单导入与SSH联调.md]] + `ssh-skills/feature-skills/ssh-k8s-浏览后端日志/` |
 | **自动化测试-权限/isOwner/Header** | isOwner bypass、sessionStorage 诊断、登录后个人中心下拉 | → [[references/场景-权限与登录态诊断.md]] + `opencli-ux-user-perm/feature-skills/权限后门与Header诊断/` |
 | **自动化测试-其他场景** | 端到端校验（操作→断言） | → [[references/场景-自动化测试.md]] — 路由到子 skill 或通用流程 |
 | **手动点击自动化** | 模拟人工操作：点按钮、填表单、切换 Tab、截图 | → [[references/场景-手动点击自动化.md]] |
@@ -173,6 +175,8 @@ run_skill { name: "opencli-autofix", arguments: "opencli browser nebula-ux click
 | `opencli-ux-tenant/` | 自动化测试：租户 CRUD 流程 |
 | `opencli-ux-user-perm/` | 自动化测试：用户管理 E2E + 操作列权限诊断 |
 | `opencli-ux-menu/` | 自动化测试：菜单路由路径按项目判重 |
+| `opencli-ux-menu-import/` | 自动化测试：菜单权限合并 YAML 预览导入 + SSH 三联 |
+| `common-skills/ssh-skills/` | 后端排障：jump + kubectl 查 seccenter Pod 日志 |
 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 爬虫与数据提取：飞书文档滚动抓取 |
 
 ## 自生长流程
