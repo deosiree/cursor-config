@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "prompt": "沉淀",
+    "expected": "Agent 应触发 hermes-session-harvest → 执行四步 audit → 输出报告"
+  },
+  {
+    "id": 2,
+    "prompt": "刚才用 OpenCLI 跑完了租户创建测试，帮我收尾",
+    "expected": "Agent 应触发 hermes-session-harvest → SCAN 检测到 OpenCLI 命令序列 → CLASSIFY 判定是否新场景 → 若已有覆盖则仅记录 session-log"
+  },
+  {
+    "id": 3,
+    "prompt": "这轮修复安全配置权限 bug，用到了 OpenCLI eval 查 DOM + 读源码 v-if，自生长一下",
+    "expected": "Agent 应触发 → SCAN 检测跨工具组合 → CLASSIFY 判定为新场景 (重合度 <50%) → Checkpoint 确认 → HARVEST 新增场景 → commit"
+  },
+  {
+    "id": 4,
+    "prompt": "opencli-ux-foo 的 run-e2e.sh 从来没跑通过，骨架放了两个月了，帮我清理一下",
+    "expected": "Agent 应触发 → SCAN 检测废弃 → 清理废弃产物 feature skill 生成候选列表 → Checkpoint 用户确认 → 删除"
+  },
+  {
+    "id": 5,
+    "prompt": "不看文档，纯问答，这个函数是干嘛的？",
+    "expected": "Agent 不应触发 hermes-session-harvest（纯问答，无可复用产出）"
+  }
+]

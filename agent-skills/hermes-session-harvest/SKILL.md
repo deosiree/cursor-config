@@ -76,6 +76,25 @@ Agent 自动检查以下所有维度，不依赖用户提示：
 | **废弃产物** | 是否有脚本从未成功跑通、超过 30 天未使用？ | 检查 run-e2e.sh 的执行记录 + 修改时间 |
 | **未提交变更** | 是否有 `write_file` 创建但未 `git add` 的文件？ | `git status --porcelain` |
 
+#### ⏸️ Checkpoint 1 — SCAN 结果预览
+
+SCAN 完成后，向用户展示发现摘要，确认后继续：
+
+```markdown
+## SCAN 结果
+
+| 发现 | 数量 | 详情 |
+|------|:--:|------|
+| 新命令序列 | N | {简要描述} |
+| 新场景候选 | N | {场景名} |
+| 新脚本 | N | {路径} |
+| 脚本错放 | N | {当前位置 → 应落盘位置} |
+| 废弃候选 | N | {路径} |
+| 未提交变更 | N | {文件列表} |
+
+继续执行 CLASSIFY？(y/n)
+```
+
 ### Step 2 — CLASSIFY（分类：沉淀 vs 删除 vs 跳过）
 
 ```
@@ -107,6 +126,24 @@ Agent 自动检查以下所有维度，不依赖用户提示：
 | 脚本文件 | 能跑通且近期使用 | → 保留，不操作 | — |
 | 脚本错放 | 位于禁止位置（根目录/`docs/`同级/沙盒临时目录） | → **迁移**到落盘映射表对应位置 → 删除原文件 | — |
 | 踩坑记录 | 新错误码/新失败模式 | → 追加到对应 `references/` 或 `session-log/` | — |
+
+#### ⏸️ Checkpoint 2 — 执行计划确认
+
+CLASSIFY 完成后，展示执行计划，待用户确认后再执行：
+
+```markdown
+## 执行计划
+
+| 动作 | 目标 | 操作 |
+|------|------|------|
+| 🏗️ 新增场景 | {场景名} | write_file references/... + 更新路由表 |
+| 📝 会话日志 | {文件名} | write_file session-log/... |
+| 🧹 迁移错放 | {当前→目标} | move_file + delete_file |
+| 🧹 候选删除 | {路径} | ⚠️ 需逐项确认 |
+| ⏭️ 跳过 | N 项 | {原因} |
+
+确认执行？(y/n/逐项确认)
+```
 
 ### Step 3 — HARVEST or DELETE（执行沉淀或清理）
 
@@ -156,6 +193,26 @@ write_file: session-log/{date}-{session}-{scene}.md
 | 会话日志 | 📝 | `📝 OpenCLI自生长: 新增会话日志「{name}」({date})` |
 | 清理废弃 | 🧹 | `🧹 OpenCLI自生长: 清理废弃产物 — {描述} ({date})` |
 
+#### ⏸️ Checkpoint 3 — Pre-commit 确认
+
+所有文件写入完成后，展示待提交变更，确认后提交：
+
+```markdown
+## 待提交
+
+```bash
+git add {文件1} {文件2} ...
+git commit -m "{commit message}"
+```
+
+| 文件 | 状态 | 内容 |
+|------|:--:|------|
+| {路径} | new | {变更描述} |
+| {路径} | modified | {变更描述} |
+
+确认提交？(y/n/跳过提交只保存文件)
+```
+
 ### Step 4 — REPORT（输出摘要）
 
 每次 audit 结束后输出结构化报告：
@@ -203,6 +260,64 @@ write_file: session-log/{date}-{session}-{scene}.md
 - 不拷贝被引用 skill 的脚本/config
 - 删除操作必须展示候选列表 + 等待用户确认
 - 沉淀操作必须在 git commit 前完成所有文件写入
+
+## 边界条件与异常处理
+
+### 1. Harvest 脚本不可用
+
+若 `harvest/add-scene.sh` 或 `harvest/scaffold-skill.sh` 不存在或不可执行：
+
+```yaml
+fallback 链路:
+  1. 用 Agent 路径代替: write_file 创建 references/ + edit_file 更新路由表
+  2. 如果 Agent 路径也无法执行 (read-only mode) → 记录待办列表到 session-log
+  3. 输出提示: "harvest 脚本不可用，已走 Agent 路径落盘，需手动 git commit"
+```
+
+### 2. Git commit 失败
+
+若 `git commit` 失败（无 git、无权限、无暂存区）：
+
+```yaml
+fallback 链路:
+  1. git 不可用 → 跳过 commit，提示用户手动提交: cd .cursor && git add ... && git commit
+  2. 无变更 → 静默跳过（正常情况，非错误）
+  3. 权限拒绝 → 记录错误，不阻塞 audit 流程
+  4. 始终输出: "需手动 git commit: {变更清单}"
+```
+
+### 3. 并发会话冲突
+
+若两个 Agent 同时操作同一个 session-log 或 `references/` 文件：
+
+```yaml
+预防:
+  - session-log 文件名包含时间戳到秒级 → 天然去重 (session-log/{date}-{HHmmss}-{scene}.md)
+  - references/ 场景文件创建前检查 exists → 已存在则追加而非覆盖
+  - 路由表更新前 re-read → 避免基于过期缓存编辑
+```
+
+### 4. 路径解析失败
+
+若 OpenCLI 自生长系统根目录无法定位：
+
+```yaml
+查找顺序:
+  1. 从当前工作目录向上查找 "自生长的 OpenCLI 自动化知识体系/SKILL.md"
+  2. 从 .cursor/common-skills/ 查找
+  3. 未找到 → 降级为"纯报告模式"：只输出 audit 摘要，不执行任何文件沉淀
+```
+
+### 5. 部分成功回滚
+
+若沉淀流程中断（写入了 references 但未更新路由表）：
+
+```yaml
+回滚策略:
+  - references/ 新文件已创建但路由表未更新 → 不删除（可手动补路由），标记为 ⚠️
+  - 路由表已更新但 test-prompts.json 未更新 → 回滚路由表那行 → 重试
+  - git commit 前所有文件写入都是可逆的（手动 delete_file + git checkout）
+```
 
 ## 与 OpenCLI 自生长系统的关系
 
