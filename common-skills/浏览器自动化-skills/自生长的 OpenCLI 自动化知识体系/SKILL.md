@@ -178,6 +178,7 @@ run_skill { name: "opencli-autofix", arguments: "opencli browser nebula-ux click
 | `opencli-ux-menu-import/` | 自动化测试：菜单权限合并 YAML 预览导入 + SSH 三联 |
 | `common-skills/ssh-skills/` | 后端排障：jump + kubectl 查 seccenter Pod 日志 |
 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 爬虫与数据提取：飞书文档滚动抓取 |
+| `agent-skills/hermes-session-harvest/` | 会话沉淀引擎：四步 audit (SCAN→CLASSIFY→HARVEST→REPORT) + 废弃清理 |*
 
 ## 自生长流程
 
@@ -316,6 +317,37 @@ new-scene-name/
 - 用户只是口头提问不需要执行 → 回答即可，不自生长
 - 只有一个命令就能解决的问题 → 执行并记录到本次对话日志即可
 - 场景与已覆盖场景 ≥80% 重合 → 扩展已有子 skill 而非新建
+
+## Session-End 自检（强制）
+
+> ⚠️ **每次 OpenCLI 交互结束后，Agent 必须执行以下自检。不依赖用户提示。**
+
+Agent 在完成 OpenCLI 操作（测试/修复/爬虫/点击）后，必须调用 `hermes-session-harvest` agent skill 执行四步 audit：
+
+```
+1. SCAN     — 扫描本次会话产生的命令序列、场景、脚本
+2. CLASSIFY — 分类：≥3次复用→沉淀场景 / 1-2次→仅记录日志 / 废弃→候选删除
+3. HARVEST  — 执行沉淀（调用 harvest pipeline）或 清理（用户确认后删除）
+4. REPORT   — 输出结构化摘要报告
+```
+
+### 自检清单（Agent 快速自检）
+
+在结束 OpenCLI 会话前，Agent 必须逐项回答：
+
+| # | 检查项 | 动作 |
+|---|--------|------|
+| 1 | 本次会话是否产生了新的命令序列？ | → 写入 `session-log/` |
+| 2 | 是否存在路由表未覆盖的新场景？ | → 新增 `references/场景-*.md` + 更新路由表 |
+| 3 | 是否在 `opencli-ux-*/` 下创建了新文件？ | → `git add` + commit |
+| 4 | 是否有脚本从未成功跑通且超过 30 天？ | → 生成候选删除列表，询问用户 |
+| 5 | `git status` 是否有未提交变更？ | → 按 harvest 约定提交 |
+
+### 引用
+
+- 沉淀引擎：`.cursor/agent-skills/hermes-session-harvest/SKILL.md`（四步 audit 完整流程）
+- 对接规范：`.cursor/agent-skills/hermes-session-harvest/references/harvest-pipeline.md`
+- 清理策略：`.cursor/agent-skills/hermes-session-harvest/feature-skills/清理废弃产物/SKILL.md`
 
 ## 观察自生长
 

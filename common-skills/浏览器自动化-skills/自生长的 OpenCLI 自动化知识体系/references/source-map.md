@@ -13,6 +13,7 @@
 | opencli-ux-menu-import | `opencli-ux-menu-import/` | 菜单权限合并 YAML 预览导入 + HTTP dry_run + SSH ERRO 三联 | [[references/场景-菜单导入与SSH联调.md]] |
 | ssh-skills | `common-skills/ssh-skills/` | jump + kubectl 查 seccenter 后端日志（与 OpenCLI 互补） | [[references/场景-菜单导入与SSH联调.md]] |
 | OpenCLI-下载飞书文档 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 爬虫：SPA 滚动抓取 + 去重合并 + 结构化输出 | [[references/场景-爬虫与数据提取.md]] |
+| hermes-session-harvest | `agent-skills/hermes-session-harvest/` | 会话沉淀引擎：四步 audit + 废弃清理（对 OpenCLI 自生长系统提供自动触发能力） | 全部场景 |
 
 ## 每个 skill 的核心贡献
 
@@ -94,4 +95,15 @@ Agent 视角：
 1. 读场景文件 → 找到引用的已有 skill
 2. 如果路径是相对路径 → 用 read_file 读其 README.md 或 SKILL.md
 3. 如果路径是 Wikilink [[opencli-ux-...]] → 按相对路径解析
+
+### hermes-session-harvest
+
+| 能力 | 文件 |
+|------|------|
+| 四步 audit 引擎（SCAN→CLASSIFY→HARVEST→REPORT） | `SKILL.md` |
+| 新命令序列检测 + 置信度评分 | `feature-skills/检测新增命令序列/SKILL.md` |
+| 路由表场景匹配 + 重合度计算 | `feature-skills/检测未覆盖场景/SKILL.md` |
+| 废弃产物四维扫描 + 安全红线 | `feature-skills/清理废弃产物/SKILL.md` |
+| Harvest pipeline 对接规范 | `references/harvest-pipeline.md` |
+| 触发/不触发条件 | `evals/should-trigger.md`、`evals/should-not-trigger.md` |
 ```
