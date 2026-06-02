@@ -146,6 +146,16 @@ WeChat 文章 (`mp.weixin.qq.com`) 特征：
 - 正文超过 50000 字符时自动截断
 - 不处理登录后页面（需要 cookie 的 URL 会失败）
 
+## 资源索引
+
+| 路径 | 用途 |
+|------|------|
+| [`references/clip_web.py`](references/clip_web.py) | 完整 Python 提取脚本（纯标准库，可直接运行） |
+| [`references/网站类型与提取策略.md`](references/网站类型与提取策略.md) | 各网站类型识别特征与提取策略 |
+| [`templates/mvp/剪藏输出示例.md`](templates/mvp/剪藏输出示例.md) | 真实剪藏输出示例（公众号文章） |
+| [`assets/test-prompts.json`](assets/test-prompts.json) | 测试提示词（happy path + negative） |
+| [`evals/evals.json`](evals/evals.json) | Darwin 评估记录 |
+
 ## Pitfalls
 
 | 陷阱 | 表现 | 解决 |
@@ -158,5 +168,7 @@ WeChat 文章 (`mp.weixin.qq.com`) 特征：
 
 ## REFACTOR（维护者参考）
 
-- 新增网站类型（如知乎、掘金）→ 在步骤 2 添加对应 `div_id` 识别
+- 新增网站类型（如知乎、掘金）→ 在步骤 2 添加对应 `div_id` 识别，更新 `references/网站类型与提取策略.md`
 - 提取逻辑变长 → 独立为 `references/` 子文件
+- 新增模板 → 在 `templates/` 下新建目录，参照 `templates/mvp/` 格式
+- 评估记录 → 更新 `evals/evals.json` 的评分和测试结果
