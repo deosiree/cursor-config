@@ -1,0 +1,5 @@
+config/ux-test.config.local.json
+*.local.json
+*.log
+screenshots/
+.ux-run.env

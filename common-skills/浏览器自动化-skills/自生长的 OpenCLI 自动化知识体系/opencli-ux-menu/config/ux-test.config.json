@@ -1,0 +1,38 @@
+{
+  "defaultProfile": "local-subapp",
+  "sessionName": "nebula-menu-ux",
+  "menuPath": "/cloud/Apex/system/menu",
+  "menuData": {
+    "projectDuplicateIn": "test0415",
+    "projectCrossProject": "test0601",
+    "duplicateRoutePath": "/opencli/dup0415",
+    "duplicateErrorText": "当前项目下的路由路径已存在",
+    "testMenuNamePrefix": "ux_menu_dup_"
+  },
+  "profiles": {
+    "local-subapp": {
+      "baseUrl": "http://localhost:8081",
+      "authMode": "none",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "password": "123456",
+      "captchaMode": "auto"
+    },
+    "local": {
+      "baseUrl": "http://localhost:8080",
+      "authMode": "login",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "password": "123456",
+      "captchaMode": "auto"
+    },
+    "cloud": {
+      "baseUrl": "https://cloud.lanniu.top",
+      "authMode": "login",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME",
+      "captchaMode": "manual"
+    }
+  }
+}

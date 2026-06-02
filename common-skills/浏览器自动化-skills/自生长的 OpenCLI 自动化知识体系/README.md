@@ -52,7 +52,8 @@ opencli browser my-session screenshot ./debug.png
 |-------|---------------------|------|
 | 角色 Tab 校验 | `opencli-ux-role-tab-validation/` | 弹窗 Tab 切换校验 + 表单错误断言 |
 | 租户管理 | `opencli-ux-tenant/` | 租户创建 → 列表校验 → 删除 → 空列表校验 |
-| 用户管理 | `opencli-ux-user-perm/` | 用户 E2E + 种子用户 + 操作列权限诊断 |
+| 用户管理 | `opencli-ux-user-perm/` | 用户 E2E + 种子用户 + 操作列权限诊断 + isOwner/Header |
+| 权限/isOwner 诊断 | `references/场景-权限与登录态诊断.md` | sessionStorage bypass + 登录后下拉断言（勿 reload） |
 | 飞书文档抓取 | `探索skills/feature-skills/OpenCLI-下载飞书文档/` | 飞书文档全文抓取保存为 Markdown |
 
 ## 文件结构
@@ -61,15 +62,22 @@ opencli browser my-session screenshot ./debug.png
 自生长的 OpenCLI 自动化知识体系/
 ├── SKILL.md                    # Agent 路由逻辑（按场景分发）
 ├── README.md                   # 本文件（人类说明）
+├── harvest/                    # 🆕 自生长自动化工具
+│   ├── add-scene.sh            #   一键注册新场景到路由表
+│   ├── scaffold-skill.sh       #   创建完整子 skill 骨架（12+ 文件）
+│   ├── session-log.sh          #   会话日志记录
+│   └── templates/              #   模板文件
+├── session-log/                # 🆕 会话沉淀（如 2026-06-02-perm-bypass-isOwner-header.md）
 ├── references/                 # 场景指南与模式
 │   ├── source-map.md           # 外部引用总览
 │   ├── 场景-自动化测试.md       # 测试场景 → 引用于 skill
+│   ├── 场景-权限与登录态诊断.md  # isOwner bypass / session / Header 下拉
 │   ├── 场景-手动点击自动化.md    # 手动操作场景 → 通用命令指南
 │   └── 场景-爬虫与数据提取.md    # 爬虫场景 → 引用探索skills
 ├── opencli-ux-tenant/           # 租户管理子 skill
 ├── opencli-ux-user-perm/        # 用户管理子 skill
 ├── opencli-ux-role-tab-validation/  # 角色Tab校验子 skill
-└── opencli-*-*.js               # 独立脚本
+└── template/                   # 脚手架模板
 ```
 
 ## 与探索技能 OpenCLI-下载飞书文档 的关系
@@ -116,6 +124,8 @@ opencli browser nebula-ux get url
 | `extract` 返回空或极少内容 | SPA 未渲染完 / 页面需要滚动加载 | 先 `wait text` 等关键元素出现，再 extract |
 | Session 过期 / 回到登录页 | 登录态超时 | 重新执行 login 流程 或 `opencli browser <session> bind` |
 | `wait text` 超时 | 页面未加载 / 文本不存在 | 先 `screenshot` 查看当前页面状态 |
+| `unknown option '--format'` | browser 子命令不支持 `-f` | 省略 flag，stdout 已是 JSON |
+| 登录后有 isOwner 但无「个人中心」 | computed 未订阅 userInfo | 见 `perm-bypass-isOwner-pitfalls.md`；OpenCLI 验收禁止 reload |
 | Windows 下 `.sh` 报错 | 纯 cmd 而非 Git Bash | 用 Git Bash 或 WSL 运行 |
 | opencli 命令卡住不返回 | daemon 进程崩溃 | `opencli doctor` 检查，重启终端 |
 
@@ -126,6 +136,7 @@ opencli browser nebula-ux get url
 | 需求 | 路由 |
 |------|------|
 | 创建/清理种子用户，对比操作列差异 | → `opencli-ux-user-perm/` |
+| isOwner bypass / 登录后 Header 个人中心 | → `references/场景-权限与登录态诊断.md` |
 | 租户 CRUD 全流程（创建→搜索→删除） | → `opencli-ux-tenant/` |
 | 角色弹窗 Tab 校验 | → `opencli-ux-role-tab-validation/` |
 | 以上都不匹配 | → 读 `references/场景-*.md` 或直接 OpenCLI 命令 |

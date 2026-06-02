@@ -47,7 +47,8 @@ _merge_json() {
     return 0
   fi
   if command -v jq >/dev/null 2>&1; then
-    jq -s '.[0] * .[1]' "$base" "$overlay"
+    # 深合并：后面的覆盖前面的对应层级
+    jq -s 'reduce .[] as $item ({}; . * $item)' "$base" "$overlay"
   else
     "$PYTHON_BIN" -c "
 import json, sys
@@ -66,17 +67,22 @@ json.dump(a, sys.stdout)
 }
 
 #===============================================================================
-# 解析 --profile 参数（从 $@ 中提取并消费）
-# 设置全局变量 UX_PROFILE_ARG，调用后 $@ 不再包含 --profile / -p
+# 解析 --profile / --skip-login 参数（从 $@ 中提取并消费）
+# 设置全局变量 UX_PROFILE_ARG / SKIP_LOGIN，调用后 $@ 不再包含已消费参数
 #===============================================================================
 parse_args_profile() {
   local args=()
   UX_PROFILE_ARG=""
+  SKIP_LOGIN=0
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --profile|-p)
         UX_PROFILE_ARG="${2:-}"
         shift 2
+        ;;
+      --skip-login)
+        SKIP_LOGIN=1
+        shift
         ;;
       *)
         args+=("$1")

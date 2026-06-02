@@ -3,6 +3,10 @@
 # OpenCLI 自动化脚本模板
 # 生成自 common-skills/浏览器自动化-skills/OpenCLI/template/
 # 脚本名: __SCRIPT_NAME__
+# 自生长元数据（请填充）:
+#   SESSION_ORIGIN="__SESSION_ORIGIN__"   # 产自此 OpenCLI session
+#   CREATED_DATE="__CREATED_DATE__"        # 创建日期
+#   SOURCE_PROMPT="__SOURCE_PROMPT__"      # 触发此脚本的用户请求原文
 # ═══════════════════════════════════════════════
 
 set -euo pipefail

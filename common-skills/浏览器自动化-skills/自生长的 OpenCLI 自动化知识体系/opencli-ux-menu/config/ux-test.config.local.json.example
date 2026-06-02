@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "cloud": {
+      "password": "your-cloud-password"
+    }
+  },
+  "menuData": {
+    "duplicateRoutePath": "/opencli/dup0415"
+  }
+}

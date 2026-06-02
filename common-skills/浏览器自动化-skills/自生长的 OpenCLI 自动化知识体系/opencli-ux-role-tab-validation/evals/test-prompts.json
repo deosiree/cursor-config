@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "prompt": "测一下角色弹窗的 Tab 校验，在 local 环境跑全流程 TC1~TC4",
+    "expected": "Agent 路由到 opencli-ux-role-tab-validation → 给出 bash run-e2e.sh --profile local 命令"
+  },
+  {
+    "id": 2,
+    "prompt": "角色新增弹窗不填名称就切 Tab，确定后会不会报错？帮我验证一下",
+    "expected": "Agent 识别为 TC1 场景 → 路由到 role-tab-validation → 给出命令并说明期望结果（Tab 跳回基础信息，显示错误）"
+  },
+  {
+    "id": 3,
+    "prompt": "我已经登录 nebula-ux 了，只想跑角色 Tab 用例",
+    "expected": "Agent 给出 bash role-tab-validation.sh --profile local --skip-login 命令"
+  },
+  {
+    "id": 4,
+    "prompt": "角色弹窗新增后取消，再打开应默认回到基础信息 Tab — 这算 Bug 吗？帮我测一下",
+    "expected": "Agent 识别为 TC4 场景 → 路由到 role-tab-validation → 说明测试步骤和期望结果"
+  }
+]

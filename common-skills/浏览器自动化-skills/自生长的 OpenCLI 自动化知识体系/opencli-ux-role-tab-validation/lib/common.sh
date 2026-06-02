@@ -363,26 +363,30 @@ fill_role_name() {
   local value="$1"
   log_step "ui" "填写角色名称: ${value}"
   set +e
-  oc_plain eval "(function(){
-    const value = '${value}';
-    const dialog = document.querySelector('.el-dialog') || document.body;
-    const setNative = (input, val) => {
-      const desc = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
-      if (desc && desc.set) desc.set.call(input, val);
-      else input.value = val;
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-    };
-    const items = [...dialog.querySelectorAll('.el-form-item')];
-    for (const item of items) {
-      const label = item.querySelector('.el-form-item__label, label');
-      const text = (label && label.innerText) ? label.innerText.trim() : '';
-      if (!text.includes('角色名称')) continue;
-      const input = item.querySelector('input:not([type=hidden])');
-      if (input) { setNative(input, value); return JSON.stringify({ ok: true }); }
-    }
-    return JSON.stringify({ ok: false, reason: 'no-role-name-input' });
-  })()" >/dev/null 2>&1
+  # 先用 fill 命令通过 placeholder 匹配（实测触发 Vue 响应更可靠）
+  oc_plain fill --role textbox --name "请输入角色名称" "$value" >/dev/null 2>&1 || {
+    # 降级：nativeInputValueSetter + dispatchEvent
+    oc_plain eval "(function(){
+      const value = '${value}';
+      const dialog = document.querySelector('.el-dialog') || document.body;
+      const setNative = (input, val) => {
+        const desc = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
+        if (desc && desc.set) desc.set.call(input, val);
+        else input.value = val;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      const items = [...dialog.querySelectorAll('.el-form-item')];
+      for (const item of items) {
+        const label = item.querySelector('.el-form-item__label, label');
+        const text = (label && label.innerText) ? label.innerText.trim() : '';
+        if (!text.includes('角色名称')) continue;
+        const input = item.querySelector('input:not([type=hidden])');
+        if (input) { setNative(input, value); return JSON.stringify({ ok: true }); }
+      }
+      return JSON.stringify({ ok: false, reason: 'no-role-name-input' });
+    })()" >/dev/null 2>&1
+  }
   set -e
   sleep 0.5
 }

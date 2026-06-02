@@ -1,0 +1,49 @@
+{
+  "skill": "opencli-ux-menu",
+  "prompts": [
+    {
+      "id": "route-dup-e2e-subapp",
+      "strictness": "high",
+      "prompt": "用 OpenCLI 在 test0415 和 test0601 测菜单路由路径按项目判重，账户 admin@system.local",
+      "expected_behaviors": [
+        "路由到 opencli-ux-menu/SKILL.md 或 run-e2e",
+        "默认 profile local-subapp 与 session nebula-menu-ux",
+        "TC1 同项目重复文案「当前项目下的路由路径已存在」",
+        "TC2 跨项目无重复错误",
+        "提及 /opencli/ 合法路径或语法先于判重"
+      ]
+    },
+    {
+      "id": "bind-8080-host",
+      "strictness": "high",
+      "prompt": "8080 基座登录后 bind，再跑菜单判重",
+      "expected_behaviors": [
+        "推荐 bind-and-run.sh 或 bind-and-run.ps1",
+        "session nebula-menu-ux 与 tenant/user-perm 的 nebula-ux 隔离",
+        "提示人工登录后再 bind，勿 eval location.href",
+        "profile local 菜单 URL 为 /cloud/Apex/system/menu"
+      ]
+    },
+    {
+      "id": "dialog-diagnose",
+      "strictness": "medium",
+      "prompt": "菜单新增弹窗 fill 找不到 input，state 里 dialog 是空的",
+      "expected_behaviors": [
+        "读取 element-plus-overlay-pattern.md 或 诊断菜单弹窗 skill",
+        "eval 点新增 + wait 路由路径",
+        "fill 用 input[placeholder] / input[maxlength=64]",
+        "读 display:block 的 .el-overlay 内 .el-form-item__error"
+      ]
+    },
+    {
+      "id": "edit-self-tc3",
+      "strictness": "medium",
+      "prompt": "编辑菜单不改 routePath 不应报重复",
+      "expected_behaviors": [
+        "TC3 open_menu_edit_dialog_by_route_path",
+        "PowerShell 脚本含 Open-EditDialogByRoutePath",
+        "assert 无「当前项目下的路由路径已存在」"
+      ]
+    }
+  ]
+}

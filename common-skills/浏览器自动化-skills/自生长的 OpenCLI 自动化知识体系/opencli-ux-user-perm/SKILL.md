@@ -26,7 +26,7 @@ description: 当需要用 OpenCLI 对 nebula 用户管理页做 E2E（登录、�
 |------|------|
 | `targetProfile` | `local-user0601` / `local-admin`（见 `config/ux-test.config.json`） |
 | `browserSession` | OpenCLI 会话名，默认 `user0601` |
-| `flowScope` | `preflight` / `seed_users` / `cleanup` / `perm_diagnose` / `full` |
+| `flowScope` | `preflight` / `seed_users` / `cleanup` / `perm_diagnose` / `perm_bypass_header` / `full` |
 | `keepCount` | 清理时保留用户数，默认 `10` |
 | `emailCount` / `pwdCount` | 种子用户数量，默认各 `3` |
 
@@ -51,6 +51,7 @@ description: 当需要用 OpenCLI 对 nebula 用户管理页做 E2E（登录、�
 | `seed_users` | 登录 → `[[feature-skills/创建种子用户/SKILL.md]]` |
 | `cleanup` | 登录 → `[[feature-skills/批量清理用户/SKILL.md]]` |
 | `perm_diagnose` | 登录 → `[[feature-skills/操作列权限诊断/SKILL.md]]` + 单元测试 |
+| `perm_bypass_header` | 登录 → `[[feature-skills/权限后门与Header诊断/SKILL.md]]` |
 | `full` | preflight → seed_users → perm_diagnose（可选 cleanup） |
 
 ## 执行前确认（必过）
@@ -106,6 +107,9 @@ bash run-e2e.sh --check
 
 为什么操作列只有编辑
 → perm_diagnose → scripts/diagnose-op-column.js 或 references/permission-op-column-pitfalls.md
+
+isOwner bypass / 登录后无个人中心
+→ perm_bypass_header → references/perm-bypass-isOwner-pitfalls.md + references/场景-权限与登录态诊断.md
 ```
 
 ## 关联资产
@@ -114,4 +118,6 @@ bash run-e2e.sh --check
 - 可执行脚本：`scripts/create-seed-users.js`、`scripts/cleanup-users-to-n.js`、`scripts/diagnose-op-column.js`、`scripts/create-users-via-ui.js`
 - 配置：`config/ux-test.config.json` + `config/ux-test.config.local.json`
 - 单测：`apex_dev/src/directive/__tests__/hasPerm.test.ts`、`userTableOpPermDiagnostic.test.ts`
+- 权限后门：`references/perm-bypass-isOwner-pitfalls.md`、`feature-skills/权限后门与Header诊断/`
+- Few-shot：`assets/few-shot-example/session-perm-bypass-header.md`
 - Darwin：`evals/darwin-baseline-report.md`、`evals/darwin-round1-report.md`

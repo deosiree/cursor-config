@@ -15,26 +15,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
-SKIP_LOGIN=0
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --skip-login) SKIP_LOGIN=1; shift ;;
-    --profile|-p) UX_PROFILE_ARG="${2:-}"; shift 2 ;;
-    *) shift ;;
-  esac
-done
+# 提取 --profile / --skip-login（剩余参数消费）
+parse_args_profile "$@"
 
 load_profile "${UX_PROFILE_ARG:-}" || exit 1
 require_opencli
 
 log_step "0" "profile=${UX_PROFILE} login=${LOGIN_URL}"
-
-# ---- bind-only 模式 ----
-if [[ "${CAPTCHA_MODE}" == "bind-only" ]]; then
-  echo "bind-only：请在 Chrome 打开 ${LOGIN_URL} 并登录，然后执行："
-  echo "  opencli browser ${SESSION} bind"
-  exit 0
-fi
 
 # ---- 跳过登录 ----
 if [[ "$SKIP_LOGIN" -eq 1 ]]; then
@@ -59,6 +46,9 @@ if [[ "$url_after_open" != *"/login"* ]]; then
   exit 0
 fi
 
+# 验证码处理（auto / manual / bind-only）
+handle_captcha_mode
+
 log_step "2" "填写账号: ${USERNAME}"
 oc_plain fill --role textbox --name "账号" "$USERNAME" >/dev/null 2>&1 || {
   oc_plain eval "document.querySelector('input')?.value='$USERNAME'" >/dev/null
@@ -80,8 +70,9 @@ oc_plain click --role button --name "登录" >/dev/null 2>&1 || {
     if(btn) btn.click();
   " >/dev/null
 }
-sleep 3
 
-assert_logged_in
+# 轮询等待跳离登录页（替代 sleep 3，网络波动时更可靠）
+wait_leave_login 60
+
 echo ""
 echo "✅ 登录完成: session=${SESSION}"

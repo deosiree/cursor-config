@@ -29,23 +29,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/common.sh"
 
 # ---- 默认值 ----
-SKIP_LOGIN=0
 FLOW="full"
 KEEP_COUNT=10
 CHECK_MODE=0
-UX_PROFILE_ARG=""
 
-# ---- 参数解析 ----
+# ---- 参数解析（共参由 parse_args_profile 消费，剩余为 flow/keep/check） ----
+parse_args_profile "$@"
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --profile|-p)
-      UX_PROFILE_ARG="${2:-}"
-      shift 2
-      ;;
-    --skip-login)
-      SKIP_LOGIN=1
-      shift
-      ;;
     --flow|-f)
       FLOW="${2:-full}"
       shift 2

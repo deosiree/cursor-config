@@ -25,7 +25,19 @@
       ]
     },
     {
-      "id": "cleanup-gate",
+      "id": "isowner-bypass-header",
+      "strictness": "high",
+      "prompt": "用 OpenCLI 测 admin@system.local 登录后 isOwner bypass 和个人中心下拉，不要刷新页面",
+      "expected_behaviors": [
+        "读取 references/场景-权限与登录态诊断.md 或 perm-bypass-isOwner-pitfalls.md",
+        "opencli doctor 后 state 取 ref 登录",
+        "eval sessionStorage isOwner===true",
+        "登录后禁止 location.reload 再测 Header",
+        "click 用户下拉断言 profileVisible",
+        "区分 bypass 失效 vs computed 未订阅 userInfo"
+      ]
+    },
+    {
       "strictness": "medium",
       "prompt": "把租户用户删到只剩 10 个。",
       "expected_behaviors": [
