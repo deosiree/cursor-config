@@ -336,6 +336,13 @@ echo "  ✅ references/"
 # ---- 12. screenshots/.gitkeep ----
 touch "${SKILL_DIR}/screenshots/.gitkeep"
 
+# ---- 13. auto-commit ----
+FILE_COUNT=$(find "${SKILL_DIR}" -type f | wc -l)
+SCRIPT_DIR="${SCRIPT_DIR}" bash "${SCRIPT_DIR}/git-commit.sh" \
+  --type skill \
+  --name "${SKILL_NAME}" \
+  --count "${FILE_COUNT}"
+
 echo ""
 echo "🎉 子 skill 骨架已创建: ${SKILL_DIR}"
 echo ""

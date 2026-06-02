@@ -48,6 +48,11 @@ capture() {
     "$TEMPLATE" > "$logfile"
 
   echo "✅ 会话日志已保存: session-log/$(basename "$logfile")"
+
+  # auto-commit
+  bash "${SCRIPT_DIR}/git-commit.sh" \
+    --type log \
+    --name "${session}-${date}"
 }
 
 list_logs() {

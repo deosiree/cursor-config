@@ -185,6 +185,13 @@ with open('${TEST_PROMPTS}', 'w', encoding='utf-8') as f:
 
 rm -f "$SKILL_TMP" "$PROMPTS_TMP"
 
+# ---- Step 4: auto-commit ----
+echo ""
+echo "==== Step 4: auto-commit ===="
+SCRIPT_DIR="${SCRIPT_DIR}" bash "${SCRIPT_DIR}/git-commit.sh" \
+  --type scene \
+  --name "${SCENE_NAME}"
+
 echo ""
 echo "🎉 场景「${SCENE_NAME}」已注册完成"
 echo ""
