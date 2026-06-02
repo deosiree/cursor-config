@@ -36,10 +36,10 @@
 - **检查**：预期中是否含代码断言、`expect`、`assert`、`===`
 - **不通过**：含代码断言
 
-### G. develop结果 = 预期结果（UI 路径）
+### G. develop结果 = 0（UI 路径）
 
-- **检查**：UI 路径下 `develop结果` 是否与 `预期结果` 一致
-- **不通过**：不一致（除非显式覆盖）
+- **检查**：UI 路径下 `develop结果` 是否为 `0`（测试系统约定「未执行」）
+- **不通过**：`develop结果` 非 `0`
 
 ### H. 功能集合是否留空（UI 路径）
 
@@ -55,6 +55,16 @@
 
 - **检查**：API 路径下是否含 `正向：` 标记
 - **不通过**：无 `正向：`
+
+### K. 用户可感知（UI 路径）
+
+- **检查**：UI 路径用例的步骤/前置/预期中是否含以下内部实现关键词：
+  - `F12`、`DevTools`、`Network`、`sessionStorage`、`localStorage`
+  - `mock`、`stub`、`fake`（手工用例不应 mock）
+  - 内部函数名（如 `loadUserPermsMap`、`handleGatewayError`、`getFuncByList`）
+  - `props` 验证（如 `props 含 userInfo`，用户看不见 props）
+- **不通过**：含上述任一关键词
+- **警告**：预期含 `permsMap`、`routePath`、`menuName` 等内部字段名（提示改写为用户视角）
 
 ## 报告格式
 

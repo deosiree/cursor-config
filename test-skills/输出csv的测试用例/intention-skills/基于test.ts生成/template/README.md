@@ -3,4 +3,3 @@
 本目录存放 test.ts 路径下的模板：
 
 - `test-scan-template.md`：describe/it 扫描记录格式
-- `case-field-mapping.json`：测试断言→CSV 字段的映射参考

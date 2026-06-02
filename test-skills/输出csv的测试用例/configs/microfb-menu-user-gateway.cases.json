@@ -1,0 +1,76 @@
+{
+  "moduleId": "microfb-menu-user-gateway",
+  "cases": [
+
+    {
+      "name": "权限加载失败仅弹一次 toast 且不阻断登录",
+      "precondition": "登录时后端权限接口返回业务错误",
+      "steps": "1. 使用非正常账号登录系统\n2. 观察是否弹出错误通知\n3. 确认能否正常进入首页",
+      "expected": "正向：仅弹 1 次错误通知，文案含「加载权限数据失败」或业务提示；仍进入首页\n反向：连续弹 2 次相同通知；或直接卡在登录页无法进入",
+      "remark": "menu.gateway handleGatewayError + user.gateway catch 不重复 toast"
+    },
+    {
+      "name": "菜单加载失败时提示「加载菜单数据失败」",
+      "precondition": "已登录；后端菜单接口返回业务错误",
+      "steps": "1. 登录系统或刷新页面\n2. 观察右下角错误通知内容",
+      "expected": "正向：弹出 1 次「加载菜单数据失败」或相应的业务错误通知\n反向：无任何提示；或同一错误连续弹多次",
+      "remark": "menu/menu.gateway.ts > tree + handleGatewayError"
+    },
+    {
+      "name": "权限数据加载失败时提示「加载权限数据失败」",
+      "precondition": "已登录；后端权限接口返回业务错误",
+      "steps": "1. 登录系统或刷新菜单\n2. 观察错误通知内容",
+      "expected": "正向：弹出含「加载权限数据失败」或业务 code 的错误通知\n反向：无任何通知",
+      "remark": "menu/menu.gateway.ts > getFuncByList fallback"
+    },
+    {
+      "name": "菜单刷新后子应用页面菜单和权限按钮同步更新",
+      "precondition": "已登录 microfb 并打开子应用页面",
+      "steps": "1. 在基座触发菜单刷新\n2. 观察子应用的菜单列表是否变化\n3. 观察子应用中带权限控制的按钮是否按新权限显示/隐藏",
+      "expected": "正向：子应用菜单列表正确更新，权限按钮按新权限正确显隐\n反向：菜单未刷新仍显示旧数据；或权限按钮显示与权限不匹配",
+      "remark": "user.store.ts > refreshCurrentUserMenus + setMicroAppProps"
+    },
+    {
+      "name": "用户信息加载失败时提示「获取用户信息失败」",
+      "precondition": "已登录；后端用户信息接口返回业务错误",
+      "steps": "1. 触发需要加载用户信息的页面或操作\n2. 观察错误通知内容",
+      "expected": "正向：弹出 1 次业务错误通知，兜底文案「获取用户信息失败」或带 code 的提示\n反向：无任何通知；或直接白屏",
+      "remark": "user.gateway.ts > getInfo + handleGatewayError"
+    },
+    {
+      "name": "创建菜单失败时提示「创建菜单失败」",
+      "precondition": "已登录平台租户；创建菜单时后端返回业务错误",
+      "steps": "1. 在菜单管理页面执行创建菜单操作\n2. 制造业务校验失败（如必填项为空）\n3. 观察页面错误提示",
+      "expected": "正向：页面弹出「创建菜单失败」或带 code 的错误提示\n反向：无任何提示；或表单校验后仍可提交",
+      "remark": "menu/menu.gateway.ts > create + handleGatewayError"
+    },
+    {
+      "name": "更新菜单失败时提示「更新菜单失败」",
+      "precondition": "已登录；选中一个可编辑菜单节点进行编辑",
+      "steps": "1. 修改菜单信息后点击保存\n2. 后端返回业务错误（如名称冲突）\n3. 观察页面错误提示",
+      "expected": "正向：提示「更新菜单失败」或相应的业务错误\n反向：无提示；或页面状态异常",
+      "remark": "menu/menu.gateway.ts > update + handleGatewayError"
+    },
+    {
+      "name": "删除菜单失败时提示「删除菜单失败」",
+      "precondition": "已登录；存在一个可删除的菜单节点",
+      "steps": "1. 确认删除某个菜单\n2. 后端返回业务错误（如菜单被引用无法删除）\n3. 观察页面错误提示",
+      "expected": "正向：提示「删除菜单失败」或相应的业务错误\n反向：无提示直接刷新；或菜单已被删除但没有操作反馈",
+      "remark": "menu/menu.gateway.ts > delete + handleGatewayError"
+    },
+    {
+      "name": "路由数据加载失败时提示「获取路由数据失败」",
+      "precondition": "已登录；后端路由/菜单接口返回业务错误",
+      "steps": "1. 登录系统或刷新页面使路由数据加载\n2. 观察错误通知内容",
+      "expected": "正向：提示「获取路由数据失败」或带 code 的业务错误\n反向：无提示；或提示文案为其他模块的兜底文案",
+      "remark": "menu/menu.gateway.ts > getRoutes + handleGatewayError"
+    },
+    {
+      "name": "有权限的用户看到对应操作按钮，无权限的用户看不到",
+      "precondition": "存在一个受权限控制的按钮（如用户管理页面的「新增」）",
+      "steps": "1. 使用有该按钮权限的账号登录\n2. 打开对应页面，观察按钮是否显示\n3. 切换为无该权限的账号登录，重新打开页面\n4. 观察按钮是否隐藏",
+      "expected": "正向：有权限时按钮可见；无权限时按钮不可见\n反向：有权限但按钮不显示（功能不可用）；或无权限但按钮仍可见（点击后报错）",
+      "remark": "apex_dev directive/permission checkHasPerm 读 session permsMap"
+    }
+  ]
+}

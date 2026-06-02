@@ -63,10 +63,10 @@ RED 阶段若用户用口语描述，须先核对下表最少 5 项（缺一则�
 
 | 门禁 | 位置 | 触发 | 行为 |
 |------|------|------|------|
-| **G1 RED 追问** | RED 结束 | 缺失 moduleId/outputPath/模块名/子系统 | 追问，不猜测，记入 missingFacts |
+| **G1 RED 追问** | RED 结束 | 缺失 moduleId/模块名/子系统/domain | 追问，不猜测，记入 missingFacts |
 | **G2 Cases 预览** | cases 产出后 | cases 数组就绪 | 展示 2 条样例 + 总条数，等用户确认 |
 | **G3 CSV 覆盖确认** | CSV 生成前 | 目标 CSV 已存在 | 展示「已有 N 行 + 新增 M 行」，等确认；`--force` 跳过 |
-| **G4 质量自检** | cases 确认后 | cases 确认通过 | 自动运行 `用例质量自检`，报告问题 |
+| **G4 质量自检** | cases 确认后 | cases 确认通过 | 自动运行 `用例质量自检`，报告问题。UI 路径额外触发 **「K.用户可感知」** 检查（步骤不含 F12/mock/sessionStorage/内部函数名） |
 | **G5 Darwin 路由** | CSV 产出后 | 每轮强制 | → `darwin拓展发现` 扫描能力缺口 |
 
 用户说「全部跳过确认」一次执行时，须在 `currentUnderstanding` 注明跳过原因。
@@ -77,9 +77,10 @@ RED 阶段若用户用口语描述，须先核对下表最少 5 项（缺一则�
 |------|------|
 | 有 `*.test.ts` 或 glob | `[[intention-skills/基于test.ts生成/SKILL.md]]` |
 | 要新建/更新模块 config（参考 CSV 或自然语言） | `[[intention-skills/沉淀模块配置/SKILL.md]]` |
-| 已有 config + cases，仅生成 CSV | 直接执行 `scripts/generate_test_csv.py` |
+| 已有 config + cases，仅生成 CSV（API/网关自动测试场景） | 直接执行 `scripts/generate_test_csv.py` → 产出模块独立 CSV |
+| 已有 cases.json，想追加到领域 CSV（非独立文件） | 直接执行 `scripts/append_ui_cases_to_csv.py` — 需指定 --domain + --date |
 | 边开发边写 UI 交互用例、追加问题单 CSV | `[[intention-skills/边开发边输出UI用例/SKILL.md]]` |
-| 无 test.ts、仅口述业务场景 | **G1 追问** 补齐字段 → `[[intention-skills/基于源码+口述生成/SKILL.md]]` |
+| 无 test.ts、仅口述业务场景 | **G1 追问** 补齐字段（含 domain） → `[[intention-skills/基于源码+口述生成/SKILL.md]]` → 追加到领域 CSV |
 
 ### REFACTOR（强制）
 

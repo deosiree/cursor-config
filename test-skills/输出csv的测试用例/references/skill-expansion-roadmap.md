@@ -8,7 +8,7 @@
 |------|------|------|
 | 基于test.ts生成 | done | 有 `*.test.ts` |
 | 沉淀模块配置 | done | 参考 CSV / 自然语言默认值 |
-| 基于源码+口述生成 | planned | 无 test.ts，口述 UI 场景 |
+| 基于源码+口述生成 | done | 无 test.ts，口述 UI 场景 |
 | 基于Swagger契约生成 | planned | 后端 API 用例为主 |
 | 合并多来源去重 | planned | 多 CSV/多 cases 合并 |
 

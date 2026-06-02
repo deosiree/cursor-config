@@ -36,10 +36,12 @@ description: 在开发过程中将 UI 交互结论沉淀为测试系统可导入
 
 ## 工作流（GREEN）
 
-1. 按 `[[../../references/ui-interaction-test-case-rules.md]]` 撰写/校对 cases
+1. 按 `[[../../references/ui-interaction-test-case-rules.md]]` 撰写/校对 cases（复杂场景可参考 `[[../../feature-skills/撰写UI交互cases/SKILL.md]]` 获取用例骨架）
 2. **G2：Cases 预览**：展示 2 条样例 + 总条数，等待用户确认。用户说「跳过确认」可一次执行，须在回报中注明
 3. 调用 `python scripts/append_ui_cases_to_csv.py --domain {domain} --date {date} --cases configs/{moduleId}.cases.json`
-4. 回报：输出路径、追加条数、是否首次从模板复制
+4. **G4 质量自检**：`[[../../feature-skills/用例质量自检/SKILL.md]]`（path_type=ui），自动触发 K 项（用户可感知）检查
+5. **G5 Darwin**：`[[../../feature-skills/darwin拓展发现/SKILL.md]]` 扫描能力缺口
+6. 回报：输出路径、追加条数、是否首次从模板复制
 
 ## Example
 

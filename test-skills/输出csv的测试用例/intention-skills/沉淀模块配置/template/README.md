@@ -3,4 +3,3 @@
 本目录存放模块配置模板：
 
 - `config-skeleton.json`：config.json 字段骨架（moduleId/repoRoot/csvTemplatePath/outputPath/casesFile/fieldDefaults）
-- `field-defaults-template.md`：fieldDefaults 常见字段说明

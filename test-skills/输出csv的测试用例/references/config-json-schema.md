@@ -1,5 +1,19 @@
 # config.json / cases.json 说明
 
+## 两个生成路径的适用场景
+
+| 路径 | 脚本 | 产出 | 适用场景 |
+|------|------|------|----------|
+| **独立 CSV** | `generate_test_csv.py` | `docs/问题单/{MMDD}/{moduleId}.csv`（按模块命名） | API/网关 test.ts 自动生成、有 config.json 的模块 |
+| **领域追加 CSV** | `append_ui_cases_to_csv.py` | `docs/问题单/{MMDD}/{domain}.csv`（按领域聚合） | 手工/口述 UI 用例、无 test.ts，追加到已有领域 CSV |
+
+**选型规则**：
+- 有 `*.test.ts` → `generate_test_csv.py`（独立 CSV，每个模块一个文件）
+- 无 test.ts、仅口述/源码阅读 → `append_ui_cases_to_csv.py`（追加到领域 CSV）
+- 已有 config.json + cases.json → 若来自 test.ts 用 `generate_test_csv.py`；若手工编写用 `append_ui_cases_to_csv.py`
+
+---
+
 ## config.json
 
 | 字段 | 必填 | 说明 |
@@ -53,7 +67,7 @@ python scripts/append_ui_cases_to_csv.py \
 | 输出文件不存在 | 从 `docs/问题单/模板/{domain}.csv` **整表复制** 再追加 |
 | 输出文件已存在 | 保留全部已有行，**仅末尾追加** |
 | 功能集合 | 新增行强制留空 |
-| develop结果 | 默认等于 **预期结果** |
+| develop结果 | 默认等于 **0**（未执行状态） |
 | domain 映射 | 见 `references/domain-template-map.md` |
 
 cases.json 可含 `fieldDefaultsOverrides`；也可用 `--overrides-json '{"创建人员":"惠岩"}'`。

@@ -71,8 +71,8 @@ def build_ui_rows(header: list[str], field_defaults: dict, cases: list[dict]) ->
         row["测试步骤"] = case.get("steps", "")
         expected = case.get("expected", "")
         row["预期结果"] = expected
-        # develop结果 默认等于 预期结果（若 case 未单独指定）
-        row["develop结果"] = case.get("develop_result", expected)
+        # develop结果 优先用 case 指定值，其次 fieldDefaults（如 "0"），最后兜底预期结果
+        row["develop结果"] = case.get("develop_result", row.get("develop结果", expected))
         # 强制留空
         row["功能集合"] = ""
         row["用例ID"] = ""
@@ -124,12 +124,14 @@ def append(config: dict, skill_root: Path) -> tuple[Path, int, bool]:
     is_new = not output_path.exists()
 
     if is_new:
-        # 首次：复制整表
+        # 首次：只写表头（复用模板表头），不复制模板数据行
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(template_path, output_path)
-        print(f"Copied template {template_path} -> {output_path}")
+        with output_path.open("w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+        print(f"Created {output_path} (header from {template_path}, template data rows excluded)")
 
-    # 读取已有行（首次复制后也读一次，确认已有行数）
+    # 读取已有行（首次：仅表头，无数据行）
     existing_rows = read_existing_rows(output_path) if output_path.exists() else []
 
     # 构建 UI 行
@@ -182,7 +184,7 @@ def main() -> int:
             "用例类型": "0",
             "子系统": "8",
             "模块名": "",
-            "develop结果": "",
+            "develop结果": "0",
             "功能集合": "",
             "用例ID": "",
         },
@@ -190,6 +192,19 @@ def main() -> int:
     if args.output_dir:
         config["outputDir"] = args.output_dir
     config["fieldDefaults"].update(overrides)
+
+    # 模块名自动映射：domain→模块名（与 domain-template-map.md 同步）
+    DOMAIN_MODULE_NAME_MAP = {
+        "role": "角色管理",
+        "menu": "菜单管理",
+        "tenant": "租户管理",
+        "user": "用户管理",
+        "e2e": "端到端测试",
+        "login": "登录登出",
+        "required": "必填字段",
+    }
+    if not config["fieldDefaults"].get("模块名") and args.domain in DOMAIN_MODULE_NAME_MAP:
+        config["fieldDefaults"]["模块名"] = DOMAIN_MODULE_NAME_MAP[args.domain]
 
     try:
         out_path, count, is_new = append(config, SKILL_ROOT)
