@@ -1,0 +1,39 @@
+{
+  "testPrompts": [
+    {
+      "id": "happy-reasonix",
+      "prompt": "把 .cursor 中的 skills 硬链接到 .reasonix/skills，让 Reasonix 能用",
+      "expectedBehavior": "扫描 .cursor → 为每个根级 SKILL.md 创建 .reasonix/skills/<name>.md 硬链接 → 输出计数",
+      "successCriteria": "DryRun 显示 >50 个 skill 文件，无 FAIL"
+    },
+    {
+      "id": "ambiguous-hermes",
+      "prompt": "让 Hermes 也能用我的 skills",
+      "expectedBehavior": "检测到 Hermes 目标 → 询问 Hermes skill 加载格式 → 根据格式决定 linkType",
+      "successCriteria": "不直接执行，先停下来确认 Hermes 格式"
+    },
+    {
+      "id": "cross-volume",
+      "prompt": "skills 在 D 盘，reasonix 在 C 盘，怎么链接？",
+      "expectedBehavior": "检测跨卷 → 提示无法用硬链接 → 建议改用 copy",
+      "successCriteria": "输出明确的降级方案，不尝试建立硬链接"
+    },
+    {
+      "id": "dryrun-preview",
+      "prompt": "用 cook-link-skills 预览 .cursor → .reasonix/skills 的链接",
+      "expectedBehavior": "DryRun 模式 → 列出所有将要建立的链接 → 不实际修改文件",
+      "successCriteria": "输出 DRYRUN 行，exit code 0"
+    }
+  ],
+  "baselineScores": {
+    "frontmatter": 5,
+    "workflow": 12,
+    "boundary": 7,
+    "checkpoint": 4,
+    "specificity": 11,
+    "resource": 2,
+    "architecture": 10,
+    "performance": 10,
+    "total": 61
+  }
+}
