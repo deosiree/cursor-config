@@ -1,0 +1,27 @@
+[
+  {
+    "prompt": "把 https://mp.weixin.qq.com/s/CLIuogpYSPng2brQph7AHg 这个网页剪藏到 Obsidian",
+    "expected": "下载公众号文章 → 提取标题和正文 → 保存到 Clippings/ → 返回文件路径",
+    "type": "happy-path"
+  },
+  {
+    "prompt": "剪藏 https://example.com/article 到 Obsidian Vault",
+    "expected": "通用网页下载 → 提取正文 → 保存 → 返回路径",
+    "type": "happy-path"
+  },
+  {
+    "prompt": "把这篇 https://zhuanlan.zhihu.com/p/123 存到我的 Obsidian 知识库",
+    "expected": "识别 zhuanlan.zhihu.com → 提取文章内容 → 保存",
+    "type": "happy-path"
+  },
+  {
+    "prompt": "剪藏（没有 URL）",
+    "expected": "不触发 — 缺少 URL",
+    "type": "negative"
+  },
+  {
+    "prompt": "把这个视频 https://example.com/video.mp4 存到 Obsidian",
+    "expected": "不触发 — 网页剪藏不支持视频下载",
+    "type": "negative"
+  }
+]

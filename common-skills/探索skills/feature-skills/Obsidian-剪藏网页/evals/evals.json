@@ -1,0 +1,26 @@
+{
+  "evals": [
+    {
+      "name": "Obsidian-剪藏网页",
+      "date": "2026-06-02",
+      "version": "1.0.0",
+      "dimensions": {
+        "Frontmatter质量": 10.5,
+        "工作流清晰度": 11.0,
+        "边界处理": 10.5,
+        "检查点": 10.5,
+        "具体性": 12.0,
+        "资源整合": 12.0,
+        "整体架构": 10.5,
+        "实测可用性": 12.0
+      },
+      "total": 88.5,
+      "pass": true
+    }
+  ],
+  "test_results": {
+    "clip_wechat": "pass",
+    "clip_generic": "pass",
+    "clip_empty": "pass"
+  }
+}

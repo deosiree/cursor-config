@@ -37,6 +37,7 @@ should-not-trigger:
 | 本地仓库 | 用户传了 `--repo-path` 或已知路径 | [[references/探索-本地仓库.md]] |
 | GitHub 仓库 | 用户给了 `owner/repo` | [[references/探索-GitHub仓库.md]] |
 | 网站/博客 | 非 GitHub 的 HTTP URL | [[references/探索-网站.md]] |
+| 网页剪藏 | URL + "剪藏"/"剪影"/"保存到 Obsidian" | [[feature-skills/Obsidian-剪藏网页/SKILL.md]] |
 
 ## 使用方法（Agent 视角）
 
