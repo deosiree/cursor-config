@@ -1,0 +1,4 @@
+- 仅查日志即可定位 → 转 ssh-k8s-浏览后端日志
+- 只需看 toast 错误码 → 转 Network 面板
+- kubectl get pods 显示 Pod 正常 Running → 不需要深度诊断
+- 用户仅需要 kubectl logs -f 实时跟输出

@@ -1,0 +1,4 @@
+- 已有 ingress / NodePort 可直接访问服务 → 不必开隧道
+- 仅需 kubectl logs → 转 ssh-k8s-浏览后端日志
+- 用户需要的是持久化 VPN 而非临时 SSH 隧道
+- 只需查日志 → 转其他 ssh-k8s skill

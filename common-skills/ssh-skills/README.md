@@ -15,6 +15,9 @@ nebula 后端排障的 SSH / K8s 日志能力路由中心，与 OpenCLI 自动�
 | feature skill | 用途 |
 |---------------|------|
 | [`ssh-k8s-浏览后端日志`](feature-skills/ssh-k8s-浏览后端日志/SKILL.md) | 48 集群 platform 命名空间查 seccenter 日志 |
+| [`ssh-k8s-pod-诊断`](feature-skills/ssh-k8s-pod-诊断/SKILL.md) | Pod 深度诊断：CrashLoopBackOff/OOMKilled/describe/events/exec |
+| [`ssh-端口转发`](feature-skills/ssh-端口转发/SKILL.md) | 端口转发隧道：数据库/Actuator/SOCKS/内网服务 |
+| [`ssh-文件传输`](feature-skills/ssh-文件传输/SKILL.md) | SCP/SFTP/pscp/kubectl cp 拉日志推配置 |
 
 ## 快速开始
 
@@ -45,7 +48,10 @@ ssh-skills/
 │   └── .gitkeep                      # 占位
 └── feature-skills/
     ├── README.md                     # 子能力索引
-    └── ssh-k8s-浏览后端日志/SKILL.md  # 唯一已实现的 feature skill
+    ├── ssh-k8s-浏览后端日志/SKILL.md  # 浏览 seccenter 后端日志
+    ├── ssh-k8s-pod-诊断/SKILL.md     # Pod 深度诊断（describe/events/exec）
+    ├── ssh-端口转发/SKILL.md         # 端口转发隧道（-L/-R/-D/数据库）
+    └── ssh-文件传输/SKILL.md         # SCP/SFTP/pscp 文件传输
 ```
 
 ## 相关 OpenCLI 子 skill

@@ -1,0 +1,6 @@
+- SSH 端口转发 / SSH 隧道 / port forwarding / local forwarding / remote forwarding
+- 需要访问内网服务但无 ingress / 无公网入口
+- 数据库连接 Navicat/DBeaver 需要 SSH 隧道
+- Spring Actuator / JMX / debug 端口在集群内部
+- SOCKS 代理 / 浏览器隧道访问内网页面
+- 内网服务端口未暴露但需要从本机工具连接

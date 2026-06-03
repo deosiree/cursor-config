@@ -25,7 +25,7 @@
     },
     "cloudtest": {
       "name": "cloudtest 集群",
-      "jumpHost": "CHANGE_ME",
+      "jumpHost": "<请填写 cloudtest 跳板机 IP — 从 ssh.config.local.json 覆盖此值>",
       "jumpPort": 22,
       "jumpUser": "shr",
       "namespace": "platform",

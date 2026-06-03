@@ -54,6 +54,8 @@ opencli browser my-session screenshot ./debug.png
 | 租户管理 | `opencli-ux-tenant/` | 租户创建 → 列表校验 → 删除 → 空列表校验 |
 | 用户管理 | `opencli-ux-user-perm/` | 用户 E2E + 种子用户 + 操作列权限诊断 + isOwner/Header |
 | 权限/isOwner 诊断 | `references/场景-权限与登录态诊断.md` | sessionStorage bypass + 登录后下拉断言（勿 reload） |
+| 菜单权限合并导入 | `opencli-ux-menu-import/` | YAML 预览导入 + SSH 查 ERRO + 自动补 id |
+| SSH 后端日志 | `../ssh-skills/` | jump + kubectl 查 seccenter Pod（与 OpenCLI 三联） |
 | 飞书文档抓取 | `探索skills/feature-skills/OpenCLI-下载飞书文档/` | 飞书文档全文抓取保存为 Markdown |
 
 ## 文件结构
@@ -73,7 +75,9 @@ opencli browser my-session screenshot ./debug.png
 │   ├── 场景-自动化测试.md       # 测试场景 → 引用于 skill
 │   ├── 场景-权限与登录态诊断.md  # isOwner bypass / session / Header 下拉
 │   ├── 场景-手动点击自动化.md    # 手动操作场景 → 通用命令指南
+│   ├── 场景-菜单导入与SSH联调.md # 菜单 YAML 导入 + SSH ERRO 三联（2026-06-02）
 │   └── 场景-爬虫与数据提取.md    # 爬虫场景 → 引用探索skills
+├── opencli-ux-menu-import/      # 菜单权限合并预览导入子 skill
 ├── opencli-ux-tenant/           # 租户管理子 skill
 ├── opencli-ux-user-perm/        # 用户管理子 skill
 ├── opencli-ux-role-tab-validation/  # 角色Tab校验子 skill

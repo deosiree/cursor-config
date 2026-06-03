@@ -1,3 +1,29 @@
+---
+name: ssh-k8s-浏览后端日志
+description: jump + kubectl 查 seccenter Pod 日志，解析 ERRO 行与前端 [100000] toast 映射。与 ssh-k8s-pod-诊断（深度诊断）互补。
+tags:
+  - kubectl
+  - kubectl logs
+  - seccenter
+  - 后端日志
+  - 100000
+  - ERRO
+should-trigger:
+  - kubectl logs / kubectl logs -f / kubectl logs --tail
+  - [100000] / [130000] / 100000 未知错误 / 130000 未知错误（token 形态）
+  - ImportProjectMenuTree
+  - seccenter 日志 / seccenter ERROR
+  - prompt 含 SSH + kubectl / K8s / 后端日志 / Pod 日志
+  - prompt 含 48 集群 / cloudtest / morbax + 查日志
+  - prompt 含「查真实错误」且前端只有 toast 兜底文案
+  - 菜单导入 / 权限点接口失败且需要对照 Pod 日志
+should-not-trigger:
+  - 纯前端 OpenCLI 自动化、不涉及 SSH 或 K8s
+  - 本地 vite dev + /dev-api/direct 已返回完整 JSON（优先 HTTP/Network）
+  - 无 SSH 权限 → 只用浏览器 Network + 文档排查
+  - 需要改集群状态（delete pod 等）且用户未授权
+---
+
 # SSH + K8s：浏览后端日志（seccenter）
 
 > 来源：2026-06-02 菜单导入 `[100000]未知错误` 排障会话；Obsidian 笔记「查后端日志-k8s-调试权限点」。
@@ -25,6 +51,8 @@
 
 ## 标准流程
 
+> **🔴 执行前检查点：** 再次向用户确认目标集群已用 morbax 打开、凭证已就绪、plink/ssh 可执行。如果任一条件不满足，停在此处。
+
 ### 1. 查 Pod 名
 
 ```bash
@@ -32,6 +60,8 @@ kubectl get pods -n platform | grep seccenter
 ```
 
 记下 **Running** 的 Pod，例如 `seccenter-v2-6d8bb9f9c-rfmzz`（**以实际为准**，通常 2 个副本）。
+
+> **🔴 检查点：** 如果 `grep seccenter` 返回空，说明命名空间或集群错了——先停，不要继续 grep 其他关键词。
 
 ### 2. 实时跟日志（复现问题时）
 
@@ -71,9 +101,13 @@ kubectl logs --tail=10000 <pod> -n platform | findstr /i "ImportProjectMenuTree 
 
 ## Windows Agent：plink / OpenSSH 非交互 SSH
 
+> 以下命令中 `10.17.196.48` 为 48 集群默认 jump IP。实际执行时从 `../../config/ssh.config.json` → `jumpHost`（或 `multiCluster.<name>.jumpHost`）读取。
+
 本机未配 kubeconfig 时，经 jump 执行 kubectl。
 
 ### plink（推荐 Windows PuTTY）
+
+> **⚠️ 引号与编码：** grep 模式**必须用单引号** `'...'` 包裹（非双引号），否则 bash 会把 `|` 当管道符拆解、把中文当命令名执行。如中文乱码（`无效`→`鏃犳晥`），在命令前加 `export LANG=en_US.UTF-8;` 或先用纯 ASCII 模式 `grep -E 'ERRO|panic|error'` 粗筛。
 
 路径从 `../../config/ssh.config.json` → `plinkPath` 读取（默认 `C:\Program Files\PuTTY\plink.exe`），agent 按需加载：
 
@@ -116,19 +150,11 @@ INFO ... 错误信息:[100000]未知错误
 
 → 自动化闭环见 [`opencli-ux-menu-import`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/opencli-ux-menu-import/SKILL.md)
 
-## 扩展：端口转发排障（非 Pod 化服务）
+## 扩展：端口转发 → 独立 skill
 
-当后端不是 K8s Pod（如独立 JVM、Nginx、中间件），需要通过 SSH 端口转发来访问管理接口或 debug 端口：
+端口转发场景（数据库隧道、Actuator、SOCKS 代理等）已迁移到独立 skill：
 
-```powershell
-# 本地 8088 → remote 127.0.0.1:8088（JVM JMX 或 Actuator）
-& $Plink -ssh -P 22 -l shr -pw $env:SSH_JUMP_PASSWORD -batch -hostkey $HostKey -L 8088:127.0.0.1:8088 10.17.196.48
-
-# 本地 9090 → remote Nginx status
-& $Plink -ssh -P 22 -l shr -pw $env:SSH_JUMP_PASSWORD -batch -hostkey $HostKey -L 9090:127.0.0.1:9090 10.17.196.48
-```
-
-然后浏览器访问 `http://localhost:8088/actuator/health` 等。
+→ [`../ssh-端口转发/SKILL.md`](../ssh-端口转发/SKILL.md)
 
 ## 参考文档索引
 
@@ -136,7 +162,7 @@ INFO ... 错误信息:[100000]未知错误
 |------|------|------|
 | 导入失败排查 100000 | `../../../../docs/menu/导入失败排查-100000.md` | 菜单导入 `[100000]` |
 | seccenter 错误码 | `../../../../docs/errCode/seccenter.swagger.md` | 错误码速查 |
-| 菜单导入 SSH 联调 | `../../references/场景-菜单导入与SSH联调.md` **（新建）** | 完整闭环参考 |
+| 菜单导入 SSH 联调 | [`../../../浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/references/场景-菜单导入与SSH联调.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/references/场景-菜单导入与SSH联调.md) | 完整闭环参考（OpenCLI 侧） |
 
 ## 输出契约（Agent 交付）
 
@@ -154,9 +180,16 @@ INFO ... 错误信息:[100000]未知错误
 |------|------|------|
 | 本机 `kubectl get pods` NotFound | kubeconfig 未指 48 集群 | SSH 到 cloudtest 再 kubectl |
 | plink `Cannot confirm host key` | batch 模式 | 加 `-hostkey SHA256:...` |
+| plink: command not found | `plinkPath` 不存在 | 检查 `config/ssh.config.json.plinkPath`；降级 OpenSSH |
+| SSH Connection timed out | jump 机不可达/端口不通 | 检查 VPN/morbax；尝试 ping；降级 Network 排障 |
+| `kubectl: command not found` | jump 上无 kubectl | `which kubectl` 或 `export PATH`；考虑 `-L` 端口转发 |
 | grep 无 Import | 日志已滚动 | 增大 `--tail` 或 `-f` 实时跟 |
 | 两个 Pod 不确定 | 负载均衡 | 两个 Pod 都 grep 一遍 |
 | ERRO 是中文但 toast 英文/码 | 网关映射 | 以 ERRO 为准 |
+| `No resources found in platform namespace` | 集群/命名空间错了 | `kubectl get namespaces` 确认；全命名空间搜 `seccenter` |
+| Pod 已 Terminating | 部署更新中，新旧交替 | 加 `--since=5m`；确认用 Running Pod |
+| grep 报 `command not found` 或 `No such file` | grep 模式用了双引号，bash 把 `\|` 拆成管道、把中文当命令 | **必须用单引号**包裹 grep 模式：`grep -E 'ERRO\|关键词'`，不是双引号 |
+| grep 中文关键词无匹配（实际日志有） | plink 传输中文时编码损坏（`无效`→`鏃犳晥`） | 命令前加 `export LANG=en_US.UTF-8;`；或先用 ASCII 模式 `grep -E 'ERRO\|error'` 粗筛 |
 
 ## 关联
 

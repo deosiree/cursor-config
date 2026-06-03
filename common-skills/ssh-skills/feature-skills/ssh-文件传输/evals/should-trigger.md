@@ -1,0 +1,6 @@
+- SCP / SFTP / pscp / rsync over SSH
+- 从 jump/集群拉取文件到本地
+- 从本地推送文件到 jump/集群
+- 导出 K8s Pod 内容 / kubectl cp
+- 跨跳板机搬运文件 / 中转传输
+- kubectl logs 不够用，需要完整日志文件

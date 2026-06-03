@@ -44,7 +44,8 @@
       "strictness": "medium",
       "prompt": "Nginx 返回 502，我 SSH 到 jump 机后想通过端口转发看 Nginx status 页面。",
       "expected_behaviors": [
-        "读取 feature-skills/ssh-k8s-浏览后端日志 → 端口转发排障 节",
+        "读取 ssh-skills/SKILL.md 路由表 → 端口转发隧道 skill",
+        "载入 feature-skills/ssh-端口转发/SKILL.md",
         "使用 plink -L 或 ssh -L 建立本地转发",
         "指定转发端口与目标地址（如 -L 9090:127.0.0.1:9090）",
         "引导用户浏览器访问 http://localhost:9090",
@@ -60,6 +61,46 @@
         "优先使用 HTTP/Network 面板的完整 JSON 错误体",
         "不执行 kubectl 或 plink 命令",
         "在回复中引用 should-not-trigger 条件说明原因"
+      ]
+    },
+    {
+      "id": "pod-crashloop-diagnosis",
+      "strictness": "high",
+      "prompt": "Pod seccenter-v2-xxxxx 一直 CrashLoopBackOff，kubectl logs 看不出问题，需要深挖根因。",
+      "expected_behaviors": [
+        "读取 ssh-skills/SKILL.md 路由到 feature-skills/ssh-k8s-pod-诊断",
+        "执行 kubectl describe pod 查看 Events 和 Last State",
+        "检查 Exit Code（137=OOM, 139=segfault, 1=app error）",
+        "尝试 kubectl logs --previous 看重启前日志",
+        "尝试 kubectl top pod 看资源使用",
+        "如需要，用 kubectl exec 非交互执行单条诊断命令",
+        "输出 podStatus/restartCount/lastState/events/fixHint"
+      ]
+    },
+    {
+      "id": "db-tunnel-via-ssh",
+      "strictness": "medium",
+      "prompt": "我需要从本机 Navicat 连接内网 MySQL，但 MySQL 没有暴露 ingress，需要通过 jump 机转发。",
+      "expected_behaviors": [
+        "读取 ssh-skills/SKILL.md 路由表 → 端口转发隧道 skill",
+        "载入 feature-skills/ssh-端口转发/SKILL.md",
+        "使用 plink -L 转发本地端口到内网 MySQL:3306",
+        "指定本机端口不冲突（如 33060）",
+        "引导用户用 mysql -h 127.0.0.1 -P 33060 连接",
+        "提醒 -N 参数保持隧道不分配 pty"
+      ]
+    },
+    {
+      "id": "scp-pull-logs",
+      "strictness": "medium",
+      "prompt": "seccenter 日志太大了，kubectl logs --tail 不够，我需要把 Pod 内 /app/logs/ 整个拉下来分析。",
+      "expected_behaviors": [
+        "读取 ssh-skills/SKILL.md 路由表 → 文件传输 skill",
+        "载入 feature-skills/ssh-文件传输/SKILL.md",
+        "使用 kubectl cp 从 Pod 拉到 jump 机",
+        "使用 pscp 或 scp 从 jump 机拉到本地 Windows",
+        "说明递归目录传输（-r 参数）",
+        "先 kubectl exec 确认目标路径存在"
       ]
     }
   ]

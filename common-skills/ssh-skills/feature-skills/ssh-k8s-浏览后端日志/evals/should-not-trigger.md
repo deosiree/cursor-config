@@ -1,0 +1,4 @@
+- 纯前端 OpenCLI 自动化、不涉及 SSH 或 K8s
+- 本地 vite dev + /dev-api/direct 已返回完整 JSON（优先 HTTP/Network）
+- 无 SSH 权限 → 只用浏览器 Network + 文档排查
+- 需要改集群状态（delete pod 等）且用户未授权

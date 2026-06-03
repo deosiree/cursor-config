@@ -1,0 +1,6 @@
+- prompt 含 SSH + kubectl / K8s / 后端日志 / Pod 日志
+- prompt 含 48 集群 / cloudtest / morbax + 查日志
+- prompt 含 seccenter + 日志 / ImportProjectMenuTree
+- prompt 含 100000 未知错误 / 130000 未知错误
+- prompt 含「查真实错误」且前端只有 toast 兜底文案
+- 菜单导入 / 权限点接口失败且需要对照 Pod 日志

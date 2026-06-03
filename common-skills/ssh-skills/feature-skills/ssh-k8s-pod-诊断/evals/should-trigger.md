@@ -1,0 +1,6 @@
+- Pod CrashLoopBackOff / OOMKilled / ImagePullBackOff / Init:Error / RunContainerError
+- kubectl describe pod / describe node / get events
+- Pod 状态异常且 kubectl logs 看不出根因
+- kubectl exec 进容器检查文件系统或进程
+- kubectl top pod / node 查资源瓶颈
+- kubectl logs --previous 看重启前日志
