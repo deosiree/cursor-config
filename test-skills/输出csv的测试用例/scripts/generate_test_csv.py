@@ -20,6 +20,15 @@ CASE_FIELD_MAP = {
 }
 
 
+def expected_csv_column(header: list[str]) -> str:
+    """menu.csv 等模板用「用例结果」，部分模板用「预期结果」。"""
+    if "预期结果" in header:
+        return "预期结果"
+    if "用例结果" in header:
+        return "用例结果"
+    return "预期结果"
+
+
 def load_json(path: Path) -> dict | list:
     with path.open(encoding="utf-8") as f:
         return json.load(f)
@@ -32,11 +41,14 @@ def resolve_path(raw: str, base: Path) -> Path:
     return (base / p).resolve()
 
 
-def build_row(field_defaults: dict, case: dict) -> dict:
+def build_row(field_defaults: dict, case: dict, header: list[str] | None = None) -> dict:
     row = dict(field_defaults)
+    expected_col = expected_csv_column(header) if header else "预期结果"
     for case_key, csv_key in CASE_FIELD_MAP.items():
-        if case_key in case and case[case_key] is not None:
-            row[csv_key] = case[case_key]
+        if case_key not in case or case[case_key] is None:
+            continue
+        target = expected_col if case_key == "expected" else csv_key
+        row[target] = case[case_key]
     return row
 
 
@@ -70,7 +82,7 @@ def generate(config_path: Path, output_override: str | None = None, force: bool 
     field_defaults = config.get("fieldDefaults", {})
 
     header = read_header(template_path)
-    rows = [build_row(field_defaults, case) for case in cases]
+    rows = [build_row(field_defaults, case, header) for case in cases]
 
     # G3 CSV 覆盖确认
     if output_path.exists() and not force:
