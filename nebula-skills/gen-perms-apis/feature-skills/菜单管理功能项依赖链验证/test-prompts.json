@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "直接用菜单管理跑一遍 E2E 测试，8 个场景全过一遍。",
+    "expected": "cd scripts/ → node run-all.node.js → 汇报 PASS/FAIL 与 examples/result-*.json"
+  },
+  {
+    "id": 2,
+    "prompt": "只运行场景 8（查询+编辑+配置API），验证权限配置弹窗内 API配置 可见。",
+    "expected": "node run-e2e-scenario.node.js scenarios/08-query-edit-configapi.json；检查 expectApiConfigInDialog"
+  },
+  {
+    "id": 3,
+    "prompt": "菜单 E2E 场景 6 失败了，帮我 debug。",
+    "expected": "先单跑 S6 看 state 门禁与 check/uncheck 日志；再决定是否 Debug 手操；禁止 eval 点 checkbox"
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "testDate": "2026-06-03",
+  "total": 7,
+  "passed": 1,
+  "failed": 6,
+  "results": [
+    {
+      "id": "02-only-export",
+      "title": "只选导出",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedSec": 28
+    },
+    {
+      "id": "03-only-add",
+      "title": "只选新建",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 24.8
+    },
+    {
+      "id": "04-only-query",
+      "title": "只选查询",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 25.2
+    },
+    {
+      "id": "05-query-add",
+      "title": "查询+新建",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 27.6
+    },
+    {
+      "id": "06-query-edit",
+      "title": "查询+编辑",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 26.3
+    },
+    {
+      "id": "07-query-delete",
+      "title": "查询+删除",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 28
+    },
+    {
+      "id": "08-query-edit-configapi",
+      "title": "查询+编辑+配置API",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 44.6
+    }
+  ]
+}

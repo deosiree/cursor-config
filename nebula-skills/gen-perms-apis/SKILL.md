@@ -1,143 +1,192 @@
 ---
 name: 梳理权限点与apis
-description: 当需要输入仓库路径，梳理页面、组件、权限点与真实 API 调用，并输出单份源码盘点文档时使用。
+description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
 ---
 
-# 梳理权限点与 APIs
+# 梳理权限点与 APIs（Agent Skill 总入口）
 
-## 目标
+## RED
 
-生成单份 `路由-组件-权限点-API 源码梳理.md`，用统一结构收敛：
+- 没有这个父 agent 时，用户会把"分析现状、设计权限点、生成菜单补丁、改源码、端到端验证"混在一次请求里
+- agent 容易直接跳到某个功能节点，跳过 `analysis_required` 判断
+- 常见失败：
+  - 在盘点文档还没产出时就设计权限点
+  - 在权限设计还没确认时就生成菜单补丁
+  - 把需要多轮人工确认的问题压成一次性执行
+  - 把需要端到端验证的问题收缩成只改源码
+  - 漏掉 `targetRepo` 默认约束，错误改动 opsdeck
+  - 用 `v-if` + computed 替代 `v-hasPerm`，增大 diff 面
 
-1. 静态路由对应的页面与子组件
-2. 已命中的 `v-hasPerm` 权限点
-3. 每个权限点真实关联的 API
-4. 未挂 `v-hasPerm` 但真实调用 API 的操作，以及建议补齐的权限点
+## 适用场景
 
-先看：
+- 需要盘点某个仓库的路由、组件、`v-hasPerm` 与真实 API 调用
+- 已有盘点结果，需要设计新的权限点与 API 映射
+- 需要生成增量菜单树 YAML 补丁
+- 需要按集中式原则改动源码（最小 diff、v-hasPerm 优先）
+- 需要通过 SSH + OpenCLI 做端到端权限验证
+- 需要通过 OpenCLI 双会话（admin 配置角色 + 测试用户验证）做自动化权限 E2E 测试，结果落盘 CSV
+- 权限运行时异常需要排障（isOwner / computed 缓存 / 登录时序）
+- 任务需要多轮推进，而不是一次性固定走完整条链
 
-- `[[template/route-component-perm-api-output.md]]`
-- `[[template/boundary-file-example.md]]`
-- `[[template/sample-run/apex_dev-route-component-perm-api.md]]`
+## 输入契约
 
-需要长说明时再看：
-
-- `[[references/default-project-boundary.md]]`
-- `[[references/doc-architecture.md]]`
-- `[[references/api-contract-resolution.md]]`
-- `[[references/api-backtrace-rules.md]]`
-- `[[references/evidence-rules.md]]`
-
-## 共享输入契约
+至少要拿到：
 
 - `仓库路径`：必填
-- `输出目录`：默认 `<repo>/docs/plans`
-- `输出文件名`：默认 `路由-组件-权限点-API 源码梳理.md`
-- `api契约`：默认 `F:\Documents\Repertory\Sieyuan\nebula\docs\api\seccenter.swagger.json`
-- `补充契约路径`：可选，支持 0 到多个路径
-- `关注模块`：可选，支持 0 到多个模块名或路由前缀；例如 `system`、`/Apex/system`
-- `关注路由`：可选，支持 0 到多个 routePath；例如 `/Apex/system/securityConfig`
-- `非关注路由处理策略`：可选，仅当 `关注模块` 或 `关注路由` 非空时启用；默认 `保留扫描、弱化结论`，若用户明确说明“不关心”，则在输出文档中统一标记“不是我的关注模块，不关心”
-- `约束与边界文件`：默认 `[[references/default-project-boundary.md]]`
-- `路由入口`：默认 `src/router/index.ts`
-- `视图根目录`：默认 `src/views`
-- `组件根目录`：默认 `src/components`
-- `网关根目录`：默认 `src/gateway`
-- `原始 API 根目录`：默认 `src/api`
+- `目标结果`：必填（盘点 / 设计 / 补丁 / 改码 / 验证 / 排障）
+- `targetRepo`：可选，默认 `apex_dev`
+- `api契约`：可选，默认 `{nebula根}/docs/api/seccenter.swagger.json`（示例：`docs/api/seccenter.swagger.json`）
+- `补充契约路径`：可选
+- `关注模块 / 关注路由`：可选
+- `是否允许多轮人工确认`：可选，默认允许多轮
 
-所有输入契约参数都要写入输出文档的笔记属性。
-笔记属性必须从文件第一行开始，并同时包含中文字段与英文字段。
-`补充契约路径` 对应英文属性 `extra_api_contracts`。
-`关注模块` 对应英文属性 `focus_modules`。
-`关注路由` 对应英文属性 `focus_routes`。
-`关注模块` 与 `关注路由` 未提供或为空时，表示全量扫描且全量纳入结论；同时提供时取并集。
+若用户没有明确回答 `是否允许多轮人工确认`，默认按以下策略：
 
-## RED：先识别失败基线
+- 可以继续做只读分析、状态判断和意图路由
+- 不可以擅自把多步执行压成一次性方案
+- 只要后续节点需要裁决权限粒度、跨模块归属、豁免策略或改动范围，就进入人工提问
 
-先判断如果没有本 skill，最容易错在哪里：
+## Agent 工作循环
 
-1. 只统计命中 `v-hasPerm` 的元素，不补“未命中但真实调用 API”的权限设计。
-2. 只按页面归类，不建立“页面 -> 组件 -> 权限点”的反向定位链。
-3. API `description` 直接写主观推断，没有优先读取契约。
-4. 把注释里的 `v-hasPerm` 误算成真实命中。
-5. 把子组件错误地单独当作路由，而不是归属父页面。
-6. 查到 gateway 方法、映射函数、模板字符串或 base URL 常量后就停止，没有追到最终 API URL 与契约。
-7. 子组件只通过 `emit`、props 回调或 `v-model` 抬升动作，就误判为“当前无后端 API 调用”。
-8. 用户未提供关注范围时，误以为只处理局部路由，而不是默认全量扫描。
+每一轮都遵循：
 
-如果这些失败风险还没排除，不要直接出文档。
+1. 观察：当前仓库状态、已有产物、用户目标
+2. 判断：属于哪个 intention 节点
+3. 选择当前意图 skill
+4. 验证事实是否足够
+5. 继续、切换节点或提问
 
-## GREEN：按固定顺序执行
+每一轮必须显式产出：
 
-1. 读取 `路由入口`，建立静态路由到顶层页面组件的映射。
-2. 以路由指向的顶层页面组件为起点，递归扫描该页面的所有业务子孙组件。
-3. 扫描 `视图根目录`、`组件根目录` 中真实消费的 `v-hasPerm`，过滤注释命中。
-4. 建立“路由 -> 页面组件/子孙组件 -> 权限点”的归属关系。
-5. 沿页面和相关子孙组件继续回查 `网关根目录` / `原始 API 根目录`，整理真实 API 调用；具体反查规则见 `[[references/api-backtrace-rules.md]]`，必须覆盖三类链路：`业务层 -> gateway -> api -> 契约`、`业务层 -> api -> 契约`、`子组件 emit/prop/v-model -> 父组件/组合式函数 -> gateway/api -> 契约`。
-6. 对每个接口，按 `默认 API契约 -> 补充契约路径 -> 停止并请求人工介入` 的顺序填写 `apiMethod / apiUrl / description`。
-7. 若所有已知契约都未命中，不允许主观补 description；要把该接口标记为“待人工确认”，并写入文末 `# 待人工介入`。
-8. 对没有挂 `v-hasPerm`、但真实触发 API 的操作，分别整理到“未命中权限控制的组件”和“未命中权限控制的权限点”。
-9. 若给了 `关注模块` 或 `关注路由`，仍需保持全路由域扫描，但 `# 待人工介入`、结论和提醒优先只保留关注范围；非关注路由统一按用户口径弱化或忽略。若二者都为空，则所有路由都属于本轮关注范围。
-10. 写 `# 待人工介入` 时，链路说明必须优先写成“业务层组件 -> gateway 方法 -> api 方法/常量 -> 契约路径”，不要直接从业务层跳到猜测 URL；若 API 调用藏在父组件、组合式函数或 gateway 内部映射函数中，也必须把抬升链路和映射函数写出来。未解析的 `/${BASE_URL}/xxx`、因漏看 base URL 得到的错误 `/menu/*`、未追完链路时的“当前无后端 API 调用”都不是可接受结论。
+- `currentUnderstanding`
+- `repoStateFacts`
+- `goalUnderstanding`
+- `analysisRequirement`（`required` / `optional`）
+- `chainConfidence`（`high` / `medium` / `low`）
+- `selectedIntentionSkill`
+- `whyThisIntentionSkill`
+- `alternativeIntentionSkills`
+- `missingFacts`
+- `humanQuestions`
+- `nextIterationAction`
 
-## 固定输出结构
+## 状态分类
 
-每个路由固定按以下顺序输出：
+父 agent 必须先把当前任务归到以下之一：
 
-1. `# 口径说明`
-2. 每个路由一个 `# <routePath>`
-3. 路由下固定有 `## 组件`
-   - 页面组件总表：`路由 | 对应组件路径`
-   - 若干 `### <完整组件路径>`
-   - `### 未命中权限控制的组件`
-4. 路由下固定有 `## 权限点`
-   - 已命中权限点总表：`权限名称 | 权限标识`
-   - 若干 `### <权限标识>`
-   - `### 未命中权限控制的权限点`
-5. 权限落点表字段固定为：`对应功能 | 对应组件路径 | 对应行号 | 对应代码`
-6. 同一权限点在多个组件、多个按钮、多个位置出现时，全部列出，不能只保留一个代表项
-7. `# 待人工介入` 每项至少包含：业务层位置、gateway 位置、api 位置、命中的契约文件或缺失契约说明
+1. `no_analysis_yet` — 尚未产出任何盘点文档
+2. `analysis_complete` — 已有盘点文档，可进入设计
+3. `design_complete` — 权限设计已确认，可进入菜单补丁或源码改动
+4. `patch_generated` — 菜单补丁已生成，可进入合并或导入验证
+5. `code_changed` — 源码已改动，可进入端到端验证
+6. `verification_needed` — 需要 OpenCLI 验证或运行时排障
+7. `unclear_or_mixed` — 状态不明确，需先分析
 
-## REFACTOR：收紧边界与模板
+## 意图 skill 调用规则
 
-1. 若某字段只适用于当前仓库，把它写进 `[[references/template-tuning-notes.md]]`，不要硬编码进模板。
-2. 页面组件总表只保留完整组件路径，不允许再写中文角色描述代替路径。
-3. 若默认契约和补充契约都没有该接口，不允许再把正式 description 写成“源码语义推断”。
-4. 契约缺失时先输出当前已确认部分，再在 `# 待人工介入` 中请求用户补充契约路径或人工确认。
-5. 只有在完成 `业务层 -> gateway -> api -> 契约`（该链路可以消费技能 `..\..\route-api-gateway\SKILL.md`）、`业务层 -> api -> 契约`、`子组件 emit/prop/v-model 抬升 -> 父组件/组合式函数 -> gateway/api -> 契约` 三类反查后，确认该权限点只是路由跳转或纯前端状态操作，才能申请人类介入；只有人类确定了确实无后端 API 调用，才可在 API 表写 `- / - / 当前无后端 API 调用`。不能因为业务层没有直接 import `src/api`、子组件没有直接调 API、gateway 方法内部又包了一层映射函数就提前停止。
-6. 样本试跑允许局部覆盖路由，但正式 skill 的能力边界始终是“全路由域递归扫描”。
-7. 允许用户多次调用同一个 skill，基于补充契约路径或人工说明继续完善原输出文档。
-8. 当满足以下任一条件时，本轮输出可视为完成：
-   - 所有接口已在默认或补充契约中确认
-   - 缺失接口已进入 `# 待人工介入`
-   - 用户已明确给出“暂不处理”的业务结论，并已写入文档
-9. 允许在仓库内保留执行过程中生成的辅助扫描脚本，前提是：
-   - 脚本服务于本 skill 的稳定执行，而不是一次性垃圾产物
-   - 脚本路径、用途、输入输出边界清晰，可复用
-   - 若脚本只适用于当前仓库，需在文档或 skill 说明中注明仓库边界
-10. 若用户明确只关心某些路由，则非关注路由的待人工项不要继续扩散；可统一落为“不是我负责的关心，不关心”。
-11. `focus_modules` / `focus_routes` 为空不是缺参，而是默认全量；只有用户显式提供关注范围时，才启用非关注路由弱化策略。
+意图 skill 位于 `[[intention-skills/]]`，父 agent 只直接消费这一层：
 
-## 直接执行模板
+- 当前没有盘点文档、用户也说不清现状 → 必须先进入 `[[intention-skills/分析-perms-apis现状]]`
+- 用户只想还原现状、摸清权限覆盖 → 也进入 `[[intention-skills/分析-perms-apis现状]]`
+- 已有盘点文档，需要设计新权限点 → 进入 `[[intention-skills/策略-设计权限点]]`
+- 想看总方案、改动面对比、推荐路径 → 进入 `[[intention-skills/编排-权限点配置全流程]]`
+  - 若盘点事实不足，先补 `[[intention-skills/分析-perms-apis现状]]`
+- 权限设计已确认，要落地源码改动 → 进入 `[[intention-skills/迁移-源码改动落地]]`
+  - 若设计尚未确认，先补 `[[intention-skills/策略-设计权限点]]`
+- 要做 OpenCLI 自动化权限 E2E 测试（双会话配置+验证+CSV）→ 进入 `[[intention-skills/编排-权限E2E测试]]`
+  - 若用户明确「菜单管理 / 8 场景 / S1~S8」→ 编排节点内直接路由到 `[[feature-skills/菜单管理功能项依赖链验证]]` 并执行 node 脚本
+  - 若测试权限点清单未确认，先补 `[[intention-skills/策略-设计权限点]]`
+- 当前已明确只差某项能力，只需选择某一个功能 skill → 进入 `[[intention-skills/路由-选择功能子skill]]`
+  - 若能力缺口判断依赖当前链路事实，先补对应意图 skill
 
-```text
-1. 读取仓库路径、路由入口、约束与边界文件、api契约
-2. 先输出页面组件总表和页面权限点总表
-3. 再输出组件定位小节
-4. 再输出已命中权限点与 API 表
-5. 最后输出“未命中权限控制的组件”“未命中权限控制的权限点”和待人工介入项
-```
+## 人工介入门禁
+
+以下情况必须先问人：
+
+- 无法确认当前处于哪个阶段（无盘点文档、设计未确认、还是改动未验证）
+- 权限粒度决策涉及产品判断（页面级 vs 操作级、跨模块归属）
+- 接口在默认契约和补充契约中均未命中，且无法从源码推断
+- `targetRepo` 不明确且用户未显式指定
+- 用户目标同时混入 skill 改造与业务代码修改
+
+若 `是否允许多轮人工确认 = 否`，也不要跳过上述门禁；此时应输出：
+
+- 当前能确认的最小事实集
+- 仍阻断路由的缺口
+- 需要用户一次性补齐的关键问题
+
+## GREEN
+
+- 顶层只做会话级判断、多轮路由、人工门禁与节点切换
+- 真实分析、策略、编排与功能路由下沉到 `intention-skills/`
+- 源码级执行能力下沉到 `feature-skills/`
+- `分析-perms-apis现状` 既是可直接使用的意图 skill，也是其他意图节点的公共前置能力
+
+## 核心约束（下沉到各层）
+
+以下约束在本父 agent 中声明，下沉到各意图/功能 skill 执行：
+
+1. **targetRepo 默认 apex_dev**：每次只改一个仓库，默认仅改 apex_dev，不动 opsdeck
+2. **v-hasPerm 优先于 v-if**：单个元素用 `v-hasPerm` 不新增 ref；整块区域共享同一 perm 时才用父层 `v-if`
+3. **菜单补丁 ID 必须回填**：`patch_children_add` 中的 function 必须先查询或创建获取 ID 后回填
+4. **菜单导入先 dry_run**：正式导入前必须先 `dry_run: true` 验证
+5. **API 反查三类硬链路**：`业务层→gateway→api→契约`、`业务层→api→契约`、`子组件 emit→父组件→gateway/api→契约`
 
 ## 使用示例
 
 ```text
-使用 $梳理权限点与apis 扫描
-F:\Documents\Repertory\Sieyuan\nebula\apex_dev
-并把样本输出放到 skill 的 template/sample-run 目录。
+使用 $梳理权限点与apis 扫描 apex_dev，
+先帮我盘点所有路由的权限点和 API 现状。
 ```
 
+预期：进入 `[[intention-skills/分析-perms-apis现状]]`
+
 ```text
-使用 $梳理权限点与apis 扫描 apex_dev，
-只重点关心 focus_routes 为 /Apex/system/securityConfig、/Apex/profile 的权限点与 API，
-但仍保留全路由扫描口径。
+已有盘点文档，帮我设计首页、租户管理、安全配置的新权限点。
 ```
+
+预期：进入 `[[intention-skills/策略-设计权限点]]`
+
+```text
+给我全流程方案：从分析现状到菜单补丁、源码改动、端到端验证。
+```
+
+预期：进入 `[[intention-skills/编排-权限点配置全流程]]`，必要时先补分析
+
+```text
+权限设计已确认，帮我按集中式原则改 apex_dev 源码。
+```
+
+预期：进入 `[[intention-skills/迁移-源码改动落地]]`
+
+```text
+我不需要总方案，只想知道这一步该进哪个功能 skill。
+```
+
+预期：进入 `[[intention-skills/路由-选择功能子skill]]`
+
+```text
+用 OpenCLI 帮我验证一下登录后 isOwner 是否正常绕过权限。
+```
+
+预期：路由到 `[[feature-skills/OpenCLI端到端验证]]` 或 `[[feature-skills/权限运行时排障]]`
+
+```text
+我要对 sys:dashboard:view、sys:tenant:query、sys:tenant:add 做 E2E 测试，
+admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
+```
+
+预期：进入 `[[intention-skills/编排-权限E2E测试]]`
+
+```text
+直接用菜单管理跑一遍 E2E，8 个场景全过一遍。
+```
+
+预期：进入 `[[intention-skills/编排-权限E2E测试]]` → `[[feature-skills/菜单管理功能项依赖链验证]]`，执行 `scripts/run-all.node.js`
+
+## REFACTOR
+
+- 如果父级仍表现成一次性 router，继续收紧 `analysis_required` / `analysis_optional` 判定
+- 如果下游节点重复猜链路，优先补强 `分析-perms-apis现状` 的复用字段
+- 如果意图节点选错率高，优先补根层路由判定表和 should-not-trigger 用例
+- 如果主文件开始承载低频解释、长示例，继续下沉到 `references/` 或 `template/`

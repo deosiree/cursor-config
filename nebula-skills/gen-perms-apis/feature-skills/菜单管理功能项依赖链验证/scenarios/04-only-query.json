@@ -1,0 +1,1 @@
+{"id":"04-only-query","title":"只选查询","check":["查询菜单树"],"expectedPerms":["sys:menu:query"],"expectToolbar":["搜索:VIS"],"expectTree":true,"expectRowOps":[]}

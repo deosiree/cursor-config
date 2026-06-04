@@ -56,6 +56,7 @@ should-not-trigger:
 | **爬虫与数据提取** | SPA / JS 渲染站点提取全文或结构化数据 | → [[references/场景-爬虫与数据提取.md]] |
 | **登录会话管理** | 先登录再执行后续操作 | → [[references/场景-手动点击自动化.md#登录会话]]（共用） |
 | **批量用户角色分配** 🆕 | 用户列表批量分配角色，逐用户勾选+提交 | → [[references/场景-批量用户角色分配.md]] — 自生长（2026-06-06） |
+| **双会话权限E2E** 🆕 | admin 配置角色 + test 用户验证，覆盖权限依赖关系，`--profile` 隔离 | → [[references/场景-双会话权限E2E.md]] — 自生长（2026-06-06） |
 | **以上都不是** 🆕 | 新场景 / 不匹配上述任何条件 | → [[#自生长流程]] — 自生长：参照模板 scaffold 新子 skill + 更新此表 |
 
 每个场景文件包含：
@@ -195,7 +196,8 @@ run_skill { name: "opencli-autofix", arguments: "opencli browser nebula-ux click
 | `opencli-ux-menu-import/` | 自动化测试：菜单权限合并 YAML 预览导入 + SSH 三联 |
 | `common-skills/ssh-skills/` | 后端排障：jump + kubectl 查 seccenter Pod 日志 |
 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 爬虫与数据提取：飞书文档滚动抓取 |
-| `agent-skills/hermes-session-harvest/` | 会话沉淀引擎：四步 audit (SCAN→CLASSIFY→HARVEST→REPORT) + 废弃清理 |*
+| `agent-skills/hermes-session-harvest/` | 会话沉淀引擎：四步 audit (SCAN→CLASSIFY→HARVEST→REPORT) + 废弃清理 |
+| `nebula-skills/gen-perms-apis/` 🆕 | 权限点与 API 配置全流程：分析→设计→补丁→改码→双会话 E2E 验证 |
 
 ## 自生长流程
 

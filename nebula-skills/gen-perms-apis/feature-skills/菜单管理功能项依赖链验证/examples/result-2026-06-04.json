@@ -1,0 +1,17 @@
+{
+  "testDate": "2026-06-04",
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "results": [
+    {
+      "id": "01-only-import",
+      "title": "只选导入",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedSec": 33.2,
+      "attempts": 1,
+      "retried": false
+    }
+  ]
+}

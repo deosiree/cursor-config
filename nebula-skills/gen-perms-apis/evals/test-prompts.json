@@ -1,0 +1,157 @@
+{
+  "suites": [
+    {
+      "target": "父 agent — 路由判断",
+      "prompts": [
+        "先帮我盘点 apex_dev 所有路由的权限点和 API 现状，不确定的地方先标出来。",
+        "已有盘点文档，帮我设计首页和租户管理的新权限点。",
+        "给我全流程方案：从分析到菜单补丁、源码改动、端到端验证。",
+        "权限设计已确认，帮我按集中式原则改 apex_dev 源码。",
+        "我不需要总方案，只想知道当前一步该进扫描、设计、补丁还是改码。"
+      ],
+      "expect": "每个 prompt 路由到正确的 intention skill，输出 selectedIntentionSkill + whyThisIntentionSkill"
+    },
+    {
+      "target": "intention — 分析-perms-apis现状",
+      "prompts": [
+        "先不要改码，帮我还原 apex_dev 当前每个路由下的权限点和 API 现状。",
+        "我现在要设计新权限点，但现状不清楚，先补一份盘点文档。",
+        "只关心 /Apex/tenant 和 /Apex/system/securityConfig 两个路由的权限现状。"
+      ],
+      "expect": "产出盘点文档 + chainConfidence + candidateNextIntentions"
+    },
+    {
+      "target": "intention — 策略-设计权限点",
+      "prompts": [
+        "已有盘点文档 apex_dev-route-component-perm-api.md，帮我设计首页、租户管理、安全配置的新权限点。",
+        "盘点结果显示租户页调用了 devmgr 和 dbres 的接口，帮我决定这些跨模块 API 应该挂哪个 perm。",
+        "loginSetting 走 direct/no-auth，帮我确认豁免并收敛到 hidden page。"
+      ],
+      "expect": "在粒度决策/跨模块归属/豁免判断上提问；产出 perm→API 映射表 + 豁免清单 + hidden page 方案"
+    },
+    {
+      "target": "intention — 编排-权限点配置全流程",
+      "prompts": [
+        "给我多个权限配置方案，并比较每种方案的改动面和风险。",
+        "当前链路不明，但我还是要总编排，请先补分析再出方案矩阵。"
+      ],
+      "expect": "至少 2 个候选方案，每个含 intentionPath / featureSkillSequence / changeSurfaceSize"
+    },
+    {
+      "target": "intention — 迁移-源码改动落地",
+      "prompts": [
+        "权限设计已确认，帮我按集中式原则改 apex_dev 源码。只改 targetRepo=apex_dev，不动 opsdeck。",
+        "首页和租户管理的改动面较大，帮我确认哪些地方用 v-hasPerm、哪些用父层 v-if。"
+      ],
+      "expect": "v-hasPerm 优先于 v-if；默认 targetRepo=apex_dev；产出逐模块改动计划"
+    },
+    {
+      "target": "intention — 路由-选择功能子skill",
+      "prompts": [
+        "我只想知道当前一步该进扫描、设计、补丁还是改码。",
+        "gap 还不完全明确，但我仍然只想收敛到一个当前最优先的功能节点。",
+        "如果这个问题其实已经需要总编排，请不要硬路由，直接告诉我该切到哪个意图 skill。"
+      ],
+      "expect": "一次只推荐 1 个功能 skill；包含排除理由"
+    },
+    {
+      "target": "feature — 扫描源码权限点与API",
+      "prompts": [
+        "扫描 apex_dev，api契约为 seccenter.swagger.json，输出到 docs/plans/",
+        "扫描 apex_dev，补充契约 devmgr.swagger.json，只关心 /Apex/tenant",
+        "继续完善上一次输出文档，这次补充 /menu/export 对应的契约路径"
+      ],
+      "expect": "产出盘点文档；完成三类 API 反查；契约缺失标记待人工确认"
+    },
+    {
+      "target": "feature — 设计权限点与API映射",
+      "prompts": [
+        "基于盘点文档，设计首页、租户管理、安全配置的权限点与 API 映射。"
+      ],
+      "expect": "产出 perm→API 映射表 + 豁免清单 + hidden page 方案；豁免项有源码证据"
+    },
+    {
+      "target": "feature — 生成菜单树权限补丁",
+      "prompts": [
+        "基于权限设计方案，生成菜单树权限补丁 YAML，所有 function 先通过本地 API 获取 ID 后回填。"
+      ],
+      "expect": "补丁中每个 function 的 id 不为 0 且 parent_id 不为 null"
+    },
+    {
+      "target": "feature — 合并权限点到菜单树",
+      "prompts": [
+        "把 0601菜单树_权限补丁.yaml 合并到 0601菜单树_20260601084145.yaml，保留现有结构。"
+      ],
+      "expect": "新增节点 parent_id 指向真实父节点；已有树节点完整保留"
+    },
+    {
+      "target": "feature — 源码集中式权限改动",
+      "prompts": [
+        "按集中式原则改 apex_dev 源码，首页用 v-hasPerm，租户工具栏用 v-if 包整块。"
+      ],
+      "expect": "v-hasPerm 未被 v-if 替代；不改非 targetRepo 仓库"
+    },
+    {
+      "target": "feature — OpenCLI端到端验证",
+      "prompts": [
+        "用 OpenCLI 验证 admin@system.local 登录后 isOwner 是否正确绕过权限检查。",
+        "用 OpenCLI 验证登录后 Header 中「个人中心」是否无需刷新即可出现。"
+      ],
+      "expect": "登录后不 refresh；检查 sessionStorage.userInfo.isOwner 和 computed 响应式"
+    },
+    {
+      "target": "feature — 权限运行时排障",
+      "prompts": [
+        "租户所有者 admin@system.local 也被权限检查拦截了，用 OpenCLI 排查原因。",
+        "登录后 Header 中的「个人中心」不显示，刷新后才出现，帮我排查。",
+        "菜单补丁导入成功但新增的权限节点在菜单中不显示。"
+      ],
+      "expect": "按决策树路由到正确根因（isOwner 缺失 / computed 缓存 / parent_id null）"
+    },
+    {
+      "target": "feature — 菜单树导入验证",
+      "prompts": [
+        "先把合并后的菜单树 dry_run 导入，确认无 ID 错误后再正式导入。",
+        "菜单树导入成功了，但用户仍然看不到新权限，帮我确认角色模板是否已勾选新 perm。"
+      ],
+      "expect": "先 dry_run 再正式导入；检查 parent_id；提醒角色配置"
+    },
+    {
+      "target": "intention — 编排-权限E2E测试",
+      "prompts": [
+        "我要对 sys:dashboard:view、sys:tenant:query 做 E2E 测试，admin 配置'权限测试角色'，13813815913 验证，结果落盘 CSV。",
+        "直接用菜单管理跑一遍 E2E 测试，8 个场景全过一遍。"
+      ],
+      "expect": "通用 perm → 双会话循环+CSV；菜单 8 场景 → 路由到菜单管理功能项依赖链验证并 run-all.node.js"
+    },
+    {
+      "target": "feature — 菜单管理功能项依赖链验证",
+      "prompts": [
+        "只运行场景 8（查询+编辑+配置API），验证 API配置 弹窗。",
+        "菜单 E2E S6 失败，帮我 debug。"
+      ],
+      "expect": "首选 node run-e2e-scenario.node.js；禁止 eval 点 checkbox；Debug 时才手操 check/uncheck"
+    },
+    {
+      "target": "feature — 角色菜单权限树快速配置",
+      "prompts": [
+        "在权限测试角色弹窗里，给菜单管理勾选查询和编辑功能项。"
+      ],
+      "expect": "搜索树节点→btns[3]清空→opencli check/uncheck；保存用 textContent 确 定"
+    },
+    {
+      "target": "feature — OpenCLI双会话权限验证",
+      "prompts": [
+        "用 OpenCLI 双会话验证本轮：勾选 sys:dashboard:view，取消 sys:tenant:query 和 sys:tenant:add。"
+      ],
+      "expect": "Session A admin 配置角色后等待 2 秒；Session B test 用户清空 sessionStorage 后重新登录；逐页验证；输出结构化验证结果"
+    },
+    {
+      "target": "feature — 权限测试结果落盘CSV",
+      "prompts": [
+        "把本轮 E2E 验证结果落盘到 docs/问题单/0605/perm-e2e.csv，模块名权限管理，创建人员惠岩。"
+      ],
+      "expect": "映射 E2E 结果到 cases.json 字段；委托外部 skill 输出csv的测试用例 生成 CSV；不自己实现 CSV 生成"
+    }
+  ]
+}

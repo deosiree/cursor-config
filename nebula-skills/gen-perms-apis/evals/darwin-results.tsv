@@ -1,0 +1,9 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-04T00:00	baseline	菜单管理功能项依赖链验证	80	88	keep	工作流+具体性	脚本首选+check/uncheck+test-prompts	dry_run
+2026-06-04T01:00	r2	路由-选择功能子skill	75	83	keep	架构+触发性	e2e_menu_scenarios+4路由规则	dry_run
+2026-06-04T01:00	r2	README.md(index)	70	84	keep	资源整合	补4个E2E feature skill	dry_run
+2026-06-04T02:00	r3	角色菜单权限树快速配置	68	79	keep	具体性	保存selector矛盾修复+TL;DR	dry_run
+2026-06-04T03:00	r4	编排-权限E2E测试	73	82	keep	runtime+架构	去run_skill+路由决策表+去重矩阵	dry_run
+2026-06-04T03:00	r5	OpenCLI双会话权限验证	77	81	keep	架构+触发性	TL;DR分层+交叉引用	dry_run
+2026-06-04T04:00	r5	双会话OpenCLI环境初始化	71	76	keep	工作流	TL;DR+admin/test统一+瘦身	dry_run
+2026-06-04T04:00	r6	父agent SKILL.md	82	85	keep	具体性+触发性	api契约相对路径+菜单E2E路由	dry_run

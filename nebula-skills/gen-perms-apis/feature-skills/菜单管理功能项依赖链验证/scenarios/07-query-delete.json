@@ -1,0 +1,11 @@
+{
+  "id": "07-query-delete",
+  "title": "查询+删除",
+  "check": ["查询菜单树", "删除菜单"],
+  "expectedPerms": ["sys:menu:query", "sys:menu:delete"],
+  "expectToolbar": ["搜索:VIS"],
+  "expectTree": true,
+  "expectRowOps": ["删除"],
+  "expectHiddenToolbar": ["新增:hid"],
+  "expectHiddenRowOps": ["编辑", "权限配置"]
+}

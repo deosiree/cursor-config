@@ -1,0 +1,11 @@
+{
+  "id": "06-query-edit",
+  "title": "查询+编辑",
+  "check": ["查询菜单树", "编辑菜单"],
+  "expectedPerms": ["sys:menu:query", "sys:menu:edit"],
+  "expectToolbar": ["搜索:VIS"],
+  "expectTree": true,
+  "expectRowOps": ["编辑", "权限配置"],
+  "expectHiddenToolbar": ["新增:hid"],
+  "expectHiddenRowOps": ["删除"]
+}

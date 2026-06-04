@@ -1,0 +1,11 @@
+{
+  "id": "08-query-edit-configapi",
+  "title": "查询+编辑+配置API",
+  "check": ["查询菜单树", "编辑菜单", "API配置"],
+  "expectedPerms": ["sys:menu:query", "sys:menu:edit", "sys:menu:configApi"],
+  "expectToolbar": ["搜索:VIS"],
+  "expectTree": true,
+  "expectRowOps": ["编辑", "权限配置"],
+  "expectHiddenRowOps": ["删除"],
+  "expectApiConfigInDialog": true
+}

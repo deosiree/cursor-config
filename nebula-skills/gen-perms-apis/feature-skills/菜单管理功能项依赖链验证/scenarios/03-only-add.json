@@ -1,0 +1,1 @@
+{"id":"03-only-add","title":"只选新建","check":["新增菜单"],"expectedPerms":["sys:menu:add"],"expectToolbar":["新增:VIS"],"expectTree":false,"expectRowOps":[]}

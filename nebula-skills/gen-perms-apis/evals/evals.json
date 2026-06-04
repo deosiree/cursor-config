@@ -79,6 +79,90 @@
         "不强行补成已解决",
         "不伪造接口契约"
       ]
+    },
+    {
+      "input": "先帮我盘点 apex_dev 所有路由的权限点和 API 现状，不确定的地方先标出来。",
+      "expect": [
+        "路由到 分析-perms-apis现状 intention skill",
+        "消费 扫描源码权限点与API feature skill",
+        "产出盘点文档 + chainConfidence + candidateNextIntentions"
+      ]
+    },
+    {
+      "input": "已有盘点文档，帮我设计首页、租户管理、安全配置的新权限点。",
+      "expect": [
+        "路由到 策略-设计权限点 intention skill",
+        "在粒度决策/跨模块归属/豁免判断上提问而非自行裁量",
+        "产出 perm→API 映射表 + 豁免清单 + hidden page 方案"
+      ]
+    },
+    {
+      "input": "给我全流程方案：从分析到菜单补丁、源码改动、端到端验证，帮我比较不同路径的改动面。",
+      "expect": [
+        "路由到 编排-权限点配置全流程 intention skill",
+        "至少输出 2 个候选方案",
+        "每个方案含 intentionPath / featureSkillSequence / changeSurfaceSize"
+      ]
+    },
+    {
+      "input": "权限设计已确认，帮我按集中式原则改 apex_dev 源码，不改 opsdeck。",
+      "expect": [
+        "路由到 迁移-源码改动落地 intention skill",
+        "v-hasPerm 优先于 v-if",
+        "默认 targetRepo=apex_dev",
+        "产出逐模块改动计划"
+      ]
+    },
+    {
+      "input": "我不需要总方案，只想知道当前一步该进扫描、设计、补丁还是改码。",
+      "expect": [
+        "路由到 路由-选择功能子skill intention skill",
+        "一次只推荐 1 个功能 skill",
+        "包含排除其他选项的理由"
+      ]
+    },
+    {
+      "input": "用 OpenCLI 帮我验证登录后 isOwner 是否绕过权限，以及 Header 中个人中心是否正确显示。",
+      "expect": [
+        "路由到 OpenCLI端到端验证 feature skill",
+        "要求登录后不 refresh",
+        "检查 sessionStorage.userInfo.isOwner 和 computed 响应式更新"
+      ]
+    },
+    {
+      "input": "菜单补丁导入成功了，但新增的权限节点在菜单里看不到，帮我排查。",
+      "expect": [
+        "路由到 权限运行时排障 feature skill",
+        "先检查 parent_id 是否为 null（不报错的隐蔽失败）",
+        "再检查角色模板是否已勾选新 perm"
+      ]
+    },
+    {
+      "input": "我要对 sys:dashboard:view、sys:tenant:query、sys:tenant:add 做 E2E 测试，admin 配置\"权限测试角色\"，13813815913 登录验证，结果落盘 CSV。",
+      "expect": [
+        "路由到 编排-权限E2E测试 intention skill",
+        "使用 admin@system.local 配置角色权限",
+        "使用 13813815913 独立分组重新登录验证",
+        "委托 输出csv的测试用例 外部 skill 落盘 CSV"
+      ]
+    },
+    {
+      "input": "用 OpenCLI 双会话验证本轮权限配置：勾选 sys:dashboard:view，取消 sys:tenant:query。",
+      "expect": [
+        "路由到 OpenCLI双会话权限验证 feature skill",
+        "Session A 用 admin 配置角色",
+        "Session B 用 test 用户清空 sessionStorage 后重新登录",
+        "逐页验证权限生效情况"
+      ]
+    },
+    {
+      "input": "把本轮 E2E 验证结果落盘到 docs/问题单/0605/perm-e2e.csv。",
+      "expect": [
+        "路由到 权限测试结果落盘CSV feature skill",
+        "将 E2E 结果映射为 cases.json 字段",
+        "委托外部 skill 输出csv的测试用例 生成 CSV",
+        "不自己实现 CSV 生成逻辑"
+      ]
     }
   ],
   "should_not_trigger": [
@@ -92,6 +176,18 @@
       "input": "只帮我翻译 Markdown 文档。",
       "expect": [
         "应改由翻译类 skill 处理"
+      ]
+    },
+    {
+      "input": "帮我写一个全新的 Vue 页面，不涉及权限点和 API 配置。",
+      "expect": [
+        "应改由页面开发类 skill 处理"
+      ]
+    },
+    {
+      "input": "帮我部署后端服务到 K8s 集群。",
+      "expect": [
+        "不属于本 skill 套件的职责范围"
       ]
     }
   ],
@@ -109,6 +205,14 @@
     "未完成三类 API 反查前不输出 当前无后端 API 调用",
     "人工回答后允许保留问题挂起痕迹",
     "不要求所有问题都在第二轮被彻底解决",
-    "人工介入后允许将问题归档为暂不处理，而不是强行补成已解决状态"
+    "人工介入后允许将问题归档为暂不处理，而不是强行补成已解决状态",
+    "父 agent 输出 currentUnderstanding / chainConfidence / selectedIntentionSkill",
+    "意图 skill 输出 chainConfidence / candidateNextIntentions（分析节点）或 whyRecommended（编排节点）",
+    "功能 skill 输出包含 output 契约字段的完整产物",
+    "所有 RED 章节至少包含 3 个具体失败场景（非泛泛描述）",
+    "所有 REFACTOR 章节至少包含 3 条具体收紧规则（非占位符）",
+    "菜单补丁 YAML 每个 function 节点 id 不为 0 且 parent_id 不为 null",
+    "权限设计方案中每个豁免项附带源码证据（文件:行号）",
+    "所有 SKILL.md 的 name 和 description 使用中文"
   ]
 }

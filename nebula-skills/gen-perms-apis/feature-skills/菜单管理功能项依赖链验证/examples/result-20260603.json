@@ -1,0 +1,102 @@
+{
+  "testDate": "2026-06-03",
+  "environment": {
+    "url": "http://localhost:8080",
+    "adminProfile": "p2ejw7ww (龙虾)",
+    "testProfile": "q5prwymq (other)",
+    "adminUser": "admin@system.local",
+    "testUser": "13813815913",
+    "roleName": "权限测试角色"
+  },
+  "results": [
+    {
+      "scenario": "01-only-import",
+      "title": "只选导入",
+      "check": ["导入菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:import"],
+      "actualToolbar": ["导入:VISIBLE"],
+      "actualTree": false,
+      "status": "PASS"
+    },
+    {
+      "scenario": "02-only-export",
+      "title": "只选导出",
+      "check": ["导出菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:export"],
+      "actualToolbar": ["导出:VISIBLE"],
+      "actualTree": false,
+      "status": "PASS"
+    },
+    {
+      "scenario": "03-only-add",
+      "title": "只选新建",
+      "check": ["新增菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:add"],
+      "actualToolbar": ["新增:VISIBLE"],
+      "actualTree": false,
+      "status": "PASS"
+    },
+    {
+      "scenario": "04-only-query",
+      "title": "只选查询",
+      "check": ["查询菜单树"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:query"],
+      "actualToolbar": ["搜索:VISIBLE"],
+      "actualTree": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "05-query-add",
+      "title": "查询+新建",
+      "check": ["查询菜单树","新增菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:add","sys:menu:query"],
+      "actualToolbar": ["搜索:VISIBLE","新增:VISIBLE"],
+      "actualTree": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "06-query-edit",
+      "title": "查询+编辑",
+      "check": ["查询菜单树","编辑菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:query","sys:menu:edit"],
+      "actualToolbar": ["搜索:VISIBLE"],
+      "actualTree": true,
+      "visibleRowOps": ["编辑","权限配置"],
+      "status": "PASS"
+    },
+    {
+      "scenario": "07-query-delete",
+      "title": "查询+删除",
+      "check": ["查询菜单树","删除菜单"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:query","sys:menu:delete"],
+      "actualToolbar": ["搜索:VISIBLE"],
+      "actualTree": true,
+      "visibleRowOps": ["删除"],
+      "status": "PASS"
+    },
+    {
+      "scenario": "08-query-edit-configapi",
+      "title": "查询+编辑+配置API",
+      "check": ["查询菜单树","编辑菜单","API配置"],
+      "actualPerms": ["sys:dashboard:view","sys:profile:view","sys:menu:query","sys:menu:edit","sys:menu:configApi"],
+      "actualToolbar": ["搜索:VISIBLE"],
+      "actualTree": true,
+      "visibleRowOps": ["编辑","权限配置"],
+      "apiConfigInDialog": true,
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "keyFindings": [
+    "必须先勾选页面节点再配功能项",
+    "checkbox 必须用 .el-checkbox.click() 触发 Vue",
+    "btns[3] = 功能项清空, btns[2] = 功能项全选",
+    "每轮前必须清空，否则权限累积",
+    "依赖链: 查询→树加载→编辑→权限配置→配置API",
+    "test用户必须logout→confirm→relogin更新permsMap"
+  ]
+}

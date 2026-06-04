@@ -1,0 +1,1 @@
+{"id":"05-query-add","title":"查询+新建","check":["查询菜单树","新增菜单"],"expectedPerms":["sys:menu:add","sys:menu:query"],"expectToolbar":["搜索:VIS","新增:VIS"],"expectTree":true,"expectRowOps":[]}

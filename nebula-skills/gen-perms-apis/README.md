@@ -1,132 +1,137 @@
-# gen-perms-apis
+﻿# gen-perms-apis
 
 ## 定位
-`gen-perms-apis` 是一个中文 skill 套件，用来输入仓库路径，梳理静态路由、页面组件、`v-hasPerm` 权限点与真实 API 调用，并输出单份盘点文档：
 
-- `路由-组件-权限点-API 源码梳理.md`
+`gen-perms-apis` 是一个中文 agent skill 套件，覆盖权限点与 API 配置的完整生命周期：
 
-原本独立的“未命中 `v-hasPerm`”设计文档在这里被收敛进每个路由下的：
+```
+分析现状 → 设计权限点 → 生成菜单补丁 → 改动源码 → 端到端验证 → 运行时排障 → E2E自动化测试
+```
 
-- `未命中权限控制的组件`
-- `未命中权限控制的权限点`
+父 agent `SKILL.md` 负责会话级路由、人工门禁与节点切换。真实执行能力分层下沉：
 
-## frontmatter 模式
-本 skill 采用“本地中文模式”：
-
-- `SKILL.md` 的 `name` 使用中文
-- `SKILL.md` 的 `description` 使用中文触发描述
+- `intention-skills/`：意图层（分析 / 策略 / 编排 / 迁移 / 路由 / E2E编排）
+- `feature-skills/`：功能层（扫描 / 设计 / 补丁 / 合并 / 改码 / 验证 / 排障 / 导入 / 双会话E2E / CSV落盘）
 
 ## 输入契约
-- `仓库路径`：必填
-- `输出目录`：可选，默认 `<repo>/docs/plans`
-- `输出文件名`：可选，默认 `路由-组件-权限点-API 源码梳理.md`
-- `api契约`：可选，默认 `F:\Documents\Repertory\Sieyuan\nebula\docs\api\seccenter.swagger.json`
-- `补充契约路径`：可选，支持 0 到多个路径
-- `关注模块`：可选，支持 0 到多个模块名或路由前缀；未提供或为空时表示全量关注
-- `关注路由`：可选，支持 0 到多个 routePath；未提供或为空时表示全量关注
-- `非关注路由处理策略`：可选，仅当 `关注模块` 或 `关注路由` 非空时启用
-- `约束与边界文件`：可选，默认 `[[references/default-project-boundary.md]]`
-- `路由入口`：可选，默认 `src/router/index.ts`
-- `视图根目录`：可选，默认 `src/views`
-- `组件根目录`：可选，默认 `src/components`
-- `网关根目录`：可选，默认 `src/gateway`
-- `原始 API 根目录`：可选，默认 `src/api`
 
-以上全部参数都必须进入输出文档的笔记属性，且属性头必须从文件第一行开始。
-属性头同时保留中文字段和英文字段，中文优先给人读，英文保留给 agent / 脚本消费。
+| 参数 | 必填 | 默认值 | 说明 |
+|------|------|--------|------|
+| `仓库路径` | 是 | — | 目标仓库绝对路径 |
+| `目标结果` | 是 | — | 盘点 / 设计 / 补丁 / 改码 / 验证 / 排障 / E2E测试 |
+| `targetRepo` | 否 | `apex_dev` | 源码改动目标仓库，默认仅改 apex_dev |
+| `api契约` | 否 | `seccenter.swagger.json` | 默认 API 契约路径 |
+| `补充契约路径` | 否 | `[]` | 补充契约文件列表 |
+| `关注模块` | 否 | `[]` | 关注模块名或路由前缀 |
+| `关注路由` | 否 | `[]` | 关注 routePath 列表 |
+| `是否允许多轮人工确认` | 否 | `是` | 控制父 agent 是否在决策点提问 |
 
-## 关注范围参数
-- `关注模块` 与 `关注路由` 均为空时，不是缺参，而是默认扫描并重点处理全部路由。
-- 二者同时提供时取并集；命中任一条件即视为本轮关注范围。
-- `关注路由` 按 routePath 精确匹配，例如 `/Apex/profile`。
-- `关注模块` 支持模块名与路由前缀匹配，例如 `system` 可匹配 `/Apex/system/*`，`/Apex/system` 可按前缀匹配。
-- 只有用户提供了关注模块或关注路由时，才启用“非关注路由处理策略”；否则不要把任何路由弱化为非关注。
+## 核心约束（全套件通用）
 
-## API 反查能力
-API 不能只看页面是否直接 import `src/api`。正式输出前必须完成 `[[references/api-backtrace-rules.md]]` 中的三类反查：
+1. **targetRepo 默认 apex_dev**：每次只改一个仓库，不动 opsdeck
+2. **v-hasPerm 优先于 v-if**：单个元素用 `v-hasPerm`（不新增 ref）；整块区域共享同一 perm 时用父层 `v-if`
+3. **菜单补丁 ID 必须回填**：`patch_children_add` 中 function 必须先查询/创建获取 ID
+4. **菜单导入先 dry_run**：正式 `POST .../menu/project/import` 前先 `dry_run: true`
+5. **API 反查三类硬链路**：业务层→gateway→api→契约 / 业务层→api→契约 / 子组件 emit→父组件→gateway/api→契约
+6. **契约缺失时标记"待人工确认"**：不主观推断 description
 
-- `业务层 -> gateway -> api -> 契约`
-- `业务层 -> api -> 契约`
-- `子组件 emit/prop/v-model -> 父组件/组合式函数 -> gateway/api -> 契约`
+## 套件结构
 
-gateway 内部的映射函数、模型转换函数、常量、模板字符串、`direct/forward` base URL 都必须继续解析到最终 API URL。不得把 `/${BASE_URL}/xxx`、错误 `/menu/*`、未追完链路时的“当前无后端 API 调用”当成最终结论。
-
-## 多轮补全模式
-本 skill 不再假设一次调用就能产出最终完整文档。
-
-当默认契约与已提供的补充契约都无法覆盖某个源码消费的接口时：
-
-- 不再允许把正式 `description` 写成 `源码语义推断`
-- 先输出当前已确认部分
-- 再在文末 `# 待人工介入` 中提出缺失问题
-- 等用户补充契约路径、接口说明或人工判断后，再次调用同一个 skill 继续完善
-
-## 目录说明
-- `SKILL.md`：主执行规则，保留 `RED / GREEN / REFACTOR`
-- `template/`：给人类看的结构模板、边界样例、样本试跑产物
-- `assets/`：给 agent 读的轻量素材
-- `references/`：长说明、边界规则、实现计划、样本调优结论
-- `evals/`：触发与输出验收样例
-
-## 样本试跑
-本次以 `F:\Documents\Repertory\Sieyuan\nebula\apex_dev` 作为样本仓库，试跑产物放在：
-
-- `[[template/sample-run/apex_dev-route-component-perm-api.md]]`
-- `[[template/sample-run/apex_dev-route-component-perm-api-iteration.md]]`
-- `[[template/sample-run/apex_dev-api-backtrace-focus-iteration.md]]`
-
-第一份文件用于验证最终结构是否可读，不作为通用模板本体。
-第二份文件用于演示“契约不全 -> 人工介入 -> 二次补完”的完整闭环。
-第三份文件用于演示“漏看 gateway / 子组件 emit / 补充契约 / 关注路由”的 API 反查回归。
-样本试跑可以只覆盖部分路由；正式 skill 仍要求扫描每个路由页面及其所有业务子孙组件。
-
-## 二次调用示例
-```text
-第一次调用：
-使用 $梳理权限点与apis 扫描 apex_dev，
-默认 API 契约为 seccenter.swagger.json，补充契约路径为 dbres.json。
-如果还有找不到契约的接口，请在文末输出待人工介入问题。
 ```
-
-```text
-第二次调用：
-继续使用 $梳理权限点与apis 完善上一次输出文档，
-这次补充 /menu/export 对应的契约路径或人工接口说明。
-```
-
-```text
-关注路由调用：
-继续使用 $梳理权限点与apis 扫描 apex_dev，
-关注路由只关心 /Apex/tenant、/Apex/system/securityConfig、/Apex/profile。
-非关注路由保留扫描证据，但结论统一标记为非本轮关注范围。
+gen-perms-apis/
+├── SKILL.md                              # 父 agent：会话路由 + 人工门禁 + 节点切换
+├── README.md                             # 本文件
+├── intention-skills/
+│   ├── 分析-perms-apis现状/SKILL.md       # 源码扫描 + API 反查（公共前置能力）
+│   ├── 策略-设计权限点/SKILL.md            # 权限粒度决策 + 豁免判断 + hidden page
+│   ├── 编排-权限点配置全流程/SKILL.md      # 多阶段方案矩阵 + 改动面评估
+│   ├── 迁移-源码改动落地/SKILL.md          # 集中式改码策略 + 最小 diff
+│   ├── 编排-权限E2E测试/SKILL.md           # OpenCLI 双会话 E2E 编排
+│   └── 路由-选择功能子skill/SKILL.md       # 单步功能路由
+├── feature-skills/
+│   ├── 扫描源码权限点与API/SKILL.md        # 原 gen-perms-apis 核心逻辑
+│   ├── 设计权限点与API映射/SKILL.md        # perm 命名 + 豁免表 + 跨模块归属
+│   ├── 生成菜单树权限补丁/SKILL.md         # 增量 YAML 补丁 + ID 回填
+│   ├── 合并权限点到菜单树/SKILL.md         # 补丁与已有树合并
+│   ├── 源码集中式权限改动/SKILL.md         # v-hasPerm 优先 + 父组件收敛
+│   ├── OpenCLI端到端验证/SKILL.md          # SSH + OpenCLI 权限验收
+│   ├── 权限运行时排障/SKILL.md             # isOwner / computed 缓存 / 登录时序
+│   ├── 菜单树导入验证/SKILL.md             # dry_run → 正式导入 + 角色模板
+│   ├── OpenCLI双会话权限验证/SKILL.md       # admin 配置 + test 用户验证（通用底座）
+│   ├── 双会话OpenCLI环境初始化/SKILL.md     # profile 预检 + 双 session 登录
+│   ├── 角色菜单权限树快速配置/SKILL.md     # 角色弹窗内搜索树+功能项勾选
+│   ├── 菜单管理功能项依赖链验证/SKILL.md   # 菜单 8 场景 E2E（node 脚本 + scenarios/）
+│   └── 权限测试结果落盘CSV/SKILL.md         # 薄包装 → 委托外部 skill 生成 CSV
+├── template/                              # 人类可读模板与样本
+│   ├── route-component-perm-api-output.md
+│   ├── boundary-file-example.md
+│   ├── perm-design-output.md
+│   ├── menu-patch-yaml-output.md
+│   ├── centralized-diff-output.md
+│   └── sample-run/
+│       ├── before-01-需求输入.md           # few-shot：用户原始需求
+│       ├── after-01-完整执行链路.md        # few-shot：完整产物
+│       ├── mvp-01-最小闭环.md              # few-shot：最小可复现路径
+│       └── snapshot-01-关键决策.md         # few-shot：关键决策节点
+├── assets/                                # agent 轻量素材
+│   ├── few-shot-example/
+│   ├── frontmatter-template.yaml
+│   └── skill-output-checklist.md
+├── references/                            # 长说明与规则文件
+│   ├── default-project-boundary.md
+│   ├── doc-architecture.md
+│   ├── api-contract-resolution.md
+│   ├── api-backtrace-rules.md
+│   ├── evidence-rules.md
+│   ├── implementation-plan.md
+│   ├── template-tuning-notes.md
+│   ├── writing-skills-core.md
+│   ├── perm-design-rules.md               # 权限设计规则
+│   ├── menu-yaml-spec.md                  # 菜单 YAML 字段规范
+│   ├── centralized-diff-rules.md          # 集中式改动规则
+│   └── perm-runtime-debugging.md          # 运行时排障规则
+└── evals/
+    ├── evals.json
+    └── test-prompts.json
 ```
 
 ## 使用示例
+
 ```text
-使用 $梳理权限点与apis 扫描
-F:\Documents\Repertory\Sieyuan\nebula\apex_dev
-并基于默认 seccenter swagger 输出一份路由-组件-权限点-API 源码梳理文档。
+使用 $梳理权限点与apis 扫描 apex_dev，
+先帮我盘点所有路由的权限点和 API 现状。
 ```
 
 ```text
-使用 $梳理权限点与apis 扫描一个 Vue 仓库，
-把没有挂 v-hasPerm 但真实调用 API 的操作也一并设计成建议权限点，
-输出到 docs/plans。
+已有盘点文档，帮我设计首页、租户管理、安全配置的新权限点。
+```
+
+```text
+给我全流程方案：从分析现状到菜单补丁、源码改动、端到端验证。
+```
+
+```text
+权限设计已确认，帮我按集中式原则改 apex_dev 源码。
+```
+
+```text
+我要对 sys:dashboard:view、sys:tenant:query 做 E2E 测试，
+admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
+```
+
+```text
+直接用菜单管理跑一遍 E2E 测试，8 个场景全过一遍。
 ```
 
 ## 模板与素材入口
-- `[[template/README.md]]`
+
 - `[[template/route-component-perm-api-output.md]]`
 - `[[template/boundary-file-example.md]]`
-- `[[template/sample-run/apex_dev-route-component-perm-api.md]]`
-- `[[template/sample-run/apex_dev-api-backtrace-focus-iteration.md]]`
+- `[[template/sample-run/mvp-01-最小闭环.md]]`
+- `[[template/sample-run/after-01-完整执行链路.md]]`
 - `[[assets/few-shot-example]]`
-- `[[assets/few-shot-example/api-backtrace-regression.md]]`
-- `[[assets/few-shot-example/api-backtrace-regression/01-baseline-failures.md]]`
-- `[[assets/few-shot-example/api-backtrace-regression/02-gateway-contract-corrections.md]]`
-- `[[assets/few-shot-example/api-backtrace-regression/03-focus-and-backend-todo.md]]`
-- `[[assets/few-shot-example/api-backtrace-regression/04-emit-lift-and-profile-security.md]]`
-- `[[assets/skill-output-checklist.md]]`
 - `[[references/default-project-boundary.md]]`
 - `[[references/api-backtrace-rules.md]]`
-- `[[references/template-tuning-notes.md]]`
+- `[[references/perm-design-rules.md]]`
+- `[[references/centralized-diff-rules.md]]`
+- `[[references/perm-runtime-debugging.md]]`
