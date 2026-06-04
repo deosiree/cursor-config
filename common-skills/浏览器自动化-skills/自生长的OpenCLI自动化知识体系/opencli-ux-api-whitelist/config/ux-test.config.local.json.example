@@ -1,0 +1,13 @@
+{
+  "defaultProfile": "local",
+  "sessionName": "p2ejw7ww",
+  "opencliChromeProfile": "p2ejw7ww",
+  "profiles": {
+    "local": {
+      "baseUrl": "http://localhost:8080",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "password": "CHANGE_ME"
+    }
+  }
+}

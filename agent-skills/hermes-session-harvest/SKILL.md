@@ -303,7 +303,7 @@ fallback 链路:
 
 ```yaml
 查找顺序:
-  1. 从当前工作目录向上查找 "自生长的 OpenCLI 自动化知识体系/SKILL.md"
+  1. 从当前工作目录向上查找 "自生长的OpenCLI自动化知识体系/SKILL.md"
   2. 从 .cursor/common-skills/ 查找
   3. 未找到 → 降级为"纯报告模式"：只输出 audit 摘要，不执行任何文件沉淀
 ```
@@ -322,7 +322,7 @@ fallback 链路:
 ## 与 OpenCLI 自生长系统的关系
 
 ```
-hermes-session-harvest (本 skill)    自生长的 OpenCLI 自动化知识体系
+hermes-session-harvest (本 skill)    自生长的OpenCLI自动化知识体系
 ┌──────────────────────────┐        ┌──────────────────────────────┐
 │ 通用 session-end audit   │  引用  │ OpenCLI 领域知识 + 路由表    │
 │ SCAN → CLASSIFY → HARVEST│ ◄──── │ harvest/add-scene.sh         │

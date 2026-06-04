@@ -26,7 +26,7 @@ should-not-trigger:
 # SSH 技能路由中心
 
 > **定位：** SSH / jump / K8s 日志能力的 agent 入口。只做路由与通用门禁，具体命令下沉到 `feature-skills/`。
-> **与 OpenCLI 关系：** 前端 toast 往往只有 `[100000]未知错误`；SSH + `kubectl logs` 可拿到 **ERRO 行真实堆栈**。常与 `自生长的 OpenCLI 自动化知识体系/opencli-ux-menu-import` 组合使用。
+> **与 OpenCLI 关系：** 前端 toast 往往只有 `[100000]未知错误`；SSH + `kubectl logs` 可拿到 **ERRO 行真实堆栈**。常与 `自生长的OpenCLI自动化知识体系/opencli-ux-menu-import` 组合使用。
 
 ## RED（失败基线）
 
@@ -64,7 +64,7 @@ should-not-trigger:
 | 场景 | 条件 | 策略 | 状态 |
 |------|------|------|------|
 | **K8s 浏览后端日志** | seccenter / platform 命名空间 / 导入失败 / 100000 | → [`feature-skills/ssh-k8s-浏览后端日志/SKILL.md`](feature-skills/ssh-k8s-浏览后端日志/SKILL.md) | ✅ 已实现 |
-| **菜单导入 + SSH 联调** | 菜单 YAML import 预览/正式导入失败 | → OpenCLI 子 skill [`../浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/opencli-ux-menu-import/`](../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/opencli-ux-menu-import/SKILL.md)（内嵌 SSH 步骤） | ✅ 已实现（跨 skill） |
+| **菜单导入 + SSH 联调** | 菜单 YAML import 预览/正式导入失败 | → OpenCLI 子 skill [`../浏览器自动化-skills/自生长的OpenCLI自动化知识体系/opencli-ux-menu-import/`](../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/opencli-ux-menu-import/SKILL.md)（内嵌 SSH 步骤） | ✅ 已实现（跨 skill） |
 | **多集群切换** | 需要在 47/cloudtest 而非 48 集群操作 | → `config/ssh.config.json` → `multiCluster`；切换 morbax profile 后按 K8s 浏览后端日志流程 | ✅ config 已就绪 |
 | **仅 Network 足够** | 本地 dev + vite proxy，响应体含完整 code/message | 优先浏览器 Network，不必 SSH | ⚠️ 无需 feature skill |
 | **Pod 深度诊断** | CrashLoopBackOff / OOMKilled / ImagePullBackOff / Pod NotReady / `kubectl describe` | → [`feature-skills/ssh-k8s-pod-诊断/SKILL.md`](feature-skills/ssh-k8s-pod-诊断/SKILL.md) | ✅ 新增 |

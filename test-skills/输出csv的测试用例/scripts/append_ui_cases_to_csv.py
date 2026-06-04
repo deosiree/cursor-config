@@ -61,8 +61,28 @@ def read_existing_rows(csv_path: Path) -> list[dict]:
         return list(reader)
 
 
+def expected_csv_column(header: list[str]) -> str:
+    """menu.csv 等模板用「用例结果」，部分模板用「预期结果」。"""
+    if "预期结果" in header:
+        return "预期结果"
+    if "用例结果" in header:
+        return "用例结果"
+    return "预期结果"
+
+
+def self_test_result_column(header: list[str]) -> str | None:
+    """未执行状态列：优先 develop结果，其次 自测结果。"""
+    if "develop结果" in header:
+        return "develop结果"
+    if "自测结果" in header:
+        return "自测结果"
+    return None
+
+
 def build_ui_rows(header: list[str], field_defaults: dict, cases: list[dict]) -> list[dict]:
     """将 cases 转为 CSV 行，强制功能集合为空。"""
+    expected_col = expected_csv_column(header)
+    self_test_col = self_test_result_column(header)
     rows = []
     for case in cases:
         row = dict(field_defaults)
@@ -70,9 +90,9 @@ def build_ui_rows(header: list[str], field_defaults: dict, cases: list[dict]) ->
         row["前置条件"] = case.get("precondition", "")
         row["测试步骤"] = case.get("steps", "")
         expected = case.get("expected", "")
-        row["预期结果"] = expected
-        # develop结果 优先用 case 指定值，其次 fieldDefaults（如 "0"），最后兜底预期结果
-        row["develop结果"] = case.get("develop_result", row.get("develop结果", expected))
+        row[expected_col] = expected
+        if self_test_col:
+            row[self_test_col] = case.get("develop_result", row.get(self_test_col, "0"))
         # 强制留空
         row["功能集合"] = ""
         row["用例ID"] = ""

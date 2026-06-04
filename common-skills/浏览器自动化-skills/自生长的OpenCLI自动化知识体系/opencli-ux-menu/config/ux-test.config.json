@@ -1,0 +1,42 @@
+{
+  "defaultProfile": "local",
+  "sessionName": "p2ejw7ww",
+  "opencliChromeProfile": "p2ejw7ww",
+  "menuPath": "/cloud/Apex/system/menu",
+  "menuData": {
+    "projectDuplicateIn": "test0415",
+    "projectCrossProject": "test0601",
+    "duplicateRoutePath": "/opencli/dup0415",
+    "duplicateErrorText": "当前项目下的路由路径已存在",
+    "testMenuNamePrefix": "ux_menu_dup_"
+  },
+  "profiles": {
+    "local-subapp": {
+      "baseUrl": "http://localhost:8081",
+      "authMode": "none",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "accountNote": "平台 admin 账户；非双会话场景勿改用 huiyan 等其他账号",
+      "password": "123456",
+      "captchaMode": "auto"
+    },
+    "local": {
+      "baseUrl": "http://localhost:8080",
+      "authMode": "login",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "accountNote": "平台 admin 账户；非双会话场景勿改用 huiyan 等其他账号",
+      "password": "123456",
+      "captchaMode": "auto"
+    },
+    "cloud": {
+      "baseUrl": "https://cloud.lanniu.top",
+      "authMode": "login",
+      "loginPath": "/cloud/login",
+      "account": "admin@system.local",
+      "accountNote": "平台 admin 账户；非双会话场景勿改用 huiyan 等其他账号",
+      "password": "CHANGE_ME",
+      "captchaMode": "manual"
+    }
+  }
+}

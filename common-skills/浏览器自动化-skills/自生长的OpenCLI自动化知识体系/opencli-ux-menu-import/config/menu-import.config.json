@@ -1,0 +1,11 @@
+{
+  "defaultScriptBase": "../../../docs/menu/scripts",
+  "defaultPatchDir": "../../../docs/menu",
+  "scripts": {
+    "previewLoop": "menu_import_preview_loop.py",
+    "ensurePatchIds": "ensure-patch-menu-ids.py",
+    "mergePatch": "../../docs/menu/merge-perm-patch.py"
+  },
+  "defaultApiBase": "http://localhost:8082/dev-api/direct/seccenter/v2",
+  "defaultWireProject": "51"
+}

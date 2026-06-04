@@ -1,0 +1,17 @@
+[
+  {
+    "id": "whitelist-scroll-full",
+    "prompt": "用 OpenCLI 在菜单管理页打开 API 白名单弹窗，真实插入 50 条后检查表格纵向滚动条",
+    "expected": "路由 opencli-ux-api-whitelist → test-api-whitelist-table-scroll.ps1 -BindOnly → scroll-eval-oneline 测 el-scrollbar__wrap"
+  },
+  {
+    "id": "whitelist-scroll-skip-seed",
+    "prompt": "白名单已经插过 50 条了，只用 p2ejw7ww 会话测一下表格滚动",
+    "expected": "识别 -BindOnly -SkipSeed → 不跑 seed eval → 仍打开弹窗并 eval 滚动指标"
+  },
+  {
+    "id": "whitelist-btn-perm-missing",
+    "prompt": "OpenCLI 点菜单管理白名单按钮找不到，是不是权限问题？",
+    "expected": "走失败 fallback 表 → 检查 sys:menu:whitelist → 0604 补丁 yaml → 勿改用 8081 或错误 profile"
+  }
+]

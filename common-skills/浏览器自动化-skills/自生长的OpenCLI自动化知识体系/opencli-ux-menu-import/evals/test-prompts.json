@@ -1,0 +1,17 @@
+[
+  {
+    "id": "import-yaml-preview",
+    "prompt": "菜单权限合并 YAML 预览失败，toast 显示 `[100000]未知错误`，帮我用 OpenCLI 和 SSH 查真实原因并修复直到预览成功",
+    "expected": "Agent 路由到 opencli-ux-menu-import + references/场景-菜单导入与SSH联调.md → SSH skill 查 ERRO → Python 补 id → 重试 dry_run 直至 PREVIEW OK"
+  },
+  {
+    "id": "ensure-patch-ids",
+    "prompt": "菜单树0602_1455_权限补丁.yaml 里 patch_children_add 的 id 都是 0，帮我补上真实 id",
+    "expected": "Agent 路由到 opencli-ux-menu-import → bash run-e2e.sh --ensure-ids → 从 API 查 2107~2113 写回补丁"
+  },
+  {
+    "id": "import-precheck",
+    "prompt": "帮我把 0602 菜单合并导入跑通，先检查环境就绪",
+    "expected": "Agent 检查：git status 确认路径 → read config/menu-import.config.json 确认 API base → opencli doctor（UI 路径） → 提示用户启动 apex dev"
+  }
+]

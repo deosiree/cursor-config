@@ -162,7 +162,7 @@ INFO ... 错误信息:[100000]未知错误
 |------|------|------|
 | 导入失败排查 100000 | `../../../../docs/menu/导入失败排查-100000.md` | 菜单导入 `[100000]` |
 | seccenter 错误码 | `../../../../docs/errCode/seccenter.swagger.md` | 错误码速查 |
-| 菜单导入 SSH 联调 | [`../../../浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/references/场景-菜单导入与SSH联调.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/references/场景-菜单导入与SSH联调.md) | 完整闭环参考（OpenCLI 侧） |
+| 菜单导入 SSH 联调 | [`../../../浏览器自动化-skills/自生长的OpenCLI自动化知识体系/references/场景-菜单导入与SSH联调.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/references/场景-菜单导入与SSH联调.md) | 完整闭环参考（OpenCLI 侧） |
 
 ## 输出契约（Agent 交付）
 
@@ -194,6 +194,6 @@ INFO ... 错误信息:[100000]未知错误
 ## 关联
 
 - 父 skill：[`../../SKILL.md`](../../SKILL.md)
-- OpenCLI 联调：[`../../../浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/references/场景-菜单导入与SSH联调.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/references/场景-菜单导入与SSH联调.md)
-- 会话日志：[`../../../浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/session-log/2026-06-02-menu-import-ssh-opencli.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/session-log/2026-06-02-menu-import-ssh-opencli.md)
+- OpenCLI 联调：[`../../../浏览器自动化-skills/自生长的OpenCLI自动化知识体系/references/场景-菜单导入与SSH联调.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/references/场景-菜单导入与SSH联调.md)
+- 会话日志：[`../../../浏览器自动化-skills/自生长的OpenCLI自动化知识体系/session-log/2026-06-02-menu-import-ssh-opencli.md`](../../../浏览器自动化-skills/自生长的%20OpenCLI%20自动化知识体系/session-log/2026-06-02-menu-import-ssh-opencli.md)
 - 业务文档：[`docs/menu/导入失败排查-100000.md`](../../../../docs/menu/导入失败排查-100000.md)

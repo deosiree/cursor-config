@@ -6,7 +6,7 @@
 
 ```text
 # OpenCLI 自生长系统根目录（相对本仓库）
-.cursor/common-skills/浏览器自动化-skills/自生长的 OpenCLI 自动化知识体系/
+.cursor/common-skills/浏览器自动化-skills/自生长的OpenCLI自动化知识体系/
 
 # Harvest 脚本路径
 harvest/add-scene.sh          # 新增场景 → 更新路由表 + test-prompts

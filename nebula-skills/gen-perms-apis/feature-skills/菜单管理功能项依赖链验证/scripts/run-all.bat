@@ -30,3 +30,6 @@ if %EXIT_CODE%==0 (
   echo [FAIL] 存在失败场景，详见 examples\result-*.json
 )
 exit /b %EXIT_CODE%
+*.json
+)
+exit /b %EXIT_CODE%
