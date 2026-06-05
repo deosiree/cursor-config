@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-05T18:00	baseline	reasonix-dispatcher	-	79.8	baseline	-	初始基线评估; dim4最低(5/10)	dry_run
+2026-06-05T18:10	r1-hl1	reasonix-dispatcher	79.8	82.2	keep	dim4	HL-1: 加 📋classify/🔴CHECKPOINT/🛑STOP标记; Δ=+2.4	dry_run
+2026-06-05T18:20	r2-failure	reasonix-dispatcher	82.2	83.7	keep	dim3+dim9	失败表5→8行 + 反例6→7条; Δ=+1.5	dry_run
+2026-06-05T18:30	r3-mermaid	reasonix-dispatcher	83.7	84.9	keep	dim2+dim7	纯文字→Mermaid流程图; Δ=+1.2; 🛑HL-4触发	dry_run
+2026-06-05T18:45	r4-fulltest	reasonix-dispatcher	84.9	87.5	keep	dim8+dim9	3/3 test-prompts full_test验证通过; 修intent gate bug; 反例8条; Δ=+2.6	full_test
+2026-06-05T19:00	r5-trigger	reasonix-dispatcher	87.5	89.8	keep	dim2+dim5+dim9	强制规则: 从"建议"升级为"必须"+违规自查清单+🚨警告头; 触发词增加排名/排行/排序/查询/统计/count; 反例9条; Δ=+2.3	dry_run

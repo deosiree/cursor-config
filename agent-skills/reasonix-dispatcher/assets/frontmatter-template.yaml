@@ -1,0 +1,7 @@
+# reasonix-dispatcher frontmatter template
+# Copy into new SKILL.md and customize
+
+---
+name: my-skill-name
+description: 一句话：做什么 + 何时用 + 触发词。例如：智能任务分发引擎。编码/问答/分析类任务自动路由到 Reasonix 执行。触发词：省 token、缓存优化、自动路由、dispatch。
+---

@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-05T16:00	baseline	skill-tracker	-	44.4	baseline	-	初始基线评估	baseline
+2026-06-05T16:10	improve-v1	skill-tracker	44.4	68.7	keep	全部	新增dim3失败处理+dim4检查点+dim9反例+dim5具体命令	dry_run
+2026-06-05T17:00	phase1-v2	skill-tracker	68.7	77.7	baseline	-	新增auto-increment脚本+SKILL.md重构后基线; dim3最弱(7/10); dim6次弱(7/10)	dry_run
+2026-06-05T17:10	r1-hl2	skill-tracker	77.7	81.5	keep	dim3+dim6	三段式HL-2失败模式表+dim6引用补齐; Δ=+3.8	dry_run
+2026-06-05T17:20	r2-hl1	skill-tracker	81.5	83.3	keep	dim4+频率控制	HL-1统一📋快照/🔴CHECKPOINT/✅验证三标记法; 频率控制从手动→自动; Δ=+1.8	dry_run
+2026-06-05T17:30	r3-full	skill-tracker	83.3	86.2	keep	dim8+dim9	全量实测验证Test1+2; 新增dim9反例×2; Δ=+2.9; 🎉TARGET≥85	dry_run

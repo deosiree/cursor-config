@@ -1,0 +1,5 @@
+[
+  {"id": 1, "prompt": "帮我写个 Python 脚本，从 CSV 文件读取数据并按日期分组统计", "expected": "intent=code, dispatch to reasonix, return Python code with csv+pandas usage"},
+  {"id": 2, "prompt": "分析一下这个代码仓库的架构，看看模块依赖关系", "expected": "intent=analysis, dispatch to reasonix, return architecture analysis"},
+  {"id": 3, "prompt": "帮我在飞书上发个通知，告诉团队下午三点开会", "expected": "intent=orchestration, stay on Hermes, don't call reasonix"}
+]

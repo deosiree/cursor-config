@@ -1,0 +1,5 @@
+[
+  {"id": 1, "prompt": "我想看看当前 Top-30 的 skill 使用排名", "expected": "展示 skill-track.tsv 中 count 降序的前 30 条，含 name、count、last_used"},
+  {"id": 2, "prompt": "我用了一次 write-skill，帮我记录一下", "expected": "读取 skill-track.tsv，找到 write-skill，count 加 1，写回"},
+  {"id": 3, "prompt": "我需要用 gen-README，但它不在 Top-30 里，帮我把它加进来", "expected": "找到最低 count 的 skill，踢出，启用 gen-README，set count=1，更新 config.yaml"}
+]
