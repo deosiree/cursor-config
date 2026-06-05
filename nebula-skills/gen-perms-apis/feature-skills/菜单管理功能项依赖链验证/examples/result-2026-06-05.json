@@ -1,7 +1,104 @@
 {
   "testDate": "2026-06-05",
-  "total": 0,
+  "total": 8,
   "passed": 0,
-  "failed": 0,
-  "results": []
+  "failed": 8,
+  "results": [
+    {
+      "id": "01-only-import",
+      "title": "只选导入",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "02-only-export",
+      "title": "只选导出",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "03-only-add",
+      "title": "只选新建",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "04-only-query",
+      "title": "只选查询",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 39.9,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "05-query-add",
+      "title": "查询+新建",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSec": 36.9,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "06-query-edit",
+      "title": "查询+编辑",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "07-query-delete",
+      "title": "查询+删除",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    },
+    {
+      "id": "08-query-edit-configapi",
+      "title": "查询+编辑+配置API",
+      "status": "FAIL",
+      "exitCode": null,
+      "elapsedSec": 300,
+      "rerun": {
+        "status": "FAIL",
+        "exitCode": null,
+        "elapsedSec": 300
+      }
+    }
+  ]
 }
