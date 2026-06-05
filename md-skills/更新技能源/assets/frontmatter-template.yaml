@@ -1,0 +1,3 @@
+# 默认：本地中文模式
+name: 更新技能源
+description: 当需要从 cc-switch 管理的技能仓库（如 cursor-config）拉取最新 skill，并重启 Hermes Gateway 使其生效时使用。

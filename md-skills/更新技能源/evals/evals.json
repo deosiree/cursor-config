@@ -1,0 +1,54 @@
+{
+  "skill_name": "更新技能源",
+  "evals": [
+    {
+      "id": "should-trigger-1",
+      "category": "should_trigger",
+      "prompt": "更新技能源，我改了 cursor-config 里的 skill",
+      "expected_output": "输出应执行 discover → sync → restart 三步流程",
+      "assertions": [
+        "输出中包含 cc-switch skills discover",
+        "输出中包含 cc-switch skills sync",
+        "输出中包含 hermes gateway restart"
+      ]
+    },
+    {
+      "id": "should-trigger-2",
+      "category": "should_trigger",
+      "prompt": "刷新技能，让最新的预览隧道 skill 生效",
+      "expected_output": "输出应执行三步流程",
+      "assertions": [
+        "输出中包含 cc-switch skills discover",
+        "输出中包含 cc-switch skills sync",
+        "输出中包含 hermes gateway restart"
+      ]
+    },
+    {
+      "id": "should-trigger-3",
+      "category": "should_trigger",
+      "prompt": "cc-switch同步一下，我更新了技能仓库",
+      "expected_output": "输出应执行三步流程",
+      "assertions": [
+        "输出中包含 cc-switch 命令"
+      ]
+    },
+    {
+      "id": "should-not-trigger-1",
+      "category": "should_not_trigger",
+      "prompt": "帮我看看预览隧道 skill 写得怎么样",
+      "expected_output": "这是评估任务，不应触发更新技能源",
+      "assertions": [
+        "不应输出 cc-switch 命令"
+      ]
+    },
+    {
+      "id": "should-not-trigger-2",
+      "category": "should_not_trigger",
+      "prompt": "重启一下 Hermes",
+      "expected_output": "只有重启要求，没有更新技能的需求，不应触发",
+      "assertions": [
+        "不应输出 cc-switch skills discover"
+      ]
+    }
+  ]
+}
