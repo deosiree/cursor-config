@@ -47,6 +47,19 @@ description: 当仓库命中“纯 TS / util / request / helper 等非组件逻�
 - 仅为建立依赖但不消费值时，优先使用 `void i18n.global.locale.value`，表达“读取依赖但丢弃结果”
 - 同步补齐 `zh_CN.json` 与 `en_US.json`
 
+### 特殊场景：RuleFail + extract:i18n（formRules 样式）
+
+当纯 TS 文件内存在「定义点是 messageKey，消费点在 `RuleFail` 等 helper 内用 `t(messageKey, params)` 翻译」的模式时（例如 `formRules.ts` 内 `createRuleFail` + `fail("…")`）：
+
+- **不要**在定义点直接写 `fail(t("key"))`——`createRuleFail` 内部会再次调 `t()`，造成双重翻译。
+- 正确做法：
+  - **定义点**用 `trans("…")` 标记 messageKey，使 `pnpm run extract:i18n` 能静态抽取：
+    - `fail(trans("{label}不能为空"))`
+    - `fail(trans("仅允许中文、西文、数字、下划线"))`
+  - **消费点**在 helper 内保留 `i18n.global.t(messageKey, params)`，运行时只翻译一次。
+- `trans()` 来自 `vue-i18n-kit-sy/runtime`，运行时原样返回字符串，只起"让抽取脚本识别 key"的作用；必须配合消费点的 `t()` 才能出翻译结果。
+- 适用场景：`formRules`、通用校验器、错误映射 helper 等「字符串 key 传入、由内部统一翻译」的模式。
+
 ## REFACTOR
 
 - 对照 `assets/few-shot-example/` 比较不同仓库、不同模块里的同类实现
