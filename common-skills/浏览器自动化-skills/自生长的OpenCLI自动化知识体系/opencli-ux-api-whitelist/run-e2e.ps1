@@ -17,6 +17,7 @@ param(
 
 $ErrorActionPreference = "Continue"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$SkillName = Split-Path -Leaf $ScriptDir
 $Main = Join-Path $ScriptDir "scripts\test-api-whitelist-table-scroll.ps1"
 
 if ($Check) {
@@ -38,4 +39,7 @@ if (-not $Full) { $mainSwitches["SkipSeed"] = $true }
 $flagLabel = ($mainSwitches.Keys | ForEach-Object { "-$_" }) -join " "
 Write-Host "==> run-e2e: $Main $flagLabel"
 & $Main @mainSwitches
-exit $LASTEXITCODE
+$ExitCode = $LASTEXITCODE
+# auto-log: 实跑结果记录
+& "$ScriptDir\..\harvest\log-result.ps1" -Result $(if ($ExitCode -eq 0) { "PASS" } else { "FAIL" }) -Notes "exit code=$ExitCode" -Skill $SkillName
+exit $ExitCode

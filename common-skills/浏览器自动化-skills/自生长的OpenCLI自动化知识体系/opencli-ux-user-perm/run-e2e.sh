@@ -25,6 +25,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_NAME="$(basename "$SCRIPT_DIR")"
+# auto-log: 退出时自动记录实跑结果
+trap 'EXIT_CODE=$?; if [[ $EXIT_CODE -eq 0 ]]; then R="PASS"; N="flow=${FLOW:-full} 完成"; else R="FAIL"; N="exit code=$EXIT_CODE"; fi; bash "${SCRIPT_DIR}/../harvest/log-result.sh" "$R" "$N" "${SKILL_NAME}" 2>/dev/null || true' EXIT
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 

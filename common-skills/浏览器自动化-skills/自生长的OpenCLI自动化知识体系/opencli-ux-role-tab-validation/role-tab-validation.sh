@@ -5,6 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
+# auto-log: 无论 PASS 还是 FAIL (die)，退出时自动记录实跑结果
+SKILL_NAME="$(basename "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
+trap 'EXIT_CODE=$?; if [[ $EXIT_CODE -eq 0 ]]; then R="PASS"; N="TC1~TC4 全通过"; else R="FAIL"; N="die 退出 (code=$EXIT_CODE)"; fi; bash "${SCRIPT_DIR}/../harvest/log-result.sh" "$R" "$N" "${SKILL_NAME}" 2>/dev/null || true' EXIT
+
 parse_args_profile "$@"
 load_profile "${UX_PROFILE_ARG:-}" || exit 1
 require_opencli

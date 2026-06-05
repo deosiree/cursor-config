@@ -2,3 +2,4 @@ date	skill	result	env	notes
 2026-06-01	opencli-ux-role-tab-validation	PASS	local	TC1~TC4 全通过；login fill 正常；dialog footer 按钮文本含空白字符已处理
 2026-06-04	opencli-ux-api-whitelist	PASS	local	p2ejw7ww；脚本链路通过；UI 断言需用户手动登录菜单页
 2026-06-06	opencli-ux-user-perm	PASS	local	双会话权限 E2E 8 场景覆盖；--profile 隔离验证通过
+2026-06-04	opencli-ux-role-tab-validation	FAIL	local	die 退出 (code=1)
