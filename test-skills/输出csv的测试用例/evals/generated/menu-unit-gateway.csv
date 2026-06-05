@@ -1,0 +1,126 @@
+﻿用例ID,名称,描述,标签,配置文件,用例目的,执行方式,对应进程,进程参数,最新结果,创建时间,备注,用例等级,需求编号,子系统,模块名,功能集合,用例说明,前置条件,测试步骤,环境说明,创建人员,环境版本,重试次数,超时时间,审核状态,审核人员,用例类型,预留字段1,预留字段2,预留字段3,预留字段4,预留字段5,排序顺序,用例结果,修改时间,自测结果,自测人员,内部测试人员,支持系统
+,编辑回显时 v2 树节点字段映射为稳定模型,,1,,,4,,,0,,"menu.gateway.test.ts > maps projectId, perm and params from v2 tree nodes for edit backfill",0,,8,菜单管理,,,已登录；菜单树中存在 type=page 的节点，含 projectId、perm、params,"1. 进入菜单管理，加载菜单树
+2. 编辑含 perm 与 params 的页面节点
+3. 查看表单回显的 projectId、权限标识、路由参数",,惠岩,,,,,,0,,,,,,,"正向：projectId 显示为 PROJECT--51 形态；perm 与 params 正确解析为键值对
+反向：projectId 仍为 wire 数字串；params 未解析或回显为空",,,,,
+,后端 isVisible=false 时节点显示为隐藏,,1,,,4,,,0,,menu.gateway.test.ts > prefers isVisible when mapping hidden state from v2 tree nodes,0,,8,菜单管理,,,已登录；后端树节点 isVisible=false,"1. 进入菜单管理加载菜单树
+2. 打开 isVisible=false 的页面节点编辑弹窗
+3. 查看「显示」开关状态",,惠岩,,,,,,0,,,,,,,"正向：表单「显示」为关闭/否
+反向：「显示」仍为开启",,,,,
+,后端缺失 isVisible 时默认显示,,1,,,4,,,0,,menu.gateway.test.ts > defaults isVisible to shown when isVisible is absent,0,,8,菜单管理,,,已登录；后端树节点未返回 isVisible 字段,"1. 进入菜单管理加载菜单树
+2. 打开未带 isVisible 字段的页面节点
+3. 查看「显示」开关",,惠岩,,,,,,0,,,,,,,"正向：「显示」默认为开启/是
+反向：「显示」默认为关闭",,,,,
+,无查询条件时 tree 接口空 payload,,1,,,4,,,0,,menu.gateway.test.ts > requests role permission tree with empty payload when no query params are provided,0,,8,菜单管理,,,已登录；进入菜单管理页,"1. F12 打开 Network，筛选 menu/tree
+2. 刷新或进入菜单管理触发树加载（无项目/角色筛选）
+3. 查看请求体",,惠岩,,,,,,0,,,,,,,"正向：POST /seccenter/v2/menu/tree 请求体为 {}
+反向：请求体含多余默认筛选字段",,,,,
+,按项目查全局页面走 list 且 projectId 去前缀,,1,,,4,,,0,,menu.gateway.test.ts > queries project-scoped global menu pages through menu/list,0,,8,菜单管理,,,已登录；已选项目 PROJECT--51,"1. 进入菜单管理，选择项目 PROJECT--51
+2. F12 筛选 menu/list 相关请求
+3. 触发需按项目加载全局页面的操作",,惠岩,,,,,,0,,,,,,,"正向：list 请求 projectId 为 ""51""；types 含 menu、directory、page
+反向：projectId 仍带 PROJECT-- 前缀；或 types 不完整",,,,,
+,创建菜单时 projectId 稳定态转 wire,,1,,,4,,,0,,menu.gateway.test.ts > maps stable projectId to wire format when creating menu,0,,8,菜单管理,,,已登录；已选项目 PROJECT--51,"1. 选择项目 PROJECT--51，点击「新增」
+2. 填写必填项并保存
+3. F12 查看 POST /seccenter/v2/menu/create 请求体",,惠岩,,,,,,0,,,,,,,"正向：请求体 projectId 为 ""51""；接口成功
+反向：请求体仍含 PROJECT-- 前缀；或保存失败",,,,,
+,更新菜单时 projectId 稳定态转 wire,,1,,,4,,,0,,menu.gateway.test.ts > maps stable projectId to wire format when updating menu,0,,8,菜单管理,,,已登录；存在可编辑菜单节点，所属项目 PROJECT--52,"1. 编辑该节点并保存
+2. F12 查看 POST /seccenter/v2/menu/update 请求体",,惠岩,,,,,,0,,,,,,,"正向：请求体 projectId 为 ""52""
+反向：请求体仍含 PROJECT-- 前缀",,,,,
+,更新隐藏状态时 payload 含 isVisible false,,1,,,4,,,0,,menu.gateway.test.ts > maps hidden isVisible state to false in v2 update payload,0,,8,菜单管理,,,已登录；存在可编辑页面节点,"1. 编辑节点，将「显示」设为关闭并保存
+2. F12 查看 update 请求体 isVisible 字段",,惠岩,,,,,,0,,,,,,,"正向：请求体 isVisible 为 false
+反向：请求体 isVisible 仍为 true 或未传",,,,,
+,祖先锁：隐藏与仅平台显示同时生效,,1,,,4,,,0,,menu.gateway.test.ts > exposes ancestor lock lookup for dialog consumers,0,,8,菜单管理,,,已登录；树结构为 root(isSystemOnly=true) > menu(isVisible=false) > page,"1. 编辑 menu 或 page 子节点
+2. 查看「显示」「仅平台显示」开关是否灰禁
+3. 查看提示文案中的来源节点",,惠岩,,,,,,0,,,,,,,"正向：「显示」因 menu 隐藏而锁定；「仅平台显示」因 root 锁定；提示指向对应祖先
+反向：子节点可独立修改被锁定的状态",,,,,
+,权限面板加载功能子节点含 API,,1,,,4,,,0,,menu.gateway.test.ts > loads function children from menu tree with includeApis and maps them into permission panel stable model,0,,8,菜单管理,,,已登录；页面节点下存在 function 子节点及 apis,"1. 打开页面节点的权限配置
+2. F12 查看 menu/tree 请求（menuId、includeApis）
+3. 查看功能列表回显",,惠岩,,,,,,0,,,,,,,"正向：tree 请求含 menuId 与 includeApis:true；功能项名称、projectId 正确展示
+反向：未带 includeApis；或功能列表为空/字段错乱",,,,,
+,功能 API 详情 apiMethod 映射,,1,,,4,,,0,,menu.gateway.test.ts > loads function apis from menu detail and maps apiMethod into stable model,0,,8,菜单管理,,,已登录；功能节点下存在 apiMethod=2 的 API,"1. 打开权限配置中该功能的 API 列表
+2. F12 查看 menu/detail 请求
+3. 查看 HTTP 方法列展示",,惠岩,,,,,,0,,,,,,,"正向：detail 请求含 includeApis:true；方法显示为 POST
+反向：方法显示错误或未映射枚举",,,,,
+,新增功能 API 绑定,,1,,,4,,,0,,menu.gateway.test.ts > creates menu api associations through menu/api/add,0,,8,菜单管理,,,已登录；已打开某功能节点的 API 配置,"1. 新增 API：填写 url、方法、描述、排序并保存
+2. F12 查看 POST menu/api/add 请求体",,惠岩,,,,,,0,,,,,,,"正向：请求体含 menuId、apiUrl、apiMethod、description、sortOrder 且与表单一致；保存成功
+反向：字段缺失或保存失败",,,,,
+,更新功能 API 绑定,,1,,,4,,,0,,menu.gateway.test.ts > updates menu api associations through menu/api/update,0,,8,菜单管理,,,已登录；功能下已存在 API 记录,"1. 编辑该 API 并保存
+2. F12 查看 POST menu/api/update 请求体",,惠岩,,,,,,0,,,,,,,"正向：请求体 id、apiUrl、apiMethod、description、sortOrder 与表单一致
+反向：更新未生效或请求体字段错误",,,,,
+,删除功能 API 绑定,,1,,,4,,,0,,menu.gateway.test.ts > deletes menu api associations through menu/api/delete,0,,8,菜单管理,,,已登录；功能下已存在 API 记录,"1. 删除该 API
+2. F12 查看 POST menu/api/delete 请求体",,惠岩,,,,,,0,,,,,,,"正向：请求体 id 为目标 API id；列表中该项消失
+反向：删除失败或 id 错误",,,,,
+,按 id 查找菜单节点,,1,,,4,,,0,,menu-tree-helpers.test.ts > finds nodes by id from the current tree,0,,8,菜单管理,,,已登录；菜单树已加载，含 root-a、a-2 等节点,"1. 在树中定位 id 为 root-a、a-2 的节点
+2. 尝试定位 id 为 missing 的节点",,惠岩,,,,,,0,,,,,,,"正向：root-a、a-2 可选中并展示对应数据
+反向：missing 无匹配节点，详情区无数据",,,,,
+,仅祖先隐藏锁生效,,1,,,4,,,0,,menu-tree-helpers.test.ts > resolves ancestor locks by walking parent chain until a lock is hit,0,,8,菜单管理,,,已登录；树为 root > menu(isVisible=false) > page > function,"1. 编辑 menu 节点或其子节点
+2. 查看「显示」锁定状态与来源提示",,惠岩,,,,,,0,,,,,,,"正向：「显示」被祖先隐藏锁定且不可改；「仅平台显示」未锁定
+反向：子节点可开启显示；或误报仅平台显示锁",,,,,
+,隐藏锁与仅平台显示锁来自不同祖先,,1,,,4,,,0,,menu-tree-helpers.test.ts > collects both locks independently from different ancestors,0,,8,菜单管理,,,已登录；root(isSystemOnly=true) 下 menu(isVisible=false) 下 page,"1. 编辑 menu 或 page 节点
+2. 分别查看「显示」「仅平台显示」锁定与来源",,惠岩,,,,,,0,,,,,,,"正向：「显示」锁定来源为 menu 祖先；「仅平台显示」锁定来源为 root 祖先，两锁独立
+反向：仅生效其一；或来源节点提示错误",,,,,
+,路由 path 首尾空格 trim 为内部路径,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRoutePath trim,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写路由 path 为 "" system/user "" 并保存
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：保存后 path 为 /system/user
+反向：path 仍含首尾空格或未加前导 /",,,,,
+,路由 path 保留 Apex 前缀,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRoutePath Apex prefix,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写 path 为 /Apex/system/user
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：path 保持 /Apex/system/user
+反向：被错误改写为 /system/user",,,,,
+,路由 path 外部 URL 不变,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRoutePath external URL,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写 path 为 https://example.com/app
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：path 保持 https://example.com/app
+反向：被当作内部路径改写",,,,,
+,路由 path 空串规范为根路径,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRoutePath empty,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 将 path 留空或仅空格后保存
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：path 规范为 /
+反向：为空或保存失败",,,,,
+,redirect 首尾空格 trim,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRedirect trim,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写 redirect 为 "" system/user ""
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：redirect 为 /system/user
+反向：仍含空格",,,,,
+,redirect 保留 Apex 前缀,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRedirect Apex prefix,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写 redirect 为 /Apex/dashboard
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：redirect 保持 /Apex/dashboard
+反向：前缀被剥离",,,,,
+,redirect 外部 URL 不变,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRedirect external URL,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. 填写 redirect 为 https://example.com/landing
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：保持外部 URL
+反向：被改写",,,,,
+,redirect 空串时不设置,,1,,,4,,,0,,menu-route-normalization.test.ts > normalizeMenuRedirect empty,0,,8,菜单管理,,,已登录；可编辑含 routePath/redirect 的菜单节点,"1. 打开菜单编辑弹窗
+2. redirect 留空保存
+3. F12 查看保存请求或侧栏跳转行为",,惠岩,,,,,,0,,,,,,,"正向：不写入 redirect 或等价于 undefined
+反向：写入空字符串导致路由异常",,,,,
+,顶级 redirect 后端缺失时取首个子节点 path,,1,,,4,,,0,,menu-route-normalization.test.ts > resolveTopLevelMenuRedirect default from first child,0,,8,菜单管理,,,已登录；顶级菜单无 redirect，有子页面 /Apex/system/user、/Apex/system/role,"1. 配置父 path=/Apex/system，子节点如上，不填 redirect
+2. 保存后查看侧栏点击父级跳转或路由配置",,惠岩,,,,,,0,,,,,,,"正向：redirect 推导为 /Apex/system/user（首个子 path）
+反向：redirect 为空或跳到错误路径",,,,,
+,顶级 redirect 已有值不被子节点覆盖,,1,,,4,,,0,,menu-route-normalization.test.ts > resolveTopLevelMenuRedirect preserve existing,0,,8,菜单管理,,,已登录；父 redirect 已设为 /Apex/system/role，存在其他子节点,"1. 保存菜单配置
+2. 验证父级 redirect",,惠岩,,,,,,0,,,,,,,"正向：redirect 保持 /Apex/system/role
+反向：被首个子节点 path 覆盖",,,,,
+,顶级 redirect 无子节点时不推导,,1,,,4,,,0,,menu-route-normalization.test.ts > resolveTopLevelMenuRedirect empty children,0,,8,菜单管理,,,已登录；顶级菜单无 redirect 且无子节点,"1. 保存配置
+2. 查看 redirect 字段",,惠岩,,,,,,0,,,,,,,"正向：无 redirect（undefined/不设置）
+反向：错误写入默认 path",,,,,
+,创建时 isSystemOnly 写入 v2 payload,,1,,,4,,,0,,menu-system-only.test.ts > maps displayed-to-tenant option to v2 create payload,0,,8,菜单管理,,,已登录；新建菜单并勾选仅平台显示,"1. 新增节点，开启「仅平台显示」并保存
+2. F12 查看 create 请求体",,惠岩,,,,,,0,,,,,,,"正向：isSystemOnly 为 true；projectId 为 wire 格式
+反向：isSystemOnly 未传或为 false",,,,,
+,更新时 isSystemOnly 写入 v2 payload,,1,,,4,,,0,,menu-system-only.test.ts > maps displayed-to-tenant option to v2 update payload,0,,8,菜单管理,,,已登录；存在可编辑节点,"1. 编辑节点，关闭「仅平台显示」并保存
+2. F12 查看 update 请求体",,惠岩,,,,,,0,,,,,,,"正向：isSystemOnly 为 false
+反向：仍为 true 或未更新",,,,,
+,读取树时 isSystemOnly 回显到节点,,1,,,4,,,0,,menu-system-only.test.ts > maps v2 tree isSystemOnly back to menu nodes,0,,8,菜单管理,,,已登录；后端树节点 isSystemOnly=true,"1. 加载菜单树
+2. 打开该节点编辑弹窗",,惠岩,,,,,,0,,,,,,,"正向：「仅平台显示」为开启
+反向：显示为关闭或未回显",,,,,
+,查询树时 PROJECT--51 转为 wire 51,,1,,,4,,,0,,menu-project-scope.test.ts > maps stable project ids to seccenter wire ids before querying tree,0,,8,菜单管理,,,已登录；选择项目 PROJECT--51,"1. 选择项目后触发树加载
+2. F12 查看 menu/tree 请求体 projectId",,惠岩,,,,,,0,,,,,,,"正向：请求体 projectId 为 ""51""
+反向：仍为 PROJECT--51",,,,,
+,项目列表含 Platform 时默认选中 PROJECT--51,,1,,,4,,,0,,menu-project-scope.test.ts > prefers the configured platform project when present,0,,8,菜单管理,,,已登录；项目列表含名为 Platform 的 PROJECT--51,"1. 进入菜单管理
+2. 查看项目下拉默认选中项",,惠岩,,,,,,0,,,,,,,"正向：默认选中 PROJECT--51（Platform）
+反向：选中其他项目或为空",,,,,
+,无 Platform 时默认选中第一个项目,,1,,,4,,,0,,menu-project-scope.test.ts > falls back to the first project when the platform project is missing,0,,8,菜单管理,,,已登录；项目列表无 Platform，首项为 PROJECT--88,"1. 进入菜单管理
+2. 查看项目下拉默认项",,惠岩,,,,,,0,,,,,,,"正向：默认选中 PROJECT--88（列表第一项）
+反向：选中错误项目",,,,,
+,写入菜单缓存时不注入衍生字段,,1,,,4,,,0,,menu-repo-cache.test.ts > writes raw v2 menu trees without injecting derived fields,0,,8,菜单管理,,,已登录；触发菜单缓存写入（如同步侧栏）,"1. F12 Application 查看 localStorage subAppMenuList
+2. 对比写入前后节点字段",,惠岩,,,,,,0,,,,,,,"正向：缓存与原始 v2 树一致；无 menuName、visible、sort 注入字段
+反向：出现衍生字段或结构被改写",,,,,
+,清会话时清除 navbar 同步状态键,,1,,,4,,,0,,menu-repo-cache.test.ts > clearMenuCache removes navbar sync status key on session teardown,0,,8,菜单管理,,,已登录；localStorage 存在 MENU_NAVBAR_SYNC_STATUS_KEY,"1. 执行登出或清会话
+2. Application 查看该键",,惠岩,,,,,,0,,,,,,,"正向：MENU_NAVBAR_SYNC_STATUS_KEY 已清除
+反向：键仍存在",,,,,

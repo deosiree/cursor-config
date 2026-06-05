@@ -11,6 +11,7 @@ Agent skill 套件：将 Vitest `test.ts` 与模块配置沉淀为测试系统�
 | `scripts/append_ui_cases_to_csv.py` | UI 交互：复制模板 + 追加行 |
 | `scripts/csv_to_test_config.py` | 参考 CSV → config.json |
 | `scripts/bootstrap_menu_cases.py` | 从 `docs/问题单/0529/generate_menu_unit_csv.py` 迁移 cases |
+| `scripts/run-menu-index-smoke.node.js` | OpenCLI bind 模式：菜单页 index 简化回归冒烟 |
 | `configs/` | 模块 config / cases |
 | `intention-skills/` | 基于test.ts生成、沉淀模块配置、边开发边输出UI用例 |
 | `feature-skills/` | api/gateway 撰写、撰写UI交互cases、darwin拓展发现 |
@@ -23,6 +24,27 @@ python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.js
 ```
 
 输出：`docs/问题单/0529/menu-unit-gateway.csv`（若文件被占用，可用 `--output template/menu-unit-gateway/sample-output.csv`）
+
+## 0605 菜单模块落盘清单（仅新增）
+
+| moduleId | cases | 输出 CSV | 条数 | 说明 |
+|----------|-------|----------|------|------|
+| `menu-index-ui` | `configs/menu-index-ui.cases.json` | `docs/问题单/0605/menu-index-ui.csv` | 8 | **本次新增**（index 简化 UI 回归） |
+
+已有模块勿重复落盘（cases/config 已存在，指向原 outputPath）：
+
+| moduleId | 原输出 CSV |
+|----------|------------|
+| `menu-perm-e2e` | `docs/问题单/0604/menu-perm-e2e.csv` |
+| `menu-api-whitelist` | `configs/` 仅有 cases，按需 `--force` 生成，不默认复制到新日期目录 |
+| `menu-unit-gateway` | `docs/问题单/0529/menu-unit-gateway.csv` |
+
+0605 仅重生 index-ui：
+
+```bash
+cd .cursor/test-skills/输出csv的测试用例
+python scripts/generate_test_csv.py --config configs/menu-index-ui.config.json --force
+```
 
 ## 新模块三步
 

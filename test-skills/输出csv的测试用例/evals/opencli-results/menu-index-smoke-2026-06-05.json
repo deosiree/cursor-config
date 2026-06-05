@@ -1,0 +1,10 @@
+{
+  "testDate": "2026-06-05",
+  "scenario": "menu-index-smoke",
+  "profile": "p2ejw7ww",
+  "session": "p2ejw7ww",
+  "bindOnly": true,
+  "verdict": "FAIL",
+  "reason": "eval 解析失败",
+  "smoke": null
+}

@@ -109,6 +109,9 @@ python scripts/append_ui_cases_to_csv.py \
   --domain role \
   --date 0601 \
   --cases configs/role-ui-tab.cases.json
+
+# 5. 菜单 index 简化回归 OpenCLI 冒烟（bind 模式）
+node scripts/run-menu-index-smoke.node.js --bind-only
 ```
 
 脚本失败、路径错误、PowerShell 转义等 → `references/config-json-schema.md` §执行异常与回退。

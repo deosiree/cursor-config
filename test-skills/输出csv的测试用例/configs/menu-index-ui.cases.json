@@ -1,0 +1,62 @@
+{
+  "moduleId": "menu-index-ui",
+  "source": "menu/index.vue 简化回归 + OpenCLI 冒烟断言",
+  "cases": [
+    {
+      "name": "菜单管理-进入页面-项目下拉与Tab正常展示",
+      "precondition": "用户已登录且具备「sys:menu:query」权限；microfb 8080 与 apex 子应用可用",
+      "steps": "1. 进入「系统管理」>「菜单管理」\n2. 查看顶部项目下拉框\n3. 查看 Tab 区域与下方表格/空态区域",
+      "expected": "1. 项目下拉框可见且已选中某一项目\n2. 存在根菜单 Tab（或仅有空态占位，无 Tab 头）\n3. 下方展示菜单树表格或「暂无菜单/未找到匹配」空态",
+      "remark": "index.vue：menuTableData 驱动 Tab 与表格"
+    },
+    {
+      "name": "菜单管理-关键字搜索-过滤菜单树",
+      "precondition": "用户已登录且具备「sys:menu:query」权限；当前项目下存在可搜索的菜单数据",
+      "steps": "1. 进入「菜单管理」并等待树加载完成\n2. 在「请输入关键字搜索」输入框输入已知子菜单名称（如「角色」）\n3. 按 Enter 或点击「搜索」",
+      "expected": "1. 表格仅保留名称/路径命中关键字的节点及其父级\n2. Tab 列表同步缩小为仍包含命中子树的根菜单\n3. 未命中的根 Tab 不再出现",
+      "remark": "filterMenusByKeyword + 单 menuTableData"
+    },
+    {
+      "name": "菜单管理-清空搜索-恢复完整菜单树",
+      "precondition": "用户已登录；已执行过关键字搜索且树被过滤",
+      "steps": "1. 点击搜索框右侧清空按钮\n2. 观察 Tab 与表格",
+      "expected": "1. 搜索框内容为空\n2. Tab 恢复为当前项目下全部根菜单\n3. 表格展示完整子树",
+      "remark": "清空触发 handleQuery"
+    },
+    {
+      "name": "菜单管理-搜索无匹配-显示未找到空态",
+      "precondition": "用户已登录且具备「sys:menu:query」权限；当前项目有菜单数据",
+      "steps": "1. 在搜索框输入不存在的关键字（如「zzzz不存在」）\n2. 点击「搜索」",
+      "expected": "1. Tab 区域隐藏或仅显示空态 Tab\n2. 内容区展示「未找到匹配的菜单」空态\n3. 不展示完整菜单树",
+      "remark": "MENU_EMPTY_TAB_KEY 空态"
+    },
+    {
+      "name": "菜单管理-切换Tab-表格展示对应根菜单子树",
+      "precondition": "用户已登录；当前项目下存在至少两个根菜单 Tab",
+      "steps": "1. 进入「菜单管理」\n2. 点击第二个根菜单 Tab\n3. 查看表格根节点及展开子项",
+      "expected": "1. 激活 Tab 高亮切换\n2. 表格数据切换为该根菜单的 children\n3. 切换后刷新页面，仍停留在上次选中的 Tab（session 缓存）",
+      "remark": "getMenuChildrenFromRoots(menuTableData)"
+    },
+    {
+      "name": "菜单管理-侧栏同步Tag-待刷新后点击同步变最新",
+      "precondition": "用户已登录；刚完成会影响侧栏的菜单结构变更（新增/编辑目录或页面）",
+      "steps": "1. 保存菜单变更后返回列表\n2. 查看标题旁 Tag 是否为「待刷新」\n3. 点击黄色「待刷新」Tag\n4. 等待同步完成",
+      "expected": "1. 变更后 Tag 显示「待刷新」（黄色）\n2. 点击后 Tag 变为「最新」（绿色）\n3. 基座左侧导航与当前项目菜单一致",
+      "remark": "useMenuListRefreshState"
+    },
+    {
+      "name": "菜单管理-点击白名单-打开编辑白名单弹窗",
+      "precondition": "用户已登录且具备「sys:menu:whitelist」权限",
+      "steps": "1. 进入「菜单管理」\n2. 点击工具栏「白名单」按钮",
+      "expected": "1. 弹出「编辑白名单」对话框\n2. 对话框内展示白名单表格与「新增」「删除」按钮",
+      "remark": "whitelistDialogVisible ref"
+    },
+    {
+      "name": "菜单管理-点击导入-打开导入对话框",
+      "precondition": "用户已登录且具备「sys:menu:import」权限",
+      "steps": "1. 进入「菜单管理」\n2. 点击工具栏「导入」按钮",
+      "expected": "1. 弹出菜单导入对话框\n2. 可选择文件并执行导入操作",
+      "remark": "importDialogVisible ref"
+    }
+  ]
+}

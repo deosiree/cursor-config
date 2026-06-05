@@ -34,5 +34,17 @@
       "pause": true,
       "darwin": "propose 基于源码+口述生成"
     }
+  },
+  {
+    "id": "csv-menu-index-ui",
+    "prompt": "菜单管理 index 页面简化后，沉淀 UI 交互用例到测试系统 CSV，创建人员惠岩，输出 0605。",
+    "expect": {
+      "intention": "边开发边输出UI用例",
+      "config": "configs/menu-index-ui.config.json",
+      "caseCountApprox": 8,
+      "outputPath": "docs/问题单/0605/menu-index-ui.csv",
+      "scripts": ["generate_test_csv.py", "run-menu-index-smoke.node.js"],
+      "dedup": "skip if menu-perm-e2e / menu-unit-gateway cases already exist"
+    }
   }
 ]
