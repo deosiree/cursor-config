@@ -9,8 +9,10 @@
 | 🧑‍🏫 用费曼/苏格拉底/金字塔写内容 | [[方法论skills/SKILL.md]] | 根据知识点特征选择方法论 → 跳转到已有方法文档 |
 | 📊 画流程图/架构图/数据表 | [[渲染图skills/SKILL.md]] | Mermaid（内嵌）或 output-html（独立页面） |
 | 🔍 探索本地仓库/GitHub/网站 | [[探索skills/SKILL.md]] | 本地 tree+read / GitHub raw / OpenCLI 网站抓取 |
-| 🖼️ 生成图片 | [[生图skills/SKILL.md]] | image-gen · Mermaid→PNG · HTML截图 |
-| 🎬 生成视频 | [[视频skills/SKILL.md]] | Remotion · OpenMontage · TikTok模板 |
+| 🖼️ 生成图片 | [[生图skills/SKILL.md]] | GPT Image 2 · image-gen · Mermaid→PNG · HTML截图 |
+| 🎬 生成视频 | [[视频skills/SKILL.md]] | Web Video Presentation · Remotion · OpenMontage · TikTok模板 |
+| 🌐 网页设计 | [[网页设计-skills/SKILL.md]] | Web Design Engineer（企业级网页原型） |
+| 📚 知识库检索 | [[知识库检索-skills/SKILL.md]] | KB Retriever（层次化索引 + 专业阅读器） |
 | 🔊 文字转语音 | [[语音tts-skills/SKILL.md]] | edge-tts（免费）· 文档转播客 · OpenAI TTS |
 | 🌐 浏览器自动化 | [[浏览器自动化-skills/OpenCLI/SKILL.md]] | OpenCLI 驱动真实 Chrome · 自动化测试 · 手动操作模拟 · SPA 爬虫 |
 
@@ -32,8 +34,10 @@ common-skills/
 │   ├── SKILL.md
 │   ├── README.md
 │   └── references/
-├── 生图skills/             ← 待建
-├── 视频skills/             ← 待建
+├── 生图skills/             ← GPT Image 2 · image-gen · Mermaid→PNG
+├── 视频skills/             ← Web Video Presentation · Remotion · OpenMontage
+├── 网页设计-skills/         ← Web Design Engineer（企业级网页原型）
+├── 知识库检索-skills/       ← KB Retriever（层次化索引 + 专业阅读器）
 └── 语音tts-skills/         ← 待建
 ```
 
@@ -58,6 +62,10 @@ common-skills/
 | `test-skills/opencli-ux-role-tab-validation/` | 浏览器自动化-skills/OpenCLI |
 | `test-skills/opencli-ux-tenant/` | 浏览器自动化-skills/OpenCLI |
 | `common-skills/探索skills/feature-skills/OpenCLI-下载飞书文档/` | 浏览器自动化-skills/OpenCLI |
+| `garden-skills/web-video-presentation/` | 视频skills |
+| `garden-skills/gpt-image-2/` | 生图skills |
+| `garden-skills/web-design-engineer/` | 网页设计-skills |
+| `garden-skills/kb-retriever/` | 知识库检索-skills |
 
 ## 外部工具生态
 

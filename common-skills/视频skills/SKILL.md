@@ -1,6 +1,6 @@
 ---
 name: 视频路由
-description: 视频生成路由。muapi/Kling/Seedance（AI 视频）、Remotion（React 渲染）、OpenMontage、podcast-maker（播客视频）、template-tiktok（竖屏短视频）、claude-code-video-toolkit。触发词：生成视频、制作视频、AI视频、动画、幻灯片视频、产品视频、配音、字幕、播客、短视频、产品演示、演讲稿。
+description: 视频生成路由。muapi/Kling/Seedance（AI 视频）、Remotion（React 渲染）、OpenMontage、podcast-maker（播客视频）、template-tiktok（竖屏短视频）、claude-code-video-toolkit、Web Video Presentation（口播稿→视频网页）。触发词：生成视频、制作视频、AI视频、动画、幻灯片视频、产品视频、配音、字幕、播客、短视频、产品演示、演讲稿、口播、视频网页。
 ---
 
 # 视频路由中心
@@ -134,3 +134,4 @@ cd my-project && npm install
 | [digitalsamba/claude-code-video-toolkit](https://github.com/digitalsamba/claude-code-video-toolkit) | Claude Code 视频工具包 | 1.3k |
 | [remotion-dev/template-tiktok](https://github.com/remotion-dev/template-tiktok) | TikTok 竖屏模板 | 256 |
 | [FelippeChemello/podcast-maker](https://github.com/FelippeChemello/podcast-maker) | 自动播客视频化 | 686 |
+| [Garden-Skills: Web Video Presentation](https://github.com/ConardLi/garden-skills/tree/main/skills/web-video-presentation) | 口播稿→视频网页（设计方法论 + 协作流程） | — |

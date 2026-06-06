@@ -1,6 +1,6 @@
 ---
 name: 生图路由
-description: 图像生成路由。muapi（Midjourney/Flux/Kling 100+模型）、image-gen、Mermaid→PNG。触发词：生图、生成图片、画图、示意图、概念图、产品图、海报。
+description: 图像生成路由。muapi（Midjourney/Flux/Kling 100+模型）、image-gen、Mermaid→PNG、GPT Image 2（80+结构化模板）。触发词：生图、生成图片、画图、示意图、概念图、产品图、海报、GPT Image 2。
 ---
 
 # 生图路由中心
@@ -107,3 +107,4 @@ npx skills add SamurAIGPT/Generative-Media-Skills --all
 | [SamurAIGPT/Generative-Media-Skills](https://github.com/SamurAIGPT/Generative-Media-Skills) | 41 个生图/视频工作流 + 100+ 模型 | 3.4k |
 | [muapi-cli](https://www.npmjs.com/package/muapi-cli) | midjourney/flux/kling/veo3 统一 CLI | — |
 | Output-html image-gen | `html-skills/output-html/subskills/image-gen/SKILL.md` | — |
+| GPT Image 2 | `common-skills/生图skills/gpt-image-2/` — GPT Image 2 结构化模板（80+模板，18大类，3种运行模式） | — |
