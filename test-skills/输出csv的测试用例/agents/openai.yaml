@@ -1,4 +1,4 @@
 interface:
   display_name: "输出 CSV 测试用例"
-  short_description: "将 test.ts 或模块配置沉淀为可导入测试系统的 CSV 用例（config + cases + 通用脚本）"
+  short_description: "将 test.ts、UI 交互或 legacy export 迁移沉淀为可导入 CSV；支持 v1 追加与 v2 功能集合重组"
   default_prompt: "使用 $输出csv的测试用例：整理 apex_dev 菜单相关 *.test.ts，生成 config/cases 并输出可导入 CSV。"

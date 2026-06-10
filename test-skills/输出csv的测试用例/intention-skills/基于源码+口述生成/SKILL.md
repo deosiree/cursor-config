@@ -62,20 +62,39 @@ description: 无 test.ts 时，通过口述业务场景或阅读源码直接撰�
 7. **质量自检**：`[[../../feature-skills/用例质量自检/SKILL.md]]`（path_type=ui）
 8. **Darwin**：`[[../../feature-skills/darwin拓展发现/SKILL.md]]`
 
-### 路径 B：源码阅读（进阶）
+### 路径 B：源码阅读（进阶，v1）
 
 - 阅读 `src/views/**` 或 `src/components/**` 下的交互逻辑
 - 提取弹窗状态、Tab 切换、表单校验、灰禁条件
 - 转为 UI 交互 cases
 - 后续步骤同路径 A 的 5-7（即走 `append_ui_cases_to_csv.py`，不走 `generate_test_csv.py`）
 
+### 路径 C：源码 + 功能集合 v2（整文件覆盖）
+
+适用：测试工具改版、需填功能集合与用例结果、或从 legacy export 迁移。
+
+1. RED 确认：`domain`、模板路径、`date`、`模块名`（从模板取）、`子系统`（从模板取）
+2. 源码阅读 + 口述 → 撰写 v2 cases（见 `撰写UI交互cases` v2 字段）
+3. G2 预览 + 功能集合分布
+4. 生成 CSV：
+   ```bash
+   python scripts/generate_feature_csv.py \
+     --cases configs/{domain}.cases.json \
+     --template ../../../docs/问题单/模板/{domain}.csv \
+     --output ../../../docs/问题单/{date}/{domain}.csv \
+     --force
+   ```
+5. 质量自检 `path_type=ui-v2`
+
+若同时涉及 legacy export 筛选迁移，优先路由 `[[../legacy-export迁移重组/SKILL.md]]`。
+
 ## Output
 
 - `configs/{moduleId}.cases.json`（可改后重新生成）
-- `docs/问题单/{date}/{domain}.csv`（追加到领域 CSV，不生成独立文件）
+- v1：`docs/问题单/{date}/{domain}.csv`（追加）
+- v2：`docs/问题单/{date}/{domain}.csv`（`generate_feature_csv.py` 整文件覆盖）
 
-> **不生成** `config.json`——手工/口述用例走 `append_ui_cases_to_csv.py` 追加到领域 CSV，
-> 不需要 `generate_test_csv.py` 所需的独立 outputPath 配置。
+> v1 **不生成** `config.json`。v2 同样不需要独立 `config.json`，`fieldDefaults` 写在 cases.json 内。
 
 ## Boundary
 

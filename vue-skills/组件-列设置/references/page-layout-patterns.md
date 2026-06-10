@@ -59,3 +59,15 @@
 | 父页 + `*Table.vue` + `BaseListToolbar` | B |
 | 父页 + 独立 `*SearchBar.vue` | C（需插槽） |
 | 列表组件内含工具栏+表 | D |
+
+## BaseListToolbar 间距约定
+
+形态 B/C/D 及 `PageTabShell`（内嵌 `BaseListToolbar`）的间距由 [`BaseListToolbar.vue`](../../../apex_dev/src/components/ListToolbar/BaseListToolbar.vue) 统一维护，业务页勿再加 `ml-12px` 或自定义 filters gap。
+
+| 区域 | 规则 | 像素 |
+|------|------|------|
+| `__filters` 内表单控件 | `gap` + `align-items: center` | 8px |
+| `__filters` ↔ `__actions` | `__tools` 的 `gap` | 12px |
+| `__actions` 内按钮 / 列设置 span | `gap` + 清零 EP `.el-button + .el-button` margin | 8px |
+
+形态 A（设备管理）使用 `.search-fields { gap: 8px }` + `.action-buttons` 无 gap + 列设置 `ml-12px`，与上表不同，**勿照搬**到 `BaseListToolbar` 页面。详见 [`anti-patterns.md`](anti-patterns.md) §9。

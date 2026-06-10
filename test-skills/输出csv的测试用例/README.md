@@ -8,12 +8,14 @@ Agent skill 套件：将 Vitest `test.ts` 与模块配置沉淀为测试系统�
 |------|------|
 | `SKILL.md` | Agent 主入口 |
 | `scripts/generate_test_csv.py` | 通用：config + cases → CSV（覆盖写） |
-| `scripts/append_ui_cases_to_csv.py` | UI 交互：复制模板 + 追加行 |
+| `scripts/append_ui_cases_to_csv.py` | UI 交互 v1：复制模板 + 追加行（功能集合留空） |
+| `scripts/generate_feature_csv.py` | UI v2：功能集合 + 用例结果 + **用例类型推导**，整文件覆盖 |
+| `scripts/patch_tenant_expected.py` | 租户 0610 一次性补丁（补 expected / 重写 428）；新模式见 `generate_feature_csv` |
 | `scripts/csv_to_test_config.py` | 参考 CSV → config.json |
 | `scripts/bootstrap_menu_cases.py` | 从 `docs/问题单/0529/generate_menu_unit_csv.py` 迁移 cases |
 | `scripts/run-menu-index-smoke.node.js` | OpenCLI bind 模式：菜单页 index 简化回归冒烟 |
 | `configs/` | 模块 config / cases |
-| `intention-skills/` | 基于test.ts生成、沉淀模块配置、边开发边输出UI用例 |
+| `intention-skills/` | 基于test.ts生成、沉淀模块配置、边开发边输出UI用例、legacy-export迁移重组 |
 | `feature-skills/` | api/gateway 撰写、撰写UI交互cases、darwin拓展发现 |
 
 ## 快速开始（菜单样本）
@@ -24,6 +26,45 @@ python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.js
 ```
 
 输出：`docs/问题单/0529/menu-unit-gateway.csv`（若文件被占用，可用 `--output template/menu-unit-gateway/sample-output.csv`）
+
+## 0610 功能集合 v2 落盘（五模块）
+
+| moduleId | cases | 输出 CSV | 条数 | 说明 |
+|----------|-------|----------|------|------|
+| `tenant` | `configs/tenant.cases.json` | `docs/问题单/0610/tenant.csv` | 46 | 从 testcases_export 迁移 + 源码补充 |
+| `dashboard` | `configs/dashboard.cases.json` | `docs/问题单/0610/dashboard.csv` | 19 | 首页 KPI/图表/筛选 |
+| `user` | `configs/user.cases.json` | `docs/问题单/0610/user.csv` | 31 | 用户列表/弹窗/删除/校验 |
+| `role` | `configs/role.cases.json` | `docs/问题单/0610/role.csv` | 25 | 角色列表/Tab 弹窗/关键字搜索 |
+| `securityConfig` | `configs/securityConfig.cases.json` | `docs/问题单/0610/securityConfig.csv` | 19 | 三 Tab 策略/保存撤销 |
+
+创建人员均为惠岩。质量报告：`evals/*-0610.md`。
+
+**用例类型**：v2 不写 `fieldDefaults.用例类型=0` 一刀切；每条 case 写 `direction`，脚本按 [`references/case-type-map.md`](references/case-type-map.md) 推导（功能 0 / 异常 1 / 边界 3）。真源：`docs/问题单/模板/types.csv`。
+
+复跑：
+
+```bash
+cd .cursor/test-skills/输出csv的测试用例
+python scripts/generate_feature_csv.py \
+  --cases configs/tenant.cases.json \
+  --template ../../../docs/问题单/模板/tenant.csv \
+  --output ../../../docs/问题单/0610/tenant.csv \
+  --force
+```
+
+样本文档：`assets/few-shot-example/tenant-feature-set-reorg.md`
+
+批量复跑（0610 五模块）：
+
+```bash
+cd .cursor/test-skills/输出csv的测试用例
+for m in tenant dashboard user role securityConfig; do
+  python scripts/generate_feature_csv.py \
+    --cases configs/$m.cases.json \
+    --template ../../../docs/问题单/模板/$m.csv \
+    --output ../../../docs/问题单/0610/$m.csv --force
+done
+```
 
 ## 0605 菜单模块落盘清单（仅新增）
 
@@ -75,6 +116,7 @@ python scripts/generate_test_csv.py --config configs/menu-index-ui.config.json -
 - 「**test.ts 转 CSV**，正向反向写在预期结果」
 - 「**边开发输出 UI 用例** / **追加问题单 CSV**」
 - 「**沉淀模块配置**，生成 config.json」
+- 「**功能集合重组** / **testcases_export 迁移** / 按 alarm_.csv 风格输出 tenant.csv」
 
 未点名 skill 时，只要语义是「单元测试 → 可导入 CSV 用例」，也会匹配本套件。
 
@@ -107,7 +149,8 @@ python scripts/generate_test_csv.py --config configs/menu-index-ui.config.json -
 | 模块名是租户管理 | 模块名 → `租户管理` |
 | 创建人员惠岩 | 创建人员 → `惠岩` |
 | 标签 1、执行方式 4、最新结果 0 | 标签 / 执行方式 / 最新结果 |
-| 用例等级 0、用例类型 0、develop 填 0 | 用例等级 / 用例类型 / develop结果 |
+| 用例等级 0、develop 填 0 | 用例等级 / develop结果 |
+| 用例类型 0（**仅 v1/API**） | 用例类型 → `0`；**v2 由 direction 推导**，见 `references/case-type-map.md` |
 | 用例 ID 和功能集合留空 | 用例ID、功能集合 → 空 |
 
 未提到的列：有参考 CSV 时由脚本按众数推断；无参考时 Agent 按 `references/csv-field-convention.md` 补全。
@@ -226,7 +269,21 @@ python scripts/append_ui_cases_to_csv.py \
 
 ---
 
-### 示例 7：目前不支持、会提示拓展（口述 UI 无 domain）
+### 示例 7：功能集合 v2 — 租户迁移重组
+
+```text
+用「输出 csv 测试用例」skill：
+从 docs/问题单/模板/testcases_export.csv 筛选创建人员=惠岩、功能集合=租户管理的 5 条，
+按功能集合重组，对照 apex_dev 租户页面源码补充用例。
+表头参考 docs/问题单/模板/tenant.csv，模块名租户管理界面，子系统从模板取。
+输出 docs/问题单/0610/tenant.csv，每条须填用例结果与 direction（推导用例类型），不走 append 脚本。
+```
+
+Agent 预期：`configs/tenant.cases.json` → `generate_feature_csv.py` → `evals/tenant-reorg-0610.md`
+
+---
+
+### 示例 8：目前不支持、会提示拓展（口述 UI 无 domain）
 
 ```text
 根据口述整理某页面 UI 用例，不知道用哪个模板 CSV。

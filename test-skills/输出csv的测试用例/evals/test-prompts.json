@@ -46,5 +46,74 @@
       "scripts": ["generate_test_csv.py", "run-menu-index-smoke.node.js"],
       "dedup": "skip if menu-perm-e2e / menu-unit-gateway cases already exist"
     }
+  },
+  {
+    "id": "tenant-feature-set-reorg",
+    "prompt": "从 testcases_export 迁移惠岩的租户管理 5 条，按功能集合重组，对照源码补充，输出 0610/tenant.csv，子系统从模板取。",
+    "expect": {
+      "intention": "legacy-export迁移重组",
+      "cases": "configs/tenant.cases.json",
+      "caseCountApprox": 46,
+      "outputPath": "docs/问题单/0610/tenant.csv",
+      "scripts": ["generate_feature_csv.py"],
+      "format": "v2-feature-set",
+      "fieldDefaults": {
+        "子系统": "17",
+        "模块名": "租户管理界面",
+        "创建人员": "惠岩"
+      },
+      "notScripts": ["append_ui_cases_to_csv.py"]
+    }
+  },
+  {
+    "id": "dashboard-feature-set",
+    "prompt": "对照 apex_dev 首页源码设计 UI 用例，功能集合 v2，输出 0610/dashboard.csv，创建人员惠岩，子系统从模板取。",
+    "expect": {
+      "intention": "基于源码+口述生成",
+      "path": "C",
+      "cases": "configs/dashboard.cases.json",
+      "caseCountApprox": 19,
+      "outputPath": "docs/问题单/0610/dashboard.csv",
+      "scripts": ["generate_feature_csv.py"],
+      "format": "v2-feature-set",
+      "fieldDefaults": {
+        "子系统": "17",
+        "模块名": "管理中心首页界面",
+        "创建人员": "惠岩"
+      }
+    }
+  },
+  {
+    "id": "user-feature-set",
+    "prompt": "对照 apex_dev 用户管理源码设计 UI 用例，功能集合 v2，输出 0610/user.csv，创建人员惠岩。",
+    "expect": {
+      "cases": "configs/user.cases.json",
+      "caseCountApprox": 31,
+      "outputPath": "docs/问题单/0610/user.csv",
+      "scripts": ["generate_feature_csv.py"],
+      "format": "v2-feature-set"
+    }
+  },
+  {
+    "id": "role-feature-set",
+    "prompt": "对照 apex_dev 角色管理源码设计 UI 用例，功能集合 v2，输出 0610/role.csv，创建人员惠岩。",
+    "expect": {
+      "cases": "configs/role.cases.json",
+      "caseCountApprox": 25,
+      "outputPath": "docs/问题单/0610/role.csv",
+      "scripts": ["generate_feature_csv.py"],
+      "format": "v2-feature-set"
+    }
+  },
+  {
+    "id": "securityConfig-feature-set",
+    "prompt": "对照 apex_dev 安全配置源码设计 UI 用例，功能集合 v2，输出 0610/securityConfig.csv，创建人员惠岩。",
+    "expect": {
+      "cases": "configs/securityConfig.cases.json",
+      "caseCountApprox": 19,
+      "outputPath": "docs/问题单/0610/securityConfig.csv",
+      "scripts": ["generate_feature_csv.py"],
+      "format": "v2-feature-set"
+    }
   }
 ]

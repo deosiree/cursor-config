@@ -41,10 +41,16 @@
 - **检查**：UI 路径下 `develop结果` 是否为 `0`（测试系统约定「未执行」）
 - **不通过**：`develop结果` 非 `0`
 
-### H. 功能集合是否留空（UI 路径）
+### H1. 功能集合是否留空（UI v1 路径）
 
-- **检查**：UI 路径下 `功能集合` 列
+- **检查**：`path_type=ui` 时 `功能集合` 列
 - **不通过**：有内容
+
+### H2. 功能集合是否必填（UI v2 路径）
+
+- **检查**：`path_type=ui-v2` 时每条 case 的 `featureSet`
+- **不通过**：缺 `featureSet` 或为空
+- **警告**：功能集合不在已知列表（提醒用户测试工具手动添加）
 
 ### I. 用例ID 是否留空（UI 路径）
 
@@ -60,11 +66,29 @@
 
 - **检查**：UI 路径用例的步骤/前置/预期中是否含以下内部实现关键词：
   - `F12`、`DevTools`、`Network`、`sessionStorage`、`localStorage`
-  - `mock`、`stub`、`fake`（手工用例不应 mock）
+  - `mock`、`stub`、`fake`（v1 手工用例不应 mock）
   - 内部函数名（如 `loadUserPermsMap`、`handleGatewayError`、`getFuncByList`）
   - `props` 验证（如 `props 含 userInfo`，用户看不见 props）
-- **不通过**：含上述任一关键词
+- **不通过**：含上述任一关键词（v2 见 K2 例外）
 - **警告**：预期含 `permsMap`、`routePath`、`menuName` 等内部字段名（提示改写为用户视角）
+
+### K2. mock 例外（UI v2 + 异常处理）
+
+- **适用**：`path_type=ui-v2` 且 `featureSet=异常处理`
+- **允许**：步骤含「mock / 模拟接口返回业务错误」
+- **要求**：预期必须描述用户可见通知、弹窗状态、列表不变；不得断言内部函数名
+
+### L. 用例结果必填（UI v2 路径）
+
+- **检查**：`path_type=ui-v2` 时每条 case 的 `expected`
+- **不通过**：缺 `expected` 或为空
+
+### L2. 用例类型与 direction 一致（UI v2 路径）
+
+- **检查**：对照 `case-type-map.md` 推导规则
+- **警告**：`featureSet=异常处理` 但 `direction` 非 `异常`
+- **警告**：`direction=边界` 或 `direction=异常` 未写（仅靠 featureSet 仍可推导，但描述列缺方向语义）
+- **警告**：`direction=异常` 且 `featureSet` 非 `异常处理`（如删除失败）— 允许，提醒撰写者确认类型应为异常测试
 
 ## 报告格式
 

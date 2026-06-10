@@ -1,6 +1,6 @@
 ---
 name: 撰写UI交互cases
-description: 将开发过程中的 UI 交互结论转为 cases.json 字段（名称/前置条件/步骤/预期）。不写脚本、不选路径。
+description: 将开发过程中的 UI 交互结论转为 cases.json 字段。支持 v1（功能集合留空）与 v2（featureSet + expected→用例结果）。不写脚本、不选路径。
 ---
 
 # 撰写 UI 交互 cases
@@ -16,7 +16,7 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段（名
 
 ## Output
 
-`cases.json` 片段：
+### v1（追加到领域 CSV，功能集合留空）
 
 ```json
 {
@@ -32,13 +32,32 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段（名
 }
 ```
 
+### v2（功能集合重组，`generate_feature_csv.py`）
+
+骨架见 `[[../../template/tenant-feature-set/ui-case-v2-skeleton.json]]`。
+
+额外字段：`featureSet`（必填）、`direction`（推荐，推导用例类型）、`level`、`purpose`、`remark`、`env`、`reserve1`（`ui`）、`sortOrder`。
+
+用例类型不在 cases 层手写 CSV 列值；按 `direction` / `featureSet` 由脚本推导，规则见 `[[../../references/case-type-map.md]]`。
+
 ## Boundary
 
-- **不加** `remark` 字段（UI 用例无 test.ts 溯源）
-- **不加** `developResult` 在此层；脚本层默认 = 预期结果
-- 名称不加 `[正向]` / `[反向]` 前缀
-- 预期结果使用编号列表，非 `正向：` / `反向：` 格式
+### v1
+
+- **不加** `remark` 字段
 - 不写 `功能集合`、`用例ID`
+
+### v2
+
+- **必须**写 `featureSet` 与 `expected`（映射 CSV「用例结果」）
+- `remark` / `purpose` 允许（源码溯源、迁移备注）
+- 名称不加 `[正向]` / `[反向]` 前缀；方向写入 `direction` 字段
+- **用例类型**：按 `direction` 推导（`正向/逆向→0`、`边界→3`、`异常→1`）；`featureSet=异常处理` 时视为异常测试；详见 `[[../../references/case-type-map.md]]`
+
+### 通用
+
+- **不加** `developResult` 在此层
+- 预期使用编号列表，非 `正向：` / `反向：` 格式
 
 ## 撰写规则
 
@@ -49,7 +68,7 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段（名
 - 步骤以动词开头，≤ 7 步
 - 预期用界面语言（Tab 名、toast、红字）
 
-## Example
+## Example（v1）
 
 ```text
 输入：「新增角色弹窗，切到关联设备 Tab 后点确定，空角色名应跳回基础信息并提示」
@@ -63,3 +82,23 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段（名
   }]
 }
 ```
+
+## Example（v2）
+
+```text
+输入：「创建租户接口返回业务错误时，应 toast 具体错误并回到向导第一步」
+输出：
+{
+  "cases": [{
+    "name": "mock创建租户业务错误时展示有效错误提示并回退第一步",
+    "featureSet": "异常处理",
+    "direction": "异常",
+    "precondition": "1. 用户具备 sys:tenant:add 2. 已 mock 创建接口返回业务错误",
+    "steps": "1. 点击「新增」完成向导填写\n2. 第三步点击「确定」\n3. 观察错误提示与弹窗状态",
+    "expected": "1. 右下角错误通知展示具体业务错误，非「服务不可用」\n2. 弹窗不关闭，回到第一步\n3. 列表未新增租户",
+    "reserve1": "ui"
+  }]
+}
+```
+
+完整样本：`[[../../assets/few-shot-example/tenant-feature-set-reorg.md]]`

@@ -198,3 +198,22 @@ console.log(`报告: ${outFile}`);
 console.log(`${'='.repeat(60)}\n`);
 
 process.exit(fail > 0 ? 1 : 0);
+ : 0);
+: 0);
+ 0);
+h} 个，补跑 ${rerunCount} 个（${rerunPass} 个转 PASS）`);
+}
+console.log(`报告: ${outFile}`);
+console.log(`${'='.repeat(60)}\n`);
+
+process.exit(fail > 0 ? 1 : 0);
+1 : 0);
+ : 0);
+: 0);
+ 0);
+h} 个，补跑 ${rerunCount} 个（${rerunPass} 个转 PASS）`);
+}
+console.log(`报告: ${outFile}`);
+console.log(`${'='.repeat(60)}\n`);
+
+process.exit(fail > 0 ? 1 : 0);

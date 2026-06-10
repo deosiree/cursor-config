@@ -12,7 +12,7 @@
 </span>
 ```
 
-设备/租户/角色用 `v-hasPerm`；用户模块用 `v-if="toolbarPerms.query"`（与搜索按钮一致）。
+设备/租户/角色用 `v-hasPerm`；用户模块用 `v-if="toolbarPerms.query"`（与搜索按钮一致）。`BaseListToolbar` 场景下 **勿加 `ml-12px`**，间距由组件 `gap` 统一管理；设备管理页使用无 gap 的 `.action-buttons`，才需要 `ml-12px`。
 
 ## 2. buildTableColumns 未调用 t()
 
@@ -48,8 +48,16 @@ label 常量不会进入 i18n 抽取。须在 `buildTableColumns` 内对每个�
 
 ## 9. BaseListToolbar 场景误加 ml-12px
 
-**错误**：在 `#actions` 内对 `column-filter-wrap` 加 `ml-12px`（照搬设备管理页）
+**错误**：`class="column-filter-wrap ml-12px"`（租户/用户/角色/菜单等走 `BaseListToolbar` 的页面）
 
-**原因**：`BaseListToolbar` 的 `.base-list-toolbar__actions` 已用 `gap: 8px` 统一间距，并在组件内清零 `.el-button + .el-button` 的 EP 默认 `margin-left`。再叠 `ml-12px` 会让列设置与相邻按钮间距偏大。
+**原因**：`BaseListToolbar.__actions` 已有 `gap: 8px` 并清零 EP 相邻按钮 `margin-left`。再叠 `ml-12px` 会让列设置间距变为 8+12≈20px，与按钮之间不一致，也和设备管理页的 12px 语义不同。
 
-**正确**：列设置 `span` 不加额外 margin，间距由 toolbar 的 `gap` 统一管理。设备管理页使用自定义 `.action-buttons`（无 gap），才需要 `ml-12px`。
+**正确**：仅 `column-filter-wrap`，间距交给 `BaseListToolbar`：
+
+```vue
+<span v-hasPerm="'sys:tenant:query'" class="column-filter-wrap">
+  <ColumnFilter v-model="selectedColumns" :columns="tableColumns" />
+</span>
+```
+
+设备管理页（`.action-buttons` 无 flex gap）仍用 `ml-12px`，见 [`device/index.vue`](../../../apex_dev/src/views/deviceManage/device/index.vue)。

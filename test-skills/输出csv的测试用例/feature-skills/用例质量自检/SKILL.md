@@ -12,7 +12,7 @@ description: 对已生成的 cases.json 执行质量清单检查，输出问题�
 ## Input
 
 - `cases_path`：要检查的 `*.cases.json` 路径
-- `path_type`：`"api"` 或 `"ui"`（决定检查项侧重）
+- `path_type`：`"api"`、`"ui"`（v1）或 `"ui-v2"`（功能集合重组）
 
 ## Output
 
@@ -49,9 +49,13 @@ description: 对已生成的 cases.json 执行质量清单检查，输出问题�
 | E | 前置条件不混入步骤 | ✅ | ✅ |
 | F | 无代码断言 | ✅ | ✅ |
 | G | develop结果=预期结果 | — | ✅ |
-| H | 功能集合留空 | — | ✅ |
-| I | 用例ID留空 | — | ✅ |
+| H1 | 功能集合留空 | — | ui |
+| H2 | 功能集合必填 | — | ui-v2 |
+| I | 用例ID留空 | — | ui / ui-v2 |
 | J | 正向：格式 | ✅ | — |
+| K2 | mock 例外（异常处理） | — | ui-v2 |
+| L | 用例结果必填 | — | ui-v2 |
+| L2 | 用例类型与 direction | — | ui-v2 |
 
 ## Example
 
