@@ -1,0 +1,43 @@
+{
+  "skill": "组件-列设置",
+  "version": "1.0.0",
+  "truthSource": {
+    "mvpCommit": "a5b3214",
+    "tenantUserRoleBefore": "HEAD",
+    "tenantUserRoleAfter": "working-tree"
+  },
+  "cases": [
+    {
+      "id": "route-add",
+      "prompt": "新仓库没有 ColumnFilter，列表需要列设置按钮",
+      "expectedRoute": "新增-组件列设置",
+      "expectedArtifacts": ["template/mvp", "ColumnFilter.vue"]
+    },
+    {
+      "id": "route-apply-tenant",
+      "prompt": "ColumnFilter 有了，给租户列表加列设置，默认隐藏联系人",
+      "expectedRoute": "应用-列设置",
+      "expectedSample": "template/before|after/tenant"
+    },
+    {
+      "id": "route-apply-user",
+      "prompt": "用户管理加列设置，UserSearchBar 工具栏",
+      "expectedRoute": "应用-列设置",
+      "expectedSample": "template/before|after/user",
+      "expectedPattern": "C"
+    },
+    {
+      "id": "route-apply-role",
+      "prompt": "角色管理 RoleListTable 加列设置",
+      "expectedRoute": "应用-列设置",
+      "expectedSample": "template/before|after/role",
+      "expectedPattern": "D"
+    },
+    {
+      "id": "should-not-opcol",
+      "prompt": "用户表操作列折叠到更多",
+      "expectedRoute": "组件-操作列折叠",
+      "shouldTrigger": false
+    }
+  ]
+}

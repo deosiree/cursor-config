@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "prompt": "新仓库没有 ColumnFilter，列表需要列设置按钮",
+    "expected": "路由新增子 skill：从 template/mvp 落地 ColumnFilter.vue；核对 i18n 三条；读 snapshot fragment；不改业务表；委派应用-列设置"
+  },
+  {
+    "id": 2,
+    "prompt": "ColumnFilter 有了，给租户列表加列设置，默认隐藏联系人和创建时间",
+    "expected": "路由应用子 skill：形态 B；对照 template/before|after/tenant；index.vue 列状态 + TenantTable visibleColumns；storageKey tenant_manage_table_columns"
+  },
+  {
+    "id": 3,
+    "prompt": "用户管理加列设置，UserSearchBar 工具栏，默认隐藏创建时间",
+    "expected": "路由应用子 skill：形态 C；UserSearchBar #actions-extra 插槽；user before/after；勿误抄 BaseListToolbar #actions"
+  },
+  {
+    "id": 4,
+    "prompt": "角色管理 RoleListTable 加列设置",
+    "expected": "路由应用子 skill：形态 D；单文件 RoleListTable 内列状态+Filter；无 selection 列；role before/after"
+  },
+  {
+    "id": 5,
+    "prompt": "新模块列表页从零开始要列设置，仓库是空白前端",
+    "expected": "组合：先新增（template/mvp）再应用；委派顺序明确；形态未定则读 page-layout-patterns A-D"
+  },
+  {
+    "id": 6,
+    "prompt": "用户表操作列折叠到更多，inline-visible-count",
+    "expected": "不触发本 skill，路由组件-操作列折叠；勿改 ColumnFilter/visibleColumns"
+  }
+]

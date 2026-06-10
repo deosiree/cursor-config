@@ -33,3 +33,7 @@ exit /b %EXIT_CODE%
 *.json
 )
 exit /b %EXIT_CODE%
+%
+*.json
+)
+exit /b %EXIT_CODE%

@@ -1,0 +1,4 @@
+interface:
+  display_name: "组件-列设置"
+  short_description: "ColumnFilter 列显示/隐藏；buildTableColumns + localStorage；先判定新增组件或页面应用"
+  default_prompt: "使用 $组件-列设置：先判定新增/应用；无 ColumnFilter 走 mvp；已有组件走 before|after 样本；v-hasPerm 须包原生 span。"
