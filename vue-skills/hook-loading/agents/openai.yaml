@@ -1,0 +1,4 @@
+interface:
+  display_name: "hook-loading"
+  short_description: "useLoading 全屏遮罩 + 领域 composable；首屏占位闪烁时先判定新建 hook 或应用 hook"
+  default_prompt: "使用 $hook-loading：先判定目标仓是否有 layouts/composables/useLoading.ts；无则走新建-hook（mvp）；有则走应用-hook（profile before|after 样本）；勿与 v-loading 表格局部遮罩混淆。"

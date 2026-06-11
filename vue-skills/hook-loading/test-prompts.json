@@ -1,0 +1,59 @@
+{
+  "shouldTrigger": [
+    {
+      "id": 1,
+      "prompt": "个人中心刷新闪 XXX 假数据，抽 hook 加全屏 loading",
+      "expectedRoute": "apply-hook",
+      "expectedArchetype": "A",
+      "sample": "template/after/profile"
+    },
+    {
+      "id": 2,
+      "prompt": "从 opsdeck 迁 useLoading 到 apex layouts/composables",
+      "expectedRoute": "new-hook",
+      "sample": "template/mvp"
+    },
+    {
+      "id": 3,
+      "prompt": "profile 页 inline loadUserProfile 改成 composable",
+      "expectedRoute": "apply-hook",
+      "sample": "template/before|after"
+    },
+    {
+      "id": 4,
+      "prompt": "报表详情页 inline fetchReport 改成 composable，首屏加全屏 loading",
+      "expectedRoute": "apply-hook",
+      "expectedArchetype": "A",
+      "sample": "usePageData.skeleton + detail-page-hook-replace",
+      "naming": "useReportDetail 非 useProfile"
+    },
+    {
+      "id": 5,
+      "prompt": "告警列表查询时加全屏 loading，不要抽 composable",
+      "expectedRoute": "apply-hook 或 父级边界",
+      "expectedArchetype": "B",
+      "expectedBehavior": "页面内 useLoading() + fetchList，不建 useAlarmList",
+      "sample": "list-query-loading.fragment + list-page-inline-loading"
+    },
+    {
+      "id": 8,
+      "prompt": "安全配置进入时闪默认策略值，已有 useSecurityConfigPage，加全屏 loading",
+      "expectedRoute": "apply-hook",
+      "expectedArchetype": "E",
+      "naming": "configLoaded 非 profileLoaded；保留 useSecurityConfigPage",
+      "sample": "template/before|after/securityConfig + security-config-hook-replace"
+    }
+  ],
+  "shouldNotTrigger": [
+    {
+      "id": 6,
+      "prompt": "用户表格查询加 v-loading",
+      "reason": "表格局部遮罩，非 useLoading"
+    },
+    {
+      "id": 7,
+      "prompt": "axios 拦截器全局 loading",
+      "reason": "request 层，本子 skill 不覆盖"
+    }
+  ]
+}

@@ -56,15 +56,17 @@
 ## Skill 发现顺序（nebula 项目）
 
 1. 先扫描项目专有目录：`.cursor/nebula-skills`
-2. 再扫描 IDE/工具类目录：`.cursor/IDE-skill`（如 `清除worktree`）
-3. 再扫描通用目录：`.cursor/mySkills`、`.cursor/agent-skills`
-4. 当 nebula-skills 与 mySkills/agent-skills 存在同名或语义重叠时，优先使用 `.cursor/nebula-skills`
-5. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
+2. 再扫描 Vue 前端模式库：`.cursor/vue-skills`（如 `hook-loading`：全屏 useLoading、composable 抽离、首屏占位闪烁）
+3. 再扫描 IDE/工具类目录：`.cursor/IDE-skill`（如 `清除worktree`）
+4. 再扫描通用目录：`.cursor/mySkills`、`.cursor/agent-skills`
+5. 当 nebula-skills 与 vue-skills/mySkills 存在同名或语义重叠时，优先使用 `.cursor/nebula-skills`，其次 `.cursor/vue-skills`
+6. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
    - `route-architecture-delivery-skills`（位于 `.cursor/nebula-skills`）
    - `mf-route-home-alignment`（位于 `.cursor/nebula-skills`）
-6. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
-7. **强制规则**：nebula 项目级 skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
-8. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
+7. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
+8. **强制规则**：Vue 通用模式 skill（如 hook-loading、formRules）存放在 `.cursor/vue-skills`
+9. **强制规则**：skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
+10. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
 
 ## 响应要求
 - 选择最合适的技能内部使用

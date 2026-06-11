@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-11Tbaseline	hook-loading	-	79.5	baseline	-	初始评估含通用性专评	dry_run
+2026-06-11Tround1	hook-loading	79.5	84.2	keep	通用性样本层	page-archetypes+skeleton+detail few-shot+test-prompts扩展	dry_run
+2026-06-11Tround2	hook-loading	84.2	85.6	keep	形态B可拷贝样本	list-fragment+list few-shot+dry-run-expected	dry_run
+2026-06-11Tround3	hook-loading	85.6	87.0	keep	dim8实测验证	prompt4/5 full_test+shouldNotTrigger6/7；anti-patterns§10	full_test
+2026-06-11Tround4	hook-loading	87.0	88.2	keep	形态E实仓样本	securityConfig before|after+prompt8 full_test+!canSave stopLoading	full_test

@@ -1,0 +1,32 @@
+{
+  "skill": "hook-loading",
+  "version": "1.0.0",
+  "truthSource": {
+    "repo": "apex_dev",
+    "commitAfter": "3a989099251f8d9f964f68964f3dca878a6e5020",
+    "commitBefore": "3a989099251f8d9f964f68964f3dca878a6e5020^",
+    "securityConfigAfter": "apex_dev working tree (useSecurityConfigPage + index.vue)"
+  },
+  "routes": [
+    {
+      "id": "new-hook",
+      "featureSkill": "feature-skills/新建-hook/SKILL.md",
+      "signal": "无 layouts/composables/useLoading.ts"
+    },
+    {
+      "id": "apply-hook",
+      "featureSkill": "feature-skills/应用-hook/SKILL.md",
+      "signal": "useLoading 已有且页面 inline load"
+    }
+  ],
+  "samples": [
+    "template/mvp/src/layouts/composables/useLoading.ts",
+    "template/mvp/src/views/_shared/usePageData.skeleton.ts",
+    "template/mvp/src/views/_shared/list-query-loading.fragment.ts",
+    "template/before/src/views/profile/index.profile-loading.fragment.vue",
+    "template/after/src/views/profile/composables/useProfile.ts",
+    "template/before/src/views/system/securityConfig/useSecurityConfigPage.ts",
+    "template/after/src/views/system/securityConfig/useSecurityConfigPage.ts"
+  ],
+  "dryRunMatrix": "evals/dry-run-expected.md"
+}
