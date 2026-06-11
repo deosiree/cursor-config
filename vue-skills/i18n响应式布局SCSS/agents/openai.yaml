@@ -1,0 +1,4 @@
+interface:
+  display_name: "i18n响应式布局SCSS"
+  short_description: "locale-layout 插件 + 侧栏/表单布局 sm-md-lg-xl 档位；先判定扩展已有、新建 MVP 或修复 SCSS 撑满"
+  default_prompt: "使用 $i18n响应式布局SCSS：先读 plugins/locale-layout.ts 是否存在；有则扩展 preset 字段（如 sidebarWidth Record<LayoutSize>），无则从 template/mvp 新建；容器变宽但 menu 仍 200px 则走 SCSS 修复；模板默认消费 $localeLayout.{field}.md。"

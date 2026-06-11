@@ -1,0 +1,27 @@
+{
+  "skill": "i18n响应式布局SCSS",
+  "version": "1.0.0",
+  "evalSets": [
+    {
+      "id": "routing",
+      "description": "父级应正确路由到扩展 / 新建 / SCSS 修复",
+      "promptsFile": "should-trigger-prompts.md",
+      "expectedRoutes": [
+        "扩展-已有locale-layout侧栏",
+        "新建-locale-layout插件",
+        "修复-侧栏菜单SCSS撑满"
+      ]
+    },
+    {
+      "id": "negative",
+      "description": "不应误触发 locale-layout 改造",
+      "promptsFile": "should-not-trigger-prompts.md"
+    }
+  ],
+  "acceptance": [
+    "preset 字段为 Record<LayoutSize, string>",
+    "模板消费 .md",
+    "折叠宽不在 preset",
+    "vue-tsc 通过"
+  ]
+}

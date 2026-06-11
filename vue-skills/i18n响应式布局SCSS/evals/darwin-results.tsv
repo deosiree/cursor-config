@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-11T00:00	baseline	i18n响应式布局SCSS	-	70.0	baseline	-	初始9维：缺 test-prompts、无 fallback 表、Agent 步骤不显性	dry_run
+2026-06-11T01:00	round1-dim3	i18n响应式布局SCSS	70.0	76.0	keep	dim3	新增「常见失败·一线修复·仍失败兜底」HL-2 表	dry_run
+2026-06-11T02:00	round2-dim2-dim5	i18n响应式布局SCSS	76.0	82.0	keep	dim2,dim5	TL;DR + Agent 执行步骤 1–6	dry_run
+2026-06-11T03:00	round3-dim8-dim6-dim9	i18n响应式布局SCSS	82.0	87.0	keep	dim8,dim6,dim9	test-prompts.json、产出 checklist、禁止事项黑名单；Δ=5≥2 继续	dry_run
+2026-06-11T04:00	round4-hl4-check	i18n响应式布局SCSS	87.0	87.5	stop	HL-4	微调 frontmatter description；Δ=0.5<2 连续拐点，≥85 达标	dry_run

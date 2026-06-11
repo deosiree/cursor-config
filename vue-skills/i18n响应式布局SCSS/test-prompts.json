@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "microfb 切换英文后侧栏变宽了但 menu icon 还是被裁切，menu.scss 好像还锁 200px",
+    "expected": "路由：新建或 SCSS 修复；指出删 200px、el-menu width 100%；消费 sidebarWidth.md"
+  },
+  {
+    "id": 2,
+    "prompt": "apex_dev 已有 locale-layout，给 LeftLayout 加 sidebarWidth 四档，模板用 .md",
+    "expected": "路由：扩展-已有locale-layout侧栏；preset Record<LayoutSize>；折叠宽不进 preset"
+  },
+  {
+    "id": 3,
+    "prompt": "帮我把菜单 zh_CN.json 翻译成英文",
+    "expected": "不应触发本 skill；说明属 i18n 翻译而非布局"
+  }
+]
