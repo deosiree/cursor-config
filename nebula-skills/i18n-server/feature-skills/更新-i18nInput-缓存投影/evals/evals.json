@@ -1,0 +1,17 @@
+{
+  "should_trigger": [
+    "切换语言后侧栏、面包屑不更新，writeMenuCache 时要投影 menuName。",
+    "去掉壳层 resolveI18nText wrapper，改缓存双字段 name + menuName。",
+    "setLang 时要 refreshMenuCacheProjection 并 reloadRoutesFromCache。"
+  ],
+  "should_not_trigger": [
+    "表单字段第一次接 I18nInput。",
+    "仅列表页显示 JSON 乱码，尚未做读侧 V1 resolve。",
+    "静态模板文案包 $t()。"
+  ],
+  "output_checklist": [
+    "说明为什么命中缓存投影 skill",
+    "对照 before/after 或基座 few-shot",
+    "说明 wire/展示分流与未改表单边界"
+  ]
+}

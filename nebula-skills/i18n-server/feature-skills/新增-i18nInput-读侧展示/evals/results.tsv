@@ -1,0 +1,4 @@
+prompt_id	expected_skill	actual_skill	pass	notes
+read-01-shell	新增-i18nInput-读侧展示	新增-i18nInput-读侧展示	yes	darwin_blind_judge_20260610
+read-02-not-form	新增-i18nInput-表单字段	新增-i18nInput-表单字段	yes	darwin_blind_judge_20260610; negative_for_read_skill
+read-03-upgrade	更新-i18nInput-缓存投影	更新-i18nInput-缓存投影	yes	darwin_blind_judge_20260610; negative_for_read_skill

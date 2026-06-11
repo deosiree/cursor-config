@@ -1,0 +1,17 @@
+{
+  "should_trigger": [
+    "菜单名称字段要接 I18nInput，表单提交 JSON wire。",
+    "告警描述也要像名称一样多语言编辑，走 I18nInput append。",
+    "业务字段从 plain string 改为入库 JSON，需要 parseI18nData 和 stringifyI18nData。"
+  ],
+  "should_not_trigger": [
+    "侧栏显示 JSON 乱码，要在消费点 resolve 展示。",
+    "切换语言后导航栏菜单名不更新，要做缓存投影。",
+    "只是模板静态文案要包 $t()，不是用户可编辑字段。"
+  ],
+  "output_checklist": [
+    "说明为什么命中表单字段 skill",
+    "说明选用 mvp 还是 snapshot 或哪个 few-shot",
+    "说明完成态与不应跨入的读侧/缓存 skill"
+  ]
+}

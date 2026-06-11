@@ -1,0 +1,17 @@
+{
+  "should_trigger": [
+    "侧栏、面包屑显示 JSON wire 乱码，要在读侧 resolve。",
+    "菜单管理表格和 Tab 要按当前语言显示名称。",
+    "gateway 映射 menu 节点时要保留 name wire 并解析 menuName 展示。"
+  ],
+  "should_not_trigger": [
+    "表单字段第一次接 I18nInput 提交 JSON。",
+    "切换语言后导航缓存不更新，要做 projectMenuTreeForCache。",
+    "只是静态模板文案要包 $t()。"
+  ],
+  "output_checklist": [
+    "说明为什么命中读侧展示 skill",
+    "说明 mvp 与 snapshot 或 few-shot 选择",
+    "说明 V1 wrapper 与后续缓存投影边界"
+  ]
+}

@@ -167,6 +167,15 @@ description: 当需要在 nebula 仓库中判断当前 i18n 状态、选择正�
 
 预期：进入 `路由-选择功能子skill`
 
+```text
+业务字段要接 I18nInput 存 JSON wire，或切换语言后菜单侧栏不更新。
+```
+
+预期：先 `路由-选择功能子skill` 判定：
+- 表单未接 wire → `新增-i18nInput-表单字段`
+- 读侧乱码 → `新增-i18nInput-读侧展示`
+- 缓存投影 → `更新-i18nInput-缓存投影`
+
 ## 输出模板
 
 单轮输出优先复用 `[[template/root-single-iteration-template.md]]`。

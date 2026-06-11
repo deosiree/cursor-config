@@ -67,6 +67,9 @@ description: 当当前模块没有旧 i18n，或旧 i18n 已完全退化完成�
 6. `[[../../feature-skills/新i18n-纯ts中用i18n.global.t]]`
 7. `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`
 8. 按需进入 `trans` / 动态拼接 / wrapper 清理相关功能 skill
+9. 用户可编辑入库字段接 I18nInput：`[[../../feature-skills/新增-i18nInput-表单字段]]`
+10. wire 已有、读侧展示：`[[../../feature-skills/新增-i18nInput-读侧展示]]`
+11. 导航缓存双字段投影：`[[../../feature-skills/更新-i18nInput-缓存投影]]`（通常在 9→10 之后）
 
 ## Guardrails
 

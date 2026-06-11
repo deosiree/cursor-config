@@ -1,0 +1,4 @@
+prompt_id	expected_skill	actual_skill	pass	notes
+form-01-happy-path	新增-i18nInput-表单字段	新增-i18nInput-表单字段	yes	darwin_blind_judge_20260610
+form-02-extend-fields	新增-i18nInput-表单字段	新增-i18nInput-表单字段	yes	darwin_blind_judge_20260610
+form-03-not-read-side	新增-i18nInput-读侧展示	新增-i18nInput-读侧展示	yes	darwin_blind_judge_20260610; negative_for_form_skill

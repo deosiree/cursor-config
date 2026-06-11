@@ -1,0 +1,17 @@
+[
+  {
+    "id": "form-01-happy-path",
+    "prompt": "菜单名称要接 I18nInput，提交时存 JSON wire。",
+    "expected_feature_skill": "新增-i18nInput-表单字段"
+  },
+  {
+    "id": "form-02-extend-fields",
+    "prompt": "告警描述、模板也要像名称一样多语言编辑。",
+    "expected_feature_skill": "新增-i18nInput-表单字段"
+  },
+  {
+    "id": "form-03-not-read-side",
+    "prompt": "侧栏显示 {\"zh-CN\":...} 乱码。",
+    "expected_feature_skill": "新增-i18nInput-读侧展示"
+  }
+]

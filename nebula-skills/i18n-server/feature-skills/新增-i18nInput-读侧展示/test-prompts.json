@@ -1,0 +1,17 @@
+[
+  {
+    "id": "read-01-shell",
+    "prompt": "侧栏显示 {\"zh-CN\":\"用户管理\"} 乱码，要在读侧 resolve。",
+    "expected_feature_skill": "新增-i18nInput-读侧展示"
+  },
+  {
+    "id": "read-02-not-form",
+    "prompt": "菜单名称字段要接 I18nInput 提交 JSON。",
+    "expected_feature_skill": "新增-i18nInput-表单字段"
+  },
+  {
+    "id": "read-03-upgrade",
+    "prompt": "切换语言后侧栏不更新，不想每个组件 void locale。",
+    "expected_feature_skill": "更新-i18nInput-缓存投影"
+  }
+]

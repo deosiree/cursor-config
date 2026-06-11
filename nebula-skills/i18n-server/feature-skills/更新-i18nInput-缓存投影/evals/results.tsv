@@ -1,0 +1,4 @@
+prompt_id	expected_skill	actual_skill	pass	notes
+proj-01-cache	更新-i18nInput-缓存投影	更新-i18nInput-缓存投影	yes	darwin_blind_judge_20260610
+proj-02-not-form	新增-i18nInput-表单字段	新增-i18nInput-表单字段	yes	darwin_blind_judge_20260610; negative_for_proj_skill
+proj-03-v1-first	新增-i18nInput-读侧展示	新增-i18nInput-读侧展示	yes	darwin_blind_judge_20260610; negative_for_proj_skill

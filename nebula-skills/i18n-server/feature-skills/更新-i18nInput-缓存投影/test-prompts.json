@@ -1,0 +1,17 @@
+[
+  {
+    "id": "proj-01-cache",
+    "prompt": "切换语言后侧栏不更新，writeMenuCache 投影 menuName，setLang 刷新缓存。",
+    "expected_feature_skill": "更新-i18nInput-缓存投影"
+  },
+  {
+    "id": "proj-02-not-form",
+    "prompt": "菜单名称第一次接 I18nInput 表单。",
+    "expected_feature_skill": "新增-i18nInput-表单字段"
+  },
+  {
+    "id": "proj-03-v1-first",
+    "prompt": "面包屑显示 JSON 字符串，还没有做缓存，先能在页面上显示对就行。",
+    "expected_feature_skill": "新增-i18nInput-读侧展示"
+  }
+]
