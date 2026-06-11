@@ -11,6 +11,7 @@ description: 菜单管理功能项 E2E 自动化测试：8 场景矩阵、依赖
 2. 全矩阵：`node scripts/run-all.node.js` 或 `scripts/run-all.bat`
 3. 手操 opencli 仅用于 **脚本失败后的 debug**（见文末「Debug 手操」）
 4. Step 2 勾选必须用 **`opencli check/uncheck --role checkbox --name`**，禁止 eval 点 `.el-checkbox`（Vue 会回滚）
+5. **`scripts/*.js` 只跑不改**：实跑失败、`SyntaxError`、`node --check` 失败时 **禁止** StrReplace/追加修补；从 git 整文件恢复（基线 commit `7008806`）或向用户报 blocker
 
 ## RED
 
@@ -166,6 +167,17 @@ eval：`document.querySelector('.el-dialog')` → `closed`。仍为 `open` → �
 | 保存静默失败 | dialog 仍 open | 用 textContent「确 定」，勿 `.el-button--primary` |
 | test 权限陈旧 | perms 与 admin 配置不符 | logout→confirm→sessionStorage.clear()→重登 |
 | S8 API配置 FAIL | dialogOpen false | 确认 check 含「编辑菜单」且 rowOp「权限配置」可见 |
+| `run-all.node.js` SyntaxError | 末尾出现 `h} 个`、`: 0);` 等碎片 | **勿局部删改**；`git show 7008806:.../run-all.node.js` 整文件恢复 |
+
+## 脚本维护禁令
+
+实跑或 `node --check` 报错时，agent **不得**编辑 `scripts/run-all.node.js`、`scripts/run-e2e-scenario.node.js` 等 runner（常见误操作：只删 `0);` 或重复 append 文件尾，会导致语法错误越改越长）。
+
+允许动作：
+
+1. 汇报 SyntaxError + 建议从 git 恢复
+2. 业务 FAIL → 单场景 `run-e2e-scenario.node.js` 或 Debug 手操
+3. 用户明确要求改脚本功能 → 整文件重写或基于干净基线修改，改后必须 `node --check`
 
 ## 实跑记录
 
