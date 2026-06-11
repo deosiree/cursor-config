@@ -131,6 +131,14 @@ python scripts/generate_feature_csv.py \
 
 脚本失败、路径错误、PowerShell 转义等 → `references/config-json-schema.md` §执行异常与回退。
 
+### OpenCLI / menu-perm E2E 阻塞规则
+
+编排或验证流程若需跑 `gen-perms-apis/菜单管理功能项依赖链验证` 的 `node run-all.node.js`（或 `configs/menu-perm-e2e.*`）：
+
+- 脚本 `SyntaxError` / `node --check` 失败 → **blocker**，向用户汇报；**禁止** StrReplace 修补 `nebula-skills/gen-perms-apis/**/scripts/*.js`
+- 恢复方式：由用户或专人从 git 基线整文件 checkout（干净版见该 feature skill §脚本维护禁令）
+- 业务 FAIL（脚本能启动）→ 按 `菜单管理功能项依赖链验证` 单场景 rerun / debug，与本套件 CSV 产出可并行
+
 ## 子 skill 地图
 
 | 节点 | 职责 |
