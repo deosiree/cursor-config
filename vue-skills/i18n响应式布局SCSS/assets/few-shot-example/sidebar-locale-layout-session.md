@@ -32,3 +32,4 @@
 ## 参考
 
 - [`references/responsive-breakpoints.md`](../references/responsive-breakpoints.md) — Element Plus + Bootstrap 档位说明
+- [`assets/few-shot-example/pagetab-tablabel-session.md`](../assets/few-shot-example/pagetab-tablabel-session.md) — PageTabShell Tab 宽实跑

@@ -22,6 +22,14 @@
 - [ ] icon `flex-shrink: 0`；标题 ellipsis
 - [ ] zh/en 切换后 icon 与折叠按钮对齐正常
 
+## 扩展 PageTabShell tabLabelMaxWidth
+
+- [ ] `tabLabelMaxWidth: Record<LayoutSize, string>` 已写入 preset/state/applyLocaleLayout
+- [ ] 页面 `:tab-label-max-width="$localeLayout.tabLabelMaxWidth.md"`（禁止写死 4em/200px）
+- [ ] 有 `#tabLabelExtra` → `show-tab-actions=true`；无齿轮 → `false`
+- [ ] `PageTabShell` 项宽已联动（`calc(label+3.5rem)` 或 `auto`）
+- [ ] 切语言后菜单管理、安全配置 Tab 宽实时变化
+
 ## 验收
 
 - [ ] `vue-tsc` 无新增错误

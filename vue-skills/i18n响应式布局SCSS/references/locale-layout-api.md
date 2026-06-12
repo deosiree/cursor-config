@@ -4,7 +4,7 @@
 
 | 仓库 | 文件 | 说明 |
 |------|------|------|
-| apex_dev / opsdeck | `src/plugins/locale-layout.ts` | 全量 preset（formLabel、queryField、descriptions、sidebarWidth） |
+| apex_dev / opsdeck | `src/plugins/locale-layout.ts` | 全量 preset（formLabel、queryField、descriptions、sidebarWidth、tabLabelMaxWidth） |
 | microfb | `src/plugins/locale-layout.ts` | **精简版**：仅 `sidebarWidth`（侧栏场景） |
 
 注册：`setupLocaleLayout(app)`，必须在 `app.use(i18n)` **之后**。
@@ -20,6 +20,7 @@ export interface LocaleLayoutPreset {
   descriptionsLabel: string;                   // el-descriptions :label-width（单值）
   descriptionsItem: Record<LayoutSize, string>; // el-descriptions-item :width
   sidebarWidth: Record<LayoutSize, string>;     // 侧栏展开 width / minWidth
+  tabLabelMaxWidth: Record<LayoutSize, string>; // PageTabShell / SpanByTips Tab 标签 max-width
 }
 ```
 
@@ -37,6 +38,19 @@ export interface LocaleLayoutPreset {
 ```
 
 `md` 对应当前桌面默认展开宽度；语言切换时整组档位一并切换。
+
+## preset 示例（tabLabelMaxWidth）
+
+```typescript
+"zh-CN": {
+  tabLabelMaxWidth: { sm: "3em", md: "4em", lg: "5em", xl: "6em" },
+},
+"en-US": {
+  tabLabelMaxWidth: { sm: "6em", md: "10em", lg: "14em", xl: "18em" },
+},
+```
+
+动态长 Tab 名（如根菜单「Management Center」）可按业务加大 en `md`；固定策略 Tab（登录/密码/会话）用较短 em 即可。
 
 ## 消费方式
 
@@ -56,11 +70,29 @@ export interface LocaleLayoutPreset {
 />
 ```
 
+### PageTabShell
+
+```vue
+<!-- 有 #tabLabelExtra 齿轮 -->
+<PageTabShell
+  :show-tab-actions="true"
+  :tab-label-max-width="$localeLayout.tabLabelMaxWidth.md"
+/>
+
+<!-- 无 Tab 操作（安全配置） -->
+<PageTabShell
+  :show-tab-actions="false"
+  :tab-label-max-width="$localeLayout.tabLabelMaxWidth.md"
+/>
+```
+
+`showTabActions=true` 时组件项总宽默认 `calc(tabLabelMaxWidth + 3.5rem)`，见 `PageTabShell/index.vue`。
+
 ### 脚本（apex）
 
 ```typescript
-const { sidebarWidth, formLabelWidth } = useLocaleLayout();
-// sidebarWidth('md') → ComputedRef<string>
+const { sidebarWidth, formLabelWidth, tabLabelMaxWidth } = useLocaleLayout();
+// tabLabelMaxWidth('md') → ComputedRef<string>
 ```
 
 ### 全局类型

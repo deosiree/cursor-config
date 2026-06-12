@@ -45,3 +45,15 @@
 **症状**：flex 布局下侧栏被压缩。
 
 **正确**：展开时同时设 `width` 与 `minWidth` 为同一 preset 值。
+
+## 8. 只改 Tab 文案 max-width，不改 Tab 项总宽
+
+**症状**：英文 Tab 文案溢出，与相邻 Tab 重叠（如 "Management Center" 叠到「运维中心」）。
+
+**原因**：仅绑 `tab-label-max-width` 或写死 `4em`/`200px`；`PageTabShell` 在 `showTabActions=true` 时曾固定项宽 112px。
+
+**正确**：
+
+1. `locale-layout` 增加 `tabLabelMaxWidth` 四档，页面 `:tab-label-max-width="$localeLayout.tabLabelMaxWidth.md"`
+2. 确认 `PageTabShell` 项宽为 `calc(tabLabelMaxWidth + 3.5rem)`（有齿轮）或 `show-tab-actions=false`（无操作）
+3. 见 [`feature-skills/扩展-PageTabShell-tabLabelMaxWidth`](../feature-skills/扩展-PageTabShell-tabLabelMaxWidth/SKILL.md)
