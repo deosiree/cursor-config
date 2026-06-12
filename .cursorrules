@@ -20,12 +20,21 @@
   </skills>
 </plugin>
 
+<plugin name="obsidian-wiki">
+  <description>Obsidian Wiki 知识库自动维护：Wikify（学术文献编译）和 claude-wiki-verbs（9 动词知识引擎）</description>
+  <skills>
+    <skill>wikify</skill>
+    <skill>claude-wiki-verbs</skill>
+  </skills>
+</plugin>
+
 <plugin name="frontend-slides">
   <description>创建精美、动画丰富的HTML演示文稿，从零开始或转换PowerPoint文件</description>
   <skills>
     <skill>frontend-slides</skill>
   </skills>
 </plugin>
+
 
 # 使用技能（Using Superpowers）
 

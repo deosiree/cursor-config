@@ -15,6 +15,7 @@
 | 📚 知识库检索 | [[知识库检索-skills/SKILL.md]] | KB Retriever（层次化索引 + 专业阅读器） |
 | 🔊 文字转语音 | [[语音tts-skills/SKILL.md]] | edge-tts（免费）· 文档转播客 · OpenAI TTS |
 | 🌐 浏览器自动化 | [[浏览器自动化-skills/OpenCLI/SKILL.md]] | OpenCLI 驱动真实 Chrome · 自动化测试 · 手动操作模拟 · SPA 爬虫 |
+| 📚 Obsidian Wiki 知识库 | [[wiki-skills/README.md]] | Wikify（学术文献编译）· claude-wiki-verbs（9 动词知识引擎）|
 
 ## 目录结构
 

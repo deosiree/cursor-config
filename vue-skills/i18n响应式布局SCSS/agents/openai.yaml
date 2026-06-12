@@ -1,0 +1,4 @@
+interface:
+  display_name: "i18n响应式布局SCSS"
+  short_description: "locale-layout + 侧栏/表单/PageTabShell Tab sm-md-lg-xl；扩展 preset、新建 MVP、SCSS 撑满、Tab 项宽联动"
+  default_prompt: "使用 $i18n响应式布局SCSS：先读 plugins/locale-layout.ts；有则扩展 preset（sidebarWidth / tabLabelMaxWidth 等 Record<LayoutSize>），无则从 template/mvp 新建；menu 200px 走 SCSS 修复；PageTabShell Tab 重叠或写死宽则绑 $localeLayout.tabLabelMaxWidth.md 并确认项宽 calc(label+3.5rem)。"

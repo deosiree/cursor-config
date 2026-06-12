@@ -35,8 +35,8 @@ if [[ "$ALREADY_BOUND" -eq 0 ]]; then
   echo "  3. 保持该标签为当前活动标签"
   echo ""
   read -r -p "完成后按 Enter 执行 bind ... "
-  log_step "bind" "opencli browser ${SESSION} bind"
-  oc_plain bind || die "bind 失败：请确认 OpenCLI 扩展已连接且标签未关闭"
+  log_step "bind" "bind 当前聚焦标签 (profile/session 自动解析)"
+  opencli_bind_with_url_check "localhost" || die "bind 失败"
 fi
 
 log_step "menu" "打开菜单页 ${MENU_URL}"

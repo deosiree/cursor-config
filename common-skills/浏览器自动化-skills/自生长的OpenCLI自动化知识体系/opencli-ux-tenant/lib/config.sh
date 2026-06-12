@@ -126,6 +126,9 @@ login_path = p["loginPath"]
 tenant_path = p["tenantPath"]
 fields = {
     "SESSION": data.get("sessionName", "nebula-ux"),
+    "OPENCLI_CONFIG_SESSION_NAME": data.get("sessionName", "nebula-ux"),
+    "OPENCLI_CONFIG_CHROME_PROFILE": data.get("opencliChromeProfile", ""),
+    "OPENCLI_CHROME_PROFILE": os.environ.get("OPENCLI_CHROME_PROFILE", ""),
     "BASE_URL": base,
     "LOGIN_PATH": login_path,
     "TENANT_PATH": tenant_path,

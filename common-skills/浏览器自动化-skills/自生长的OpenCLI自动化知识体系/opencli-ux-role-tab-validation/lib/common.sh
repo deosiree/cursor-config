@@ -4,6 +4,9 @@
 UX_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/config.sh
 source "${UX_LIB_DIR}/config.sh"
+OPENCLI_KBS_LIB="$(cd "${UX_LIB_DIR}/../.." && pwd)/lib"
+# shellcheck source=../../lib/resolve-opencli-context.sh
+source "${OPENCLI_KBS_LIB}/resolve-opencli-context.sh"
 
 set -euo pipefail
 
@@ -36,7 +39,7 @@ die() {
 }
 
 oc_plain() {
-  opencli browser "$SESSION" "$@" 2>&1
+  opencli_oc_args "$@" 2>&1
 }
 
 parse_args_profile() {

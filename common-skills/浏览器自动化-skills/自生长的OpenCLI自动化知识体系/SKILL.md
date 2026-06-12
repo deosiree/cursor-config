@@ -98,6 +98,7 @@ Agent 调用于 skill 前，自动按以下顺序检查：
 | 2 | 目标子 skill 目录存在 | 报错路径不存在 |
 | 3 | 子 skill 的 `config/ux-test.config.local.json` 已配置密码 | 提示用户复制 example 并填写 |
 | 4 | 已有 session 是否仍在登录态（`opencli browser SESSION get url`） | 非登录态则执行 login 或 bind |
+| 4b | Chrome profile / session | **动态解析**：`lib/resolve-opencli-context.*`；失败则提示人类提供 `OPENCLI_CHROME_PROFILE` |
 | 5 | 批量删除前请用户确认租户 + keepCount | 未确认则暂停 |
 
 ## 常用基础命令速查
