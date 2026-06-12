@@ -1,0 +1,74 @@
+{
+  "suite": "create-MCP-Server",
+  "version": "1.0.0",
+  "description": "验证 create-MCP-Server skill 套件的触发条件、路由正确性和输出完整性",
+  "tests": [
+    {
+      "id": "trigger-filesystem-basic",
+      "description": "用户要求新建文件系统 MCP Server，应触发并路由到新建策略",
+      "input": "在 F:\\Projects\\test-mcp 创建一个文件系统 MCP Server，提供 read_file 和 write_file",
+      "expectedIntent": "策略-新建MCP-Server",
+      "expectedFeatures": ["封装FastMCP工具", "配置安全沙箱", "生成启动脚本", "生成mcp配置", "注册到Agent"],
+      "expectedTransport": "http",
+      "expectedOutput": ["toolList", "transport", "serverCode", "configFiles", "registrationGuide"],
+      "misrouteRisk": "不应进入分析-需求理解后停住"
+    },
+    {
+      "id": "trigger-obsidian",
+      "description": "用户要求创建 Obsidian 笔记检索 MCP Server",
+      "input": "创建一个 Obsidian 笔记检索 MCP Server，支持按标签搜索和全文搜索",
+      "expectedTools": ["obsidian_search_by_tag", "obsidian_search_by_keyword", "obsidian_list_notes"],
+      "expectedSecurityHints": ["路径白名单", "文件大小限制"]
+    },
+    {
+      "id": "trigger-stdio",
+      "description": "用户明确要求 stdio 传输，不应默认 HTTP",
+      "input": "在本地创建一个使用 stdio 传输的数据库查询 MCP Server",
+      "expectedTransport": "stdio",
+      "misrouteRisk": "不应推荐 HTTP"
+    },
+    {
+      "id": "negative-not-mcp",
+      "description": "用户只是问 MCP 是什么，不涉及新建，不应触发",
+      "input": "MCP 是什么？能解释一下吗",
+      "expectedTrigger": false,
+      "triggerBlockReason": "纯知识问题，不涉及新建 Server"
+    },
+    {
+      "id": "negative-code-only",
+      "description": "用户只是修改现有代码，不应触发",
+      "input": "帮我改一下 server.py 里 read_file 的错误处理",
+      "expectedTrigger": false,
+      "triggerBlockReason": "修改已有代码，非新建"
+    },
+    {
+      "id": "boundary-no-targetPath",
+      "description": "用户未提供 targetPath，应触发人工门禁",
+      "input": "帮我创建一个 MCP Server",
+      "expectedHumanGate": true,
+      "expectedMissingFacts": ["targetPath"]
+    },
+    {
+      "id": "quality-checklist",
+      "description": "产出物质量检查",
+      "checks": [
+        "server.py 语法无错误",
+        "所有 @tool 有完整 docstring",
+        "路径操作有白名单检查",
+        ".mcp.json 语法正确",
+        "README.md 包含启动方式和工具列表",
+        "tools/list 返回所有工具"
+      ]
+    },
+    {
+      "id": "few-shot-fidelity",
+      "description": "few-shot 资产完整性检查",
+      "checks": [
+        "assets/few-shot-完整文件系统+Obsidian笔记服务器/server.py 存在",
+        "assets/few-shot-完整文件系统+Obsidian笔记服务器/test_client.py 存在",
+        "assets/few-shot-完整文件系统+Obsidian笔记服务器/.mcp.json 存在",
+        "assets/few-shot-完整文件系统+Obsidian笔记服务器/README.md 存在"
+      ]
+    }
+  ]
+}

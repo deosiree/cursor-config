@@ -1,0 +1,8 @@
+# SKILL.md frontmatter 模板
+
+```yaml
+---
+name: <skill-name>
+description: <一句话描述（≤120 字）>
+---
+```

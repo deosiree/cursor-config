@@ -1,0 +1,3 @@
+[submodule "common-skills/wiki-skills/wikify"]
+	path = common-skills/wiki-skills/wikify
+	url = https://github.com/Misaka16384/Wikify.git
