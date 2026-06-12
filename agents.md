@@ -43,6 +43,12 @@
 ### 开发工作流插件
 - **prototype-driven-dev**: 原型驱动开发工作流，以代码为中心的设计
 
+### Obsidian Wiki 技能（自动发现）
+以下技能位于 `.cursor/common-skills/wiki-skills/`（git submodule），由 using-superpowers 元技能在会话启动时自动扫描发现：
+
+- **wikify**（15 个子技能）：学术文献深度编译流水线 — `/wiki_ingest` / `/wiki_compile` / `/wiki_semantic_link` / `/wiki_ask` 等
+- **claude-wiki-verbs**（9 动词引擎）：通用知识管理 — `/wiki ingest` / `/wiki query` / `/wiki save` / `/wiki synthesize` / `/wiki lint` 等
+
 ## 使用规则
 
 1. **强制使用**: 如果有 1% 的可能性技能适用，必须调用 Skill 工具
@@ -59,14 +65,15 @@
 2. 再扫描 Vue 前端模式库：`.cursor/vue-skills`（如 `hook-loading`：全屏 useLoading、composable 抽离、首屏占位闪烁）
 3. 再扫描 IDE/工具类目录：`.cursor/IDE-skill`（如 `清除worktree`）
 4. 再扫描通用目录：`.cursor/mySkills`、`.cursor/agent-skills`
-5. 当 nebula-skills 与 vue-skills/mySkills 存在同名或语义重叠时，优先使用 `.cursor/nebula-skills`，其次 `.cursor/vue-skills`
-6. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
+5. 再扫描知识库管理技能：`.cursor/common-skills/wiki-skills/`（含 submodule：`wikify/skills/` 和 `claude-wiki-verbs/skills/`，自动递归发现 SKILL.md）
+6. 当 nebula-skills 与 vue-skills/mySkills 存在同名或语义重叠时，优先使用 `.cursor/nebula-skills`，其次 `.cursor/vue-skills`
+7. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
    - `route-architecture-delivery-skills`（位于 `.cursor/nebula-skills`）
    - `mf-route-home-alignment`（位于 `.cursor/nebula-skills`）
-7. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
-8. **强制规则**：Vue 通用模式 skill（如 hook-loading、formRules）存放在 `.cursor/vue-skills`
-9. **强制规则**：skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
-10. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
+8. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
+9. **强制规则**：Vue 通用模式 skill（如 hook-loading、formRules）存放在 `.cursor/vue-skills`
+10. **强制规则**：skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
+11. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
 
 ## 响应要求
 - 选择最合适的技能内部使用

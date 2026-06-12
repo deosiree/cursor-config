@@ -1,3 +1,6 @@
 [submodule "common-skills/wiki-skills/wikify"]
 	path = common-skills/wiki-skills/wikify
 	url = https://github.com/Misaka16384/Wikify.git
+[submodule "common-skills/wiki-skills/claude-wiki-verbs"]
+	path = common-skills/wiki-skills/claude-wiki-verbs
+	url = https://github.com/daniel8824-del/claude-wiki-verbs.git
