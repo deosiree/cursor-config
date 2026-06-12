@@ -96,8 +96,10 @@ base = p["baseUrl"].rstrip("/")
 login_path = p.get("loginPath", "/cloud/login")
 menu_path = data.get("menuPath", "/cloud/Apex/system/menu")
 fields = {
-    "SESSION": data.get("sessionName", "p2ejw7ww"),
-    "OPENCLI_CHROME_PROFILE": data.get("opencliChromeProfile", data.get("sessionName", "p2ejw7ww")),
+    "SESSION": data.get("sessionName", ""),
+    "OPENCLI_CONFIG_SESSION_NAME": data.get("sessionName", ""),
+    "OPENCLI_CONFIG_CHROME_PROFILE": data.get("opencliChromeProfile", ""),
+    "OPENCLI_CHROME_PROFILE": os.environ.get("OPENCLI_CHROME_PROFILE", ""),
     "BASE_URL": base,
     "LOGIN_PATH": login_path,
     "MENU_PATH": menu_path,

@@ -97,6 +97,9 @@ login_path = p["loginPath"]
 role_path = data.get("rolePath", "/cloud/Apex/system/role")
 fields = {
     "SESSION": data.get("sessionName", "nebula-ux"),
+    "OPENCLI_CONFIG_SESSION_NAME": data.get("sessionName", "nebula-ux"),
+    "OPENCLI_CONFIG_CHROME_PROFILE": data.get("opencliChromeProfile", ""),
+    "OPENCLI_CHROME_PROFILE": os.environ.get("OPENCLI_CHROME_PROFILE", ""),
     "BASE_URL": base,
     "LOGIN_PATH": login_path,
     "ROLE_PATH": role_path,

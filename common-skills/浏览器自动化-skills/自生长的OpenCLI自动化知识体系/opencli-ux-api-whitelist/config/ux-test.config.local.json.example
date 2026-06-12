@@ -1,7 +1,7 @@
 {
   "defaultProfile": "local",
-  "sessionName": "p2ejw7ww",
-  "opencliChromeProfile": "p2ejw7ww",
+  "sessionName": "",
+  "opencliChromeProfile": "",
   "profiles": {
     "local": {
       "baseUrl": "http://localhost:8080",

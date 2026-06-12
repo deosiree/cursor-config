@@ -10,6 +10,9 @@
 UX_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/config.sh
 source "${UX_LIB_DIR}/config.sh"
+OPENCLI_KBS_LIB="$(cd "${UX_LIB_DIR}/../.." && pwd)/lib"
+# shellcheck source=../../lib/resolve-opencli-context.sh
+source "${OPENCLI_KBS_LIB}/resolve-opencli-context.sh"
 
 set -euo pipefail
 
@@ -79,7 +82,7 @@ die() {
 }
 
 oc_plain() {
-  opencli browser "$SESSION" "$@" 2>&1
+  opencli_oc_args "$@" 2>&1
 }
 
 parse_args_profile() {
@@ -114,7 +117,7 @@ assert_logged_in() {
 wait_leave_login() {
   local timeout="${1:-30000}"
   set +e
-  opencli browser "$SESSION" wait text "密码登录" --timeout 5000 >/dev/null 2>&1
+  oc_plain wait text "密码登录" --timeout 5000 >/dev/null 2>&1
   set -e
   oc_plain click --role tab --name "密码登录" >/dev/null 2>&1 || true
 

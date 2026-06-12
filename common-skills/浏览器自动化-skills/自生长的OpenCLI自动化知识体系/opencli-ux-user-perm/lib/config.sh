@@ -103,7 +103,10 @@ load_profile() {
   merged_json="$(_merge_json "$CONFIG_MAIN" "$CONFIG_LOCAL")" || return 1
 
   export UX_PROFILE="$profile_name"
-  export SESSION="$(echo "$merged_json" | "$PYTHON_BIN" -c "import json,sys; print(json.load(sys.stdin).get('session','nebula-ux'))")"
+  export SESSION="$(echo "$merged_json" | "$PYTHON_BIN" -c "import json,sys; print(json.load(sys.stdin).get('sessionName','user0601'))")"
+  export OPENCLI_CONFIG_SESSION_NAME="$SESSION"
+  export OPENCLI_CONFIG_CHROME_PROFILE="$(echo "$merged_json" | "$PYTHON_BIN" -c "import json,sys; print(json.load(sys.stdin).get('opencliChromeProfile',''))")"
+  export OPENCLI_CHROME_PROFILE="${OPENCLI_CHROME_PROFILE:-}"
   export LOGIN_URL="$(echo "$merged_json" | "$PYTHON_BIN" -c "
 import json,sys
 c=json.load(sys.stdin)

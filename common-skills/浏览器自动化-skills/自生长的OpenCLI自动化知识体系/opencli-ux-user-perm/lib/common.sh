@@ -10,6 +10,9 @@
 LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/config.sh
 source "${LIB_DIR}/config.sh"
+OPENCLI_KBS_LIB="$(cd "${LIB_DIR}/../.." && pwd)/lib"
+# shellcheck source=../../lib/resolve-opencli-context.sh
+source "${OPENCLI_KBS_LIB}/resolve-opencli-context.sh"
 
 set -euo pipefail
 
@@ -69,7 +72,7 @@ die() {
 # OpenCLI 包装（静默 + 错误处理）
 #===============================================================================
 oc_plain() {
-  opencli browser "${SESSION:-nebula-ux}" "$@" 2>/dev/null
+  opencli_oc_args "$@" 2>/dev/null
 }
 
 # 断言已离开登录页（即登录成功）

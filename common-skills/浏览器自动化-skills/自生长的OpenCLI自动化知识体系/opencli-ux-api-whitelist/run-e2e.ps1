@@ -21,8 +21,10 @@ $SkillName = Split-Path -Leaf $ScriptDir
 $Main = Join-Path $ScriptDir "scripts\test-api-whitelist-table-scroll.ps1"
 
 if ($Check) {
-  Write-Host "==> opencli doctor (profile p2ejw7ww)"
-  & opencli --profile p2ejw7ww doctor
+  . (Join-Path (Split-Path $ScriptDir -Parent) "lib\resolve-opencli-context.ps1")
+  Initialize-OpenCliContext
+  Write-Host "==> opencli doctor (profile $($script:OpenCliProfile))"
+  & opencli --profile $script:OpenCliProfile doctor
   exit $LASTEXITCODE
 }
 
