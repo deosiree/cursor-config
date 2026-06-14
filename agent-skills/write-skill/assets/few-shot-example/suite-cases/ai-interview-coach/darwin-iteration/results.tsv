@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-14T12:00	baseline	ai-interview-coach	-	-	baseline	-	Initial creation	dry_run
+2026-06-14T12:00	baseline	ai-interview-coach	-	69.8	baseline	-	初始基线评估	dry_run
+2026-06-14T12:30	opt-r1-fallback	ai-interview-coach	69.8	83.9	keep	失败模式+检查点+反模式	修dim3/dim4/dim9: fallback表+CHECKPOINT标记+🚫反模式章节	dry_run
+2026-06-14T13:10	phase2-self-iteration	ai-interview-coach	83.9	86.0	keep	自我迭代	新增诊断-自我能力评估 + 设计-新skill草图子skill	dry_run
+2026-06-14T13:20	phase2-reround	ai-interview-coach	83.5	84.0	keep	dim5微调	重评baseline 83.5，dim5软话已清理	dry_run
+2026-06-14T13:40	opt-r4-softeners+evals	ai-interview-coach	84.0	85.6	keep	dim5+dim6	清理软话6处 + 新增4组evals + 全真测试用例6条	dry_run

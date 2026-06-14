@@ -1,6 +1,12 @@
 ---
 name: 写skill
 description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件、拆分 intention-skills 与 feature-skills，或在 skill 落地后继续接入 Darwin 质量评估闭环时使用。
+version: 2.0.0
+tags: [skill, 写skill, agent, intention, feature, darwin, 质量评估]
+metadata:
+  hermes:
+    category: development
+    related_skills: [darwin-skill, write-skill-single]
 ---
 
 # 目标
@@ -52,6 +58,17 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
    - 产物结构最不稳定的部分
 3. 先进入 `[[intention-skills/分析-skill现状/SKILL.md]]`
 
+
+### 🛟 失败模式与 fallback 树
+
+| 触发条件 | 一线修复 | 仍失败兜底 |
+|---------|---------|-----------|
+| targetPath 无法定位 | 询问用户确切路径 | 提示用户提供绝对路径 |
+| skillTopic 超出路由范围 | 退化为"通用 skill 新建"流程 | 提示用户当前 skill 分类不存在 |
+| currentStructure 判断错误 | 重新分析目录结构 | 要求用户明确当前结构类型 |
+| Darwin 评估流程不可用 | 请求用户提供外部 darwin-skill | 退化到内部简化闭环（简化评分+半手动优化） |
+| 子 skill 模板缺失 | 复用同类模板 | 提示用户手动创建 |
+
 ## GREEN
 ### 任务分类
 - `new_single_skill`
@@ -80,6 +97,7 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 - `[[feature-skills/references与evals补全/SKILL.md]]`
 - `[[feature-skills/Markdown格式规范收尾/SKILL.md]]`
 - `[[feature-skills/darwin质量评估与迭代/SKILL.md]]`
+- `[[feature-skills/Darwin-集成评估闭环/SKILL.md]]`
 
 ## Darwin
 当请求明确涉及“质量评估 / 试跑 / keep or revert / 持续优化”时，才进入 Darwin 分支。
@@ -90,6 +108,18 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 
 如果用户只要求评分或 baseline，优先走 `evaluate-only`，不默认进入优化循环。
 
+
+## 🚫 反模式
+
+| 反模式 | 为什么错 | 正确做法 |
+|--------|---------|---------|
+| 跳过当前技能现状分析 | 不知道起点就无法规划路径 | 先进入 `分析-skill现状` |
+| 不确认输入契约就开始写 | 缺 targetPath 或 goalState 则路径不稳定 | 缺关键事实先停下来问清楚 |
+| 模板只写说明壳不写样本 | 说明壳无法当作 few-shot 使用 | template/ 下必须有实体样本 |
+| 跳过 Darwin 评估直接交付 | 无质量门禁的 skill 不稳定 | 默认接入 Darwin 评估闭环 |
+| 主 skill 承载过多细节 | 入口膨胀后子 skill 空心化 | 主 skill 保持精简，细节下沉到子 skill |
+| 未拆 intention/feature 直接堆 | 路由不收敛，子 skill 平铺混乱 | 先拆 intention 层(判断)和 feature 层(执行) |
+
 ## REFACTOR
 优先重构结构，而不是继续堆主入口：
 - 主文件开始承载低频解释、长示例或 Darwin 细编排
@@ -97,14 +127,18 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 - 模板只有说明壳，没有实体样本或结构说明
 - 功能已经拆开，但路由仍不收敛
 
-## 人工门禁
-以下情况必须先停下来确认：
-- 无法稳定识别唯一目标 skill
-- 请求同时混入 skill 套件改造与无关文案润色 / 业务代码修改
-- 用户只要求单点补强 `few-shot` / `template` / `evals`
-- 用户明确限制“只评估不优化”或“不引入 Darwin”
-- 模板层只有说明壳，无法确认 `before/after` 或 `mvp/snapshot` 是否来自真实历史样本
+## 🔴 CHECKPOINT · 人工门禁
 
+以下情况必须先停下来确认：
+
+| 节点 | 检查点动作 | 视觉标记 |
+|------|-----------|---------|
+| 目标识别模糊 | 无法稳定识别唯一目标 skill | 🔴 STOP |
+| 请求混杂 | 混入 skill 套件改造与无关修改 | 🔴 CHECKPOINT |
+| 单点补强 | 用户只要求单点补强 `few-shot`/`template`/`evals` | 🔴 CHECKPOINT |
+| 评估限制 | 用户明确限制只评估不优化或不引入 Darwin | 🔴 STOP |
+| 模板空壳 | 模板层只有说明壳，无真实历史样本 | 🔴 STOP |
+| 关键事实缺失 | 缺 targetPath/currentStructure/goalState | 🔴 CHECKPOINT |
 ## 输出契约
 每轮至少输出：
 - `currentUnderstanding`
@@ -130,3 +164,28 @@ description: 当需要新建中文 skill、把旧 skill 升级为 agent 套件�
 升级为父级 agent + intention-skills + feature-skills 套件，
 主 SKILL.md 保持精简，并在需要时接入 Darwin 评估。
 ```
+
+
+## 实跑示例
+
+### 示例1：新建 agent 套件
+
+用户：`帮我写一个 Python 代码审查 skill`
+
+执行路径：
+1. 策略-新建skill → 确认 targetPath 和 skillTopic
+2. 子skill路由决策 → 选最少必要子skill（intention: 分析-代码风格 + feature: 审查-代码扫描）
+3. 编写 SKILL.md（RED: 漏检模式 + GREEN: 审查流程）
+4. 模板类型判定 → mvp（最小可用）+ snapshot（完整用例）
+5. references与evals补全 → 测试 prompt 3条
+6. Darwin-集成评估闭环 → baseline 评分 → results.tsv 记录
+
+### 示例2：旧 skill 升级
+
+用户：`把旧的 proofreading skill 升级为 agent 套件`
+
+执行路径：
+1. 分析-skill现状 → 确认是单文件 skill
+2. 策略-升级旧skill → 拆 intention: 分析-文本类型 + feature: 执行-拼写检查
+3. 主SKILL瘦身与下沉 → 保留路由入口
+4. Darwin-集成评估闭环 → baseline → 优化 → keep/revert

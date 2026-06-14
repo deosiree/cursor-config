@@ -1,0 +1,14 @@
+{
+  "skill_name": "诊断-自我能力评估",
+  "evals": [
+    {
+      "id": "诊断自我能力评估-happy-path",
+      "category": "should_trigger",
+      "prompt": "触发 诊断-自我能力评估 流程",
+      "expected_output": "正常执行 诊断-自我能力评估 流程",
+      "assertions": [
+        "提到诊断-自我能力评估"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-14T13:20	baseline	write-skill	-	73.2	baseline	- 	首次darwin基线评估	dry_run
+2026-06-14T13:20	opt-r1	write-skill	73.2	81.2	keep	dim1+dim3+dim4+dim9	修frontmatter+fallback表+CHECKPOINT+反模式表	dry_run
+2026-06-14T13:20	opt-r2	write-skill	81.2	83.5	keep	dim5+dimm6+dim8	添加实跑示例2组，子skill无软话，资源整合完好	dry_run
+2026-06-14T13:20	opt-r3	write-skill	83.5	84.0	keep	dim8推演	第3轮边际收益<2分，触顶break	dry_run
+2026-06-14T13:40	opt-r4-evals+examples	write-skill	84.0	85.6	keep	dim5+dim6+dim8	新增5条test-prompts + 2组evals+references + 实跑场景增强	dry_run
+2026-06-14T13:50	opt-r5-templates	write-skill	85.6	86.0	keep	dim6	补齐Darwin-集成+诊断-自我能力评估的template目录	dry_run

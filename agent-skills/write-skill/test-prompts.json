@@ -1,0 +1,7 @@
+[
+  "新建skill：使用 $写skill 新建一个 Python 自动化测试 skill，输出到 ~/test-skill/，包含 intention+feature 层",
+  "旧skill升级：使用 $写skill 把 ~/test-skill/ 从单文件升级为 agent 套件模式",
+  "Darwin评估：使用 $写skill 对 ~/test-skill/ 做 baseline 评分和 dry_run",
+  "非触发：帮我写一段 Vue 组件代码（不涉及 skill 套件改造）",
+  "意图拆层：使用 $写skill 把平铺的子skill拆成 intention-skills 和 feature-skills"
+]

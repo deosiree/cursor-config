@@ -6,6 +6,7 @@
 
 - `[[suite-cases/gen-README/README.md]]`
 - `[[suite-cases/i18n-server/README.md]]`
+- `[[suite-cases/ai-interview-coach/README.md]]` ← 从0新建+Darwin4轮迭代标杆
 
 这两类目录里已经直接放入真实实现片段，而不再只是说明文档。
 
@@ -18,7 +19,26 @@
 - `intention-skills/编排-skill质量迭代/assets/few-shot-example/example-01`
 - `feature-skills/darwin质量评估与迭代/assets/few-shot-example/example-01`
 
-## 3. 子skill 局部 few-shot
+## 3. 写 skill + Darwin 集成闭环案例
+
+当需要"新建 skill + 自动接入 Darwin 评估"时，参考以下完整流程：
+
+```
+1. 策略-新建skill → 判断新建路径
+2. 子skill路由决策 → 选择最少必要子skill
+3. 编写 SKILL.md（RED + GREEN 流程）
+4. 模板类型判定 → 确定 before/after/mvp/snapshot
+5. 编写 template/ 和 assets/
+6. references与evals补全 → 补充 references 和 evals
+7. Darwin-集成评估闭环 → 自动接入 Darwin 评估
+8. Markdown格式规范收尾 → 统一格式
+```
+
+输出产物：SKILL.md + intention-skills/ + feature-skills/ + template/ + references/ + evals/ + Darwin results.tsv
+
+**真实标杆**：`[[suite-cases/ai-interview-coach/README.md]]` — 从0新建到Darwin 4轮迭代完整记录（起始69.8→终分85.6）
+
+## 4. 子skill 局部 few-shot
 
 每个 intention / feature 节点都应在自己的：
 

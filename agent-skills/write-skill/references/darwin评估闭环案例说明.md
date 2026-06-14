@@ -2,6 +2,7 @@
 
 ## 案例
 - `darwin-skill`
+- `ai-interview-coach`（`assets/few-shot-example/suite-cases/ai-interview-coach/darwin-iteration/`）
 
 ## 观察重点
 - skill 写完不是终点

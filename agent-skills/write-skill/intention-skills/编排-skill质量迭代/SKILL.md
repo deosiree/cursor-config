@@ -29,6 +29,18 @@ description: 当一个 skill 写完后还需要进入 Darwin 式质量评估、�
 
 ## 常用配套
 - `[[../../feature-skills/darwin质量评估与迭代/SKILL.md]]`
+- `[[../../feature-skills/Darwin-集成评估闭环/SKILL.md]]`
+
+## 自我迭代入口
+
+当实跑完成后，自动进入自我检查：
+
+```
+调用 诊断-自我能力评估 ← intention-skill
+  ├─ 检查路由/模板/Darwin/用户反馈 4个维度
+  ├─ 连续<3次同一缺口 → 记录暂不触发
+  └─ 连续≥3次 → 触发迭代（新增子skill）
+```
 
 ## 使用示例
 ```text

@@ -1,0 +1,14 @@
+{
+  "skill_name": "Darwin-集成评估闭环",
+  "evals": [
+    {
+      "id": "Darwin集成评估闭环-happy-path",
+      "category": "should_trigger",
+      "prompt": "触发 Darwin-集成评估闭环 流程",
+      "expected_output": "正常执行 Darwin-集成评估闭环 流程",
+      "assertions": [
+        "提到Darwin-集成评估闭环"
+      ]
+    }
+  ]
+}
