@@ -1,0 +1,7 @@
+{
+  "moduleId": "menu",
+  "repoRoot": "../../..",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0615/menu.csv",
+  "casesFile": "configs/menu.cases.json"
+}

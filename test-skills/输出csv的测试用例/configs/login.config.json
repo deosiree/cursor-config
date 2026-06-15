@@ -1,0 +1,7 @@
+{
+  "moduleId": "login",
+  "repoRoot": "../../..",
+  "csvTemplatePath": "docs/问题单/模板/login.csv",
+  "outputPath": "docs/问题单/0615/login.csv",
+  "casesFile": "configs/login.cases.json"
+}
