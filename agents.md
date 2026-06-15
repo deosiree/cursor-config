@@ -43,11 +43,22 @@
 ### 开发工作流插件
 - **prototype-driven-dev**: 原型驱动开发工作流，以代码为中心的设计
 
-### Obsidian Wiki 技能（自动发现）
-以下技能位于 `.cursor/common-skills/wiki-skills/`（git submodule），由 using-superpowers 元技能在会话启动时自动扫描发现：
+### Obsidian 技能路由（obsidian-skills）
+以下技能位于 `common-skills/obsidian-skills/`，分 intention（编排器）和 feature（原子技能）两层：
 
-- **wikify**（15 个子技能）：学术文献深度编译流水线 — `/wiki_ingest` / `/wiki_compile` / `/wiki_semantic_link` / `/wiki_ask` 等
-- **claude-wiki-verbs**（9 动词引擎）：通用知识管理 — `/wiki ingest` / `/wiki query` / `/wiki save` / `/wiki synthesize` / `/wiki lint` 等
+**编排器（intention-skills）：**
+- **route-obsidian**: Obsidian 技能路由器 — Single Dispatch + Human Loop 防漩涡设计
+
+**原子技能（feature-skills）：**
+- **llm-wiki**（claude-wiki-verbs 引擎）：9 动词（ingest/query/save/lint/manage/synthesize/critique/compare/eli5）
+- **vault-maintainer**（待安装 OpenClaw, 374K★）：Vault 兼容性维护
+- **obsidian-vault**（待安装 NousResearch, 153K★）：笔记读写
+- **qmd**（待安装 NousResearch, 153K★）：语义搜索
+
+使用方式：route-obsidian 按请求类型自动 dispatch 到对应 feature skill。
+
+### Wiki Skills（wiki-skills）
+以下技能位于 `common-skills/wiki-skills/`，已废弃，由 obsidian-skills 取代。
 
 ## 使用规则
 
@@ -56,24 +67,20 @@
 3. **响应顺序**: 在任何响应（包括澄清问题）之前调用相关技能
 4. **清单处理**: 如果技能有清单，为每个清单项创建 TodoWrite todo
 5. **严格遵循**: 严格按照技能指示执行，不要偏离
-6. **B 端规则唯一源**: 编码/改码规则以 `system-skills/my-skills/SKILL.md` 为唯一源，经 cc-switch 通用配置下发；禁止在仓库内复制多份同文规则
-7. **规则语言（强制）**: 所有规则文件统一使用中文
+6. **防迭代漩涡（强制）**:
+   - **Single Dispatch**：路由技能（如 route-obsidian）一次只 dispatch 一个子 skill，不得自动链式调用多个
+   - **失败即 Human Loop**：如果 dispatched skill 运行时失败，不得自行尝试其他 skill，必须询问用户"失败原因是 X，要不要试 Y？"
+   - **Token 硬止损**：连续调用超过 20 个工具仍未完成 → 停止并给出中间结论，不得继续
+7. **B 端规则唯一源**: 编码/改码规则以 `system-skills/my-skills/SKILL.md` 为唯一源，经 cc-switch 通用配置下发；禁止在仓库内复制多份同文规则
+8. **规则语言（强制）**: 所有规则文件统一使用中文
 
-## Skill 发现顺序（nebula 项目）
+## Skill 发现顺序
 
-1. 先扫描项目专有目录：`.cursor/nebula-skills`
-2. 再扫描 Vue 前端模式库：`.cursor/vue-skills`（如 `hook-loading`：全屏 useLoading、composable 抽离、首屏占位闪烁）
-3. 再扫描 IDE/工具类目录：`.cursor/IDE-skill`（如 `清除worktree`）
-4. 再扫描通用目录：`.cursor/mySkills`、`.cursor/agent-skills`
-5. 再扫描知识库管理技能：`.cursor/common-skills/wiki-skills/`（含 submodule：`wikify/skills/` 和 `claude-wiki-verbs/skills/`，自动递归发现 SKILL.md）
-6. 当 nebula-skills 与 vue-skills/mySkills 存在同名或语义重叠时，优先使用 `.cursor/nebula-skills`，其次 `.cursor/vue-skills`
-7. 与微前端业务路由、登录落点、菜单映射相关问题，优先触发：
-   - `route-architecture-delivery-skills`（位于 `.cursor/nebula-skills`）
-   - `mf-route-home-alignment`（位于 `.cursor/nebula-skills`）
-8. **强制规则**：凡属 nebula 项目级（业务耦合）skill，必须存放在 `.cursor/nebula-skills`，不得新增到 `.cursor/mySkills`
-9. **强制规则**：Vue 通用模式 skill（如 hook-loading、formRules）存放在 `.cursor/vue-skills`
-10. **强制规则**：skill 文档（`SKILL.md` 与 `agents/openai.yaml`）必须使用中文
-11. **强制规则**：触发项目级问题时，若 `.cursor/nebula-skills` 已有对应能力，必须优先使用，不得退回 `.cursor/mySkills` 同类 skill
+1. 先扫描项目专有目录：`nebula-skills/`
+2. 再扫描 IDE/工具类目录：`IDE-skill/`
+3. 再扫描通用目录：`agent-skills/`、`mySkills/`
+4. 再扫描 Obsidian 技能：`common-skills/obsidian-skills/intention-skills/` → `common-skills/obsidian-skills/feature-skills/`
+5. 再扫描其他通用能力：`common-skills/` 下各子目录
 
 ## 响应要求
 - 选择最合适的技能内部使用

@@ -20,21 +20,16 @@
   </skills>
 </plugin>
 
-<plugin name="obsidian-wiki">
-  <description>Obsidian Wiki 知识库自动维护：Wikify（学术文献编译）和 claude-wiki-verbs（9 动词知识引擎）</description>
+<plugin name="obsidian-router">
+  <description>Obsidian 技能路由器：route-obsidian（intention）+ llm-wiki/obsidian-vault/vault-maintainer/qmd（feature）</description>
   <skills>
-    <skill>wikify</skill>
-    <skill>claude-wiki-verbs</skill>
+    <skill>route-obsidian</skill>
+    <skill>llm-wiki</skill>
+    <skill>obsidian-vault</skill>
+    <skill>vault-maintainer</skill>
+    <skill>qmd</skill>
   </skills>
 </plugin>
-
-<plugin name="frontend-slides">
-  <description>创建精美、动画丰富的HTML演示文稿，从零开始或转换PowerPoint文件</description>
-  <skills>
-    <skill>frontend-slides</skill>
-  </skills>
-</plugin>
-
 
 # 使用技能（Using Superpowers）
 
@@ -57,6 +52,12 @@
 ### 规则
 
 **在任何响应或行动之前调用相关或请求的技能。** 即使只有 1% 的可能性技能可能适用，你也应该调用技能来检查。如果调用的技能结果证明不适合该情况，你不需要使用它。
+
+### 反迭代漩涡规则（强制）
+
+1. **Single Dispatch**：路由技能（如 route-obsidian）一次只 dispatch 一个子 skill，禁止自动链式调用多个
+2. **失败即 Human Loop**：如果 dispatched skill 运行失败，不得自行尝试替代 skill，必须询问用户
+3. **Token 硬止损**：连续调用超过 20 个工具仍未完成 → 停止并给出中间结论
 
 ### 技能使用流程
 
@@ -111,4 +112,3 @@
 ### 用户指令
 
 指令说的是什么（WHAT），而不是如何（HOW）。"添加 X" 或 "修复 Y" 并不意味着跳过工作流程。
-

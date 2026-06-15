@@ -1,0 +1,52 @@
+[
+  {
+    "testCase": "用户说「帮我搜一下关于 MCP 协议的文章」",
+    "expectedBehavior": "分类为「检索知识」→ dispatch 到 llm-wiki query",
+    "passCondition": "调用 llm-wiki/skills/wiki/refs/query.md 中的 4-Tier 检索链"
+  },
+  {
+    "testCase": "用户说「新建一篇笔记，标题是今日总结」",
+    "expectedBehavior": "分类为「读写笔记」→ dispatch 到 obsidian-vault",
+    "passCondition": "调用 obsidian-vault 的文件 API 创建新笔记"
+  },
+  {
+    "testCase": "用户说「修复 vault 里所有断裂的 wikilink」",
+    "expectedBehavior": "分类为「Vault 维护」→ dispatch 到 vault-maintainer",
+    "passCondition": "调用 vault-maintainer 的链接修复流程"
+  },
+  {
+    "testCase": "用户说「比较 Cursor 和 Windsurf」",
+    "expectedBehavior": "分类为「综合/对比」→ dispatch 到 llm-wiki compare",
+    "passCondition": "调用 llm-wiki/refs/compare.md 做 5 维矩阵对比"
+  },
+  {
+    "testCase": "用户说「把这个网页内容存到知识库」",
+    "expectedBehavior": "分类为「摄入知识」→ dispatch 到 llm-wiki ingest",
+    "passCondition": "调用 llm-wiki/refs/ingest.md 的 Gold In 过滤器流程"
+  },
+  {
+    "testCase": "用户说「帮我把 vim 配置记下来」",
+    "expectedBehavior": "分类为「读写笔记」→ dispatch 到 obsidian-vault",
+    "passCondition": "dispatch 到 obsidian-vault，而非归类到 llm-wiki"
+  },
+  {
+    "testCase": "用户说「搜一下」（无具体主题）",
+    "expectedBehavior": "走 Human Loop，询问用户具体搜索什么",
+    "passCondition": "不自动 dispatch，先澄清"
+  },
+  {
+    "testCase": "vault-maintainer 不存在时的 fallback",
+    "expectedBehavior": "可行性检查失败 → Max 1 Fallback（无次选）→ 走 Human Loop",
+    "passCondition": "报告用户 vault-maintainer 未安装，询问是否要安装"
+  },
+  {
+    "testCase": "obsidian-vault dispatch 后运行时出错",
+    "expectedBehavior": "不可行性检查通过但运行失败 → 不自动 fallback → 走 Human Loop",
+    "passCondition": "报告错误原因，给出次选建议，让用户决策"
+  },
+  {
+    "testCase": "连续 20+ 工具调用仍未完成",
+    "expectedBehavior": "触发 Token 止损 → 停止并报告中间结论",
+    "passCondition": "输出中间结论，不再继续自动尝试"
+  }
+]

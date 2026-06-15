@@ -1,0 +1,44 @@
+[
+  {
+    "id": "t1-search-mcp",
+    "prompt": "帮我搜一下关于 MCP 协议的文章",
+    "expectedRoute": "llm-wiki query"
+  },
+  {
+    "id": "t2-new-note",
+    "prompt": "新建一篇笔记，标题是今日总结，内容是今天完成了 obsidian-skills 套件的搭建",
+    "expectedRoute": "obsidian-vault"
+  },
+  {
+    "id": "t3-fix-wikilink",
+    "prompt": "修复 vault 里所有断裂的 wikilink",
+    "expectedRoute": "vault-maintainer"
+  },
+  {
+    "id": "t4-compare",
+    "prompt": "比较 Cursor 和 Windsurf 的优缺点",
+    "expectedRoute": "llm-wiki compare"
+  },
+  {
+    "id": "t5-ingest-web",
+    "prompt": "把这个网页 https://example.com/mcp-guide 的内容存到知识库",
+    "expectedRoute": "llm-wiki ingest"
+  },
+  {
+    "id": "t6-vague-search",
+    "prompt": "搜一下",
+    "expectedBehavior": "Human Loop - ask clarification"
+  },
+  {
+    "id": "t7-missing-skill",
+    "prompt": "修复 vault 里所有断裂的 wikilink",
+    "condition": "vault-maintainer not installed",
+    "expectedBehavior": "Human Loop - report missing skill"
+  },
+  {
+    "id": "t8-run-error",
+    "prompt": "新建一篇笔记",
+    "condition": "obsidian-vault loaded but fails at runtime",
+    "expectedBehavior": "Human Loop - report error, suggest llm-wiki save as alt"
+  }
+]
