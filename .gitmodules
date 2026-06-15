@@ -7,3 +7,6 @@
 [submodule "common-skills/obsidian-skills/feature-skills/llm-wiki"]
 	path = common-skills/obsidian-skills/feature-skills/llm-wiki
 	url = git@github.com:daniel8824-del/claude-wiki-verbs.git
+[submodule "common-skills/obsidian-skills/feature-skills/ruralocity-vault-skills"]
+	path = common-skills/obsidian-skills/feature-skills/ruralocity-vault-skills
+	url = git@github.com:ruralocity/obsidian-vault-skills.git

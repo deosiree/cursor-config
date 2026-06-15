@@ -19,3 +19,8 @@ Thumbs.db
 commit-workflow-artifacts/
 
 .obsidian/
+
+# 环境配置（含敏感路径，不提交）
+.env
+.env.local
+.env.*.local

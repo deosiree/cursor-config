@@ -1,6 +1,6 @@
 ---
 name: obsidian-vault-management
-description: Creates, edits, and manages Obsidian vault content including notes, templates, daily notes, and dataview queries. Use when working with markdown files in an Obsidian vault, creating notes, writing templates, building dataview queries, or organizing knowledge management content.
+description: Creates, edits, and manages Obsidian vault content including notes, templates, daily notes, and dataview queries. Use when working with markdown files in an Obsidian vault, creating notes, writing templates, building dataview queries, or organizing knowledge management content. 中文触发：新建笔记、记录、保存、读笔记、搜笔记、写日记、daily note。
 ---
 
 # Obsidian Vault Management
@@ -77,7 +77,39 @@ cssclasses:
 
 **Available callout types**: note, abstract, info, todo, tip, success, question, warning, failure, danger, bug, example, quote
 
-## Creating Notes
+## 执行前置检查（强制）
+
+在创建或修改任何笔记前，必须先执行以下检查：
+
+```
+Step 1: 确认 VAULT_ROOT 是否可访问
+    ├─ test -d "$VAULT_ROOT" && echo "OK"
+    └─ 失败 → 检查 .env 文件或提示用户设置
+
+Step 2: 确认目标目录存在
+    ├─ 例如：PARA 的 01-07 目录是否齐全
+    └─ 缺失 → 先创建目录再继续
+
+Step 3: 如果涉及修改已有笔记
+    ├─ 先 read_file 确认内容
+    └─ 显示摘要给用户确认 → "确认要修改这篇笔记吗？[y/N]"
+```
+
+## 创建或编辑笔记
+
+### 判断笔记类型
+
+在创建前先判断笔记类型：
+
+```
+用户请求
+    ↓
+是每日记录？ → Daily Note
+是快速想法？ → Fleeting Note (05 - Fleeting/)
+是项目内容？ → Project Note (01 - Projects/)
+是知识沉淀？ → Permanent Note (04 - Permanent/)
+其他 → 询问用户分类
+```
 
 ### Daily Note
 
@@ -206,6 +238,33 @@ For Templater syntax, see [references/templater.md](references/templater.md).
 - Link to related notes bidirectionally
 - Use callouts for important information
 - Include navigation links in daily notes
+
+### 异常处理
+
+| 场景 | 处理方式 |
+|------|---------|
+| VAULT_ROOT 未设置 | 检查 .env 文件 → 提示用户 `export VAULT_ROOT=<path>` |
+| 目标目录不存在 | 先创建目录再创建笔记，记录到操作日志 |
+| 笔记文件已存在 | 询问用户：覆盖 / 追加 / 取消 |
+| Dataview 查询返回空 | 检查 vault 路径是否正确，检查是否有笔记符合条件 |
+| 文件名含特殊字符 | 自动替换为连字符，提示用户原名 |
+| Templater 变量在 CLI 中不可用 | 注：`tp.system.*` 在 CLI 下返回 nil，改用静态模板 |
+
+### Windows 兼容说明
+
+本 skill 的 Python 脚本原为 Linux 环境编写，在 Windows 上需注意：
+
+| 问题 | 表现 | 修复 |
+|------|------|------|
+| `python3` 命令不可用 | exit 49（Microsoft Store 假死） | 改用 `python` 或 `py` |
+| GBK 编码输出乱码 | `UnicodeEncodeError: 'gbk' codec can't encode` | 执行前设置 `PYTHONIOENCODING=utf-8` |
+| 路径分隔符 | `\` 与 `/` 混用 | Python `pathlib` 自动处理，无需手动转义 |
+
+```bash
+# Windows 下正确执行方式
+set PYTHONIOENCODING=utf-8
+python scripts/create-daily-note.py 2026-07-16
+```
 
 ## Advanced Features
 

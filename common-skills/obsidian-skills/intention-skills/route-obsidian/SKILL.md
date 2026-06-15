@@ -1,6 +1,6 @@
 ---
 name: route-obsidian
-description: Obsidian 技能路由器 — 根据请求类型 single-dispatch 到最合适的 feature skill，失败时切换人类回环而非链式 fallback。触发词：读/写/搜/修复 Obsidian 笔记、知识库管理。
+description: Obsidian 技能路由器 — 根据请求类型 single-dispatch 到最合适的 feature skill，失败时切换人类回环而非链式 fallback。触发词：读/写/搜/修复 Obsidian 笔记、知识库管理。中文触发：搜一下、新建笔记、记录、保存、修复、对比、总结、摄入、剪藏。
 ---
 
 # route-obsidian — Obsidian 技能路由器
@@ -22,6 +22,16 @@ description: Obsidian 技能路由器 — 根据请求类型 single-dispatch 到
 | **Vault 维护** | "修复 wikilink" "检查 frontmatter" "文件命名规范" " vault 体检" |
 | **摄入知识** | "把这个网页存进来" "把这篇 PDF/文章摄入知识库" "剪藏" |
 | **综合/对比/编译** | "总结一下关于 X 的内容" "对比 A 和 B" "用大白话解释" |
+
+### 分类仲裁规则
+
+当上述类别有多个同时匹配时：
+
+| 匹配情况 | 优先级规则 |
+|---------|-----------|
+| 「读写笔记」和「摄入知识」同时匹配 | 用户给出的是"链接/URL" → 摄入知识；用户给出的是"文字内容" → 读写笔记 |
+| 「检索知识」和「综合/编译」同时匹配 | 用户只说了关键词 → 检索知识；用户要求"总结/对比/解释" → 综合 |
+| 无法判断（置信度 < 60%） | **不要猜测** → 直接问用户："你想做哪种操作？A: 新建笔记 B: 搜索 C: 摄入资料 D: 维护" |
 
 ---
 
@@ -77,10 +87,10 @@ description: Obsidian 技能路由器 — 根据请求类型 single-dispatch 到
 
 | 类别 | 首选 skill（← dispatch 目标） | 次选（仅可行性检查失败时） |
 |------|-----------------------------|--------------------------|
-| 📝 **读写笔记** | `feature-skills/obsidian-vault/SKILL.md`（文件 API，安全评分 90） | `feature-skills/llm-wiki/skills/wiki/SKILL.md` save 动词 |
+| 📝 **读写笔记** | `feature-skills/obsidian-vault-management/SKILL.md`（PARA 结构，含 daily note/Dataview，Hermes 原版 153K★） | `feature-skills/llm-wiki/skills/wiki/SKILL.md` save 动词 |
 | 🔍 **检索知识** | `feature-skills/llm-wiki/skills/wiki/SKILL.md` query 动词（4-Tier 检索链） | `feature-skills/qmd/SKILL.md`（如已安装）|
-| 🔧 **Vault 维护** | `feature-skills/vault-maintainer/SKILL.md`（安全评分 100） | 无（失败即走 Human Loop）|
-| 📥 **摄入知识** | `feature-skills/llm-wiki/skills/wiki/SKILL.md` ingest 动词（Gold In 过滤器） | `feature-skills/obsidian-vault/SKILL.md` |
+| 🔧 **Vault 维护** | `feature-skills/ruralocity-vault-skills/.claude/skills/vault-weekly-review/SKILL.md`（System Health + 重复检测 + 合并建议） | 无（失败即走 Human Loop）|
+| 📥 **摄入知识** | `feature-skills/llm-wiki/skills/wiki/SKILL.md` ingest 动词（Gold In 过滤器） | `feature-skills/obsidian-vault-management/SKILL.md` |
 | 🧠 **综合/对比/编译** | `feature-skills/llm-wiki/skills/wiki/SKILL.md` (synthesize / critique / compare / eli5) | 无（走 Human Loop）|
 
 > **路径约定**：所有 `feature-skills/X` 是相对 `obsidian-skills/` 的相对路径。

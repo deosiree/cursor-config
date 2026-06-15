@@ -1,0 +1,15 @@
+test-case	route	dispatch-target	status	notes
+读写笔记-新建	📝 读写笔记	obsidian-vault-management	✅	Hermes 原版，PARA 结构 + daily note + Dataview
+读写笔记-编辑	📝 读写笔记	obsidian-vault-management	✅	支持 patch/append 编辑
+检索知识-关键词搜索	🔍 检索知识	llm-wiki query	✅	4-Tier 检索链
+检索知识-语义搜索	🔍 检索知识	llm-wiki query	✅	Score 分档 (≥0.9/0.7-0.9/0.5-0.7/<0.5)
+Vault 维护-周报	🔧 Vault 维护	ruralocity-vault-skills vault-weekly-review	✅	System Health + 活跃度 + 重复/合并
+Vault 维护-重复检测	🔧 Vault 维护	ruralocity-vault-skills vault-duplicate-detection	✅	标题+内容相似度分析
+摄入知识-网页	📥 摄入知识	llm-wiki ingest	✅	Gold In 5 字段过滤器
+摄入知识-文件	📥 摄入知识	llm-wiki ingest	✅	raw/ 存储 + compile 到 wiki
+综合/对比-对比	🧠 综合/对比	llm-wiki compare	✅	5 维矩阵对比
+综合/对比-编译	🧠 综合/对比	llm-wiki synthesize	✅	多文件 → 单篇综述
+综合/对比-Eli5	🧠 综合/对比	llm-wiki eli5	✅	6 字段平易解释
+缺失 skill 回退	—	Human Loop	✅	vault-maintainer 不可用 → 报告+问用户
+模糊请求澄清	—	Human Loop	✅	"搜一下" 不含主题 → 先问清楚再 dispatch
+运行时失败回退	—	Human Loop	✅	skill 加载成功但运行报错 → 不自动 fallback

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ro-happy-1",
+    "prompt": "帮我搜一下关于 MCP 协议的资料",
+    "target": "route-obsidian",
+    "expected": "分类为「检索知识」，dispatch 到 llm-wiki query"
+  },
+  {
+    "id": "ro-happy-2",
+    "prompt": "新建一篇笔记，记录今天 obsidian skills 的搭建过程",
+    "target": "route-obsidian",
+    "expected": "分类为「读写笔记」，dispatch 到 obsidian-vault-management"
+  },
+  {
+    "id": "ro-edge-1",
+    "prompt": "搜一下",
+    "target": "route-obsidian",
+    "expected": "模糊请求，走 Human Loop 询问具体内容"
+  },
+  {
+    "id": "ro-edge-2",
+    "prompt": "修复 vault 里所有断裂的 wikilink",
+    "target": "route-obsidian",
+    "expected": "Vault 维护 → dispatch 到 vault-weekly-review（System Health 部分）"
+  },
+  {
+    "id": "ovm-happy-1",
+    "prompt": "创建今天的 daily note",
+    "target": "obsidian-vault-management",
+    "expected": "在 06 - Daily/YYYY/MM/ 下创建 YYYYMMDD.md"
+  },
+  {
+    "id": "ovm-happy-2",
+    "prompt": "用 Dataview 列出所有 status=draft 的笔记",
+    "target": "obsidian-vault-management",
+    "expected": "使用 Dataview 语法查询"
+  },
+  {
+    "id": "ovm-edge-1",
+    "prompt": "在笔记中使用 callout 标记一个警告信息",
+    "target": "obsidian-vault-management",
+    "expected": "使用 [!warning] 语法包裹内容"
+  },
+  {
+    "id": "ovm-edge-2",
+    "prompt": "修改昨天创建的笔记，追加一段内容",
+    "target": "obsidian-vault-management",
+    "expected": "用 patch 或 read+write 追加，不破坏原有结构"
+  },
+  {
+    "id": "ro-vault-1",
+    "prompt": "生成本周的 vault 维护周报",
+    "target": "route-obsidian + vault-weekly-review",
+    "expected": "dispatch 到 vault-weekly-review，执行 System Health 检查"
+  }
+]
