@@ -1,72 +1,59 @@
 ---
 name: obsidian-vault
-description: Obsidian 笔记读写 — 文件 API 创建/读取/搜索/编辑笔记。route-obsidian 在 "笔记读写" 类别时 dispatch 到此 skill。安全评分 90。
+description: Search, create, and manage notes in the Obsidian vault with wikilinks and index notes. Use when user wants to find, create, or organize notes in Obsidian.
 ---
 
-# obsidian-vault — 笔记读写
+# Obsidian Vault
 
-> NousResearch 出品（153K★），完整实现位于 Hermes Agent marketplace。
-> 本文件是 huiyanSkills 路由桥接版：优先尝试加载 Hermes 原版，不可用时走内置简化流程。
+## Vault location
 
----
+`/mnt/d/Obsidian Vault/AI Research/`
 
-## 定位
+Mostly flat at root level.
 
-route-obsidian 路由表中 obsidian-vault 是 **笔记读写类**的首选。
+## Naming conventions
 
-当用户说以下内容时触发：
-- "新建一篇笔记"
-- "帮我读一下 X 笔记"
-- "把这段文本存到 Obsidian"
-- "记录这个 / 记一下"
-- "搜索笔记内容"
+- **Index notes**: aggregate related topics (e.g., `Ralph Wiggum Index.md`, `Skills Index.md`, `RAG Index.md`)
+- **Title case** for all note names
+- No folders for organization - use links and index notes instead
 
----
+## Linking
 
-## 执行策略
+- Use Obsidian `[[wikilinks]]` syntax: `[[Note Title]]`
+- Notes link to dependencies/related notes at the bottom
+- Index notes are just lists of `[[wikilinks]]`
 
-### 方案 A：使用 Hermes 原版（首选）
+## Workflows
 
-如果 Hermes Agent 已安装 `obsidian-vault` skill：
-
-1. 检查 `~/.hermes/skills/obsidian-vault/SKILL.md` 是否存在
-2. 如果存在 → 加载并执行它（文件 API 而非 shell 命令，安全评分 90）
-3. 如果不存在 → 走方案 B
-
-### 方案 B：内置简化流程（桥接降级）
+### Search for notes
 
 ```bash
-# 1. 创建新笔记
-# 路径：${VAULT_ROOT}/笔记类别/日期-标题.md
-# 模板：YAML frontmatter + 正文
+# Search by filename
+find "/mnt/d/Obsidian Vault/AI Research/" -name "*.md" | grep -i "keyword"
 
-# 2. 读取笔记
-# 使用 cat 或 head 读取
-
-# 3. 搜索笔记
-# grep -r "关键词" ${VAULT_ROOT} --include="*.md"
+# Search by content
+grep -rl "keyword" "/mnt/d/Obsidian Vault/AI Research/" --include="*.md"
 ```
 
----
+Or use Grep/Glob tools directly on the vault path.
 
-## 安装原版
+### Create a new note
+
+1. Use **Title Case** for filename
+2. Write content as a unit of learning (per vault rules)
+3. Add `[[wikilinks]]` to related notes at the bottom
+4. If part of a numbered sequence, use the hierarchical numbering scheme
+
+### Find related notes
+
+Search for `[[Note Title]]` across the vault to find backlinks:
 
 ```bash
-hermes skills install obsidian-vault
+grep -rl "\\[\\[Note Title\\]\\]" "/mnt/d/Obsidian Vault/AI Research/"
 ```
 
-安装后，`~/.hermes/skills/obsidian-vault/` 目录下的 SKILL.md 将替代本桥接文件的方案 A。
+### Find index notes
 
----
-
-## 与 llm-wiki 的边界
-
-| 场景 | 用 obsidian-vault | 用 llm-wiki |
-|------|------------------|-------------|
-| 快速记一条笔记 | ✅ 首选 | ❌ |
-| 读一篇已有笔记 | ✅ | ❌ |
-| 摄入资料到知识库 | ❌ | ✅ ingest |
-| 搜索 + 综合回答 | ❌ | ✅ query |
-| 修改/追加笔记 | ✅ | ❌ |
-
-这条边界在 route-obsidian 的路由表中已经定义。如果 dispatch 出错，请检查路由分类。
+```bash
+find "/mnt/d/Obsidian Vault/AI Research/" -name "*Index*"
+```

@@ -1,67 +1,225 @@
 ---
-name: vault-maintainer
-description: Obsidian Vault 兼容性维护 — wikilink/frontmatter/文件名规范化。route-obsidian 在 "Vault 维护" 类别时 dispatch 到此 skill。安全评分 100。
+name: obsidian-vault-management
+description: Creates, edits, and manages Obsidian vault content including notes, templates, daily notes, and dataview queries. Use when working with markdown files in an Obsidian vault, creating notes, writing templates, building dataview queries, or organizing knowledge management content.
 ---
 
-# vault-maintainer — Vault 兼容性维护
+# Obsidian Vault Management
 
-> OpenClaw 出品（374K★），完整实现位于 Hermes Agent marketplace。
-> 本文件是 huiyanSkills 路由桥接版：优先尝试加载 Hermes 原版，不可用时走内置简化流程。
+## Vault Structure (PARA-Based)
 
----
+This vault uses a PARA-like organization:
 
-## 定位
+| Folder | Purpose |
+|--------|---------|
+| `00 - Maps of Content` | Index notes linking related topics |
+| `01 - Projects` | Active project notes |
+| `02 - Areas` | Ongoing responsibilities |
+| `03 - Resources` | Reference materials |
+| `04 - Permanent` | Evergreen/zettelkasten notes |
+| `05 - Fleeting` | Quick capture notes |
+| `06 - Daily` | Daily notes (YYYY/MM/YYYYMMDD.md) |
+| `07 - Archives` | Completed/inactive content |
+| `08 - books` | Book notes and clippings |
+| `99 - Meta` | Templates, settings |
+| `Clippings` | Web clips and imports |
 
-route-obsidian 路由表中 vault-maintainer 是 **Vault 维护类**的唯一选择。
+## Quick Reference
 
-当用户说以下内容时触发：
-- "修复断裂的 wikilink"
-- "检查 frontmatter 完整性"
-- "统一文件命名规范"
-- "vault 体检 / health check"
-- "清理空文件和孤立笔记"
+### Linking Syntax
 
----
-
-## 执行策略
-
-### 方案 A：使用 Hermes 原版（首选）
-
-如果 Hermes Agent 已安装 `vault-maintainer` skill：
-
-1. 检查 `~/.hermes/skills/vault-maintainer/SKILL.md` 是否存在
-2. 如果存在 → 加载并执行它（内容最完整，安全评分 100）
-3. 如果不存在 → 走方案 B
-
-### 方案 B：内置简化流程（桥接降级）
-
-```bash
-# 1. 检查断裂 wikilink
-find ${VAULT_ROOT:-.} -name "*.md" -exec grep -l '\[\[.*\]\]' {} \;
-
-# 2. 检查 frontmatter 完整性
-# 每个 .md 文件应以 --- 开头，有 title/created/tags 等字段
-
-# 3. 检查文件名规范
-# 建议：小写+连字符，无空格，无中文文件名
-
-# 4. 报告结果并推荐安装 Hermes 原版
+```markdown
+[[Note Name]]                    # Basic wikilink
+[[Note Name|Display Text]]       # Aliased link
+[[Note Name#Heading]]            # Link to heading
+[[Note Name#^block-id]]          # Link to block
+![[Note Name]]                   # Embed note
+![[image.png]]                   # Embed image
+![[Note Name#Heading]]           # Embed section
 ```
 
+### Frontmatter Template
+
+```yaml
 ---
-
-## 安装原版
-
-```bash
-hermes skills install vault-maintainer
+created: {{date:YYYY-MM-DDTHH:mm}}
+updated: {{date:YYYY-MM-DDTHH:mm}}
+title: "Note Title"
+type: note
+status: draft
+tags:
+  - tag1
+  - tag2
+aliases:
+  - "Alternate Name"
+cssclasses:
+  - custom-class
+---
 ```
 
-安装后，`~/.hermes/skills/vault-maintainer/` 目录下的 SKILL.md 将替代本桥接文件的方案 A。
+### Callouts
+
+```markdown
+> [!note] Title
+> Content
+
+> [!warning] Important
+> Warning content
+
+> [!tip] Helpful tip
+> Tip content
+
+> [!info]+ Collapsible (open by default)
+> Content
+
+> [!danger]- Collapsed by default
+> Content
+```
+
+**Available callout types**: note, abstract, info, todo, tip, success, question, warning, failure, danger, bug, example, quote
+
+## Creating Notes
+
+### Daily Note
+
+Create in `06 - Daily/YYYY/MM/` with filename `YYYYMMDD.md`:
+
+```yaml
+---
+created: 2025-12-09T09:00
+updated: 2025-12-09T09:00
+title: "20251209"
+type: daily-note
+status: true
+tags:
+  - daily
+  - journal
+  - 2025
+  - 2025-12
+aliases:
+  - "2025-12-09"
+date_formatted: 2025-12-09
+topics:
+  - "[[daily]]"
+  - "[[journal]]"
+related:
+  - "[[2025-12-08]]"
+  - "[[2025-12-10]]"
+cssclasses:
+  - daily
+---
+
+# Daily Note - 2025-12-09
+
+### Tasks
+- [ ] Task 1
+
+### Journal
+...
+
+### Navigation
+<< [[2025-12-08]] | **Today** | [[2025-12-10]] >>
+```
+
+### Zettelkasten Note
+
+Create in `04 - Permanent/`:
+
+```yaml
+---
+created: {{date}}
+type: zettelkasten
+tags:
+  - permanent
+  - topic
+---
+
+# Note Title
+
+## Main Insight
+**Key Idea**: [Main point]
+
+## Connections
+- [[Related Note 1]]
+- [[Related Note 2]]
+
+## References
+- Source citation
+```
+
+## Dataview Queries
+
+For dataview query syntax, see [references/dataview.md](references/dataview.md).
+
+**Quick examples:**
+
+```dataview
+LIST FROM "06 - Daily" WHERE file.cday = date(today) SORT file.ctime DESC
+```
+
+```dataview
+TABLE status, tags FROM "01 - Projects" WHERE status != "completed"
+```
+
+## Templates
+
+Templates location: `99 - Meta/00 - Templates/`
+
+For Templater syntax, see [references/templater.md](references/templater.md).
+
+**Common Templater variables:**
+
+```markdown
+<% tp.file.title %>              # Current file name
+<% tp.date.now("YYYY-MM-DD") %>  # Current date
+<% tp.file.cursor(1) %>          # Cursor position
+<% tp.system.prompt("Question") %> # User input prompt
+```
+
+## Installed Plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| **Dataview** | Query and display data from notes |
+| **Templater** | Advanced templates with scripting |
+| **Auto Note Mover** | Auto-organize notes by tags |
+| **Periodic Notes** | Daily/weekly/monthly notes |
+| **Kanban** | Kanban boards in markdown |
+| **Tag Wrangler** | Bulk tag management |
+| **Table Editor** | Markdown table editing |
+| **Advanced URI** | Deep links to notes |
+| **Local REST API** | External API access |
+
+## File Operations
+
+### Creating a Note
+
+1. Determine appropriate folder based on note type
+2. Add proper frontmatter
+3. Use consistent naming conventions
+4. Include relevant tags for auto-organization
+
+### Best Practices
+
+- Use descriptive filenames (avoid special characters except hyphens)
+- Always include `created` and `updated` timestamps
+- Tag notes for discoverability
+- Link to related notes bidirectionally
+- Use callouts for important information
+- Include navigation links in daily notes
+
+## Advanced Features
+
+- **Dataview queries**: [references/dataview.md](references/dataview.md)
+- **Templater scripting**: [references/templater.md](references/templater.md)
+- **Canvas diagrams**: [references/canvas.md](references/canvas.md)
+- **Plugin configurations**: [references/plugins.md](references/plugins.md)
 
 ---
 
-## 注意事项
+## Gotchas
 
-- **安全评分 100**（最高）：本 skill 只有读取和规范化操作，不会删除内容
-- **不自作主张改名**：任何文件名修改前先询问用户确认
-- **报告 > 修复**：优先报告问题列表，让用户决定是否修复
+- **Bulk operations outside Obsidian don't trigger link-rebuilding** — external scripts must signal a `:Reindex` or wait for the next vault open.
+- **Dataview cache is per-vault and per-session** — CLI script-based DQL queries may see stale state if Obsidian was last open with different filters.
+- **Templater scripts via CLI run in a different context than the UI** — many `tp.system.*` functions return nil (no UI to prompt against).
+- **PARA folder moves break tag-based queries** — if your queries hardcode folder paths, refactor them to use tags or properties before reorganizing.
+- **Daily note rotation: changing the daily-note format mid-vault leaves old notes orphaned** — they don't auto-migrate to the new format; a rename pass is needed.
