@@ -1,0 +1,38 @@
+[
+  {
+    "id": "feynman-narrative",
+    "target": "费曼-skills/SKILL.md",
+    "prompt": "使用 费曼-skills 对「API Gateway、Service Mesh、Load Balancer」三个微服务组件做统合叙事",
+    "expected": "路由到 编排-统合叙事 → 生成一个贯穿三者的场景 → 写后校验"
+  },
+  {
+    "id": "feynman-concept",
+    "target": "费曼-skills/intention-skills/编排-概念解释/SKILL.md",
+    "prompt": "解释「上下文窗口」给一位前端程序员",
+    "expected": "工作台面类比 + Token 映射表 + 代码示例 + 边界说明"
+  },
+  {
+    "id": "socratic-chain",
+    "target": "苏格拉底-skills/intention-skills/编排-追问链/SKILL.md",
+    "prompt": "为什么选 TypeScript 而非 JavaScript？生成追问链",
+    "expected": "5 问以内递进链，从表面疑问到核心约束"
+  },
+  {
+    "id": "pyramid-conclusion",
+    "target": "金字塔-skills/intention-skills/编排-结论先行/SKILL.md",
+    "prompt": "用金字塔结构概述 FastAPI 的三个核心优势",
+    "expected": "塔尖可验证 + 3 层 MECE 论据 + 过渡句"
+  },
+  {
+    "id": "teach-concept",
+    "target": "md-skills/学习助手/feature-skills/讲解-概念教学/SKILL.md",
+    "prompt": "教学「Pydantic 校验」概念给 FastAPI 新手",
+    "expected": "分析概念特征 → 选择讲解方式 → 路由到 common-skills"
+  },
+  {
+    "id": "assess-image",
+    "target": "md-skills/学习助手/feature-skills/评估-分析掌握画像/SKILL.md",
+    "prompt": "用户完成了 3 轮追问，回答中混淆了「异步」和「并行」，输出掌握画像",
+    "expected": "准确识别薄弱点 + 置信度 + 推荐考核维度"
+  }
+]

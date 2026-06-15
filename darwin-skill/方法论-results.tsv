@@ -1,0 +1,5 @@
+target	mode	dimension	frontmatter	workflow	boundary	checkpoint	specificity	resources	architecture	realworld	total	eval_mode	date	notes
+方法论套件(费曼父级)	optimize	checkpoint	7	13	8	7	14	4	12	20	85.0	dry_run	2026-02-19	达HL-4拐点，建议收手
+方法论套件(苏格拉底父级)	optimize	checkpoint	7	13	8	7	14	4	12	20	85.0	dry_run	2026-02-19	达HL-4拐点，建议收手
+方法论套件(金字塔父级)	optimize	checkpoint	7	13	8	6	15	4	13	18	84.0	dry_run	2026-02-19	达HL-4拐点，建议收手
+学习助手feature(avg)	optimize	checkpoint	6	10	6	7	9	3	8	15	64.0	dry_run	2026-02-19	子skill仍有空间，但边际收益递减

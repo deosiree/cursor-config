@@ -4,3 +4,6 @@
 [submodule "common-skills/wiki-skills/claude-wiki-verbs"]
 	path = common-skills/wiki-skills/claude-wiki-verbs
 	url = https://github.com/daniel8824-del/claude-wiki-verbs.git
+[submodule "common-skills/obsidian-skills/feature-skills/llm-wiki"]
+	path = common-skills/obsidian-skills/feature-skills/llm-wiki
+	url = https://github.com/daniel8824-del/claude-wiki-verbs.git
