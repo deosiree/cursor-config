@@ -1,5 +1,7 @@
 {
   "moduleId": "role-group-perm",
+  "_status": "deprecated",
+  "_note": "角色组功能未开放，勿导入测试系统；待功能上线后再启用",
   "fieldDefaultsOverrides": {
     "创建人员": "惠岩",
     "模块名": "角色管理",

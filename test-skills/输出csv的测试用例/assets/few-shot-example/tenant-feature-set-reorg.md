@@ -60,6 +60,27 @@
 }
 ```
 
+## CSV 导出格式（0616 起）
+
+cases.json 仍分别写 `steps` / `expected`；导出 CSV 时脚本合并为：
+
+```text
+测试步骤：
+1. 进入「安全管理」>「租户管理」（路由 /Apex/tenant）
+2. 观察页面工具栏、表格与底部分页区域
+3. 确认 loading 结束后表格有数据或空态
+---
+预期结果：
+1. 页面标题为「租户列表」
+2. 工具栏展示关键字搜索、搜索、新增、删除、列设置等区域
+3. 表格与底部分页组件正常渲染，loading 结束后有数据或空态
+```
+
+- CSV「用例结果」列：**留空**
+- 新增用例「用例ID」：**留空**；更新场景 `--preserve-ids-from`
+
+权威规则：`references/csv-export-format-rules.md`
+
 ## fieldDefaults（tenant 0610）
 
 ```json

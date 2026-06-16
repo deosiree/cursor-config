@@ -646,6 +646,48 @@
       "expected": "1. 弹出「删除成功」提示\n2. 被删租户从列表中消失"
     },
     {
+      "name": "系统租户复选框禁用不可勾选",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "TenantTable.vue :selectable isSystem 守卫",
+      "remark": "1. isSystem=true 的租户（如「系统租户」）selection 列 selectable 返回 false 2. 复选框置灰不可点",
+      "precondition": "1. 用户已登录且具备 sys:tenant:query 与 sys:tenant:delete 2. 列表中存在 isSystem=true 的系统租户（如「系统租户」）",
+      "steps": "1. 进入「安全管理」>「租户管理」\n2. 定位系统租户行（如「系统租户」）\n3. 尝试点击该行复选框",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "expected": "1. 系统租户行复选框为禁用态（置灰）\n2. 无法单独勾选该系统租户"
+    },
+    {
+      "name": "表头全选时系统租户不被选中",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "TenantTable.vue selectable 全选排除 isSystem",
+      "remark": "1. el-table selectable 同时控制全选范围 2. 全选后 selectIds 不含系统租户 ID",
+      "precondition": "1. 用户具备 sys:tenant:delete 2. 列表同时存在系统租户与普通租户",
+      "steps": "1. 进入租户列表\n2. 点击表头全选复选框\n3. 观察系统租户行与普通租户行的勾选状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "expected": "1. 普通租户行被勾选\n2. 系统租户行复选框保持未勾选（置灰）\n3. 工具栏「删除」按钮可点击（因 selectIds 含普通租户）"
+    },
+    {
+      "name": "删除系统租户时提示不可删除且不发起请求",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "index.vue handleDelete isSystem 拦截",
+      "remark": "1. handleDelete 在确认弹窗前校验 pageData.isSystem 2. toast「不能删除系统租户」3. 不调用 TenantGateway.deleteV2",
+      "precondition": "1. 用户具备 sys:tenant:delete 2. 列表存在系统租户",
+      "steps": "1. 进入租户列表\n2. 展开系统租户行操作「更多」，点击「删除」\n3. 观察页面提示与列表状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 7,
+      "expected": "1. 页面弹出警告通知「不能删除系统租户」\n2. 不出现删除确认弹窗\n3. 系统租户仍在列表中"
+    },
+    {
       "name": "mock创建租户业务错误时展示有效错误提示并回退第一步",
       "featureSet": "异常处理",
       "direction": "异常",

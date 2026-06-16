@@ -11,7 +11,7 @@
 | `user` | `user.csv` | 用户管理界面（子系统 `17`，v2） |
 | `securityConfig` | `securityConfig.csv` | 安全配置界面（子系统 `17`，v2） |
 | `e2e` | `e2e.csv` | 端到端测试 |
-| `login` | `login-logout.csv` | 登录登出 |
+| `login` | `login.csv` | 登录登出 |
 | `required` | `必填字段.csv` | 必填字段 |
 
 ## 使用规则

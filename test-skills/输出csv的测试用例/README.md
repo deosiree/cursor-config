@@ -9,7 +9,9 @@ Agent skill 套件：将 Vitest `test.ts` 与模块配置沉淀为测试系统�
 | `SKILL.md` | Agent 主入口 |
 | `scripts/generate_test_csv.py` | 通用：config + cases → CSV（覆盖写） |
 | `scripts/append_ui_cases_to_csv.py` | UI 交互 v1：复制模板 + 追加行（功能集合留空） |
-| `scripts/generate_feature_csv.py` | UI v2：功能集合 + 用例结果 + **用例类型推导**，整文件覆盖 |
+| `scripts/generate_feature_csv.py` | UI v2：功能集合 + **合并测试步骤** + 用例类型推导，整文件覆盖 |
+| `scripts/regenerate_module_exports.py` | 批量重新生成 0616 等模块 CSV（`--preserve-ids`） |
+| `scripts/csv_step_format.py` | 测试步骤合并 / 用例结果留空（见 `references/csv-export-format-rules.md`） |
 | `scripts/patch_tenant_expected.py` | 租户 0610 一次性补丁（补 expected / 重写 428）；新模式见 `generate_feature_csv` |
 | `scripts/csv_to_test_config.py` | 参考 CSV → config.json |
 | `scripts/bootstrap_menu_cases.py` | 从 `docs/问题单/0529/generate_menu_unit_csv.py` 迁移 cases |
@@ -276,7 +278,7 @@ python scripts/append_ui_cases_to_csv.py \
 从 docs/问题单/模板/testcases_export.csv 筛选创建人员=惠岩、功能集合=租户管理的 5 条，
 按功能集合重组，对照 apex_dev 租户页面源码补充用例。
 表头参考 docs/问题单/模板/tenant.csv，模块名租户管理界面，子系统从模板取。
-输出 docs/问题单/0610/tenant.csv，每条须填用例结果与 direction（推导用例类型），不走 append 脚本。
+输出 docs/问题单/0616/tenant.csv，cases.json 须填 expected 与 direction；CSV 测试步骤为合并格式、用例结果留空（见 csv-export-format-rules.md）。
 ```
 
 Agent 预期：`configs/tenant.cases.json` → `generate_feature_csv.py` → `evals/tenant-reorg-0610.md`

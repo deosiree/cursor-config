@@ -2,9 +2,9 @@
 name: 输出csv的测试用例
 description: >-
   将 Vitest test.ts、模块 JSON 配置或 UI 交互用例沉淀为可导入测试系统的 CSV。
-  通用脚本 generate_test_csv.py + append_ui_cases_to_csv.py；v2 功能集合路径用 generate_feature_csv.py。
-  支持 legacy export 迁移重组、从参考 CSV 或自然语言生成 config。
-  触发词：输出csv测试用例、test.ts转CSV、测试系统导入、边开发输出用例、UI交互、追加问题单CSV、沉淀模块配置、功能集合重组、testcases_export迁移。
+  默认 v2 功能集合路径：generate_feature_csv.py / regenerate_module_exports.py（测试步骤合并、用例结果留空）。
+  API 路径用 generate_test_csv.py；legacy v1 追加仅用户明确要求时用 append_ui_cases_to_csv.py。
+  触发词：输出csv测试用例、test.ts转CSV、测试系统导入、功能集合重组、0616再导出、testcases_export迁移、沉淀模块配置。
 ---
 
 # 输出 CSV 测试用例（Agent）
@@ -17,7 +17,7 @@ description: >-
 
 - 需要把 `*.test.ts` 整理为手工可执行用例并录入测试系统
 - 边开发边录入 **页面/弹窗 UI 交互** 用例到 `docs/问题单/{MMDD}/`
-- **功能集合 v2**：按 `alarm_.csv` 风格输出带功能集合、`用例结果` 的 CSV（`generate_feature_csv.py`）
+- **功能集合 v2**：按 `alarm_.csv` 风格输出带功能集合的 CSV；**测试步骤合并格式、用例结果留空**（见 `references/csv-export-format-rules.md`）
 - 从 `testcases_export.csv` 按创建人员筛选旧用例，迁移重组到新功能集合体系
 - 新模块只需换 `*.config.json` / `*.cases.json`，不重写 `generate_*_csv.py`
 - 从参考 CSV 或口述固定默认值，生成模块 config
@@ -37,6 +37,7 @@ description: >-
 
 ### RED（先判）
 
+0. **CSV 导出格式**：必读 [`references/csv-export-format-rules.md`](references/csv-export-format-rules.md)（测试步骤合并、用例结果留空、用例ID 规则、**Agent 禁止清单**）
 1. 输入类型：`test.ts` 路径 / 仅要 config / 仅口述默认值 / 已有 cases 只要生成 CSV / **legacy export 迁移** / **功能集合 v2**
 2. `repoRoot`（默认 nebula 根）
 3. CSV 模板路径（默认 `docs/问题单/模板/menu.csv` 表头）
@@ -69,65 +70,58 @@ RED 阶段若用户用口语描述，须先核对下表最少 5 项（缺一则�
 | **G1 RED 追问** | RED 结束 | 缺失 moduleId/模块名/子系统/domain | 追问，不猜测，记入 missingFacts |
 | **G2 Cases 预览** | cases 产出后 | cases 数组就绪 | 展示 2 条样例 + 总条数，等用户确认 |
 | **G3 CSV 覆盖确认** | CSV 生成前 | 目标 CSV 已存在 | 展示「已有 N 行 + 新增 M 行」，等确认；`--force` 跳过 |
-| **G4 质量自检** | cases 确认后 | cases 确认通过 | 自动运行 `用例质量自检`（`ui` 或 `ui-v2`），报告问题。v1 UI 触发 K；v2 另检功能集合必填、用例结果必填、**用例类型与 direction**（`case-type-map.md`） |
+| **G4 质量自检** | cases 确认后 | cases 确认通过 | 自动运行 `用例质量自检`（`ui` 或 `ui-v2`），报告问题。v1 UI 触发 K；v2 另检功能集合必填、cases.json expected 必填、**用例类型与 direction**；CSV 生成后检 M（格式合规） |
 | **G5 Darwin 路由** | CSV 产出后 | 每轮强制 | → `darwin拓展发现` 扫描能力缺口 |
 
 用户说「全部跳过确认」一次执行时，须在 `currentUnderstanding` 注明跳过原因。
 
 ### GREEN（意图路由）
 
+**默认路径（0616 已验证）**：UI 口述/源码 → **路径 C（v2 整文件）** → `generate_feature_csv.py` 或 `regenerate_module_exports.py`。
+
 | 信号 | 路由 |
 |------|------|
 | 有 `*.test.ts` 或 glob | `[[intention-skills/基于test.ts生成/SKILL.md]]` |
 | 要新建/更新模块 config（参考 CSV 或自然语言） | `[[intention-skills/沉淀模块配置/SKILL.md]]` |
-| 已有 config + cases，仅生成 CSV（API/网关自动测试场景） | 直接执行 `scripts/generate_test_csv.py` → 产出模块独立 CSV |
-| 已有 cases.json，想追加到领域 CSV（v1，功能集合留空） | 直接执行 `scripts/append_ui_cases_to_csv.py` — 需指定 --domain + --date |
-| 边开发边写 UI 交互用例、追加问题单 CSV（v1） | `[[intention-skills/边开发边输出UI用例/SKILL.md]]` |
-| 无 test.ts、仅口述业务场景（v1 追加） | **G1 追问** → `[[intention-skills/基于源码+口述生成/SKILL.md]]` 路径 A/B |
-| **testcases_export 迁移 + 功能集合 v2 重组** | `[[intention-skills/legacy-export迁移重组/SKILL.md]]` → `generate_feature_csv.py` |
-| 已有 v2 cases，生成带功能集合的单文件 CSV | 直接执行 `scripts/generate_feature_csv.py` — `--cases` + `--template` + `--output` |
-| 无 test.ts、口述 + 源码补充（v2 整文件） | `基于源码+口述生成` **路径 C** → `generate_feature_csv.py` |
+| 已有 config + cases，仅生成 CSV（API/网关） | `scripts/generate_test_csv.py` |
+| **testcases_export 迁移 + 功能集合 v2** | `[[intention-skills/legacy-export迁移重组/SKILL.md]]` |
+| 已有 v2 cases / 口述 UI / 源码补充 UI | `基于源码+口述生成` **路径 C** 或直跑 `generate_feature_csv.py` |
+| 批量修复/再导出 7 模块（0616 等） | `scripts/regenerate_module_exports.py --preserve-ids --force` |
+
+**Legacy v1（仅用户明确「追加到旧 CSV、功能集合留空」时）**：
+
+| 信号 | 路由 |
+|------|------|
+| 边开发边追加 v1 UI 用例 | `[[intention-skills/边开发边输出UI用例/SKILL.md]]` → `append_ui_cases_to_csv.py` |
+| 口述场景 v1 追加 | `基于源码+口述生成` **路径 A/B** |
+
+> v1 与 v2 不可混用同一输出文件。见 `references/csv-export-format-rules.md` §Agent 禁止清单 #3。
 
 ### REFACTOR（强制）
 
 每轮 CSV / config 产出或路由结束后 → `[[feature-skills/darwin拓展发现/SKILL.md]]`
 
-## 脚本速查
+## 脚本速查（默认三条）
 
-在 skill 根目录执行：
+在 skill 根目录执行；完整命令与 legacy 脚本见 `README.md` §脚本速查。
 
 ```bash
-# 1. 从 legacy 或手写 cases 已有后，生成 CSV
-python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.json
-
-# 2. 参考 CSV → config 骨架
-python scripts/csv_to_test_config.py \
-  --reference-csv ../../../docs/问题单/模板/menu.csv \
-  --module-id tenant-unit \
-  --output-config configs/tenant-unit.config.json \
-  --overrides-json "{\"模块名\":\"租户管理\",\"创建人员\":\"惠岩\"}"
-
-# 3. 一次性：从 docs/0529/generate_menu_unit_csv.py 提取 cases
-python scripts/bootstrap_menu_cases.py
-
-# 4. UI 交互用例：首次复制模板 + 追加（不覆盖已有行）
-python scripts/append_ui_cases_to_csv.py \
-  --domain role \
-  --date 0601 \
-  --cases configs/role-ui-tab.cases.json
-
-# 5. 菜单 index 简化回归 OpenCLI 冒烟（bind 模式）
-node scripts/run-menu-index-smoke.node.js --bind-only
-
-# 6. v2：功能集合 + 用例结果（alarm_.csv 风格，整文件覆盖）
+# 1. v2 单模块（更新场景保留用例ID）
 python scripts/generate_feature_csv.py \
   --cases configs/tenant.cases.json \
   --template ../../../docs/问题单/模板/tenant.csv \
-  --output ../../../docs/问题单/0610/tenant.csv \
+  --output ../../../docs/问题单/0616/tenant.csv \
+  --preserve-ids-from ../../../docs/问题单/0616/tenant.csv \
   --force
+
+# 2. v2 批量 7 模块
+python scripts/regenerate_module_exports.py --preserve-ids --force
+
+# 3. API/test.ts
+python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.json
 ```
 
-> v1 `append_ui_cases_to_csv.py` **强制清空功能集合**，与 v2 冲突；功能集合重组必须走脚本 6。
+> 导出格式见 **`references/csv-export-format-rules.md`**：测试步骤含 `---` + 预期结果；用例结果列留空。
 
 脚本失败、路径错误、PowerShell 转义等 → `references/config-json-schema.md` §执行异常与回退。
 

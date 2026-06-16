@@ -78,10 +78,17 @@
 - **允许**：步骤含「mock / 模拟接口返回业务错误」
 - **要求**：预期必须描述用户可见通知、弹窗状态、列表不变；不得断言内部函数名
 
-### L. 用例结果必填（UI v2 路径）
+### L. cases.json expected 必填（UI v2 路径）
 
-- **检查**：`path_type=ui-v2` 时每条 case 的 `expected`
+- **检查**：`path_type=ui-v2` 时每条 case 的 `expected`（cases.json 层）
 - **不通过**：缺 `expected` 或为空
+- **注意**：CSV「用例结果」列仍须留空，expected 由脚本合并进「测试步骤」
+
+### M. CSV 导出格式合规（生成 CSV 后）
+
+- **检查**：对照 [`csv-export-format-rules.md`](csv-export-format-rules.md)
+- **不通过**：「用例结果」列非空；或「测试步骤」缺少 `---` / 「预期结果：」（有 expected 的用例）
+- **警告**：新增用例误填用例ID
 
 ### L2. 用例类型与 direction 一致（UI v2 路径）
 

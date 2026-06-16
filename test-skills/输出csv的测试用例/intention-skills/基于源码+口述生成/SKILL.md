@@ -71,7 +71,7 @@ description: 无 test.ts 时，通过口述业务场景或阅读源码直接撰�
 
 ### 路径 C：源码 + 功能集合 v2（整文件覆盖）
 
-适用：测试工具改版、需填功能集合与用例结果、或从 legacy export 迁移。
+适用：测试工具改版、需填功能集合 v2、或从 legacy export 迁移。CSV「用例结果」列留空（见 csv-export-format-rules）。
 
 1. RED 确认：`domain`、模板路径、`date`、`模块名`（从模板取）、`子系统`（从模板取）
 2. 源码阅读 + 口述 → 撰写 v2 cases（见 `撰写UI交互cases` v2 字段）

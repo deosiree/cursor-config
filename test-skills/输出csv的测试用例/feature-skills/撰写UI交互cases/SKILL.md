@@ -1,6 +1,6 @@
 ---
 name: 撰写UI交互cases
-description: 将开发过程中的 UI 交互结论转为 cases.json 字段。支持 v1（功能集合留空）与 v2（featureSet + expected→用例结果）。不写脚本、不选路径。
+description: 将开发过程中的 UI 交互结论转为 cases.json 字段。支持 v1（功能集合留空）与 v2（featureSet + expected 合并进测试步骤）。不写脚本、不选路径。
 ---
 
 # 撰写 UI 交互 cases
@@ -38,7 +38,8 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段。支
 
 额外字段：`featureSet`（必填）、`direction`（推荐，推导用例类型）、`level`、`purpose`、`remark`、`env`、`reserve1`（`ui`）、`sortOrder`。
 
-用例类型不在 cases 层手写 CSV 列值；按 `direction` / `featureSet` 由脚本推导，规则见 `[[../../references/case-type-map.md]]`。
+- cases.json 分别写 `steps` 与 `expected`（**expected 必填**）
+- CSV 导出时脚本合并为「测试步骤」列（见 [`csv-export-format-rules.md`](../../references/csv-export-format-rules.md)），**「用例结果」列留空**
 
 ## Boundary
 
@@ -49,7 +50,8 @@ description: 将开发过程中的 UI 交互结论转为 cases.json 字段。支
 
 ### v2
 
-- **必须**写 `featureSet` 与 `expected`（映射 CSV「用例结果」）
+- **必须**写 `featureSet` 与 `expected`（cases.json 层）
+- CSV「用例结果」**留空**；expected 合并进「测试步骤」（见 csv-export-format-rules）
 - `remark` / `purpose` 允许（源码溯源、迁移备注）
 - 名称不加 `[正向]` / `[反向]` 前缀；方向写入 `direction` 字段
 - **用例类型**：按 `direction` 推导（`正向/逆向→0`、`边界→3`、`异常→1`）；`featureSet=异常处理` 时视为异常测试；详见 `[[../../references/case-type-map.md]]`

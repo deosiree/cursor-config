@@ -8,6 +8,8 @@ import json
 import sys
 from pathlib import Path
 
+from csv_step_format import build_combined_test_steps, clear_result_columns
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
 
@@ -43,12 +45,18 @@ def resolve_path(raw: str, base: Path) -> Path:
 
 def build_row(field_defaults: dict, case: dict, header: list[str] | None = None) -> dict:
     row = dict(field_defaults)
-    expected_col = expected_csv_column(header) if header else "预期结果"
     for case_key, csv_key in CASE_FIELD_MAP.items():
         if case_key not in case or case[case_key] is None:
             continue
-        target = expected_col if case_key == "expected" else csv_key
-        row[target] = case[case_key]
+        if case_key in ("steps", "expected"):
+            continue
+        row[csv_key] = case[case_key]
+    row["测试步骤"] = build_combined_test_steps(
+        case.get("steps", ""),
+        case.get("expected", ""),
+    )
+    if header:
+        clear_result_columns(row, header)
     return row
 
 

@@ -1,5 +1,7 @@
 # 租户管理用例重组 — 质量报告（0610）
 
+> **历史报告（0610 导入前格式）**：表中「用例结果」列填写指当时格式。当前质检以 [`references/csv-export-format-rules.md`](../references/csv-export-format-rules.md) 为准。
+
 ## 交付物
 
 | 文件 | 说明 |
