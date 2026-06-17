@@ -1,0 +1,31 @@
+## OS
+.DS_Store
+Thumbs.db
+
+## Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+## Node (if anyone adds tooling later)
+node_modules/
+npm-debug.log*
+
+## Local vault (users point VAULT_ROOT at their own)
+/vault/
+
+## Installer scratch
+*.bak
+*.tmp
+
+## OMC harness artifacts (if run inside this repo)
+.omc/
+.claude/state/
+
+## Per-user path substitution (never commit a user's vault path)
+skills/wiki/**/*.local.md
+
+## Obsidian workspace (if someone accidentally puts a vault inside)
+.obsidian/workspace*
+.obsidian/cache

@@ -1,0 +1,23 @@
+# Ignore everything by default (vault contains personal notes)
+*
+
+# Allow the system/config files
+!.gitignore
+!CLAUDE.md
+!README.md
+
+# Claude Code skills
+!.claude/
+!.claude/skills/
+!.claude/skills/**
+
+# Documentation and plans
+!docs/
+!docs/**
+
+# Obsidian templates
+!Templates/
+!Templates/**
+
+# Exclude personal/local settings that sneak in
+.claude/settings.local.json

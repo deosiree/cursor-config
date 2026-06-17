@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIKI_ENGINE · Persistent knowledge compiler for Obsidian</title>
+<meta name="description" content="9-verb knowledge engine for Obsidian vaults. Karpathy LLM Wiki pattern, pure markdown prompts. Works with Claude Code, Antigravity, Codex, Gemini CLI, Cursor via symlink distribution.">
+<meta name="theme-color" content="#F4F4F0">
+<meta property="og:title" content="WIKI_ENGINE — Persistent knowledge compiler for Obsidian">
+<meta property="og:description" content="9 verbs. 5 tools. Pure markdown prompts. Karpathy LLM Wiki pattern.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:   #F4F4F0;
+  --ink:  #0A0A0A;
+  --soft: #4A4A44;
+  --rule: #0A0A0A;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--ink); }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  padding: 20px 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ──────────────────────────────────────────────
+   FRAME + PERFORATED EDGES
+   ────────────────────────────────────────────── */
+.frame {
+  max-width: 1120px;
+  margin: 0 auto;
+  border: 1.5px solid var(--ink);
+  background: var(--bg);
+  position: relative;
+}
+
+.edge {
+  display: block;
+  width: 100%;
+  height: 10px;
+  color: var(--ink);
+}
+.edge rect { fill: var(--bg); }
+
+.inner { padding: 28px 34px 32px; }
+
+@media (max-width: 680px) {
+  body { padding: 10px 6px; }
+  .inner { padding: 18px 16px 22px; }
+}
+
+/* ──────────────────────────────────────────────
+   TOP META STRIP
+   ────────────────────────────────────────────── */
+.meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
+  padding: 6px 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  gap: 14px;
+}
+.meta > div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta b { font-weight: 600; }
+@media (max-width: 680px) {
+  .meta { grid-template-columns: repeat(2, 1fr); font-size: 10.5px; }
+}
+
+/* ──────────────────────────────────────────────
+   HERO
+   ────────────────────────────────────────────── */
+.hero {
+  padding: 52px 0 36px;
+  border-bottom: 1px dashed var(--rule);
+  text-align: center;
+}
+
+.title {
+  font-family: 'Silkscreen', monospace;
+  font-weight: 700;
+  font-size: clamp(40px, 11vw, 116px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 680px) {
+  .title { letter-spacing: 0; font-size: clamp(30px, 13vw, 68px); }
+}
+
+.tagline {
+  margin-top: 22px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+.tagline .muted { color: var(--soft); }
+
+.hero-meta {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* ──────────────────────────────────────────────
+   SECTIONS
+   ────────────────────────────────────────────── */
+.section {
+  border-bottom: 1px dashed var(--rule);
+  padding: 22px 0;
+}
+.section:last-of-type { border-bottom: 0; }
+
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sec-head .right { color: var(--soft); font-weight: 400; }
+
+.row {
+  display: grid;
+  gap: 28px;
+}
+.row.r-2 { grid-template-columns: 1fr 1fr; }
+@media (max-width: 860px) {
+  .row.r-2 { grid-template-columns: 1fr; }
+}
+
+/* ──────────────────────────────────────────────
+   INSTALL BLOCKS
+   ────────────────────────────────────────────── */
+.install-h {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.install-h .badge {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  padding: 1px 7px;
+  border: 1px solid var(--ink);
+}
+.code {
+  border: 1px solid var(--ink);
+  padding: 13px 15px;
+  background: var(--bg);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-x: auto;
+}
+.code .c { color: var(--soft); }
+.note {
+  margin-top: 9px;
+  font-size: 11px;
+  color: var(--soft);
+  letter-spacing: 0.04em;
+}
+.note b { color: var(--ink); font-weight: 600; }
+
+/* ──────────────────────────────────────────────
+   EXAMPLES — "WHAT YOU TYPE → WHAT HAPPENS"
+   ────────────────────────────────────────────── */
+.ex {
+  display: grid;
+  grid-template-columns: 1fr 18px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 13px;
+}
+.ex:first-of-type { border-top: 0; padding-top: 0; }
+.ex-in {
+  border: 1px solid var(--ink);
+  padding: 8px 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ex-arrow {
+  text-align: center;
+  font-weight: 700;
+  padding-top: 6px;
+  letter-spacing: 0;
+}
+.ex-out {
+  padding-top: 1px;
+  color: var(--ink);
+}
+.ex-out b {
+  display: block;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+  color: var(--soft);
+}
+@media (max-width: 680px) {
+  .ex { grid-template-columns: 1fr; gap: 8px; }
+  .ex-arrow { text-align: left; padding-top: 0; font-size: 13px; }
+}
+
+/* ──────────────────────────────────────────────
+   VERB REGISTRY
+   ────────────────────────────────────────────── */
+.verbs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.verbs td {
+  padding: 8px 10px 8px 0;
+  vertical-align: top;
+  border-top: 1px dashed var(--rule);
+}
+.verbs tr:first-child td { border-top: 0; }
+.verbs .vn {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  width: 128px;
+  white-space: nowrap;
+}
+.verbs .vn::before { content: "▸ "; color: var(--ink); }
+.verbs .vr {
+  width: 104px;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  padding-top: 10px;
+}
+.verbs .vd { color: var(--ink); }
+@media (max-width: 680px) {
+  .verbs .vr { display: none; }
+  .verbs .vn { width: auto; }
+  .verbs td { display: block; padding: 3px 0; }
+  .verbs td.vn { padding-top: 10px; }
+  .verbs td.vn:first-child { padding-top: 0; }
+  .verbs tr { display: block; border-top: 1px dashed var(--rule); padding: 6px 0; }
+  .verbs tr:first-child { border-top: 0; }
+}
+
+/* ──────────────────────────────────────────────
+   TOOLS COMPATIBILITY
+   ────────────────────────────────────────────── */
+.tools {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.tools th, .tools td {
+  padding: 8px 10px 8px 0;
+  text-align: left;
+  border-top: 1px dashed var(--rule);
+  vertical-align: top;
+}
+.tools thead th {
+  border-top: 0;
+  border-bottom: 1px solid var(--rule);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.tools .yes { font-weight: 600; letter-spacing: 0.08em; }
+.tools .no  { color: var(--soft); letter-spacing: 0.08em; }
+@media (max-width: 680px) {
+  .tools th:nth-child(2), .tools td:nth-child(2) { display: none; }
+}
+
+/* ──────────────────────────────────────────────
+   TIER STACK
+   ────────────────────────────────────────────── */
+.tier {
+  display: grid;
+  grid-template-columns: 86px 1fr 120px;
+  gap: 14px;
+  padding: 9px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 13px;
+}
+.tier:first-of-type { border-top: 0; padding-top: 2px; }
+.tier-num { font-weight: 700; letter-spacing: 0.06em; }
+.tier-cost {
+  text-align: right;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  padding-top: 1px;
+}
+.score {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--ink);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.score b { font-weight: 600; }
+@media (max-width: 680px) {
+  .tier { grid-template-columns: 60px 1fr; }
+  .tier-cost { grid-column: 1 / -1; text-align: left; padding-top: 0; }
+}
+
+/* ──────────────────────────────────────────────
+   STATS KV
+   ────────────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.stat {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 12px 14px;
+}
+.stat-k {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--soft);
+}
+.stat-v {
+  font-family: 'Silkscreen', monospace;
+  font-size: 22px;
+  margin-top: 4px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 860px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ──────────────────────────────────────────────
+   VAULT TREE
+   ────────────────────────────────────────────── */
+.tree {
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-x: auto;
+  padding: 6px 0;
+}
+.tree .hl { font-weight: 600; }
+.tree .sub { color: var(--soft); }
+
+/* ──────────────────────────────────────────────
+   VERB WIREFRAMES · GRID + BOXES
+   ────────────────────────────────────────────── */
+.verbs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (max-width: 860px) { .verbs-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .verbs-grid { grid-template-columns: 1fr; } }
+.vwire {
+  border: 1px solid var(--ink);
+  padding: 10px 12px 12px;
+  min-height: 100%;
+}
+.vwire-h {
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--ink);
+  margin-bottom: 6px;
+}
+.vwire pre {
+  font-size: 11.5px;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 0;
+}
+.matrix {
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-x: auto;
+  padding: 12px 14px;
+  border: 1px solid var(--ink);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────
+   FOOTER
+   ────────────────────────────────────────────── */
+.foot {
+  padding: 18px 0 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--rule);
+  margin-top: 18px;
+}
+.foot a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); }
+.foot a:hover { background: var(--ink); color: var(--bg); }
+
+a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { background: var(--ink); color: var(--bg); text-decoration: none; }
+
+::selection { background: var(--ink); color: var(--bg); }
+</style>
+</head>
+<body>
+<main class="frame" role="main">
+
+<!-- perforated top edge -->
+<svg class="edge" viewBox="0 0 1120 10" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="pt" width="10" height="10" patternUnits="userSpaceOnUse">
+      <polygon points="0,10 5,0 10,10" fill="currentColor"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="currentColor"/>
+  <rect width="100%" height="100%" fill="url(#pt)" style="fill:var(--bg)"/>
+</svg>
+
+<div class="inner">
+
+<!-- ─────────────── META STRIP ─────────────── -->
+<div class="meta" role="banner">
+  <div><b>REPO:</b> DANIEL8824-DEL</div>
+  <div><b>VERSION:</b> v0.1.1</div>
+  <div><b>LICENSE:</b> MIT</div>
+  <div><b>STATUS:</b> PUBLIC</div>
+</div>
+
+<!-- ─────────────── HERO ─────────────── -->
+<section class="hero">
+  <div class="title">WIKI_ENGINE</div>
+  <div class="tagline">Persistent knowledge compiler for your <span class="muted">Obsidian vault</span>.</div>
+  <div class="hero-meta">9 VERBS · 5 TOOLS · PURE MARKDOWN · KARPATHY LLM WIKI PATTERN</div>
+</section>
+
+<!-- ─────────────── INSTALL ─────────────── -->
+<section class="section" id="install">
+  <div class="sec-head"><span>INSTALL · TWO PATHS</span><span class="right">Select one</span></div>
+  <div class="row r-2">
+    <div>
+      <div class="install-h">PATH A · FULL SETUP <span class="badge">RECOMMENDED</span></div>
+      <div class="code"><span class="c"># detect tools · symlink · export VAULT_ROOT · install qmd</span>
+git clone https://github.com/daniel8824-del/claude-wiki-verbs \
+    ~/repos/claude-wiki-verbs
+cd ~/repos/claude-wiki-verbs
+./install.sh
+source ~/.bashrc</div>
+      <div class="note">
+        <b>Symlinks</b> into Claude Code / Antigravity / Codex / Gemini CLI.<br>
+        <b>Exports</b> <code>VAULT_ROOT</code> to <code>~/.bashrc</code>.<br>
+        <b>Installs</b> qmd (optional, prompts Y/N) + runs initial index.<br>
+        <b>Scaffolds</b> 6-area vault from <code>VAULT_TEMPLATE/</code> if empty.
+      </div>
+    </div>
+    <div>
+      <div class="install-h">PATH B · CLAUDE PLUGIN <span class="badge">SKILL ONLY</span></div>
+      <div class="code"><span class="c"># claude code only · vault setup is manual</span>
+/plugin marketplace add \
+    daniel8824-del/claude-wiki-verbs
+/plugin install \
+    claude-wiki-verbs@claude-wiki-verbs-marketplace</div>
+      <div class="note">
+        Registers skill files into Claude Code only.<br>
+        You must set <code>VAULT_ROOT</code>, install qmd, and copy the vault scaffold yourself.<br>
+        No symlinks into Antigravity / Codex / Gemini.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── WHAT YOU TYPE ─────────────── -->
+<section class="section" id="examples">
+  <div class="sec-head"><span>WHAT YOU TYPE · WHAT HAPPENS</span><span class="right">4 samples</span></div>
+
+  <div class="ex">
+    <div class="ex-in">Ingest this paper on LLM distillation.</div>
+    <div class="ex-arrow">→</div>
+    <div class="ex-out">
+      <b>Routes to <code>10_Raw/07_Scholar/</code></b>
+      Applies Gold In filter (5 required fields: why / take / insight / gold-out / action-intent). Creates Source + Entity + Concept pages in <code>20_Wiki/</code>.
+    </div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-in">What do I know about knowledge compounding?</div>
+    <div class="ex-arrow">→</div>
+    <div class="ex-out">
+      <b>4-Tier search chain</b>
+      Tier 1 (compiled 20_Wiki) → Tier 2 (30_Claude logs) → Tier 3 (10_Raw, manual) → Tier 4 (web, last). Score-routed answer with citations. External calls only if the vault comes up empty.
+    </div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-in">Synthesize everything I have on transformers.</div>
+    <div class="ex-arrow">→</div>
+    <div class="ex-out">
+      <b>Compiler pass → <code>20_Wiki/07_Syntheses/</code></b>
+      Reads every matching page. Produces a single compiled page + provenance trace showing which inputs contributed to which sections.
+    </div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-in">Find contradictions in my notes on RLHF.</div>
+    <div class="ex-arrow">→</div>
+    <div class="ex-out">
+      <b>Runner pass → <code>20_Wiki/08_Critiques/</code></b>
+      Cross-reads related pages, flags conflicting claims, stale facts, and knowledge gaps. Writes a dated critique note and links back to the affected pages.
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── VERB WIREFRAMES ─────────────── -->
+<section class="section" id="diagrams">
+  <div class="sec-head"><span>VERB WIREFRAMES · IN → OP → OUT</span><span class="right">9 operations</span></div>
+  <div class="verbs-grid">
+
+    <div class="vwire">
+      <div class="vwire-h">INGEST</div>
+      <pre>IN   source — url / paper /
+     note / conversation
+
+OP   apply Gold In filter
+     · 5 required fields
+     · why / take / insight
+     · gold-out / action
+
+OUT  → 10_Raw/XX/
+     + Source stub
+     + Entity stubs
+     + Concept stubs</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">QUERY</div>
+      <pre>IN   natural question
+     or keyword
+
+OP   4-Tier chain:
+     T1 20_Wiki (auto)
+     T2 30_Claude (auto)
+     T3 10_Raw (manual)
+     T4 web (last)
+
+OUT  answer + citations
+     · score ≥ 0.9 quoted
+     · &lt;0.5 silent skip</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">SAVE</div>
+      <pre>IN   content +
+     target area
+
+OP   route by type
+     validate [[links]]
+     (existence check)
+
+OUT  → 20_Wiki/** or
+     → 30_Claude/**
+     · missing target
+       → plain text</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">LINT</div>
+      <pre>IN   (whole vault)
+
+OP   4-tier severity scan:
+     FATAL / MAJOR /
+     MINOR / POLISH
+
+OUT  → 20_Wiki/06_Meta/
+       lint-YYYY-MM-DD.md
+     + counts by tier</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">MANAGE</div>
+      <pre>IN   verb —
+     update | embed |
+     status | reindex
+
+OP   qmd lifecycle op
+
+OUT  refreshed index
+     + vector embeds
+     · auto after save</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">SYNTHESIZE</div>
+      <pre>IN   topic OR
+     file set (N files)
+
+OP   read all matches
+     compile one page
+     preserve provenance
+
+OUT  → 20_Wiki/07_Syntheses/
+     + provenance trace
+       (file:section → §)</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">CRITIQUE</div>
+      <pre>IN   topic /
+     page range
+
+OP   cross-read pages
+     flag contradictions
+     flag stale facts
+     identify gaps
+
+OUT  → 20_Wiki/08_Critiques/
+       critique-{date}.md</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">COMPARE</div>
+      <pre>IN   A vs B
+
+OP   build 5-dim matrix:
+     scope · approach ·
+     tradeoffs · cost ·
+     opinion
+
+OUT  → 20_Wiki/04_Comparisons/
+       compare-{date}.md</pre>
+    </div>
+
+    <div class="vwire">
+      <div class="vwire-h">ELI5</div>
+      <pre>IN   topic / vault page
+
+OP   6-section structure:
+     hook · analogy ·
+     simple steps ·
+     edge cases ·
+     gotcha · summary
+
+OUT  inline answer
+     · or → 20_Wiki/09_ELI5/</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────── ACCESS MATRIX ─────────────── -->
+<section class="section" id="matrix">
+  <div class="sec-head"><span>ACCESS MATRIX · WHO READS · WHO WRITES</span><span class="right">9 verbs × 5 scopes</span></div>
+  <pre class="matrix">  VERB         | 10_RAW | 20_WIKI | 30_CLAUDE | USER | WEB
+  ─────────────┼────────┼─────────┼───────────┼──────┼─────
+  INGEST       |   W    |    W    |     ·     |  R   |  ·
+  QUERY        |   R    |    R    |     R     |  W   |  R*
+  SAVE         |   ·    |    W    |     W     |  R   |  ·
+  LINT         |   ·    |    W    |     ·     |  ·   |  ·
+  MANAGE       |   ·    |    W    |     W     |  ·   |  ·
+  SYNTHESIZE   |   R    |    W    |     R     |  ·   |  ·
+  CRITIQUE     |   ·    |    W    |     R     |  ·   |  ·
+  COMPARE      |   ·    |    W    |     R     |  ·   |  ·
+  ELI5         |   ·    |    R    |     ·     |  W   |  ·
+
+  R = reads     W = writes     · = no access     R* = Tier-4 fallback only</pre>
+</section>
+
+<!-- ─────────────── 9 VERBS ─────────────── -->
+<section class="section" id="verbs">
+  <div class="sec-head"><span>VERB REGISTRY · 9 OPERATIONS</span><span class="right">Lazy-loaded</span></div>
+  <table class="verbs">
+    <tr><td class="vn">INGEST</td><td class="vr">SOURCE</td><td class="vd">External material → <code>10_Raw/</code> with a 5-field Gold In filter. Auto-generates linked Source/Entity/Concept stubs.</td></tr>
+    <tr><td class="vn">QUERY</td><td class="vr">SEARCH</td><td class="vd">4-Tier chain: compiled wiki → collab log → raw sources → web. Score-routed reads, not a dump.</td></tr>
+    <tr><td class="vn">SAVE</td><td class="vr">ROUTE</td><td class="vd">6-area vault routing + wikilink existence validation. Plain text fallback on missing targets (no broken links).</td></tr>
+    <tr><td class="vn">LINT</td><td class="vr">HEALTH</td><td class="vd">Structure audit across 4 tiers (FATAL / MAJOR / MINOR / POLISH). Report lands in <code>20_Wiki/06_Meta/</code>.</td></tr>
+    <tr><td class="vn">MANAGE</td><td class="vr">INDEX</td><td class="vd">QMD lifecycle — update / embed / status / reindex. Runs automatically after every save.</td></tr>
+    <tr><td class="vn">SYNTHESIZE</td><td class="vr">COMPILE</td><td class="vd">Compiler verb. N input pages → one compiled output with a provenance trace.</td></tr>
+    <tr><td class="vn">CRITIQUE</td><td class="vr">VERIFY</td><td class="vd">Runner verb. Detects contradictions, stale claims, and knowledge gaps vault-wide.</td></tr>
+    <tr><td class="vn">COMPARE</td><td class="vr">MATRIX</td><td class="vd">5-dimension A-vs-B matrix. Output to <code>20_Wiki/04_Comparisons/</code>.</td></tr>
+    <tr><td class="vn">ELI5</td><td class="vr">EXPLAIN</td><td class="vd">6-section plain-language explanation. Inline by default, persistable to <code>20_Wiki/09_ELI5/</code>.</td></tr>
+  </table>
+</section>
+
+<!-- ─────────────── TOOLS ─────────────── -->
+<section class="section" id="tools">
+  <div class="sec-head"><span>TOOL COMPATIBILITY · 5 HOSTS</span><span class="right">Symlink-distributed</span></div>
+  <table class="tools">
+    <thead>
+      <tr><th>HOST</th><th>MOUNT</th><th>METHOD</th><th>AUTO</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Claude Code</td><td><code>~/.claude/skills/wiki/</code></td><td>symlink</td><td class="yes">AUTO</td></tr>
+      <tr><td>Antigravity</td><td><code>~/.antigravity/skills/wiki/</code></td><td>symlink</td><td class="yes">AUTO</td></tr>
+      <tr><td>Codex CLI</td><td><code>~/.codex/skills/wiki/</code> + AGENTS.md</td><td>symlink + repo entry</td><td class="yes">AUTO</td></tr>
+      <tr><td>Gemini CLI</td><td><code>~/.gemini/skills/wiki/</code> + GEMINI.md</td><td>symlink + repo entry</td><td class="yes">AUTO</td></tr>
+      <tr><td>Cursor</td><td><code>.cursor/rules/wiki.mdc</code></td><td>mdc copy (no symlink)</td><td class="no">MANUAL</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────── 4-TIER ─────────────── -->
+<section class="section" id="tiers">
+  <div class="sec-head"><span>QUERY CHAIN · 4-TIER FALLBACK</span><span class="right">Cost ascending</span></div>
+  <div class="tier"><span class="tier-num">TIER 1</span><span>Compiled <code>20_Wiki/</code>. Auto first. Stops here if the answer is in there.</span><span class="tier-cost">Cheap</span></div>
+  <div class="tier"><span class="tier-num">TIER 2</span><span>Collaboration records in <code>30_Claude/</code> — sessions, plans, retros, designs.</span><span class="tier-cost">Cheap</span></div>
+  <div class="tier"><span class="tier-num">TIER 3</span><span>Raw sources in <code>10_Raw/</code>. <b>Manual only</b> — invoked when you say "raw" / "원본".</span><span class="tier-cost">Medium</span></div>
+  <div class="tier"><span class="tier-num">TIER 4</span><span>External web (Brave, Firecrawl). Last fallback. The LLM tells you when it crosses this line.</span><span class="tier-cost">Expensive</span></div>
+  <div class="score">
+    <b>Score routing ·</b> ≥0.9 full read + quote &nbsp;/&nbsp; 0.7–0.9 summary + offer &nbsp;/&nbsp; 0.5–0.7 title only &nbsp;/&nbsp; &lt;0.5 silent skip
+  </div>
+</section>
+
+<!-- ─────────────── VAULT TOPOLOGY ─────────────── -->
+<section class="section" id="vault">
+  <div class="sec-head"><span>VAULT TOPOLOGY · 6-AREA CONVENTION</span><span class="right">23 subareas</span></div>
+  <pre class="tree">&lt;VAULT_ROOT&gt;/
+├── <span class="hl">10_Raw/</span>       <span class="sub">▸ Layer 1 · Immutable sources (manual retrieval)</span>
+│   └── 01_Articles  02_Books  03_Videos  04_Notes  05_Conversations  06_Research  07_Scholar
+├── <span class="hl">20_Wiki/</span>      <span class="sub">▸ Layer 2 · Compiled knowledge (synthesize output)</span>
+│   └── 01_Sources  02_Entities  03_Concepts  04_Comparisons  05_Questions
+│       06_Meta     07_Syntheses  08_Critiques  09_ELI5
+└── <span class="hl">30_Claude/</span>    <span class="sub">▸ Layer 3 · Collaboration log (auto-searchable)</span>
+    └── 00_Meta  01_Sessions  02_Learnings  03_Retros  04_Plans  05_Research  06_Designs</pre>
+</section>
+
+<!-- ─────────────── STATS ─────────────── -->
+<section class="section" id="stats">
+  <div class="sec-head"><span>REPO STATS · ACTUAL</span><span class="right">As of v0.1.1</span></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-k">TOTAL LINES</div><div class="stat-v">4514</div></div>
+    <div class="stat"><div class="stat-k">VERBS</div><div class="stat-v">9</div></div>
+    <div class="stat"><div class="stat-k">TOOL TARGETS</div><div class="stat-v">5</div></div>
+    <div class="stat"><div class="stat-k">EXTERNAL DEPS</div><div class="stat-v">1</div></div>
+    <div class="stat"><div class="stat-k">CANONICAL FILES</div><div class="stat-v">17</div></div>
+    <div class="stat"><div class="stat-k">VAULT AREAS</div><div class="stat-v">6</div></div>
+    <div class="stat"><div class="stat-k">SUBAREAS</div><div class="stat-v">23</div></div>
+    <div class="stat"><div class="stat-k">VERSION</div><div class="stat-v">0.1.1</div></div>
+  </div>
+</section>
+
+<!-- ─────────────── ATTRIBUTION ─────────────── -->
+<section class="section" id="attribution">
+  <div class="sec-head"><span>ATTRIBUTION · LINEAGE</span><span class="right">Prior art</span></div>
+  <table class="tools">
+    <tbody>
+      <tr><td style="width: 140px">Concept</td><td><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy · LLM Wiki gist</a></td></tr>
+      <tr><td>Layout ref</td><td><a href="https://github.com/AgriciDaniel/claude-obsidian">AgriciDaniel / claude-obsidian</a></td></tr>
+      <tr><td>Symlink ref</td><td><a href="https://github.com/heyitsnoah/claudesidian">heyitsnoah / claudesidian</a></td></tr>
+      <tr><td>Multi-tool ref</td><td><a href="https://github.com/amtiYo/agents">amtiYo / agents</a></td></tr>
+      <tr><td>Search backend</td><td><a href="https://www.npmjs.com/package/qmd">qmd · Quick Markdown Search</a></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────── FOOTER ─────────────── -->
+<footer class="foot">
+  <div>© 2026 daniel8824-del · MIT</div>
+  <div>
+    <a href="https://github.com/daniel8824-del/claude-wiki-verbs">GITHUB</a> ·
+    <a href="https://github.com/daniel8824-del/claude-wiki-verbs/releases/tag/v0.1.1">v0.1.1</a> ·
+    <a href="https://github.com/daniel8824-del/claude-wiki-verbs/issues">ISSUES</a>
+  </div>
+</footer>
+
+</div><!-- /inner -->
+
+<!-- perforated bottom edge -->
+<svg class="edge" viewBox="0 0 1120 10" preserveAspectRatio="none" aria-hidden="true" style="transform: scaleY(-1)">
+  <rect width="100%" height="100%" fill="currentColor"/>
+  <rect width="100%" height="100%" fill="url(#pt)" style="fill:var(--bg)"/>
+</svg>
+
+</main>
+</body>
+</html>
