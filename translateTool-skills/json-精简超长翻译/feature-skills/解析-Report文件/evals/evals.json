@@ -1,0 +1,26 @@
+{
+  "should-trigger": [
+    {
+      "name": "标准 .report 文件",
+      "input": "含 interpretation 的 report 文件",
+      "expect": "解析出 entries 数组，actualMax = maxLen - 1"
+    },
+    {
+      "name": "多个 .report 文件目录",
+      "input": "目录含多个 .report 文件",
+      "expect": "分别解析每个文件，合并输出"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "interpretation 格式异常",
+      "input": "interpretation 字段缺失或格式错误",
+      "expect": "跳过该条目，输出异常列表"
+    },
+    {
+      "name": "无 .report 文件",
+      "input": "目录中只有 .dic 文件",
+      "expect": "输出空列表，提示走 v1 流程"
+    }
+  ]
+}

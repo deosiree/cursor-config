@@ -1,0 +1,32 @@
+[
+  {
+    "id": "tp-001",
+    "name": "完整检测流程",
+    "input": "使用 $json-精简超长翻译\n  --inputPath F:\path\to\hisparam.dic\n  --fieldPath translation.ru_RU\n  --byteLimit 63",
+    "expect": "检测到 8 条超长词条，输出检测报告。overlongCount = 8，每条有 charBudget"
+  },
+  {
+    "id": "tp-002",
+    "name": "全合规文件无需缩短",
+    "input": "使用 $json-精简超长翻译\n  --inputPath all_ok.json\n  --fieldPath translation.ru_RU\n  --byteLimit 63",
+    "expect": "所有词条在 63 字节内，overlongCount = 0，直接复制到 _new 目录"
+  },
+  {
+    "id": "tp-003",
+    "name": "LLM 缩短俄语词条",
+    "input": "缩短以下俄语字符串到 63 字节内：\n原: Включает временной интервал данных (65 字节)\ncharBudget: 30",
+    "expect": "缩短后 ≤ 63 字节，保留核心语义。如：Включает врем. интервал данных (56 字节)"
+  },
+  {
+    "id": "tp-004",
+    "name": "目录递归扫描",
+    "input": "使用 $json-精简超长翻译\n  --inputPath F:\path\to\db\n  --byteLimit 63",
+    "expect": "递归扫描 db/ 下所有 .json 文件，每文件独立检测"
+  },
+  {
+    "id": "tp-005",
+    "name": "自定义 byteLimit",
+    "input": "使用 $json-精简超长翻译\n  --inputPath test.json\n  --byteLimit 100",
+    "expect": "以 100 字节为标准检测，超出标记为 overlong"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "should-trigger": [
+    { "name": "用户说元数据", "input": "dataType=meta", "expect": "routeTarget = 分析-输入确认" },
+    { "name": "用户说对象数据", "input": "dataType=object", "expect": "routeTarget = 解析-Report文件" }
+  ],
+  "should-not-trigger": [
+    { "name": "数据类型不明", "input": "不提供 dataType", "expect": "action = abort, 要求用户确认" }
+  ]
+}
