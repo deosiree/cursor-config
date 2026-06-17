@@ -12,7 +12,7 @@ description: 当仓库命中“业务字段要从 plain string 改为 I18nInput 
 
 ## TL;DR
 
-表单 append `I18nInput` → 内存 `I18nData`（`zh_CN`）→ 提交 `JSON.stringify` wire（`zh-CN`）→ 编辑 `parseI18nData` 回填。
+表单 append `I18nInput` → 内存 `I18nData`（`zh-CN` 连字符，与组件一致）→ 提交 `JSON.stringify` wire → 编辑 `parseI18nData` + `normalizeI18nDataLocaleKeys` 回填。
 
 ## RED
 
@@ -42,7 +42,7 @@ description: 当仓库命中“业务字段要从 plain string 改为 I18nInput 
 ## 执行清单（按序）
 
 1. **组件**：确认 `I18nInput/index.vue` + `I18nDialog.vue`；缺失则从 mvp 复制
-2. **表单三件套**：`I18nData` + `parseI18nData` / `stringifyI18nData`；`toInputLocaleKey` / `toWireLocaleKey`
+2. **表单三件套**：`I18nData` + `parseI18nData` / `stringifyI18nData`；`getCurrentLocaleKey` = `normalizeI18nLocaleCode(locale)`；parse 末尾 `normalizeI18nDataLocaleKeys`
 3. **绑定**：`xxxValue` computed + `v-model:i18n-data` + `#append` + `I18nInput`
 4. **提交**：payload 字段传 `JSON.stringify({ "zh-CN": "...", "en-US": "..." })`，禁止 plain string
 5. **回填**：`parseI18nData(row.rawXxx ?? row.xxx)`
@@ -54,7 +54,7 @@ description: 当仓库命中“业务字段要从 plain string 改为 I18nInput 
 |----------|----------|------------|
 | 侧栏/表格显示 JSON 乱码 | 不在本 skill 修展示；路由 `新增-i18nInput-读侧展示` | 若切换语言仍不更新 → `更新-i18nInput-缓存投影` |
 | 提交后后端仍是纯文本 | 检查 submit 是否 `stringifyI18nData`，非 `formData.xxx` 直传 | 对照 mvp `AlarmFormDialog` submit 段 |
-| 编辑弹窗名称为空 | `parseI18nData` 是否读 `row.rawName ?? row.name` | 对照 snapshot `MenuFormDialog` open 逻辑 |
+| 编辑弹窗名称为空 | `parseI18nData` 是否调 `normalizeI18nDataLocaleKeys` | 若仍用 `toInputLocaleKey` → `更新-i18nInput-localeKey归一` |
 | 同表单加第二、三字段 | 复用 parse/stringify；参考 `告警配置-扩展多字段` few-shot | 禁止复制三套独立 parse 函数 |
 | `I18nInput` 组件缺失 | 从 mvp 复制组件目录 | 禁止手写简化版弹窗 |
 
@@ -72,6 +72,7 @@ description: 当仓库命中“业务字段要从 plain string 改为 I18nInput 
 |------|------|
 | 读侧 JSON 乱码 | `新增-i18nInput-读侧展示` |
 | 切换语言壳层不更新 | `更新-i18nInput-缓存投影` |
+| 主输入与 I18nInput 弹窗 key 错位 | `更新-i18nInput-localeKey归一` |
 | 静态 UI 文案 | `新i18n-Vue模板中使用$t()` |
 
 ## 输出契约

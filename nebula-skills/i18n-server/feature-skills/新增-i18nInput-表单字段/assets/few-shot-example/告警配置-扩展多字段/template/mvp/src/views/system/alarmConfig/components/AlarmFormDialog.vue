@@ -150,6 +150,7 @@ import { useI18n } from "vue-i18n";
 import type { AlarmLevelOption } from "@/composables/useAlarmDict";
 import { resolveAlarmI18nText } from "@/composables/useAlarmDict";
 import I18nInput from "@/components/I18nInput/index.vue";
+import { normalizeI18nDataLocaleKeys, normalizeI18nLocaleCode } from "@/utils/i18n";
 const { t, locale } = useI18n();
 
 interface I18nData {
@@ -201,25 +202,22 @@ const rules = computed(() => {
 const getAlarmLevelLabel = (level: AlarmLevelOption) =>
   resolveAlarmI18nText(level.levelName, locale.value, level.levelNameI18n) || String(level.id);
 
-const getCurrentLocaleKey = () => locale.value.replace("-", "_");
+const getCurrentLocaleKey = () => normalizeI18nLocaleCode(locale.value);
 
 const cloneI18nData = (i18nData?: I18nData) => (i18nData ? { ...i18nData } : {});
-
-const toInputLocaleKey = (key: string) => key.replace("-", "_");
-
-const toWireLocaleKey = (key: string) => key.replace("_", "-");
 
 const parseI18nData = (value?: unknown): I18nData => {
   if (!value) return {};
 
   if (typeof value === "object") {
-    return Object.entries(value as Record<string, unknown>).reduce<I18nData>(
+    const parsed = Object.entries(value as Record<string, unknown>).reduce<I18nData>(
       (result, [key, item]) => {
-        if (typeof item === "string") result[toInputLocaleKey(key)] = item;
+        if (typeof item === "string") result[key] = item;
         return result;
       },
       {}
     );
+    return normalizeI18nDataLocaleKeys(parsed);
   }
 
   if (typeof value !== "string") return {};
@@ -269,7 +267,7 @@ const validateName = (_rule: unknown, _value: unknown, callback: (error?: Error)
 const stringifyI18nData = (i18nData: I18nData) => {
   const data = Object.entries(i18nData).reduce<Record<string, string>>((result, [key, value]) => {
     const text = value.trim();
-    if (text) result[toWireLocaleKey(key)] = text;
+    if (text) result[normalizeI18nLocaleCode(key)] = text;
     return result;
   }, {});
 

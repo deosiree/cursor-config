@@ -1,7 +1,10 @@
 timestamp	commit	skill	old_score	new_score	delta	status	dimension	note	eval_mode
+2026-06-15Tbaseline	-	更新-i18nInput-localeKey归一	-	85	-	baseline	dim1-9	新建 skill 首评；runtime_warn=0	dry_run+struct
 2026-06-10Tbaseline	-	新增-i18nInput-表单字段	78	78	0	baseline	dim3,dim4,dim9	缺 CHECKPOINT/兜底表/黑名单	blind_trigger_9of9
 2026-06-10Tbaseline	-	新增-i18nInput-读侧展示	78	78	0	baseline	dim3,dim4,dim9	同上	blind_trigger_9of9
 2026-06-10Tbaseline	-	更新-i18nInput-缓存投影	79	79	0	baseline	dim3,dim4,dim9	同上	blind_trigger_9of9
 2026-06-10Tr1	-	新增-i18nInput-表单字段	78	90	+12	keep	HL1+HL2+HL3	🔴CHECKPOINT+失败表+黑名单+输出契约	struct_score
 2026-06-10Tr1	-	新增-i18nInput-读侧展示	78	89	+11	keep	HL1+HL2+HL3	同上	struct_score
 2026-06-10Tr1	-	更新-i18nInput-缓存投影	79	91	+12	keep	HL1+HL2+HL3	同上	struct_score
+2026-06-15Tr0	-	新增-i18nInput-表单字段	90	90	0	keep	契约同步	TL;DR 改为 normalize；模板 snapshot/mvp 同步	struct_score
+2026-06-15Tr0	-	更新-i18nInput-localeKey归一	-	85	-	keep	新建	MenuFormDialog 沉淀 + 路由接入	dry_run

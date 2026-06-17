@@ -10,6 +10,7 @@ description: 当需要在主模板之外，为「新增-i18nInput-表单字段�
 - 单表单首字段 → `告警配置-首字段` 或主 `template/mvp`
 - 同表单扩展第二、三字段 → `告警配置-扩展多字段`
 - 菜单树 FormDialog（含树选择与 wire 校验）→ `菜单树-表单` 或主 `template/snapshot`
+- 已有 wire 但 locale key 与 I18nInput 弹窗错位 → `更新-i18nInput-localeKey归一` 下 `菜单树-表单-locale归一` / `告警配置-locale归一`
 
 ## 场景与文件
 

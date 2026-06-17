@@ -41,6 +41,9 @@
 | fix(views): 告警配置描述、模板增加国际化编辑功能                                                   | 16db8f1d2e58877926344b00bcff71729b094fe1 | 值得       | 新增      | 新增-i18nInput-表单字段          | 告警配置-扩展多字段 few-shot   |
 | feat(views): 菜单树增加i18n国际化（导航栏、面包屑、角色管理-菜单树均受影响）                              | cc503626cd6a162b9459cb28606a20f12bd62961 | 值得       | 新增      | 新增-i18nInput-表单字段/读侧展示    | 菜单树-表单 + 菜单树-读侧V1    |
 | feat(views): 菜单树增加i18n国际化V2（导航栏、面包屑、角色管理-菜单树均受影响）                            | ebf4d5d002c87036b1b37c415dbf898a1cdbad59 | 值得       | 更新      | 更新-i18nInput-缓存投影          | 微服务-菜单缓存投影            |
+| fix: 用户输入国际化组件重构                                                              | 2b106736cb392f040d19c39ad78d3cf478eba14d | 值得       | 更新      | 更新-i18nInput-localeKey归一   | I18nInput 组件 + 接口语言列表   |
+| fix(utils): 国际化增加接口语言列表归一化                                                    | 7fd591de7f150ec21755bc4a12c31ce9b883dc87 | 值得       | 更新      | 更新-i18nInput-localeKey归一   | 告警配置-locale归一 few-shot |
+| fix(views): 菜单 FormDialog 菜单名 I18nInput localeKey 对齐                           | （MenuFormDialog 对齐）                    | 值得       | 更新      | 更新-i18nInput-localeKey归一   | 菜单树-表单-locale归一 few-shot |
 
 ## Opsdeck(中台)
 
