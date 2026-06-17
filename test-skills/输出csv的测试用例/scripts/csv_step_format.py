@@ -38,4 +38,22 @@ def load_name_to_id_map(csv_path: Path) -> dict[str, str]:
             return mapping
         except UnicodeDecodeError:
             continue
-    return mapping
+    return {}
+
+
+def load_existing_case_names(csv_path: Path) -> set[str]:
+    """从已有 CSV 读取已导入用例的「名称」集合（增量导出过滤用）。"""
+    if not csv_path.is_file():
+        return set()
+    for enc in ("utf-8-sig", "utf-8", "gbk"):
+        try:
+            names: set[str] = set()
+            with csv_path.open(encoding=enc, newline="") as f:
+                for row in csv.DictReader(f):
+                    name = (row.get("名称") or "").strip()
+                    if name:
+                        names.add(name)
+            return names
+        except UnicodeDecodeError:
+            continue
+    return set()

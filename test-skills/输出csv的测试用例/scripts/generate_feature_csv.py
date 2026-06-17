@@ -11,6 +11,7 @@ from pathlib import Path
 from csv_step_format import (
     build_combined_test_steps,
     clear_result_columns,
+    load_existing_case_names,
     load_name_to_id_map,
 )
 
@@ -135,12 +136,20 @@ def generate(
     template_path: Path,
     output_path: Path,
     preserve_ids_from: Path | None = None,
+    only_new_from: Path | None = None,
 ) -> int:
     defaults, cases = load_cases(cases_path)
     if "用例结果" in defaults:
         defaults["用例结果"] = ""
     header = read_header(template_path)
-    id_by_name = load_name_to_id_map(preserve_ids_from) if preserve_ids_from else {}
+
+    if only_new_from:
+        existing_names = load_existing_case_names(only_new_from)
+        cases = [c for c in cases if (c.get("name") or "").strip() not in existing_names]
+        id_by_name: dict[str, str] = {}
+    else:
+        id_by_name = load_name_to_id_map(preserve_ids_from) if preserve_ids_from else {}
+
     rows = [case_to_row(c, defaults, header, id_by_name) for c in cases]
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8-sig", newline="") as f:
@@ -161,18 +170,24 @@ def main() -> int:
         default="",
         help="更新场景：从已有 CSV 按「名称」回填用例ID",
     )
+    parser.add_argument(
+        "--only-new-from",
+        default="",
+        help="增量导入：仅导出基准 CSV 中不存在的用例（用例ID 留空，不与 preserve 联用）",
+    )
     args = parser.parse_args()
 
     cases_path = resolve_path(args.cases, SKILL_ROOT)
     template_path = Path(args.template)
     output_path = Path(args.output)
     preserve_path = Path(args.preserve_ids_from) if args.preserve_ids_from else None
+    only_new_path = Path(args.only_new_from) if args.only_new_from else None
 
     if output_path.exists() and not args.force:
         print(f"Output exists: {output_path}. Pass --force to overwrite.", file=sys.stderr)
         return 1
 
-    count = generate(cases_path, template_path, output_path, preserve_path)
+    count = generate(cases_path, template_path, output_path, preserve_path, only_new_path)
     print(f"Wrote {count} rows to {output_path}")
     return 0
 

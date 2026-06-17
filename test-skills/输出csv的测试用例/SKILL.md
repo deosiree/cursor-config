@@ -1,10 +1,10 @@
 ---
 name: 输出csv的测试用例
 description: >-
-  将 Vitest test.ts、模块 JSON 配置或 UI 交互用例沉淀为可导入测试系统的 CSV。
-  默认 v2 功能集合路径：generate_feature_csv.py / regenerate_module_exports.py（测试步骤合并、用例结果留空）。
-  API 路径用 generate_test_csv.py；legacy v1 追加仅用户明确要求时用 append_ui_cases_to_csv.py。
-  触发词：输出csv测试用例、test.ts转CSV、测试系统导入、功能集合重组、0616再导出、testcases_export迁移、沉淀模块配置。
+  将 UI 交互用例沉淀为可导入测试系统的 CSV（v2 功能集合）。
+  默认 generate_feature_csv.py / regenerate_module_exports.py（测试步骤合并、用例结果留空）。
+  口述或源码补充 UI 走「基于源码+口述生成」；test.ts/API 走 generate_test_csv.py。
+  触发词：输出csv测试用例、UI交互用例、功能集合、0616再导出、测试系统导入、沉淀cases。
 ---
 
 # 输出 CSV 测试用例（Agent）
@@ -77,25 +77,18 @@ RED 阶段若用户用口语描述，须先核对下表最少 5 项（缺一则�
 
 ### GREEN（意图路由）
 
-**默认路径（0616 已验证）**：UI 口述/源码 → **路径 C（v2 整文件）** → `generate_feature_csv.py` 或 `regenerate_module_exports.py`。
+**UI 默认（0616 已验证）**：口述/源码 → `[[intention-skills/基于源码+口述生成/SKILL.md]]` → `generate_feature_csv.py` / `regenerate_module_exports.py`。
 
 | 信号 | 路由 |
 |------|------|
-| 有 `*.test.ts` 或 glob | `[[intention-skills/基于test.ts生成/SKILL.md]]` |
-| 要新建/更新模块 config（参考 CSV 或自然语言） | `[[intention-skills/沉淀模块配置/SKILL.md]]` |
-| 已有 config + cases，仅生成 CSV（API/网关） | `scripts/generate_test_csv.py` |
-| **testcases_export 迁移 + 功能集合 v2** | `[[intention-skills/legacy-export迁移重组/SKILL.md]]` |
-| 已有 v2 cases / 口述 UI / 源码补充 UI | `基于源码+口述生成` **路径 C** 或直跑 `generate_feature_csv.py` |
-| 批量修复/再导出 7 模块（0616 等） | `scripts/regenerate_module_exports.py --preserve-ids --force` |
+| 口述 / 源码补充 UI / 已有 v2 cases | `基于源码+口述生成` → `generate_feature_csv.py` |
+| **增量导入**（测试系统不能更新，只导新用例） | `--only-new-from-dir docs/问题单/{已导入快照}` |
+| 全量再导出且系统支持更新 | `--preserve-ids-from-dir`（少数场景） |
+| 有 `*.test.ts`（非 UX 主路径） | `[[intention-skills/基于test.ts生成/SKILL.md]]` |
+| 仅要 config | `[[intention-skills/沉淀模块配置/SKILL.md]]` |
+| testcases_export 迁移 | `[[intention-skills/legacy-export迁移重组/SKILL.md]]` |
 
-**Legacy v1（仅用户明确「追加到旧 CSV、功能集合留空」时）**：
-
-| 信号 | 路由 |
-|------|------|
-| 边开发边追加 v1 UI 用例 | `[[intention-skills/边开发边输出UI用例/SKILL.md]]` → `append_ui_cases_to_csv.py` |
-| 口述场景 v1 追加 | `基于源码+口述生成` **路径 A/B** |
-
-> v1 与 v2 不可混用同一输出文件。见 `references/csv-export-format-rules.md` §Agent 禁止清单 #3。
+> v1 `append_ui_cases_to_csv.py` **已退役**，见 `csv-export-format-rules.md` §Agent 禁止清单。
 
 ### REFACTOR（强制）
 
@@ -106,16 +99,18 @@ RED 阶段若用户用口语描述，须先核对下表最少 5 项（缺一则�
 在 skill 根目录执行；完整命令与 legacy 脚本见 `README.md` §脚本速查。
 
 ```bash
-# 1. v2 单模块（更新场景保留用例ID）
+# 1. v2 单模块增量（仅未导入的新用例，ID 留空）
 python scripts/generate_feature_csv.py \
   --cases configs/tenant.cases.json \
   --template ../../../docs/问题单/模板/tenant.csv \
   --output ../../../docs/问题单/0616/tenant.csv \
-  --preserve-ids-from ../../../docs/问题单/0616/tenant.csv \
+  --only-new-from ../../../docs/问题单/0616_v1/tenant.csv \
   --force
 
-# 2. v2 批量 7 模块
-python scripts/regenerate_module_exports.py --preserve-ids --force
+# 2. v2 批量增量（各模块仅有新增时才写出文件）
+python scripts/regenerate_module_exports.py \
+  --only-new-from-dir docs/问题单/0616_v1 \
+  --force
 
 # 3. API/test.ts
 python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.json
@@ -139,8 +134,8 @@ python scripts/generate_test_csv.py --config configs/menu-unit-gateway.config.js
 |------|------|
 | `intention-skills/基于test.ts生成` | 扫描 test.ts → 撰写 cases.json → 路由 api/gateway feature |
 | `intention-skills/沉淀模块配置` | 参考 CSV / 自然语言 → config.json |
-| `intention-skills/边开发边输出UI用例` | UI 交互 cases → 追加 `docs/问题单/{MMDD}/*.csv`（v1） |
-| `intention-skills/legacy-export迁移重组` | testcases_export 筛选 → 功能集合 v2 → 单文件 CSV |
+| `intention-skills/基于源码+口述生成` | 口述/源码 → v2 cases → 整文件 CSV（**UI 主入口**） |
+| `intention-skills/legacy-export迁移重组` | testcases_export 筛选 → 功能集合 v2 |
 | `feature-skills/撰写UI交互cases` | 开发结论 → cases.json 字段（v1 / v2） |
 | `feature-skills/api-基于test.ts生成` | `src/api/**/__tests__/**` 用例撰写 |
 | `feature-skills/gateway-基于test.ts生成` | `src/gateway/**/__tests__/**` 用例撰写 |

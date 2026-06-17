@@ -58,7 +58,33 @@ CSV「测试步骤」列必须写入以下结构（由 `build_combined_test_step
 
 禁止 Agent 为新增用例手写用例ID。
 
-## 实现落点
+## 规则 D：增量导入（测试系统无法更新已有用例时）
+
+当测试系统**不能更新**、相同用例ID 或同名用例只会跳过时：
+
+| 行为 | 说明 |
+|------|------|
+| **0616 等增量目录** | 只写入 `cases.json` 中**基准 CSV 尚不存在**的用例 |
+| **用例ID** | 全部留空（禁止回填旧 ID） |
+| **脚本** | `--only-new-from` 或 `regenerate_module_exports.py --only-new-from-dir` |
+| **无新增模块** | 不生成该模块 CSV 文件 |
+
+基准目录通常为已导入快照（如 `docs/问题单/0616_v1/`）。主数据源仍是完整 `configs/*.cases.json`。
+
+```bash
+# 单模块：仅 4 条新用例
+python scripts/generate_feature_csv.py \
+  --cases configs/tenant.cases.json \
+  --template ../../../docs/问题单/模板/tenant.csv \
+  --output ../../../docs/问题单/0616/tenant.csv \
+  --only-new-from ../../../docs/问题单/0616_v1/tenant.csv \
+  --force
+
+# 批量：各模块仅有新增时才写出
+python scripts/regenerate_module_exports.py \
+  --only-new-from-dir docs/问题单/0616_v1 \
+  --force
+```
 
 | 组件 | 文件 |
 |------|------|
@@ -95,7 +121,8 @@ CSV「测试步骤」列必须写入以下结构（由 `build_combined_test_step
 | # | 禁止 | 替代 |
 |---|------|------|
 | 1 | CSV「用例结果」列填 expected、`0` 或任何占位 | expected 写入 cases.json；脚本合并进「测试步骤」 |
-| 2 | 为新增用例手写用例ID | 留空；更新场景用 `--preserve-ids-from` |
-| 3 | UI 模块默认走 `append_ui_cases_to_csv.py`（v1 追加） | 默认 `generate_feature_csv.py` / `regenerate_module_exports.py`；仅用户明确「v1 追加」时用 v1 |
+| 2 | 为新增用例手写用例ID | 留空；测试系统分配 |
+| 2b | 测试系统不能更新时仍全量导出并回填旧用例ID | 用 `--only-new-from` / `--only-new-from-dir`，0616 只含新增行 |
+| 3 | UI 模块使用已退役的 `append_ui_cases_to_csv.py`（v1 追加） | 默认 `generate_feature_csv.py` / `regenerate_module_exports.py` |
 | 4 | 使用 `patch_tenant_expected.py` 补预期 | 改 `configs/*.cases.json` 后重新生成 |
 | 5 | 测试步骤列只写步骤、预期另列 | 必须用规则 A 合并格式（含 `---`） |
