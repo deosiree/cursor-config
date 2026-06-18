@@ -17,6 +17,7 @@ description: 页面首屏/刷新误显示占位、需全屏 loading（useLoading
 ## 何时不要使用
 
 - 表格/卡片局部遮罩 → 页面 `v-loading`（见用户列表、租户表等惯例）
+- 弹窗确定连点防重 → [`hook-submit-guard`](../hook-submit-guard/SKILL.md) + `useSubmitGuard`，**不要**用 `useLoading` 锁全屏
 - request 拦截器 / `loading.store` 全局链路 → 本子 skill 不覆盖
 - qiankun 主应用「点击菜单即 loading」→ microfb 导航侧另案（见 [`references/hook-data-flow.md`](references/hook-data-flow.md) 边界）
 
