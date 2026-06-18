@@ -223,7 +223,11 @@ import { findNodeById } from "@/gateway/system/menu/menu-tree-helpers";
 import type { MenuFormSuccessPayload } from "../menu.types";
 import { shouldMarkListPending } from "../composables/useMenuListRefreshState";
 import I18nInput from "@/components/I18nInput/index.vue";
-import { resolveI18nJsonText } from "@/utils/i18n";
+import {
+  resolveI18nJsonText,
+  normalizeI18nDataLocaleKeys,
+  normalizeI18nLocaleCode,
+} from "@/utils/i18n";
 import {
   createNameValidator,
   createSiblingKeyUniqueRule,
@@ -306,25 +310,22 @@ const parentMenuOptions = computed(() => {
 
 const nameI18n = ref<I18nData>({});
 
-const getCurrentLocaleKey = () => locale.value.replace("-", "_");
+const getCurrentLocaleKey = () => normalizeI18nLocaleCode(locale.value);
 
 const cloneI18nData = (i18nData?: I18nData) => (i18nData ? { ...i18nData } : {});
-
-const toInputLocaleKey = (key: string) => key.replace("-", "_");
-
-const toWireLocaleKey = (key: string) => key.replace("_", "-");
 
 const parseNameI18nData = (value?: unknown): I18nData => {
   if (!value) return {};
 
   if (typeof value === "object") {
-    return Object.entries(value as Record<string, unknown>).reduce<I18nData>(
+    const parsed = Object.entries(value as Record<string, unknown>).reduce<I18nData>(
       (result, [key, item]) => {
-        if (typeof item === "string") result[toInputLocaleKey(key)] = item;
+        if (typeof item === "string") result[key] = item;
         return result;
       },
       {}
     );
+    return normalizeI18nDataLocaleKeys(parsed);
   }
 
   if (typeof value !== "string") return {};
@@ -357,7 +358,7 @@ const stringifyNameI18nData = () => {
   const data = Object.entries(nameI18n.value).reduce<Record<string, string>>(
     (result, [key, value]) => {
       const text = value.trim();
-      if (text) result[toWireLocaleKey(key)] = text;
+      if (text) result[normalizeI18nLocaleCode(key)] = text;
       return result;
     },
     {}

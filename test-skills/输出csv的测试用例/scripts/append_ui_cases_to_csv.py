@@ -10,6 +10,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from csv_step_format import build_combined_test_steps, clear_result_columns
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
 
@@ -19,7 +21,7 @@ DOMAIN_TEMPLATE_MAP = {
     "tenant": "tenant.csv",
     "user": "用户管理.csv",
     "e2e": "e2e.csv",
-    "login": "login-logout.csv",
+    "login": "login.csv",
     "required": "必填字段.csv",
 }
 
@@ -81,16 +83,17 @@ def self_test_result_column(header: list[str]) -> str | None:
 
 def build_ui_rows(header: list[str], field_defaults: dict, cases: list[dict]) -> list[dict]:
     """将 cases 转为 CSV 行，强制功能集合为空。"""
-    expected_col = expected_csv_column(header)
     self_test_col = self_test_result_column(header)
     rows = []
     for case in cases:
         row = dict(field_defaults)
         row["名称"] = case.get("name", "")
         row["前置条件"] = case.get("precondition", "")
-        row["测试步骤"] = case.get("steps", "")
-        expected = case.get("expected", "")
-        row[expected_col] = expected
+        row["测试步骤"] = build_combined_test_steps(
+            case.get("steps", ""),
+            case.get("expected", ""),
+        )
+        clear_result_columns(row, header)
         if self_test_col:
             row[self_test_col] = case.get("develop_result", row.get(self_test_col, "0"))
         # 强制留空

@@ -646,6 +646,48 @@
       "expected": "1. 弹出「删除成功」提示\n2. 被删租户从列表中消失"
     },
     {
+      "name": "系统租户复选框禁用不可勾选",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "TenantTable.vue :selectable isSystem 守卫",
+      "remark": "1. isSystem=true 的租户（如「系统租户」）selection 列 selectable 返回 false 2. 复选框置灰不可点",
+      "precondition": "1. 用户已登录且具备 sys:tenant:query 与 sys:tenant:delete 2. 列表中存在 isSystem=true 的系统租户（如「系统租户」）",
+      "steps": "1. 进入「安全管理」>「租户管理」\n2. 定位系统租户行（如「系统租户」）\n3. 尝试点击该行复选框",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "expected": "1. 系统租户行复选框为禁用态（置灰）\n2. 无法单独勾选该系统租户"
+    },
+    {
+      "name": "表头全选时系统租户不被选中",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "TenantTable.vue selectable 全选排除 isSystem",
+      "remark": "1. el-table selectable 同时控制全选范围 2. 全选后 selectIds 不含系统租户 ID",
+      "precondition": "1. 用户具备 sys:tenant:delete 2. 列表同时存在系统租户与普通租户",
+      "steps": "1. 进入租户列表\n2. 点击表头全选复选框\n3. 观察系统租户行与普通租户行的勾选状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "expected": "1. 普通租户行被勾选\n2. 系统租户行复选框保持未勾选（置灰）\n3. 工具栏「删除」按钮可点击（因 selectIds 含普通租户）"
+    },
+    {
+      "name": "删除系统租户时提示不可删除且不发起请求",
+      "featureSet": "删除操作",
+      "direction": "逆向",
+      "level": 1,
+      "purpose": "index.vue handleDelete isSystem 拦截",
+      "remark": "1. handleDelete 在确认弹窗前校验 pageData.isSystem 2. toast「不能删除系统租户」3. 不调用 TenantGateway.deleteV2",
+      "precondition": "1. 用户具备 sys:tenant:delete 2. 列表存在系统租户",
+      "steps": "1. 进入租户列表\n2. 展开系统租户行操作「更多」，点击「删除」\n3. 观察页面提示与列表状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 7,
+      "expected": "1. 页面弹出警告通知「不能删除系统租户」\n2. 不出现删除确认弹窗\n3. 系统租户仍在列表中"
+    },
+    {
       "name": "mock创建租户业务错误时展示有效错误提示并回退第一步",
       "featureSet": "异常处理",
       "direction": "异常",
@@ -658,6 +700,62 @@
       "env": "测试环境；路由 /Apex/tenant；mock 创建接口返回业务错误",
       "reserve1": "ui",
       "sortOrder": 4
+    },
+    {
+      "name": "新增租户第一步激活方式下拉含密码直设邮箱激活链接激活三项",
+      "featureSet": "新增租户",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "UserFormFields ACTIVATION_METHOD_OPTIONS / ownerFieldPolicy",
+      "remark": "1. 所有者区域「激活方式」下拉含密码直设、邮箱激活、链接激活 2. 选密码直设显示密码与确认密码 3. 选邮箱/链接隐藏密码字段",
+      "precondition": "1. 用户具备 sys:tenant:add 2. 已打开「新增租户」第一步",
+      "steps": "1. 在「所有者账号」区域找到「激活方式」下拉\n2. 依次选择「密码直设」「邮箱激活」「链接激活」\n3. 观察密码与确认密码字段的显示与隐藏",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "expected": "1. 「激活方式」下拉可选「密码直设」「邮箱激活」「链接激活」三项\n2. 选择「密码直设」时显示「密码」「确认密码」字段\n3. 选择「邮箱激活」或「链接激活」时不显示密码相关字段"
+    },
+    {
+      "name": "密码直设方式新增租户提交成功所有者立即可用",
+      "featureSet": "新增租户",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "index.vue createActivationMethod=password / ownerFieldPolicy.requirePassword",
+      "remark": "1. activationMethod=password 时提交 ownerPassword 2. 成功后 toast「新增租户成功」3. 不弹出激活链接对话框 4. 列表新租户所有者状态为正常",
+      "precondition": "1. 用户具备 sys:tenant:add 2. 准备未占用的租户名与所有者用户名、邮箱、手机号 3. 密码符合系统密码策略",
+      "steps": "1. 点击「新增」打开向导\n2. 第一步在「激活方式」选择「密码直设」，填写租户基本信息与所有者信息（含符合策略的密码与确认密码）\n3. 第二步选择管理项目（可留空），第三步点击「确定」提交\n4. 在列表中找到新租户，查看所有者状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "expected": "1. 提交后出现成功提示「新增租户成功」\n2. 不弹出「激活链接」结果对话框\n3. 创建弹窗关闭，列表刷新后出现新租户\n4. 新租户所有者状态为「正常」（非待激活），可使用所设密码登录"
+    },
+    {
+      "name": "邮箱激活方式新增租户提交成功所有者待激活",
+      "featureSet": "新增租户",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "index.vue createActivationMethod=email / TenantGateway.createV2",
+      "remark": "1. 邮箱激活不填密码 2. 成功后 toast 3. 系统向邮箱发送激活邮件 4. 列表显示待激活",
+      "precondition": "1. 用户具备 sys:tenant:add 2. 准备未占用租户名与有效邮箱、手机号 3. 邮件服务可用或可接受待激活状态验证",
+      "steps": "1. 点击「新增」打开向导\n2. 第一步在「激活方式」选择「邮箱激活」，填写租户与所有者信息（不填密码）\n3. 完成管理项目与角色预览后点击「确定」提交\n4. 在列表查看新租户状态；可选：查收邮箱激活邮件并完成激活",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "expected": "1. 提交后出现成功提示「新增租户成功」\n2. 不弹出激活链接对话框\n3. 列表中新租户所有者状态为「待激活」\n4. 所有者邮箱收到激活邮件；用户通过邮件链接设置密码后状态变为「正常」"
+    },
+    {
+      "name": "链接激活方式新增租户提交成功弹出激活链接对话框",
+      "featureSet": "新增租户",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "index.vue createActivationMethod=link / openActivationDialog",
+      "remark": "1. link 模式成功后 openActivationDialog 2. ActivationDialog 展示激活链接与复制按钮 3. 列表所有者待激活",
+      "precondition": "1. 用户具备 sys:tenant:add 2. 准备未占用租户名与有效邮箱、手机号",
+      "steps": "1. 点击「新增」打开向导\n2. 第一步在「激活方式」选择「链接激活」，填写租户与所有者信息\n3. 完成向导后在第三步点击「确定」提交\n4. 在弹出对话框中查看激活链接并点击「复制链接」\n5. 关闭对话框后在列表确认新租户状态",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "expected": "1. 提交后弹出「用户创建成功」结果对话框，展示可复制的「激活链接」\n2. 点击「复制链接」可将链接复制到剪贴板\n3. 关闭对话框后列表刷新，新租户所有者状态为「待激活」\n4. 用户通过该链接设置密码后状态变为「正常」"
     }
   ]
 }

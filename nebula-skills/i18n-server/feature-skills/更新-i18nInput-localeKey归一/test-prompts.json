@@ -1,0 +1,14 @@
+[
+  {
+    "id": "locale-1",
+    "prompt": "MenuFormDialog 用了 i18nInput，但主输入和弹窗 locale key 对不上，参考 AlarmFormDialog 怎么改 parse/stringify？"
+  },
+  {
+    "id": "locale-2",
+    "prompt": "编辑旧菜单时名称输入框是空的，wire 里是 zh_CN，I18nInput 已经改成 zh-CN 了。"
+  },
+  {
+    "id": "locale-3",
+    "prompt": "告警表单已经用了 normalizeI18nLocaleCode，菜单管理 FormDialog 也要同样调整。"
+  }
+]

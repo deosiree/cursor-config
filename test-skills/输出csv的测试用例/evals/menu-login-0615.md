@@ -1,5 +1,7 @@
 # 菜单管理 + 登录界面 v2 用例 — 0615 交付记录
 
+> **历史报告（0615 导入前格式）**：质检表「用例结果必填」指当时 CSV 列。当前以 [`references/csv-export-format-rules.md`](../references/csv-export-format-rules.md) 为准。
+
 ## 交付物
 
 | 文件 | 条数 | 说明 |

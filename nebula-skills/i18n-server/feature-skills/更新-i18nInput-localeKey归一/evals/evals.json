@@ -1,0 +1,18 @@
+{
+  "should_trigger": [
+    "MenuFormDialog 菜单名 I18nInput 与重构后组件 locale key 不一致，要对齐 normalize。",
+    "表单仍用 toInputLocaleKey 和 toWireLocaleKey，编辑时主输入空白。",
+    "I18nInput 弹窗是 zh-CN，parse 里还在 replace 成 zh_CN。"
+  ],
+  "should_not_trigger": [
+    "第一次给业务字段接 I18nInput，还没有 parse/stringify。",
+    "切换语言后导航栏菜单名不更新。",
+    "侧栏显示 JSON 乱码，要在消费点 resolve。"
+  ],
+  "output_checklist": [
+    "说明为什么命中 localeKey 归一 skill 而非新增表单 skill",
+    "说明选用哪个 few-shot（告警 / 菜单）",
+    "确认已删除 toInputLocaleKey / toWireLocaleKey",
+    "列出 notInScope（读侧/缓存）"
+  ]
+}

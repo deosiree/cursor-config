@@ -11,9 +11,12 @@
 
 ## wire 格式
 
-- **存库/API**：`{"zh-CN":"用户管理","en-US":"User Admin"}`（`zh-CN` 连字符）
-- **I18nInput 内存**：`{ zh_CN: "...", en_US: "..." }`（下划线）
-- 转换：`toInputLocaleKey` / `toWireLocaleKey`
+- **存库/API**：`{"zh-CN":"用户管理","en-US":"User Admin"}`（连字符 locale code）
+- **I18nInput 内存**：与组件、接口语言列表一致，**同样使用连字符**（`zh-CN`）
+- **归一化**：`normalizeI18nLocaleCode` / `normalizeI18nDataLocaleKeys`（`src/utils/i18n.ts`）
+- **已废弃**：~~`toInputLocaleKey` / `toWireLocaleKey`~~、~~内存用 `zh_CN`~~（I18nInput 重构 `2b106736` 后）
+
+已有表单仍用手写 `_` ↔ `-` 转换 → 路由 `更新-i18nInput-localeKey归一`。
 
 ## 双字段模型（读侧 / 缓存）
 
@@ -33,5 +36,6 @@
 ## skill 路由
 
 1. 表单未接 wire → `新增-i18nInput-表单字段`
-2. 读侧乱码、V1 resolve → `新增-i18nInput-读侧展示`
-3. 切换语言缓存不更新 → `更新-i18nInput-缓存投影`
+2. wire 已接但 locale key 与 I18nInput 弹窗错位 → `更新-i18nInput-localeKey归一`
+3. 读侧乱码、V1 resolve → `新增-i18nInput-读侧展示`
+4. 切换语言缓存不更新 → `更新-i18nInput-缓存投影`

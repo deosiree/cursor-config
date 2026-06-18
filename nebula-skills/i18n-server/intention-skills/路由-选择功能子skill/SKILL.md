@@ -54,6 +54,7 @@ description: 当当前目标已经收敛到“这一步该进入哪个源码级�
 15. `i18n_input_form_wire_integration`
 16. `i18n_input_read_side_v1_display`
 17. `i18n_input_cache_projection_upgrade`
+18. `i18n_input_locale_key_normalization`
 
 ## 工作流
 
@@ -80,6 +81,7 @@ description: 当当前目标已经收敛到“这一步该进入哪个源码级�
 - 组件已接入新方案，但仍保留自定义 i18n 函数或本地 translations：进入 `[[../../feature-skills/旧i18n-清理自定义的i18n函数]]`
 - 变量包仍沿用旧 key，必须改写为中文再包 `t()`：进入 `[[../../feature-skills/迁移i18n-变量改写为中文再包t]]`
 - 业务字段首次接 I18nInput、表单 wire 提交/回填：进入 `[[../../feature-skills/新增-i18nInput-表单字段]]`
+- wire 已接但表单仍用 `toInputLocaleKey` / 主输入与弹窗 locale 错位：进入 `[[../../feature-skills/更新-i18nInput-localeKey归一]]`
 - wire 已有但列表/侧栏/面包屑读侧要 resolve 展示（V1）：进入 `[[../../feature-skills/新增-i18nInput-读侧展示]]`
 - 切换语言导航不更新、要写缓存双字段投影：进入 `[[../../feature-skills/更新-i18nInput-缓存投影]]`
 

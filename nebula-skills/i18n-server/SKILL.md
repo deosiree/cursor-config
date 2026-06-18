@@ -173,6 +173,7 @@ description: 当需要在 nebula 仓库中判断当前 i18n 状态、选择正�
 
 预期：先 `路由-选择功能子skill` 判定：
 - 表单未接 wire → `新增-i18nInput-表单字段`
+- wire 已接但 locale key 与弹窗错位 → `更新-i18nInput-localeKey归一`
 - 读侧乱码 → `新增-i18nInput-读侧展示`
 - 缓存投影 → `更新-i18nInput-缓存投影`
 

@@ -54,7 +54,8 @@ description: 对已生成的 cases.json 执行质量清单检查，输出问题�
 | I | 用例ID留空 | — | ui / ui-v2 |
 | J | 正向：格式 | ✅ | — |
 | K2 | mock 例外（异常处理） | — | ui-v2 |
-| L | 用例结果必填 | — | ui-v2 |
+| L | cases.json expected 必填 | — | ui-v2 |
+| M | CSV 格式合规 | — | ui-v2（生成 CSV 后） |
 | L2 | 用例类型与 direction | — | ui-v2 |
 
 ## Example
