@@ -97,6 +97,7 @@ function calcCharBudget(text, byteLimit) {
 1. **去除 interpretation**：输出 `.dic` 文件时，移除 `interpretation` 字段
 2. **输出目录**：源目录同级加 `_new` 后缀
 3. **文件名**：`.report` → `.dic`
+4. **按 source|tag 去重**：`.report` 是检测命中列表，不是元数据全集。同一词条在元数据树中被多处引用时会产生多行重复记录。写 `.dic` 前必须按 `source + '|' + tag` 去重，保留首次出现；输出行数 = 去重后数量（非 report 原始行数）。使用 `scripts/parse-report.js` 的 `dedupeBySourceTag()` 或 `buildDicFromReport()`。
 
 ## 输出
 

@@ -1,6 +1,8 @@
 // parse-report.js — Parse .report files for v2 object data
 // KEY: interpretation length/limit are UTF-8 BYTES, not character counts
-// Usage: node parse-report.js <report_file>
+// Usage:
+//   node parse-report.js <report_file> [--dedupe-stats]
+//   node parse-report.js <report_file> --write-dic <outPath> [--shorten-map <jsonPath>]
 const fs = require("fs");
 
 function utf8ByteLen(str) {
@@ -83,21 +85,154 @@ function parseReport(filePath) {
   return { entries, errors };
 }
 
+/** 去重键：source|tag */
+function entryKey(entry) {
+  return (entry.source || "") + "|" + (entry.tag || "");
+}
+
+/**
+ * 按 source|tag 去重 parsed entries，保留首次出现
+ * @returns {{ unique: object[], duplicates: number, warnings: string[] }}
+ */
+function dedupeBySourceTag(entries) {
+  const seen = new Map();
+  const warnings = [];
+  let duplicates = 0;
+
+  for (const item of entries) {
+    const key = entryKey(item);
+    if (seen.has(key)) {
+      duplicates++;
+      const prev = seen.get(key);
+      if (prev.langText !== item.langText) {
+        warnings.push(
+          "Conflict at " + key + ": keeping first translation, ignoring variant"
+        );
+      }
+      continue;
+    }
+    seen.set(key, item);
+  }
+
+  return { unique: [...seen.values()], duplicates, warnings };
+}
+
+/**
+ * 从 .report 构建去重后的 .dic 数组
+ * @param {string} reportPath
+ * @param {object} [shortenMap] - 可选，{ "source|tag": "缩短后译文" } 或 { "source": "缩短后译文" }
+ * @param {object} [refDicMap] - 可选，{ "source|tag": "ru_RU" } 参考映射
+ */
+function buildDicFromReport(reportPath, shortenMap, refDicMap) {
+  const { entries, errors } = parseReport(reportPath);
+  if (errors.length > 0) {
+    throw new Error("Parse errors: " + errors.map(e => e.error).join("; "));
+  }
+
+  const seen = new Map();
+  const warnings = [];
+  let duplicates = 0;
+
+  for (const e of entries) {
+    const key = entryKey(e);
+    if (seen.has(key)) {
+      duplicates++;
+      const prevRu = seen.get(key).translation[e.langKey];
+      if (prevRu !== e.langText) {
+        warnings.push("Conflict at " + key + ": keeping first translation");
+      }
+      continue;
+    }
+
+    const entry = { ...e.originalEntry };
+    let ruText = e.langText;
+
+    if (refDicMap && refDicMap[key]) ruText = refDicMap[key];
+    if (shortenMap) {
+      if (shortenMap[key]) ruText = shortenMap[key];
+      else if (shortenMap[e.source]) ruText = shortenMap[e.source];
+    }
+
+    entry.translation = { ...entry.translation, [e.langKey]: ruText };
+    seen.set(key, entry);
+  }
+
+  return {
+    dic: [...seen.values()],
+    rawCount: entries.length,
+    uniqueCount: seen.size,
+    duplicates,
+    warnings,
+  };
+}
+
+/** 逐条回验 dic（需配合 report 的 actualMax） */
+function verifyDicAgainstReport(reportPath, dicEntries) {
+  const { entries, errors } = parseReport(reportPath);
+  if (errors.length > 0) throw new Error("Parse errors in verify");
+
+  const dicMap = new Map(dicEntries.map(e => [entryKey(e), e.translation[Object.keys(e.translation).find(k => e.translation[k])]]));
+  const limits = new Map();
+  for (const e of entries) {
+    const key = entryKey(e);
+    if (!limits.has(key)) limits.set(key, e.actualMax);
+  }
+
+  let pass = 0, fail = 0, fails = [];
+  for (const [key, actualMax] of limits) {
+    const text = dicMap.get(key);
+    if (text === undefined) {
+      fail++;
+      fails.push({ key, error: "missing in dic" });
+      continue;
+    }
+    const bytes = utf8ByteLen(text);
+    if (bytes <= actualMax) pass++;
+    else {
+      fail++;
+      fails.push({ key, bytes, actualMax, text });
+    }
+  }
+  return { pass, fail, fails, expectedCount: limits.size };
+}
+
+function parseCliArgs(argv) {
+  const opts = { dedupeStats: false, writeDic: null, shortenMap: null, reportFile: null };
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--dedupe-stats") opts.dedupeStats = true;
+    else if (arg === "--write-dic") opts.writeDic = argv[++i];
+    else if (arg === "--shorten-map") opts.shortenMap = JSON.parse(fs.readFileSync(argv[++i], "utf-8"));
+    else if (!arg.startsWith("--") && !opts.reportFile) opts.reportFile = arg;
+  }
+  return opts;
+}
+
 function main() {
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    console.error("Usage: node parse-report.js <report_file>");
+  const opts = parseCliArgs(process.argv.slice(2));
+  if (!opts.reportFile) {
+    console.error("Usage: node parse-report.js <report_file> [--dedupe-stats] [--write-dic <outPath>] [--shorten-map <jsonPath>]");
     process.exit(1);
   }
-  const result = parseReport(args[0]);
 
-  // 简洁输出
+  const result = parseReport(opts.reportFile);
+  const { unique, duplicates, warnings } = dedupeBySourceTag(result.entries);
+
   console.log("Entries: " + result.entries.length + ", Errors: " + result.errors.length);
+  if (opts.dedupeStats || duplicates > 0) {
+    console.log("Unique (source|tag): " + unique.length + ", Duplicates removed: " + duplicates);
+  }
+  if (warnings.length > 0) {
+    console.log("Warnings:");
+    for (const w of warnings) console.log("  " + w);
+  }
+
   const overlong = result.entries.filter(e => e.overBy > 0);
   console.log("Overlong: " + overlong.length);
   for (const e of overlong) {
     console.log("  [" + e.source + "] " + e.actualBytes + "/" + e.actualMax + "B (budget:" + e.charBudget + " Cyr) " + e.langText);
   }
+
   if (result.errors.length > 0) {
     console.log("\nErrors:");
     for (const e of result.errors) {
@@ -105,7 +240,14 @@ function main() {
     }
     process.exit(1);
   }
+
+  if (opts.writeDic) {
+    const built = buildDicFromReport(opts.reportFile, opts.shortenMap);
+    fs.mkdirSync(require("path").dirname(opts.writeDic), { recursive: true });
+    fs.writeFileSync(opts.writeDic, JSON.stringify(built.dic, null, 2), "utf-8");
+    console.log("Wrote " + built.uniqueCount + " entries to " + opts.writeDic + " (from " + built.rawCount + " raw)");
+  }
 }
 
 if (require.main === module) main();
-module.exports = { parseReport, calcCharBudget, utf8ByteLen };
+module.exports = { parseReport, calcCharBudget, utf8ByteLen, entryKey, dedupeBySourceTag, buildDicFromReport, verifyDicAgainstReport };

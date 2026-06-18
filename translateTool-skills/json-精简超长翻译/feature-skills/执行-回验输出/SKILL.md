@@ -52,4 +52,6 @@ node scripts/check-russian.js \
 
 - 如果 `workflowPlan.nextAction = copy_only`（全合规），退化为"原样复制到 _new 目录"。
 - v2 模式下验证基准是 UTF-8 字节数，使用 `Buffer.byteLength()` 计算。
+- v2 写盘前**必须**按 `source|tag` 去重（`.report` 行数 ≠ `.dic` 行数），使用 `parse-report.js` 的 `buildDicFromReport()` 或 `dedupeBySourceTag()`。
+- v2 回验需逐条按 interpretation 的 `actualMax` 校验（不可对混档限制文件使用单一 `--byte-limit`）。
 - `scripts/check-russian.js` 的 `--byte-limit` 参数接收的也是 UTF-8 字节数。

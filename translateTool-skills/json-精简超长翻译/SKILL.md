@@ -123,9 +123,10 @@ metadata:
 2. `解析-Report文件` → 解析 `.report`，提取每条 entry + interpretation
    - 自动检测 `translation` 下的语言键
    - 解析 `interpretation`：`限制:32` → 实际最大 **31** 字符（开区间 `)`）
-3. `执行-俄语LLM缩短` → LLM 按 `actualMax` 缩短（复用 v1 缩短规则）
-4. `执行-回验输出` → 传 `byteLimit=actualMax`，验证 UTF-8 字节 + 字符数
-   - passed → 输出到 `_new` 目录为 `.dic` 文件
+3. `执行-俄语LLM缩短` → LLM 按 `actualMax` 缩短（复用 v1 缩短规则；可按唯一 `source|tag` 分组以减少重复劳动）
+4. **按 `source|tag` 去重** → `.report` 是检测命中列表，同一词条可重复数十次，写 `.dic` 前必须去重
+5. `执行-回验输出` → 逐条按 interpretation 的 `actualMax` 验证 UTF-8 字节
+   - passed → 输出到 `_new` 目录为 `.dic` 文件（行数 = 去重后数量）
    - 失败且迭代 < 3 → 返回步骤 3
    - 失败且迭代 ≥ 3 → 🔴 STOP
 
@@ -145,6 +146,7 @@ metadata:
 | 缩短后不跑回验 | LLM 缩短后还超 1-2 字节 | 每次缩短后必须 verify |
 | 把 interpretation 当闭区间 | 限制:32 算成 32，实际是 31 | 开区间：actualMax = maxLen - 1 |
 | 用 interpretation 的 currentLen 计算超标 | 服务器 currentLen 可能不准 | 只取限制:N，不依赖 currentLen |
+| report 1:1 写 dic | report 是命中列表，同一 source\|tag 可重复数十次 | 写盘前按 source\|tag 去重（`dedupeBySourceTag`） |
 
 ## 使用示例
 
