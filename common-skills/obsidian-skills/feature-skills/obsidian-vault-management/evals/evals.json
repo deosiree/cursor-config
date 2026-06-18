@@ -1,0 +1,52 @@
+[
+  {
+    "testCase": "创建一篇 Daily Note：2026-07-16 的日志",
+    "expectedBehavior": "在 06 - Daily/2026/07/ 下创建 20260716.md，含 frontmatter（created/updated/title/type/tags）",
+    "passCondition": "文件存在且 frontmatter 完整"
+  },
+  {
+    "testCase": "创建一篇项目笔记：标题「MCP Server 调研」",
+    "expectedBehavior": "在 01 - Projects/ 下创建笔记，使用 wikilink 格式，含 frontmatter",
+    "passCondition": "文件创建成功，包含 [[wikilinks]]"
+  },
+  {
+    "testCase": "用 Dataview 查询所有 status:draft 的笔记",
+    "expectedBehavior": "使用 Dataview 语法 `LIST FROM \"\" WHERE status = \"draft\"` 查询",
+    "passCondition": "查询语法正确，返回结果"
+  },
+  {
+    "testCase": "写一篇 Canvas 白板笔记",
+    "expectedBehavior": "按 references/canvas.md 中的规范创建 .canvas 文件",
+    "passCondition": "文件格式正确"
+  },
+  {
+    "testCase": "在笔记中使用 callout 标记重要信息",
+    "expectedBehavior": "使用 [!warning] 等 callout 语法包裹内容",
+    "passCondition": "callout 语法正确"
+  },
+  {
+    "testCase": "创建 Fleeting 笔记（快速捕获）",
+    "expectedBehavior": "保存到 05 - Fleeting/ 目录，文件名含日期前缀",
+    "passCondition": "文件在正确目录"
+  },
+  {
+    "testCase": "搜索 vault 中所有含 'MCP' 的笔记",
+    "expectedBehavior": "用 grep 或 search_files 搜索 VAULT_ROOT 下的 .md 文件",
+    "passCondition": "返回匹配笔记列表"
+  },
+  {
+    "testCase": "编辑已有笔记，追加新内容",
+    "expectedBehavior": "使用 patch 在稳定锚点后追加内容，或 read+write_file 重写",
+    "passCondition": "内容追加成功，不破坏原有结构"
+  },
+  {
+    "testCase": "在笔记底部添加 [[wikilink]] 关联到已存在笔记",
+    "expectedBehavior": "先搜索确认目标笔记存在，然后追加 [[链接]]",
+    "passCondition": "wikilink 指向有效文件"
+  },
+  {
+    "testCase": "生成本周周报简报",
+    "expectedBehavior": "使用 Templater 模板生成周报，含本周完成/下周计划",
+    "passCondition": "输出结构化周报"
+  }
+]

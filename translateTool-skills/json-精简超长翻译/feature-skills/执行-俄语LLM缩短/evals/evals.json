@@ -1,0 +1,16 @@
+{
+  "should-trigger": [
+    {
+      "name": "有超标词条需要缩短",
+      "input": "overlongEntries 不为空",
+      "expect": "输出缩短后数据且每项 ≤ byteLimit"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "无超标词条",
+      "input": "overlongEntries 为空",
+      "expect": "不执行缩短，直接跳过"
+    }
+  ]
+}

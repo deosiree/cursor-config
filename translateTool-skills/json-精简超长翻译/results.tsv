@@ -1,0 +1,5 @@
+round	date	score	delta	changes
+v2-baseline	2026-06-17	68.3	-	首次 v2 双模式基线评估
+v2-R1	2026-06-17	72.9	+4.6	实跑数据+正则示例+检查点+反模式+parse-report脚本
+v2-R2	2026-06-17	76.2	+3.3	parse-report.js 编写测试+dry_run记录+全流程推演
+v2-R3	2026-06-17	80.1	+3.9	full flow verified + SKILL.md 引用更新

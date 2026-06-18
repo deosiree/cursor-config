@@ -1,0 +1,16 @@
+{
+  "should-trigger": [
+    {
+      "name": "缩短后数据需回验",
+      "input": "shortenedData 有 8 条词条",
+      "expect": "verifyResult.passed == true，输出到 _new 目录"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "数据未缩短仍需要复制",
+      "input": "原始数据全合规，直接复制",
+      "expect": "verifyResult.passed == true，输出到 _new 目录"
+    }
+  ]
+}

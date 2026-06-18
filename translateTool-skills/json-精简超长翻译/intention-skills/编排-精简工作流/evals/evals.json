@@ -1,0 +1,16 @@
+{
+  "should-trigger": [
+    {
+      "name": "检测报告有超标",
+      "input": "overlongCount=3",
+      "expect": "nextAction == shorten"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "检测报告无超标",
+      "input": "overlongCount=0",
+      "expect": "nextAction == copy_only"
+    }
+  ]
+}

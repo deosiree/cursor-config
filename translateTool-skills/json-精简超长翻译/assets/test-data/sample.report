@@ -1,0 +1,3 @@
+{ "entry": { "comments": "", "source": "连接超时", "tag": "auditEventDefine/name", "translation": { "ru_RU": "Тайм-аут подключения" } }, "interpretation": "译文长度:38,限制:32" }
+{ "entry": { "comments": "", "source": "同步失败", "tag": "sync/status", "translation": { "ru_RU": "Ошибка синхронизации: превышено время ожидания" } }, "interpretation": "译文长度:45,限制:40" }
+{ "entry": { "comments": "", "source": "认证失败: 用户不存在", "tag": "auth/error", "translation": { "ru_RU": "Ошибка аутентификации: пользователь не найден" } }, "interpretation": "译文长度:55,限制:50" }

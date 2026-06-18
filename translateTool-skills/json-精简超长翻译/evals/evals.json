@@ -1,0 +1,36 @@
+{
+  "should-trigger": [
+    {
+      "name": "超长 JSON 触发检测",
+      "input": "db/hisparam.dic 中 ru_RU 字段全部超 63 字节",
+      "expect": "detect 模式发现 overlongCount > 0，缩短流程触发"
+    },
+    {
+      "name": "目录输入递归扫描",
+      "input": "输入为目录 db/，内含多个 JSON 文件",
+      "expect": "递归扫描所有 .json 文件，生成探测报告"
+    },
+    {
+      "name": "自定义 byteLimit",
+      "input": "--byte-limit 100",
+      "expect": "以 100 字节为标准检测超长"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "全合规不触发缩短",
+      "input": "所有 ru_RU 字段 ≤ 63 字节",
+      "expect": "overlongCount = 0，直接复制到 _new 目录"
+    },
+    {
+      "name": "非 JSON 文件跳过",
+      "input": "目录中混有 .txt/.csv 文件",
+      "expect": "只扫描 .json 文件，不报错"
+    },
+    {
+      "name": "字段路径不匹配",
+      "input": "--field-path nonexistent.field",
+      "expect": "静默跳过不匹配字段，不报错"
+    }
+  ]
+}

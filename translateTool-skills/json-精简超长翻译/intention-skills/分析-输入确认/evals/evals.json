@@ -1,0 +1,16 @@
+{
+  "should-trigger": [
+    {
+      "name": "完整参数输入",
+      "input": "inputPath=/some/path, fieldPath=translation.ru_RU, byteLimit=63",
+      "expect": "confirmedMeta.action == proceed"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "参数不全",
+      "input": "inputPath only, no byteLimit",
+      "expect": "confirmedMeta.action == abort, missingFacts contains byteLimit"
+    }
+  ]
+}

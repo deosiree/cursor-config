@@ -1,0 +1,30 @@
+{
+  "name": "claude-wiki-verbs-marketplace",
+  "owner": {
+    "name": "daniel8824-del",
+    "url": "https://github.com/daniel8824-del"
+  },
+  "metadata": {
+    "description": "9-verb knowledge engine for Obsidian vaults — Karpathy LLM Wiki pattern, pure markdown prompts",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-wiki-verbs",
+      "source": {
+        "source": "github",
+        "repo": "daniel8824-del/claude-wiki-verbs",
+        "ref": "main"
+      },
+      "description": "9 verbs (ingest/query/save/lint/manage/synthesize/critique/compare/eli5) for compiling, querying, and maintaining an Obsidian Zettelkasten. Realizes Karpathy's LLM Wiki pattern as a persistent compounding artifact.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Daniel",
+        "url": "https://github.com/daniel8824-del"
+      },
+      "homepage": "https://github.com/daniel8824-del/claude-wiki-verbs",
+      "repository": "https://github.com/daniel8824-del/claude-wiki-verbs",
+      "license": "MIT"
+    }
+  ]
+}

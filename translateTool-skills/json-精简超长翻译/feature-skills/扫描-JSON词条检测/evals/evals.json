@@ -1,0 +1,16 @@
+{
+  "should-trigger": [
+    {
+      "name": "有超长词条的 JSON",
+      "input": "JSON 文件中有 ru_RU 字段超过 63 字节",
+      "expect": "detectionReport.overlongCount > 0"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "全合规的 JSON",
+      "input": "所有 ru_RU 字段都在 63 字节以内",
+      "expect": "detectionReport.overlongCount == 0"
+    }
+  ]
+}
