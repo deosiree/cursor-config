@@ -10,3 +10,9 @@
 [submodule "common-skills/obsidian-skills/feature-skills/ruralocity-vault-skills"]
 	path = common-skills/obsidian-skills/feature-skills/ruralocity-vault-skills
 	url = git@github.com:ruralocity/obsidian-vault-skills.git
+[submodule "frontend-slides"]
+	path = frontend-slides
+	url = git@github.com:zarazhangrui/frontend-slides.git
+[submodule "superpowers"]
+	path = superpowers
+	url = git@github.com:obra/superpowers.git
