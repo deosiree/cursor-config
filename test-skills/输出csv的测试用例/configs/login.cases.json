@@ -486,6 +486,58 @@
       "sortOrder": 2,
       "env": "测试环境；基座 microfb :8080；路由 /login",
       "remark": "legacyId 422"
+    },
+    {
+      "name": "密码登录失败仅弹一次错误通知",
+      "featureSet": "异常处理",
+      "direction": "异常",
+      "level": 0,
+      "precondition": "1. 有效测试账号\n2. 密码 Tab",
+      "steps": "1. 输入有效账号与错误密码\n2. 点击登录\n3. 观察右下角通知数量",
+      "expected": "1. 仅出现 1 条错误通知\n2. 内容为登录失败或带业务错误码\n3. 仍在登录页",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；基座 microfb :8080；路由 /login",
+      "remark": "auth.gateway login 网关层唯一通知；回归双弹"
+    },
+    {
+      "name": "验证码登录失败仅弹一次错误通知",
+      "featureSet": "异常处理",
+      "direction": "异常",
+      "level": 0,
+      "precondition": "1. 验证码 Tab\n2. 已绑定手机或邮箱的账号",
+      "steps": "1. 输入账号与错误 OTP\n2. 点击登录\n3. 观察右下角通知数量",
+      "expected": "1. 仅出现 1 条错误通知\n2. 内容为登录失败或带业务错误码\n3. 仍在登录页",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；基座 microfb :8080；路由 /login",
+      "remark": "auth.gateway loginByOtp 网关层唯一通知"
+    },
+    {
+      "name": "130103需图形验证码时不弹错误toast",
+      "featureSet": "异常处理",
+      "direction": "异常",
+      "level": 0,
+      "precondition": "1. 安全配置 captchaEnabled=true\n2. 触发 130103 需验证码场景",
+      "steps": "1. 密码 Tab 输入账号密码（未填或未通过图形验证码）\n2. 点击登录\n3. 观察通知与验证码区域",
+      "expected": "1. 不出现错误 toast\n2. 展示图形验证码输入框",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；基座 microfb :8080；路由 /login",
+      "remark": "CAP_FAIL_MAP 130103 showNotify=false"
+    },
+    {
+      "name": "图形验证码输错仅弹一次错误通知",
+      "featureSet": "异常处理",
+      "direction": "异常",
+      "level": 0,
+      "precondition": "1. 已显示图形验证码\n2. 账号密码已填写",
+      "steps": "1. 输入错误图形验证码\n2. 点击登录\n3. 观察右下角通知数量",
+      "expected": "1. 仅出现 1 条错误通知（验证码错误或已过期）\n2. 验证码图片刷新\n3. 仍在登录页",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "env": "测试环境；基座 microfb :8080；路由 /login",
+      "remark": "CAP_FAIL_MAP 130104 网关层唯一通知"
     }
   ]
 }

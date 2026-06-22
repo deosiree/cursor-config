@@ -1,0 +1,47 @@
+{
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "用户管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "用例类型": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "创建时间列按登录用户租户时区展示UTC时间",
+      "featureSet": "表格展示",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "UserTable.vue formatUtcDateTime(row.createdAt)",
+      "remark": "1. formatUtcDateTime 按 userInfo.tenant.timezone 转 UTC 2. 替代 formatDateTime 浏览器本地时区",
+      "precondition": "1. 列表有数据 2. userInfo.tenant.timezone 为 Asia/Shanghai",
+      "steps": "1. 进入用户管理\n2. 记录某用户 createdAt UTC\n3. 对比「创建时间」列是否为 Asia/Shanghai 转换结果",
+      "env": "测试环境；路由 /Apex/system/user",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "expected": "1. 格式 YYYY-MM-DD HH:mm:ss\n2. 等于 UTC 按租户时区偏移\n3. 无 dayjs.utc is not a function 错误"
+    },
+    {
+      "name": "创建时间无效时显示短横线",
+      "featureSet": "表格展示",
+      "direction": "边界",
+      "level": 2,
+      "purpose": "formatUtcDateTime fallback",
+      "remark": "1. createdAt 空或非法时返回 -",
+      "precondition": "1. 存在 createdAt 为空或无效的用户行（可 mock）",
+      "steps": "1. 进入用户列表\n2. 定位 createdAt 无效行\n3. 查看「创建时间」列",
+      "env": "测试环境；路由 /Apex/system/user",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "expected": "1. 显示「-」\n2. 表格其余列正常\n3. 无未捕获 TypeError"
+    }
+  ]
+}

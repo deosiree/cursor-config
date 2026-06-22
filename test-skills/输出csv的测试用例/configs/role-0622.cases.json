@@ -1,0 +1,103 @@
+{
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "角色管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "用例类型": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "新增角色-菜单权限Tab拉树期间显示loading遮罩",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "openRoleEditCreate roleEditLoading PermissionTab v-loading",
+      "remark": "0622 权限树 loading 回归",
+      "precondition": "用户已登录且具备 sys:role:add；已进入「安全管理 > 角色管理」页面；microfb与apex_dev子应用可用",
+      "steps": "1. 点击工具栏「新增」打开角色编辑弹窗\n2. 在弹窗打开后尽快切换到「菜单权限」Tab\n3. 观察左右权限配置区域（菜单树与功能项区）\n4. 等待 loading 结束后再观察左侧菜单权限树",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 15,
+      "expected": "1. 权限树数据未渲染完成前，「菜单权限」Tab 内出现 loading 遮罩（转圈或半透明蒙层）\n2. 不出现长时间空白边框且无反馈的状态\n3. loading 结束后左侧展示菜单权限树节点\n4. 右侧功能项区显示「请在左侧选择菜单页面」类空态提示"
+    },
+    {
+      "name": "编辑角色-菜单权限Tab拉树期间显示loading遮罩",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "openRoleEditEdit roleEditLoading 与新增流程一致",
+      "remark": "0622 权限树 loading 回归",
+      "precondition": "用户已登录且具备 sys:role:edit；已进入「安全管理 > 角色管理」页面；存在非内置测试角色且已配置部分菜单权限",
+      "steps": "1. 点击该测试角色「编辑」打开弹窗\n2. 弹窗打开后尽快切换到「菜单权限」Tab\n3. 观察权限配置区域 loading 状态\n4. 等待 loading 结束后查看左侧树勾选态",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 16,
+      "expected": "1. 详情与权限树加载完成前，Tab 内出现 loading 遮罩\n2. 不出现左侧空白树且无反馈的状态\n3. loading 结束后左侧树正常渲染\n4. 该角色已保存的菜单勾选状态正确回填"
+    },
+    {
+      "name": "新增角色-权限树加载期间点击确定不关闭弹窗",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "purpose": "RoleEditDialog handleConfirm loading 守卫",
+      "remark": "0622 权限树 loading 回归",
+      "precondition": "用户已登录且具备 sys:role:add；已进入「安全管理 > 角色管理」页面",
+      "steps": "1. 点击「新增」打开弹窗\n2. 切换到「菜单权限」Tab，在 loading 遮罩仍可见时点击底部「确 定」\n3. 观察弹窗与列表\n4. 待 loading 结束、填写基础信息合法名称后再点「确 定」",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 17,
+      "expected": "1. loading 期间点击「确 定」后弹窗不关闭\n2. 未出现保存成功提示\n3. 角色列表未新增该行\n4. loading 结束并补全基础信息后，可正常保存并关闭弹窗"
+    },
+    {
+      "name": "编辑角色-权限树全选期间显示loading遮罩",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 1,
+      "purpose": "PermissionTab selectAllSyncing v-loading",
+      "remark": "0622 权限树 loading 回归",
+      "precondition": "用户已登录且具备 sys:role:edit；已进入角色管理；存在非内置测试角色；菜单权限树已加载完成",
+      "steps": "1. 编辑该测试角色，切换到「菜单权限」Tab 并等待树加载完成\n2. 点击左侧权限树工具栏「全选」按钮\n3. 观察权限配置区域 loading 状态\n4. 等待 loading 结束后查看树勾选情况",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 18,
+      "expected": "1. 点击「全选」后 Tab 内出现 loading 遮罩\n2. 同步完成前不出现可误操作的半完成勾选态\n3. loading 结束后左侧大量菜单节点被勾选\n4. 任选含功能项的页面节点，右侧功能项为全选状态"
+    },
+    {
+      "name": "编辑角色-点击无功能项页面-显示未配置空态",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "purpose": "FunctionPermissionList pageSelected 空态区分",
+      "remark": "0622 功能项空态文案修复",
+      "precondition": "用户已登录且具备 sys:role:edit；已进入「安全管理 > 角色管理」页面；microfb与apex_dev子应用可用；存在非内置测试角色；权限树中存在未配置任何功能项的页面节点（如「数据模拟」）",
+      "steps": "1. 点击该测试角色「编辑」打开弹窗\n2. 切换到「菜单权限」Tab，等待左侧权限树加载完成\n3. 在左侧权限树搜索并点击无功能项的页面节点（如「数据模拟」）\n4. 观察右侧「功能项权限」区域空态文案与工具栏按钮状态",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 19,
+      "expected": "1. 右侧显示空态提示「该页面未配置功能项」\n2. 不显示「请在左侧选择菜单页面」\n3. 关键字搜索框为禁用状态\n4. 「全选」「清空」按钮为禁用状态"
+    },
+    {
+      "name": "编辑角色-未选页面-功能项区显示请选择菜单",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 1,
+      "purpose": "FunctionPermissionList 初始空态",
+      "remark": "0622 功能项空态文案修复；与无功能项页回归",
+      "precondition": "用户已登录且具备 sys:role:edit；已进入「安全管理 > 角色管理」页面；microfb与apex_dev子应用可用；存在非内置测试角色",
+      "steps": "1. 点击该测试角色「编辑」打开弹窗\n2. 切换到「菜单权限」Tab，等待左侧权限树加载完成\n3. 不点击任何页面节点，观察右侧「功能项权限」区域",
+      "env": "测试环境；路由 /Apex/system/role",
+      "reserve1": "ui",
+      "sortOrder": 20,
+      "expected": "1. 右侧显示空态提示「请在左侧选择菜单页面」\n2. 不显示「该页面未配置功能项」\n3. 关键字搜索框为禁用状态"
+    }
+  ]
+}

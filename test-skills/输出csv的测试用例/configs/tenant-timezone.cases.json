@@ -1,0 +1,61 @@
+{
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "用例类型": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "到期时间为空显示永久且有时区格式化",
+      "featureSet": "表格展示",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "TenantTable.vue formatUtcDateTime(row.expireAt)",
+      "remark": "1. expireAt 为空显示「永久」 2. 有值时 formatUtcDateTime 按 userInfo.tenant.timezone 转 UTC",
+      "precondition": "1. 列表含 expireAt 为空与有值租户 2. userInfo.tenant.timezone 为 Asia/Shanghai",
+      "steps": "1. 查找到期时间为空的行，确认显示「永久」\n2. 查找到期时间有值的行，记录接口 expireAt（UTC）\n3. 确认列表为 YYYY-MM-DD HH:mm:ss 且按 Asia/Shanghai 偏移（如 2026-06-17T07:33:47Z → 2026-06-17 15:33:47）",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "expected": "1. expireAt 为空显示「永久」\n2. 有值行格式 YYYY-MM-DD HH:mm:ss\n3. 展示按租户时区从 UTC 转换，非浏览器本地时区"
+    },
+    {
+      "name": "创建时间列按登录用户租户时区展示UTC时间",
+      "featureSet": "表格展示",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "TenantTable.vue formatUtcDateTime(row.createdAt)",
+      "remark": "1. 列设置开启「创建时间」 2. getTenantTimezone 读 localStorage.userInfo.tenant.timezone",
+      "precondition": "1. 列表有数据 2. timezone 为 Asia/Shanghai 3. 列设置显示「创建时间」",
+      "steps": "1. 列设置勾选「创建时间」\n2. 记录某行 createdAt UTC 值\n3. 对比表格展示是否为 Asia/Shanghai 转换结果",
+      "env": "测试环境；路由 /Apex/tenant",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "expected": "1. 格式 YYYY-MM-DD HH:mm:ss\n2. 等于 UTC 按租户时区偏移\n3. 无 dayjs.utc 报错"
+    },
+    {
+      "name": "到期时间列展示不依赖浏览器本地时区",
+      "featureSet": "表格展示",
+      "direction": "边界",
+      "level": 2,
+      "purpose": "formatUtcDateTime 替代 formatDateTime",
+      "remark": "1. 浏览器时区与租户时区不一致时仍按租户时区展示",
+      "precondition": "1. 浏览器时区 UTC 2. userInfo.tenant.timezone 为 Asia/Shanghai 3. 列表 expireAt 有值",
+      "steps": "1. 浏览器时区改 UTC 后登录进入租户列表\n2. 对比 expireAt UTC 与列表展示\n3. 确认非 UTC 原值直显",
+      "env": "测试环境；路由 /Apex/tenant；浏览器时区 UTC",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "expected": "1. 按 Asia/Shanghai 展示（UTC 07:33 → 15:33）\n2. 不因浏览器 UTC 直显 UTC 时刻\n3. 无控制台 TypeError"
+    }
+  ]
+}

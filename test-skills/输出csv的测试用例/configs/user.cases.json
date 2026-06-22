@@ -417,6 +417,34 @@
       "reserve1": "ui",
       "sortOrder": 2,
       "expected": "1. 页面弹出业务错误通知\n2. 编辑弹窗不关闭\n3. 列表未错误新增重复用户"
+    },
+    {
+      "name": "创建时间列按登录用户租户时区展示UTC时间",
+      "featureSet": "表格展示",
+      "direction": "正向",
+      "level": 0,
+      "purpose": "UserTable.vue formatUtcDateTime(row.createdAt) / utils/datetime.ts",
+      "remark": "1. 默认可见「创建时间」列 2. formatUtcDateTime 按 userInfo.tenant.timezone 转换后端 UTC createdAt 3. 替代原 formatDateTime 浏览器本地时区",
+      "precondition": "1. 用户已登录且列表有数据 2. localStorage.userInfo.tenant.timezone 为 Asia/Shanghai",
+      "steps": "1. 进入「安全管理」>「用户管理」\n2. 在 Network 查看列表接口某用户 createdAt（UTC ISO）\n3. 对比表格「创建时间」列是否为该 UTC 按 Asia/Shanghai 转换的 YYYY-MM-DD HH:mm:ss",
+      "env": "测试环境；路由 /Apex/system/user",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "expected": "1. 「创建时间」列格式为 YYYY-MM-DD HH:mm:ss\n2. 展示值等于 createdAt UTC 按租户时区偏移后的时刻\n3. 页面无 dayjs.utc is not a function 等控制台错误"
+    },
+    {
+      "name": "创建时间无效时显示短横线",
+      "featureSet": "表格展示",
+      "direction": "边界",
+      "level": 2,
+      "purpose": "formatUtcDateTime fallback=\"-\"",
+      "remark": "1. createdAt 为空或无法解析时返回 - 2. 不抛未捕获异常",
+      "precondition": "1. 可 mock 用户列表返回 createdAt 为空或非法字符串的测试数据（或环境中存在无创建时间用户）",
+      "steps": "1. 进入用户管理列表\n2. 定位 createdAt 为空或无效的用户行\n3. 查看「创建时间」列展示",
+      "env": "测试环境；路由 /Apex/system/user",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "expected": "1. 「创建时间」列显示「-」\n2. 表格其余列正常渲染\n3. 无未捕获 TypeError"
     }
   ]
 }
