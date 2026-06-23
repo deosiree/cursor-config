@@ -131,6 +131,17 @@ def read_header(template_path: Path) -> list[str]:
     raise UnicodeDecodeError("template", b"", 0, 1, f"Cannot decode {template_path}")
 
 
+def case_already_imported(case: dict, existing_names: set[str]) -> bool:
+    """名称精确匹配，或 importedAliasNames 命中已导入旧名（cases 重命名场景）。"""
+    name = (case.get("name") or "").strip()
+    if name in existing_names:
+        return True
+    for alias in case.get("importedAliasNames") or []:
+        if (alias or "").strip() in existing_names:
+            return True
+    return False
+
+
 def generate(
     cases_path: Path,
     template_path: Path,
@@ -145,7 +156,7 @@ def generate(
 
     if only_new_from:
         existing_names = load_existing_case_names(only_new_from)
-        cases = [c for c in cases if (c.get("name") or "").strip() not in existing_names]
+        cases = [c for c in cases if not case_already_imported(c, existing_names)]
         id_by_name: dict[str, str] = {}
     else:
         id_by_name = load_name_to_id_map(preserve_ids_from) if preserve_ids_from else {}
