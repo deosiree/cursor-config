@@ -5,7 +5,7 @@
 `gen-perms-apis` 是一个中文 agent skill 套件，覆盖权限点与 API 配置的完整生命周期：
 
 ```
-分析现状 → 设计权限点 → 生成菜单补丁 → 改动源码 → 端到端验证 → 运行时排障 → E2E自动化测试
+分析现状 → 设计权限点 → 生成菜单补丁 → 改动源码 → 页面门控空态 → 端到端验证 → 运行时排障 → E2E自动化测试
 ```
 
 父 agent `SKILL.md` 负责会话级路由、人工门禁与节点切换。真实执行能力分层下沉：
@@ -34,6 +34,7 @@
 4. **菜单导入先 dry_run**：正式 `POST .../menu/project/import` 前先 `dry_run: true`
 5. **API 反查三类硬链路**：业务层→gateway→api→契约 / 业务层→api→契约 / 子组件 emit→父组件→gateway/api→契约
 6. **契约缺失时标记"待人工确认"**：不主观推断 description
+7. **页面门控空态**：缺 pageGate perm 时 `PageNoPermission` 整页空态，禁止表格「暂无数据」冒充无权限
 
 ## 套件结构
 
@@ -47,9 +48,14 @@ gen-perms-apis/
 │   ├── 编排-权限点配置全流程/SKILL.md      # 多阶段方案矩阵 + 改动面评估
 │   ├── 迁移-源码改动落地/SKILL.md          # 集中式改码策略 + 最小 diff
 │   ├── 编排-权限E2E测试/SKILL.md           # OpenCLI 双会话 E2E 编排
+│   ├── 策略-页面权限空态/SKILL.md          # 整页门控 vs 操作级、view/query 裁决
+│   ├── 编排-页面无权限空态落地/SKILL.md    # PageNoPermission 单专题编排
 │   └── 路由-选择功能子skill/SKILL.md       # 单步功能路由
 ├── feature-skills/
 │   ├── 扫描源码权限点与API/SKILL.md        # 原 gen-perms-apis 核心逻辑
+│   ├── 盘点-页面权限空态反模式/SKILL.md    # 暂无数据冒充无权限扫描
+│   ├── 判定-页面门控权限点/SKILL.md        # pageGate perm + computed 命名
+│   ├── 接入-PageNoPermission空态/SKILL.md  # 组件 + 页面兄弟分支改造
 │   ├── 设计权限点与API映射/SKILL.md        # perm 命名 + 豁免表 + 跨模块归属
 │   ├── 生成菜单树权限补丁/SKILL.md         # 增量 YAML 补丁 + ID 回填
 │   ├── 合并权限点到菜单树/SKILL.md         # 补丁与已有树合并
@@ -72,7 +78,10 @@ gen-perms-apis/
 │       ├── before-01-需求输入.md           # few-shot：用户原始需求
 │       ├── after-01-完整执行链路.md        # few-shot：完整产物
 │       ├── mvp-01-最小闭环.md              # few-shot：最小可复现路径
-│       └── snapshot-01-关键决策.md         # few-shot：关键决策节点
+│       ├── snapshot-01-关键决策.md         # few-shot：关键决策节点
+│       ├── before-02-页面空态/             # RED：.vue/.scss 源码快照
+│       ├── after-02-页面空态/              # GREEN：PageNoPermission + 页面改造
+│       └── reference-02-设备数据UI参考/    # UI 基准（只读）
 ├── assets/                                # agent 轻量素材
 │   ├── few-shot-example/
 │   ├── frontmatter-template.yaml
@@ -89,6 +98,8 @@ gen-perms-apis/
 │   ├── perm-design-rules.md               # 权限设计规则
 │   ├── menu-yaml-spec.md                  # 菜单 YAML 字段规范
 │   ├── centralized-diff-rules.md          # 集中式改动规则
+│   ├── page-no-permission-pattern.md      # 页面空态架构与放置
+│   ├── page-no-permission-anti-patterns.md # 空态反模式清单
 │   └── perm-runtime-debugging.md          # 运行时排障规则
 └── evals/
     ├── evals.json
@@ -123,6 +134,10 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 直接用菜单管理跑一遍 E2E 测试，8 个场景全过一遍。
 ```
 
+```text
+租户无 query 时别显示暂无数据，接入 PageNoPermission，UI 参照设备数据。
+```
+
 ## 模板与素材入口
 
 - `[[template/route-component-perm-api-output.md]]`
@@ -134,4 +149,6 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 - `[[references/api-backtrace-rules.md]]`
 - `[[references/perm-design-rules.md]]`
 - `[[references/centralized-diff-rules.md]]`
+- `[[references/page-no-permission-pattern.md]]`
+- `[[references/page-no-permission-anti-patterns.md]]`
 - `[[references/perm-runtime-debugging.md]]`

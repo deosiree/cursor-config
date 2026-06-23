@@ -46,6 +46,17 @@ const props = defineProps<{ actionPerms: Record<string, boolean> }>();
 - ⚠️ 需要修改子组件接口
 - 适用场景：子组件需要根据权限调整行为
 
+### 4. 整页无权限：PageNoPermission 兄弟分支
+
+```vue
+<el-card v-if="canQuery">...</el-card>
+<PageNoPermission v-else />
+```
+
+- 适用场景：缺 **pageGate** perm（`view` / `query`），影响整块页面内容
+- **不同于**工具栏 `v-if="canQuery"`：后者是有 query 时显示工具栏；无 query 时应走 `PageNoPermission`，而非空表格
+- 须保留 `fetchData` 入口守卫；对照 `[[../template/sample-run/after-02-页面空态/]]`
+
 ## 禁止项
 
 | 禁止 | 原因 |

@@ -70,6 +70,7 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 | 角色 | `useRoleList.fetchData` 守卫 |
 | 安全配置 | `useSecurityConfigPage` 按 perm 分支；`index.vue` 过滤 Tab、控制保存栏 |
 | 菜单 | 工具栏 `canQuery/canAdd/canImport/canExport` + `fetchMenuList` 守卫 |
+| 整页门控空态 | 见 `[[../编排-页面无权限空态落地]]`；`PageNoPermission` 兄弟分支 |
 
 ## 输出契约
 

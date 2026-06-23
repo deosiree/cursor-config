@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮首页和租户管理接入 PageNoPermission，UI 参照设备数据，不要改设备数据模块。",
+    "expected": "输出 Step 1-4 编排 + implementationPlan + 路由接入-PageNoPermission空态；不改 deviceData"
+  },
+  {
+    "id": 2,
+    "prompt": "我只想知道无 query 时该不该整页空态，先别改代码。",
+    "expected": "停在 Step 3 策略-页面权限空态；不进入 Step 4 改码"
+  }
+]

@@ -152,6 +152,34 @@
         "把本轮 E2E 验证结果落盘到 docs/问题单/0605/perm-e2e.csv，模块名权限管理，创建人员惠岩。"
       ],
       "expect": "映射 E2E 结果到 cases.json 字段；委托外部 skill 输出csv的测试用例 生成 CSV；不自己实现 CSV 生成"
+    },
+    {
+      "target": "intention — 策略-页面权限空态",
+      "prompts": [
+        "租户无 sys:tenant:query 时应整页空态还是空表格？"
+      ],
+      "expect": "路由到策略-页面权限空态；区分 pageGate 与操作级 perm；禁止推荐表格暂无数据"
+    },
+    {
+      "target": "intention — 编排-页面无权限空态落地",
+      "prompts": [
+        "帮首页和租户管理接入 PageNoPermission，UI 参照设备数据，不要改设备数据模块。"
+      ],
+      "expect": "输出 implementationPlan + feature 序列（判定门控 → 接入组件）；引用 after-02 源码快照"
+    },
+    {
+      "target": "feature — 盘点-页面权限空态反模式",
+      "prompts": [
+        "扫描 apex_dev 哪些页还在用暂无数据冒充无权限。"
+      ],
+      "expect": "反模式清单 AP-01~AP-04；对照 before-02 快照；带文件路径"
+    },
+    {
+      "target": "feature — 接入-PageNoPermission空态",
+      "prompts": [
+        "按方案改 tenant/index.vue 和 dashboard，接入 PageNoPermission。"
+      ],
+      "expect": "兄弟分支 el-card v-if + PageNoPermission v-else；保留 fetchData 守卫；显式 import useI18n"
     }
   ]
 }

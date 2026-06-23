@@ -1,6 +1,6 @@
 ---
 name: 梳理权限点与apis
-description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
+description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、页面无权限空态、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、PageNoPermission、页面无权限空态、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
 ---
 
 # 梳理权限点与 APIs（Agent Skill 总入口）
@@ -23,6 +23,7 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 - 已有盘点结果，需要设计新的权限点与 API 映射
 - 需要生成增量菜单树 YAML 补丁
 - 需要按集中式原则改动源码（最小 diff、v-hasPerm 优先）
+- 缺页面门控 perm 时需 `PageNoPermission` 整页空态（禁止表格「暂无数据」冒充无权限）
 - 需要通过 SSH + OpenCLI 做端到端权限验证
 - 需要通过 OpenCLI 双会话（admin 配置角色 + 测试用户验证）做自动化权限 E2E 测试，结果落盘 CSV
 - 权限运行时异常需要排障（isOwner / computed 缓存 / 登录时序）
@@ -80,7 +81,8 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 4. `patch_generated` — 菜单补丁已生成，可进入合并或导入验证
 5. `code_changed` — 源码已改动，可进入端到端验证
 6. `verification_needed` — 需要 OpenCLI 验证或运行时排障
-7. `unclear_or_mixed` — 状态不明确，需先分析
+7. `page_empty_state_needed` — 有路由/门控 perm 设计，但 UI 仍显示「暂无数据」或 inline 空态不一致
+8. `unclear_or_mixed` — 状态不明确，需先分析
 
 ## 意图 skill 调用规则
 
@@ -93,6 +95,10 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
   - 若盘点事实不足，先补 `[[intention-skills/分析-perms-apis现状]]`
 - 权限设计已确认，要落地源码改动 → 进入 `[[intention-skills/迁移-源码改动落地]]`
   - 若设计尚未确认，先补 `[[intention-skills/策略-设计权限点]]`
+  - 若用户明确整页无权限空态 / `PageNoPermission` → 优先 `[[intention-skills/编排-页面无权限空态落地]]`
+- 问无 query 时显示什么、整页空态策略 → `[[intention-skills/策略-页面权限空态]]`
+- 要接入 `PageNoPermission`、统一「暂无页面访问权限」→ `[[intention-skills/编排-页面无权限空态落地]]`
+- 只扫描「暂无数据」反模式 → `[[feature-skills/盘点-页面权限空态反模式]]`
 - 要做 OpenCLI 自动化权限 E2E 测试（双会话配置+验证+CSV）→ 进入 `[[intention-skills/编排-权限E2E测试]]`
   - 若用户明确「菜单管理 / 8 场景 / S1~S8」→ 编排节点内直接路由到 `[[feature-skills/菜单管理功能项依赖链验证]]` 并执行 node 脚本
   - 若测试权限点清单未确认，先补 `[[intention-skills/策略-设计权限点]]`
@@ -131,6 +137,7 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 3. **菜单补丁 ID 必须回填**：`patch_children_add` 中的 function 必须先查询或创建获取 ID 后回填
 4. **菜单导入先 dry_run**：正式导入前必须先 `dry_run: true` 验证
 5. **API 反查三类硬链路**：`业务层→gateway→api→契约`、`业务层→api→契约`、`子组件 emit→父组件→gateway/api→契约`
+6. **页面门控空态**：缺 `view`/`query` 等 pageGate perm 时必须 `PageNoPermission`，禁止用 `el-table` 默认「暂无数据」代替；对照 `[[template/sample-run/after-02-页面空态/]]`
 
 ## 使用示例
 
@@ -183,6 +190,12 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 ```
 
 预期：进入 `[[intention-skills/编排-权限E2E测试]]` → `[[feature-skills/菜单管理功能项依赖链验证]]`，执行 `scripts/run-all.node.js`
+
+```text
+租户无 query 时显示暂无数据，应改为暂无页面访问权限整页空态。
+```
+
+预期：进入 `[[intention-skills/编排-页面无权限空态落地]]`；对照 `[[template/sample-run/before-02-页面空态/]]` / `[[template/sample-run/after-02-页面空态/]]`
 
 ## REFACTOR
 

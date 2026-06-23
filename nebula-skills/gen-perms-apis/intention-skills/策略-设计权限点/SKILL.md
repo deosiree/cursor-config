@@ -70,6 +70,13 @@ description: 当已有盘点文档，需要设计新权限点的粒度、命名�
 - 示例：`sys:tenant:query`、`sys:user:add`、`sys:securityConfig:edit`
 - 查询用 `query`、新增用 `add`、编辑用 `edit`、删除用 `delete`、导入用 `import`、导出用 `export`
 
+### 6. pageGate 与空态 UX
+
+设计 page 级 perm 时在输出表中增加 `是否 pageGate` 列：
+
+- `view` / `query` 作门控 → 无 perm 时整页 `PageNoPermission`（见 `[[../策略-页面权限空态]]`）
+- 操作级 perm → 有门控时仅 `v-hasPerm` 藏按钮
+
 ## 输出契约
 
 - `designGoal`

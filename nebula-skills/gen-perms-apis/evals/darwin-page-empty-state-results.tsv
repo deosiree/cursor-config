@@ -1,0 +1,12 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-22T12:00	baseline	接入-PageNoPermission空态	-	72.0	baseline	-	初始9维评估	dry_run
+2026-06-22T12:10	r1-opt	接入-PageNoPermission空态	72.0	86.5	keep	dim2+3+4+9	Step工作流+if-then+CHECKPOINT+黑名单+test-prompts	dry_run
+2026-06-22T12:10	baseline	编排-页面无权限空态落地	-	70.0	baseline	-	初始9维评估	dry_run
+2026-06-22T12:15	r1-opt	编排-页面无权限空态落地	70.0	84.0	keep	dim2+3+4	五步编排+兜底表+CHECKPOINT	dry_run
+2026-06-22T12:10	baseline	策略-页面权限空态	-	73.0	baseline	-	初始9维评估	dry_run
+2026-06-22T12:15	r1-opt	策略-页面权限空态	73.0	85.0	keep	dim2+3+4	四步裁决+产品CHECKPOINT	dry_run
+2026-06-22T12:20	baseline	盘点-页面权限空态反模式	-	68.0	baseline	-	初始9维评估	dry_run
+2026-06-22T12:25	r2-opt	盘点-页面权限空态反模式	68.0	81.5	keep	dim2+3+5	grep步骤+AP表+兜底	dry_run
+2026-06-22T12:20	baseline	判定-页面门控权限点	-	69.0	baseline	-	初始9维评估	dry_run
+2026-06-22T12:25	r2-opt	判定-页面门控权限点	69.0	82.0	keep	dim2+3	三步判定+兜底+黑名单	dry_run
+2026-06-22T12:30	r3-micro	编排-页面无权限空态落地	84.0	85.0	keep	dim8	验收清单+test-prompts自检	dry_run

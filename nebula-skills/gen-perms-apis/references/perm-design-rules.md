@@ -61,6 +61,17 @@
 | 导出 | `export` |
 | 查看（页面入口） | `view` |
 
+### 6. 页面门控与空态 UX
+
+设计 page 级 perm 时，在方案中注明是否作为 **pageGate**：
+
+| pageGate perm | 无 perm 时 UI | 有 perm 无操作 perm 时 |
+|---------------|--------------|------------------------|
+| `sys:dashboard:view` | 整页 `PageNoPermission` | 仅藏无权限的操作按钮 |
+| `sys:tenant:query` | 整页 `PageNoPermission` | 仅藏无权限的操作按钮 |
+
+**禁止**：仅用 `fetchData` 清空列表让表格显示「暂无数据」。详见 `[[page-no-permission-pattern.md]]`。
+
 ## 输出格式
 
 ```markdown

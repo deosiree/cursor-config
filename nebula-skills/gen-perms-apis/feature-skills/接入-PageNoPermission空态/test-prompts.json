@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "按方案改 tenant/index.vue 和 dashboard，接入 PageNoPermission，UI 参照设备数据，不要改设备数据模块。",
+    "expected": "兄弟分支 el-card v-if + PageNoPermission v-else；保留 fetchData 守卫；显式 import useI18n；对照 after-02 快照"
+  },
+  {
+    "id": 2,
+    "prompt": "PageNoPermission 组件报 TS2304 找不到 useI18n，怎么修？",
+    "expected": "组件内显式 import vue-i18n；引用失败分支表第一行"
+  },
+  {
+    "id": 3,
+    "prompt": "租户无 query 时表格还显示暂无数据，帮我接入空态。",
+    "expected": "先确认 pageGatePerm=sys:tenant:query；改造为兄弟分支；禁止仅清空 pageData"
+  }
+]

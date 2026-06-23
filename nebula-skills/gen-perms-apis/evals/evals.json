@@ -189,6 +189,28 @@
       "expect": [
         "不属于本 skill 套件的职责范围"
       ]
+    },
+    {
+      "input": "租户无 query 时表格显示暂无数据，应改为暂无页面访问权限。",
+      "expect": [
+        "触发页面空态相关 intention 或编排",
+        "提到 PageNoPermission 或整页门控",
+        "禁止仅用清空 pageData 冒充无权限"
+      ]
+    },
+    {
+      "input": "帮我把 microfb 的 404 页面改成暂无页面访问权限。",
+      "expect": [
+        "应区分 microfb 路由级 404 与子应用业务页空态",
+        "不应把 404 与 PageNoPermission 混为一谈"
+      ]
+    },
+    {
+      "input": "只生成菜单树 YAML 补丁，不涉及页面 UI。",
+      "expect": [
+        "路由到菜单补丁相关 feature",
+        "不应进入 PageNoPermission 接入"
+      ]
     }
   ],
   "output_acceptance": [

@@ -77,6 +77,16 @@ const canQuery = computed(() => checkHasPerm('sys:tenant:query'));
 const props = defineProps<{ actionPerms: Record<string, boolean> }>();
 ```
 
+#### 模式 D：整页 PageNoPermission（pageGate 缺失）
+
+```vue
+<el-card v-if="canQuery">...</el-card>
+<PageNoPermission v-else />
+```
+
+- 缺 `view`/`query` 等 pageGate 时用，**禁止**空表格「暂无数据」
+- 详见 `[[接入-PageNoPermission空态]]` 与 `[[../../template/sample-run/after-02-页面空态/]]`
+
 ### 例外
 
 已有合理且独立的子级 perm（如菜单的 `PermissionConfigDialog`、用户表 `OpItem`），本批**不强行上提**，避免大范围 diff。

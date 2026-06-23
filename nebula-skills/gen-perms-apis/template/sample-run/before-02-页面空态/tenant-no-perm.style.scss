@@ -1,0 +1,8 @@
+/* RED 快照：tenant/index.vue 页面级重复样式（应删除，下沉到 PageNoPermission） */
+.tenant-no-perm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 320px;
+}
