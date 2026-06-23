@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "用默认 6 模块检查 apex_dev 与 菜单树_0623_platform.yaml，个人中心跳过",
+    "expected": "跑 check-menu-api-gap.node.js --scope default；报告 P0/P1 汇总；exclude profile"
+  },
+  {
+    "id": 2,
+    "prompt": "模拟 role/add 漏了 assignMenuPermissions，报告应标 P0",
+    "expected": "识别 create 提交链路三 API；P0 列出未收录项；建议挂 sys:role:add"
+  },
+  {
+    "id": 3,
+    "prompt": "只检查角色管理和用户管理两个模块",
+    "expected": "--scope 角色管理,用户管理；仅输出两模块章节"
+  }
+]

@@ -28,6 +28,7 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 - 需要通过 OpenCLI 双会话（admin 配置角色 + 测试用户验证）做自动化权限 E2E 测试，结果落盘 CSV
 - 权限运行时异常需要排障（isOwner / computed 缓存 / 登录时序）
 - 任务需要多轮推进，而不是一次性固定走完整条链
+- 需要按默认 6 模块对比菜单树与源码 API 缺口（个人中心除外）→ 进入 `[[feature-skills/检查-菜单树API缺口]]`
 
 ## 输入契约
 
@@ -104,6 +105,8 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
   - 若测试权限点清单未确认，先补 `[[intention-skills/策略-设计权限点]]`
 - 当前已明确只差某项能力，只需选择某一个功能 skill → 进入 `[[intention-skills/路由-选择功能子skill]]`
   - 若能力缺口判断依赖当前链路事实，先补对应意图 skill
+- 用户要求全局/按范围检查菜单树 API 遗漏、或对比源码与 YAML 缺口 → 进入 `[[feature-skills/检查-菜单树API缺口]]`
+  - 与 `扫描源码权限点与API` 区分：范围检查 = 轻量 diff 报告；全量扫描 = 完整盘点文档
 
 ## 人工介入门禁
 
@@ -190,6 +193,12 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 ```
 
 预期：进入 `[[intention-skills/编排-权限E2E测试]]` → `[[feature-skills/菜单管理功能项依赖链验证]]`，执行 `scripts/run-all.node.js`
+
+```text
+用默认 6 模块检查菜单树 API 有没有遗漏，个人中心不用管。
+```
+
+预期：进入 `[[feature-skills/检查-菜单树API缺口]]`，执行 `scripts/check-menu-api-gap.node.js`
 
 ```text
 租户无 query 时显示暂无数据，应改为暂无页面访问权限整页空态。

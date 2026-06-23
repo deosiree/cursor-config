@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-23T10:00	baseline	检查-菜单树API缺口	-	71.2	baseline	-	初版 SKILL+脚本	dry_run
+2026-06-23T10:15	r1-dim3	检查-菜单树API缺口	71.2	76.8	keep	dim3	补 Step2 if-then fallback 表	dry_run
+2026-06-23T10:25	r2-dim5	检查-菜单树API缺口	76.8	81.5	keep	dim5	脚本 pnpm yaml 回退 + CLI 文档	dry_run
+2026-06-23T10:35	r3-dim9	检查-菜单树API缺口	81.5	84.0	keep	dim9	反例黑名单 5 条 + CHECKPOINT	dry_run
+2026-06-23T10:40	verify	检查-菜单树API缺口	84.0	84.0	keep	dim8	终检 P0=0 P1=6 exit=0	full_test

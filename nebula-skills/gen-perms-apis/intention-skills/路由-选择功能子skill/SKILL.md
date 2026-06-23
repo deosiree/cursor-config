@@ -33,6 +33,7 @@ description: 当当前目标已收敛到"这一步该进入哪个源码级功能
 10. `e2e_verify_needed` — 需要通过双会话做 E2E 验证（通用 perm 循环）
 11. `e2e_menu_scenarios` — 菜单管理 8 场景矩阵 / 功能项依赖链验证
 12. `csv_output_needed` — 验证结果需要落盘 CSV
+13. `menu_api_gap_check_needed` — 按范围对比菜单树 YAML 与源码 API 缺口
 
 ## 工作流
 
@@ -57,6 +58,7 @@ description: 当当前目标已收敛到"这一步该进入哪个源码级功能
 - 双会话环境首次搭建（profile 预检、双登录）→ 进入 `[[../../feature-skills/双会话OpenCLI环境初始化]]`
 - 仅需在角色弹窗内快速勾选某页面功能项（非完整 E2E）→ 进入 `[[../../feature-skills/角色菜单权限树快速配置]]`
 - 验证结果需要落盘为 CSV → 进入 `[[../../feature-skills/权限测试结果落盘CSV]]`
+- 按默认 6 模块（或指定 scope）对比菜单树与源码 API 缺口 → 进入 `[[../../feature-skills/检查-菜单树API缺口]]`（**首选 node 脚本** `scripts/check-menu-api-gap.node.js`）
 
 ## 输出
 
@@ -104,3 +106,9 @@ gap 还不完全明确，但我仍然只想收敛到一个当前最优先的功�
 ```
 
 预期：进入 `菜单管理功能项依赖链验证`，执行 `scripts/run-all.node.js`
+
+```text
+全局检查一下首页、租户、用户、角色、安全配置、菜单管理的 API 有没有漏。
+```
+
+预期：进入 `检查-菜单树API缺口`，执行 `scripts/check-menu-api-gap.node.js --scope default`
