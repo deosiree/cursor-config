@@ -1,0 +1,38 @@
+{
+  "skill": "微服务-qiankun-主子通信",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "T1",
+      "prompt": "子应用改了用户名，microfb 右上角不更新，怎么同步",
+      "expectTrigger": true,
+      "expectedFirstDispatch": "路由-主子通信任务",
+      "expectedFlow": "分析-通信基线 或 编排-扩展notification"
+    },
+    {
+      "id": "T2",
+      "prompt": "参考 nebula 加一个 profile_username_updated 通知",
+      "expectTrigger": true,
+      "expectedFirstDispatch": "编排-扩展notification"
+    },
+    {
+      "id": "T3",
+      "prompt": "子应用切换电站后要通知主应用高亮 tab",
+      "expectTrigger": true,
+      "expectedFirstDispatch": "编排-扩展notification",
+      "expectedFewShot": "子应用通知主应用-电站切换"
+    },
+    {
+      "id": "F1",
+      "prompt": "纯 CSS 改 Navbar 字体颜色",
+      "expectTrigger": false,
+      "negativeReason": "无 qiankun/globalState/notifyMainApp 关键词；主 SKILL 何时不要使用 已排除"
+    },
+    {
+      "id": "F2",
+      "prompt": "axios 拦截器加 token",
+      "expectTrigger": false,
+      "negativeReason": "网络拦截器与主子 globalState 无关"
+    }
+  ]
+}

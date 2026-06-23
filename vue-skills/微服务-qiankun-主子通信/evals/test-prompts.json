@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "prompt": "子应用改了用户名，microfb 右上角不更新，怎么同步",
+    "expected": "dispatch 路由或编排；message=profile_username_updated；双端文件；lazy import；payload username"
+  },
+  {
+    "id": 2,
+    "prompt": "参考 nebula 加一个 profile_username_updated 通知",
+    "expected": "直达编排-扩展notification；5步；CHECKPOINT message 确认"
+  },
+  {
+    "id": 3,
+    "prompt": "子应用切换电站后要通知主应用高亮 tab",
+    "expected": "station_change_fromChild；customEvent；非 patchStore"
+  },
+  {
+    "id": 4,
+    "prompt": "纯 CSS 改 Navbar 字体颜色",
+    "expected": "不触发本套件；指向样式/CSS"
+  },
+  {
+    "id": 5,
+    "prompt": "登录后子应用 mount 拿不到 userInfo",
+    "expected": "分析-通信基线 → 主→子 getAppProps/setMicroAppProps"
+  }
+]

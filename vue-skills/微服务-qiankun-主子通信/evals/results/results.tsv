@@ -1,0 +1,4 @@
+skill	round	score	delta	status	note
+微服务-qiankun-主子通信	0	82.6	-	baseline	evaluate-only 首版
+微服务-qiankun-主子通信	1	86.2	+3.6	keep	P0 template 双场景+P1 intention/feature 加厚+CHECKPOINT
+微服务-qiankun-主子通信	2	87.1	+0.9	keep	test-prompts+evals负例+README；边际收益下降
