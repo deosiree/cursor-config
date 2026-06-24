@@ -5,6 +5,18 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+# 套件级 CSV 列默认值：表头存在则强制写入（见 references/csv-field-convention.md）
+SKILL_CSV_COLUMN_DEFAULTS: dict[str, str] = {
+    "自测人员": "惠岩",
+}
+
+
+def apply_skill_csv_defaults(row: dict, header: list[str]) -> None:
+    """写入测试系统 CSV 前，补齐套件级固定列（如自测人员）。"""
+    for col, value in SKILL_CSV_COLUMN_DEFAULTS.items():
+        if col in header:
+            row[col] = value
+
 
 def build_combined_test_steps(steps: str, expected: str) -> str:
     """将 steps 与 expected 合并为测试系统可导入的「测试步骤」列内容。"""

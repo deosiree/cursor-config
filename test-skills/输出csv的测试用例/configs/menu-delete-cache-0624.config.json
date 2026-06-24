@@ -1,0 +1,7 @@
+{
+  "moduleId": "menu-delete-cache-0624",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0624/menu-delete-cache-0624.csv",
+  "casesFile": "configs/menu-delete-cache-0624.cases.json"
+}

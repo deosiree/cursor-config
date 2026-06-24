@@ -1,0 +1,111 @@
+{
+  "moduleId": "menu-delete-cache-0624",
+  "source": "菜单管理 index.vue 130950 最小链路修复 + useMenuViewState 精简（2026-06-24）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "菜单管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "菜单管理-删除顶级Tab-节点从列表消失且Tab自动切换",
+      "featureSet": "删除同步",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:menu:delete、sys:menu:query\n2. 当前项目下存在至少两个根菜单 Tab\n3. 待删 Tab 下可有子节点",
+      "steps": "1. 进入「系统管理」>「菜单管理」并等待列表加载\n2. 记录当前第二个根 Tab 名称\n3. 在该 Tab 的设置菜单中选择「删除」并确认\n4. 观察 Tab 栏与表格",
+      "expected": "1. 提示「删除成功」\n2. 被删根 Tab 从 Tab 栏消失\n3. 表格切换至其他根菜单子树，不出现被删节点\n4. 不出现 [130950]菜单不存在",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "删除后 applyLocalTreeAfterDelete，不再 void fetchMenuList"
+    },
+    {
+      "name": "菜单管理-删除子节点后列表即时移除且无幽灵行",
+      "featureSet": "删除同步",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 delete、query\n2. 当前 Tab 下存在可删子节点（目录/页面/路由）",
+      "steps": "1. 进入菜单管理并选中含子节点的根 Tab\n2. 点击目标行「删除」并确认\n3. 不手动点「搜索」或刷新页面\n4. 观察表格是否仍显示该行",
+      "expected": "1. 提示「删除成功」\n2. 该行立即从表格消失\n3. 数秒内不因旧 list 响应把已删节点写回\n4. 对已删节点无法再点「编辑」",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "fetchSeq + 删除后不 refetch"
+    },
+    {
+      "name": "菜单管理-新增菜单后立即删除-第一次删除成功",
+      "featureSet": "删除同步",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 add、delete、query\n2. 当前项目可新增菜单",
+      "steps": "1. 点击「新增」创建一条测试菜单并保存成功\n2. 在列表中找到刚新增的节点\n3. 立即点击「删除」并确认",
+      "expected": "1. 新增保存成功\n2. 第一次删除提示「删除成功」\n3. 节点从列表消失\n4. 不出现「菜单不存在」导致删不掉",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "deleteById 单次 API + isMenuGone"
+    },
+    {
+      "name": "菜单管理-新增后立即删除-节点不应在列表中复活",
+      "featureSet": "删除同步",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 同「新增后立即删除」前置\n2. 删除成功后保持停留当前页 5 秒",
+      "steps": "1. 新增并立即删除测试菜单\n2. 删除成功后等待约 5 秒\n3. 观察 Tab 与表格\n4. 再次尝试搜索该菜单名称",
+      "expected": "1. 已删节点不会重新出现在表格\n2. 搜索该名称无匹配或空态\n3. 再次删除同一节点时不应反复报错",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "并发 list 过期响应被 fetchSeq 丢弃"
+    },
+    {
+      "name": "菜单管理-删除目录节点后Tag显示待刷新且本页树保持正确",
+      "featureSet": "侧栏同步",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 delete\n2. 存在可删的目录/菜单/页面类型节点",
+      "steps": "1. 删除一条会影响侧栏的目录或页面节点并确认\n2. 查看标题旁 Tag\n3. 不点击 Tag，确认本页列表",
+      "expected": "1. Tag 变为黄色「待刷新」\n2. 本页表格已移除被删节点\n3. 点击黄色 Tag 后 Tag 变绿「最新」且侧栏同步",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "shouldMarkListPendingOnDelete(row)"
+    },
+    {
+      "name": "菜单管理-刷新页面后项目与Tab从session恢复",
+      "featureSet": "视图状态",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 query\n2. 当前项目下至少两个根 Tab",
+      "steps": "1. 进入菜单管理\n2. 切换至非默认的第二个根 Tab\n3. 浏览器刷新页面（F5）\n4. 观察项目下拉与激活 Tab",
+      "expected": "1. 刷新后仍选中同一项目\n2. 仍停留在刷新前选中的根 Tab\n3. 表格展示该 Tab 对应子树",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "setCachedProjectId / setCachedActiveTab session 缓存"
+    },
+    {
+      "name": "菜单管理-切换Tab后session记住选中项",
+      "featureSet": "视图状态",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录\n2. 至少两个根 Tab",
+      "steps": "1. 点击第二个根 Tab\n2. 切换到其他菜单页面再返回菜单管理\n3. 或刷新页面",
+      "expected": "1. 返回后仍激活第二个根 Tab\n2. 表格数据与 Tab 一致",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "reconcileActiveTab + setCachedActiveTab"
+    }
+  ]
+}

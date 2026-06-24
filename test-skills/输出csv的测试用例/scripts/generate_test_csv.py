@@ -8,7 +8,7 @@ import json
 import sys
 from pathlib import Path
 
-from csv_step_format import build_combined_test_steps, clear_result_columns
+from csv_step_format import build_combined_test_steps, clear_result_columns, apply_skill_csv_defaults
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
@@ -57,6 +57,7 @@ def build_row(field_defaults: dict, case: dict, header: list[str] | None = None)
     )
     if header:
         clear_result_columns(row, header)
+        apply_skill_csv_defaults(row, header)
     return row
 
 

@@ -88,11 +88,16 @@ python scripts/regenerate_module_exports.py \
 
 | 组件 | 文件 |
 |------|------|
-| 合并/留空/ID 映射 | `scripts/csv_step_format.py` |
+| 合并/留空/ID 映射 / 自测人员 | `scripts/csv_step_format.py` |
 | v2 功能集合导出 | `scripts/generate_feature_csv.py` |
 | v1 UI 追加 | `scripts/append_ui_cases_to_csv.py` |
 | API/test.ts 导出 | `scripts/generate_test_csv.py` |
 | 批量修复 0616 等 | `scripts/regenerate_module_exports.py` |
+
+## 规则 E：自测人员固定为「惠岩」
+
+- CSV「自测人员」列（表头存在时）由 `csv_step_format.apply_skill_csv_defaults` **强制写入** `惠岩`
+- 无需在 `fieldDefaults` / cases.json 重复填写；脚本在 `generate_feature_csv.py`、`generate_test_csv.py`、`append_ui_cases_to_csv.py` 导出前统一补齐
 
 ## 质量自检（CSV 层）
 
@@ -100,7 +105,8 @@ python scripts/regenerate_module_exports.py \
 
 1. 「测试步骤」含 `---` 与「预期结果：」（有 expected 的用例）
 2. 「用例结果」列为空字符串（非 `0`）
-3. 更新场景下用例ID 与源 CSV 按名称一致；新增用例 ID 为空
+3. 「自测人员」列为 `惠岩`（表头含该列时）
+4. 更新场景下用例ID 与源 CSV 按名称一致；新增用例 ID 为空
 
 ## 历史备份校验
 

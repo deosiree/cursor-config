@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from csv_step_format import build_combined_test_steps, clear_result_columns
+from csv_step_format import build_combined_test_steps, clear_result_columns, apply_skill_csv_defaults
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
@@ -99,6 +99,7 @@ def build_ui_rows(header: list[str], field_defaults: dict, cases: list[dict]) ->
         # 强制留空
         row["功能集合"] = ""
         row["用例ID"] = ""
+        apply_skill_csv_defaults(row, header)
         # 只保留 header 中的列
         row = {k: row.get(k, "") for k in header}
         rows.append(row)

@@ -11,8 +11,7 @@ from pathlib import Path
 from csv_step_format import (
     build_combined_test_steps,
     clear_result_columns,
-    load_existing_case_names,
-    load_name_to_id_map,
+    apply_skill_csv_defaults,
 )
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -118,6 +117,7 @@ def case_to_row(
 
     if "用例类型" in header:
         row["用例类型"] = resolve_case_type(case)
+    apply_skill_csv_defaults(row, header)
     return row
 
 

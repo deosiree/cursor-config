@@ -63,6 +63,7 @@ v2 完整说明见 [`csv-format-v2-feature-set.md`](csv-format-v2-feature-set.md
 | 执行方式 | 4 |
 | 最新结果 | 0 |
 | 创建人员 | 惠岩（换模块时在 config 覆盖） |
+| 自测人员 | 惠岩（脚本 `apply_skill_csv_defaults` 强制写入，无需在 cases/config 重复填） |
 | 用例等级 | 0 |
 | 用例类型 | 0（**仅 v1/API**；v2 见 [`case-type-map.md`](case-type-map.md)） |
 | develop结果 | 0 |
