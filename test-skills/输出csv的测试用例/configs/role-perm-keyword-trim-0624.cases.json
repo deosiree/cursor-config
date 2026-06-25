@@ -1,0 +1,98 @@
+{
+  "moduleId": "role-perm-keyword-trim-0624",
+  "source": "角色管理 MenuPermissionTree/FunctionPermissionList 搜索框失焦 trim（2026-06-24）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "角色管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "编辑角色-菜单树搜索尾部空格-失焦后trim并正确过滤",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入角色编辑「菜单权限」Tab\n3. 菜单树中存在名称含「中心」的节点（如「管理中心」）",
+      "steps": "1. 在左侧搜索框输入「中心 」（末尾带空格，不立即失焦）\n2. 观察树过滤结果\n3. 点击搜索框外区域使输入框失焦\n4. 观察搜索框显示值与树过滤结果",
+      "expected": "1. 输入「中心 」期间能匹配含「中心」的节点\n2. 失焦后搜索框显示变为「中心」（无首尾空格）\n3. 树仍按「中心」正确过滤\n4. 不会因尾部空格导致匹配失败",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "useTrimKeywordOnBlur + normalizeSearchKeyword"
+    },
+    {
+      "name": "编辑角色-菜单树搜索尾部空格-回车后trim并正确过滤",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入角色编辑「菜单权限」Tab\n3. 菜单树中存在名称含「中心」的节点",
+      "steps": "1. 在左侧搜索框输入「中心 」\n2. 按 Enter 键\n3. 观察搜索框显示值与树过滤结果",
+      "expected": "1. 回车后搜索框显示变为「中心」\n2. 树按 trim 后的关键词过滤\n3. 含「中心」的节点仍可见",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "trimKeywordOnBlur @keyup.enter"
+    },
+    {
+      "name": "编辑角色-菜单树搜索仅空格-失焦后恢复全量展示",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入角色编辑「菜单权限」Tab",
+      "steps": "1. 在左侧搜索框输入若干空格\n2. 观察树过滤状态\n3. 点击搜索框外失焦\n4. 观察搜索框与树展示",
+      "expected": "1. 失焦后搜索框变为空\n2. 菜单树恢复展示全部节点\n3. 不出现空白过滤态",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "trim 后空串视为无过滤"
+    },
+    {
+      "name": "编辑角色-功能项搜索尾部空格-失焦后trim并正确过滤",
+      "featureSet": "功能项权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色已勾选某含多个功能项的页面\n3. 已点击该页面节点，右侧展示功能项列表",
+      "steps": "1. 在右侧功能项搜索框输入带尾部空格的关键词\n2. 观察功能项列表过滤\n3. 点击搜索框外失焦\n4. 观察搜索框显示值与列表",
+      "expected": "1. 输入期间能按 trim 后关键词匹配功能项\n2. 失焦后搜索框去掉首尾空格\n3. 功能项列表过滤结果与 trim 后关键词一致",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "FunctionPermissionList useTrimKeywordOnBlur"
+    },
+    {
+      "name": "编辑角色-过滤态全选前自动trim-尾部空格不影响scope",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 菜单树存在可区分的关键词匹配节点",
+      "steps": "1. 在左侧搜索框输入「用户 」（带尾部空格）\n2. 不手动失焦，直接点击「全选」\n3. 清空搜索框观察勾选范围",
+      "expected": "1. 全选前自动 trim 关键词\n2. 仅名称匹配 trim 后关键词的节点被勾选\n3. 不会因尾部空格导致 scope 为空或全量误触发",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "handleSelectAllClick 内 trimKeywordOnBlur"
+    },
+    {
+      "name": "编辑角色-菜单权限搜索框聚焦悬浮-宽度不变",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 1,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入角色编辑「菜单权限」Tab",
+      "steps": "1. 记录左侧搜索框默认宽度\n2. 鼠标悬浮搜索框\n3. 点击搜索框获得焦点\n4. 对比工具栏布局是否被撑开",
+      "expected": "1. 悬浮/聚焦前后搜索框宽度一致\n2. 工具栏「全选」「清空」按钮位置不因搜索框变宽而跳动\n3. 与角色列表页搜索框固定宽度表现一致",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "$localeLayout.queryField.md 固定宽度"
+    }
+  ]
+}

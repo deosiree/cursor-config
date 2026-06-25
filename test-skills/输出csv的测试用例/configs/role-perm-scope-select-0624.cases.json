@@ -1,0 +1,111 @@
+{
+  "moduleId": "role-perm-scope-select-0624",
+  "source": "角色管理 MenuPermissionTree 关键词作用域全选/清空（2026-06-24）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "角色管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "编辑角色-菜单树过滤后全选-仅新增名称匹配节点",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入「安全管理 > 角色管理」\n3. 存在非内置测试角色，且已勾选部分菜单（含与不含同一关键词的节点）\n4. 左侧菜单树节点名称可区分（如同时存在「用户管理」「角色管理」）",
+      "steps": "1. 点击该角色「编辑」，切换到「菜单权限」Tab\n2. 记录当前已勾选菜单节点\n3. 在左侧「请输入关键字搜索」输入仅匹配部分节点的关键词（如「用户」）\n4. 点击「全选」\n5. 清空搜索框，展开树观察全部勾选状态",
+      "expected": "1. 过滤态下仅名称包含关键词的节点变为勾选\n2. 名称不包含关键词的已选节点保持原勾选状态\n3. 必选菜单仍为勾选且不可取消\n4. 清空搜索后可见：未匹配节点勾选状态未被误改",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "MenuPermissionTree collectScopeMenuIds + setScopeChecked(true)"
+    },
+    {
+      "name": "编辑角色-菜单树过滤后清空-仅取消匹配节点且级联不回弹",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入角色编辑「菜单权限」Tab\n3. 测试角色已勾选含关键词的页面/目录及其上级目录\n4. 同时存在不匹配关键词的已选菜单",
+      "steps": "1. 在左侧搜索框输入关键词（如「用户」）\n2. 确认树中仅展示/高亮相关节点\n3. 点击「清空」\n4. 清空搜索框，观察整树勾选状态\n5. 点击仍勾选的页面节点，查看右侧功能项",
+      "expected": "1. 仅名称匹配关键词的菜单节点被取消勾选\n2. 不匹配关键词的已选节点仍为勾选\n3. 必选菜单保持勾选\n4. 不会出现「清空后匹配节点仍被父级级联重新勾上」\n5. 被取消页面下的功能项联动移除",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "setScopeChecked(false) 修复级联回弹"
+    },
+    {
+      "name": "编辑角色-菜单树过滤后全选含页面-功能项自动补齐",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色未勾选某含功能项页面（如「菜单管理」）\n3. 该页面名称可被唯一关键词匹配",
+      "steps": "1. 打开角色编辑「菜单权限」Tab\n2. 搜索框输入可匹配「菜单管理」的关键词\n3. 点击「全选」\n4. 点击该页面节点\n5. 保存角色后重新打开编辑确认",
+      "expected": "1. 左侧对应页面菜单变为勾选\n2. 右侧功能项列表可编辑且默认全选该页功能项\n3. 保存后重开，菜单与功能项授权与操作一致",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "onMenuIdsUpdate → syncFunctionsForAddedMenus"
+    },
+    {
+      "name": "编辑角色-菜单树无关键词全选-全量授权与loading正常",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色初始仅少量菜单授权",
+      "steps": "1. 打开角色编辑「菜单权限」Tab\n2. 确认搜索框为空\n3. 点击「全选」\n4. 等待 loading 结束\n5. 抽样查看左侧树与右侧功能项",
+      "expected": "1. Tab 出现全选同步 loading\n2. 左侧菜单树接近全选（含必选）\n3. 功能项批量写入，不仅依赖单页增量请求\n4. 行为与改前全量全选一致",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "PermissionTab handleSelectAll API 全量路径保留"
+    },
+    {
+      "name": "编辑角色-菜单树无关键词清空-仅保留必选且功能项清空",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色已勾选多菜单并授权部分功能项",
+      "steps": "1. 打开角色编辑「菜单权限」Tab\n2. 确认搜索框为空\n3. 点击「清空」\n4. 观察左侧树与右侧功能项",
+      "expected": "1. 除必选菜单外，左侧菜单全部取消勾选\n2. 功能项选中全部清空\n3. 必选菜单仍勾选且 disabled\n4. 行为与改前全量清空一致",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "PermissionTab handleClearAll 全量路径保留"
+    },
+    {
+      "name": "编辑角色-菜单树先过滤操作再清空搜索-全选恢复全量",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色处于部分授权状态",
+      "steps": "1. 打开「菜单权限」Tab\n2. 输入关键词并点击「全选」或「清空」完成一次过滤态操作\n3. 清空搜索框\n4. 再次点击「全选」",
+      "expected": "1. 清空搜索框后树展示全部节点\n2. 第二次「全选」走全量逻辑（emit → PermissionTab API）\n3. 最终菜单与功能项为全量授权，而非仅上次过滤 scope",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "treeSearchKeyword 为空时 emit select-all"
+    },
+    {
+      "name": "编辑角色-功能项区过滤后全选清空-仅影响当前页匹配项",
+      "featureSet": "功能项权限",
+      "direction": "正向",
+      "level": 1,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 测试角色已勾选某含多个功能项的页面\n3. 该页功能项名称可区分",
+      "steps": "1. 打开「菜单权限」Tab，点击已勾选页面\n2. 在右侧功能项搜索框输入关键词\n3. 点击「全选」\n4. 再次输入关键词，点击「清空」\n5. 清空功能项搜索框查看全部功能项勾选",
+      "expected": "1. 过滤后「全选」仅新增匹配的功能项勾选\n2. 过滤后「清空」仅取消匹配功能项\n3. 未匹配功能项勾选状态不变\n4. 与左侧菜单树过滤态行为一致",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "FunctionPermissionList filteredFunctionNodes 回归"
+    }
+  ]
+}

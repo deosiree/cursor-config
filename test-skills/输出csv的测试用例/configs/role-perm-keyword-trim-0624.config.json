@@ -1,0 +1,7 @@
+{
+  "moduleId": "role-perm-keyword-trim-0624",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0624/role-perm-keyword-trim-0624.csv",
+  "casesFile": "configs/role-perm-keyword-trim-0624.cases.json"
+}
