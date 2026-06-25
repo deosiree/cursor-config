@@ -18,17 +18,32 @@
 
 ## 动态 rules 打开弹窗全红
 
-**现象**：改密/重置密码弹窗一打开，空表单三字段全红。
+**现象**：弹窗一打开，空表单或刚回填的表单出现红框。
 
-**原因**：`rules` 为 `computed`，`getPwdPolicy()` 返回后 `rules` 引用变化；Element Plus 默认 `validate-on-rule-change: true` 触发全表校验。
+**原因**（二选一，不要叠加修复）：
 
-**修复**：
+1. **rules 引用变化**：`rules` 为 `computed`、`pwdPair`、异步 `policy` 注入等，导致 Element Plus 在 `validate-on-rule-change: true`（默认）下重跑全表校验。
+2. **校验态残留**：`destroyOnClose: false` 或上次点「确定」校验失败后，关闭再开仍保留红框。
 
-```vue
-<el-form :validate-on-rule-change="false" ... />
+**决策树（每个文件只选一种最小修复）**：
+
+| 症状 | 最小修复 |
+|------|----------|
+| `rules` computed / pwdPair / 异步 policy，且 `el-form` 无 `validate-on-rule-change` | `el-form` 加 `:validate-on-rule-change="false"` |
+| 已有 `validate-on-rule-change="false"`（或 `rules` 为 stable `reactive`），打开仍红 / 残留红框 | 打开弹窗后 `nextTick(() => formRef?.clearValidate())` |
+
+**示例**（apex_dev 用户管理，对齐同文件 `handleOpenResetDialog`）：
+
+```ts
+// handleOpenDialog 末尾
+nextTick(() => {
+  userFormRef.value?.clearValidate();
+});
 ```
 
-打开弹窗时 `nextTick(() => formRef?.clearValidate())`；关闭时 `pwdPlcy = undefined`。提交仍 `formRef.validate()`。
+子组件 `UserFormFields` 已有 `:validate-on-rule-change="false"` 时，父级只需补 `clearValidate`，勿再叠第二层。
+
+关闭弹窗：`resetFields` + `clearValidate`（若已有则保留）。提交仍 `formRef.validate()`。
 
 详见 [`password-pair-model.md`](password-pair-model.md)。
 

@@ -83,3 +83,4 @@ payload.apiUrl = String(formData.apiUrl ?? "").trim();
 
 - [ ] 失焦与提交行为与规则模块一致
 - [ ] 未新增 locale 改动
+- [ ] 弹窗打开无初始红框；若有问题按 [`known-issues.md`](../../references/known-issues.md) 决策树**只加一处**修复
