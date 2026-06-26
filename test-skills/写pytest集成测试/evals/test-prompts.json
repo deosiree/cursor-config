@@ -1,0 +1,82 @@
+[
+  {
+    "id": "crud-new-tenant-test",
+    "prompt": "为 seccenter 在 test_03_tenant.py 的 TestTenantCRUD 中补一条 test_update_tenant_name：创建租户 → 改名 → GetTenant 断言 → 删除。",
+    "expectedOutput": "在 TestTenantCRUD 内新增 test_update_tenant_name；含 assert_success、generate_unique_name、中文 docstring、末尾 delete；无 unittest.mock",
+    "expect": {
+      "intention": "策略-补场景用例",
+      "features": ["撰写-CRUD类用例", "质量-集成测试自检"],
+      "targetFile": "test_03_tenant.py",
+      "mustHave": [
+        "class TestTenantCRUD",
+        "assert_success",
+        "generate_unique_name",
+        "中文 docstring",
+        "清理 delete"
+      ],
+      "mustNotHave": ["unittest.mock", "MagicMock"]
+    }
+  },
+  {
+    "id": "permission-403-scenario",
+    "prompt": "参考 test_08_api_permission.py 风格，在 test_09_tenant_isolation.py 补跨租户更新用户应被拒绝的用例，策略型文件头若缺失则只补方法。",
+    "expectedOutput": "双 session 或 two_tenants；跨租户 update 用 assert_error/403；字段 camelCase 双读；不 mock HTTP",
+    "expect": {
+      "intention": "策略-补场景用例",
+      "features": ["撰写-权限隔离类用例", "质量-集成测试自检"],
+      "scenarioType": "isolation",
+      "mustHave": [
+        "two_tenants 或双 session",
+        "assert_error 或 403",
+        "camelCase 兼容读取"
+      ]
+    }
+  },
+  {
+    "id": "new-module-file-whitelist",
+    "prompt": "新建 test_18_api_whitelist.py，策略型文件头列出 CRUD + VerifySession 场景，先实现 TestApiWhitelistCRUD.test_create_whitelist 一条可跑环。",
+    "expectedOutput": "新文件含测试策略/测试场景列表、TestApiWhitelistCRUD、一条 create→assert→cleanup",
+    "expect": {
+      "intention": "策略-新建模块测试文件",
+      "features": ["撰写-CRUD类用例", "质量-集成测试自检"],
+      "newFile": "test_18_api_whitelist.py",
+      "fileHeader": "strategy",
+      "mustHave": ["测试策略", "测试场景", "TestApiWhitelistCRUD"]
+    }
+  },
+  {
+    "id": "scaffold-empty-tests",
+    "prompt": "某新后端 tests/ 只有 README，按 seccenter 黄金样本生成 conftest + config + utils + test_01_health.py 最小骨架。",
+    "expectedOutput": "产出 conftest.py/config.py/utils.py/pytest.ini + test_01_health.py；session fixture + assert_success 最小集",
+    "expect": {
+      "intention": "策略-新建模块测试文件",
+      "features": [
+        "撰写-conftest与fixtures",
+        "撰写-utils断言助手",
+        "撰写-CRUD类用例"
+      ],
+      "template": "新模块骨架/after",
+      "artifacts": ["conftest.py", "config.py", "utils.py", "pytest.ini"]
+    }
+  },
+  {
+    "id": "swagger-migrate-suspend",
+    "prompt": "根据 seccenter.swagger 的 tenant suspend 接口，在 test_03_tenant.py 规划场景并先实现 suspend 后 verify session 失效。",
+    "expectedOutput": "文件头或 backlog 列场景；至少 1 条 suspend→verify 失败；pytestOutputPlan.backlog 列其余场景",
+    "expect": {
+      "intention": "策略-迁移存量接口",
+      "features": ["撰写-CRUD类用例", "质量-集成测试自检"],
+      "backlog": true,
+      "minImplemented": 1
+    }
+  },
+  {
+    "id": "red-stop-missing-facts",
+    "prompt": "帮我写个集成测试。",
+    "expectedOutput": "STOP：输出 missingFacts 追问 targetRepo/baseUrl/moduleName/scenarioType/fileStrategy；不生成任何 .py",
+    "expect": {
+      "mustHave": ["missingFacts"],
+      "mustNotHave": ["def test_", "class Test"]
+    }
+  }
+]

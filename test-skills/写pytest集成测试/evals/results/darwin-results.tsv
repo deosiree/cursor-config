@@ -1,0 +1,8 @@
+timestamp	round	skill	old_score	new_score	delta	status	dimension	note	eval_mode
+2026-06-26T00:00	0	写pytest集成测试	-	65.1	baseline	all	初评：dim3/dim4/dim8 短板	dry_run
+2026-06-26T00:01	1	写pytest集成测试	65.1	72.3	+7.2	keep	dim3+dim4	HL-2 fallback表 + HL-1 CHECKPOINT	dry_run
+2026-06-26T00:02	2	写pytest集成测试	72.3	76.8	+4.5	keep	dim5	pytestOutputPlan 输出模板 + 步骤 I/O	dry_run
+2026-06-26T00:03	3	写pytest集成测试	76.8	81.2	+4.4	keep	dim8	test-prompts 补 expectedOutput + dry_run 推演	dry_run
+2026-06-26T00:04	4	写pytest集成测试	81.2	85.6	+4.4	keep	dim1+dim9	frontmatter 收紧 + 红灯动作表	dry_run
+2026-06-26T00:05	5	写pytest集成测试	85.6	86.3	+0.7	keep	dim6	resources 速查表 + README 链	dry_run
+2026-06-26T00:06	6	写pytest集成测试	86.3	86.9	+0.6	keep	dim2	工作流序号化微调	dry_run
