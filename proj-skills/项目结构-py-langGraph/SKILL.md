@@ -9,6 +9,8 @@ description: >-
 
 # 项目结构-py-langGraph
 
+> **TL;DR** — Single Dispatch 到唯一 intention → 按 GREEN 步骤搭包 → 双轨 Mermaid README → 对照 checklist + evals 验收。
+
 ## 何时使用
 
 - 从 0 新建 FastAPI + LangGraph Agent 项目骨架

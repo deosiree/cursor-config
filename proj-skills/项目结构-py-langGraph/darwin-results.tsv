@@ -1,2 +1,5 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-06-26T00:00	baseline	项目结构-py-langGraph	-	64.0	baseline	-	初始9维评估	dry_run
+2026-06-26T01:00	c23eddc	项目结构-py-langGraph	64.0	78.5	keep	dim2+3+4+9	workflow+fallback+CHECKPOINT	dry_run
+2026-06-26T02:00	a5e0f2f	项目结构-py-langGraph	78.5	83.2	keep	dim5+8	输出模板+evals+Mermaid fallback	dry_run
+2026-06-26T03:00	pending	项目结构-py-langGraph	83.2	85.4	keep	dim3+7+8	TL;DR+重构pytest gate+mock fallback	dry_run

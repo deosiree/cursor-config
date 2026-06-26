@@ -29,7 +29,13 @@ app/
 
 **原因**：builder 在 import 时已绑定节点函数引用。
 
-## conftest fixtures
+## 失败模式
+
+| 触发 | 修复 |
+|------|------|
+| `AttributeError` on patch 路径 | 改 patch 为 `builder.<node_fn>`，非 `nodes.xxx` |
+| mock 未生效、仍调真 LLM | 确认 patch 在 `builder.compile()` **之前** |
+| 跨 workflow 测试 import 错 | 用 `graph.<workflow>.builder` 全限定名 |
 
 - `pre_translate_service` — 注入 mock repo 的 PreTranslateService
 - `mock_repo` — AsyncMock TermRepository
