@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "使用 $项目结构-py-langGraph，为 terminology-agent 新增 graph/lexicon_curation/ 工作域，含双轨 README 与 tests，遵循 pre_translate 金样。",
+    "expected": "dispatch 策略-新增图域；输出完整域包树、双轨 Mermaid README、graph/README 登记、tests 共置"
+  },
+  {
+    "id": 2,
+    "prompt": "terminology-agent 里 orchestration/ 和 services/ 并存，graph 根还有 routes.py，帮我重构目录。",
+    "expected": "dispatch 策略-重构反模式；输出迁移映射表、import 替换、pytest 全绿、删除旧目录"
+  },
+  {
+    "id": 3,
+    "prompt": "我想搭一个 FastAPI+LangGraph 术语 Agent，但不确定是从 0 新建还是在现有项目加图域。",
+    "expected": "dispatch 路由-结构任务；追问 targetRepo/taskType；missingFacts 非空则 STOP"
+  }
+]
