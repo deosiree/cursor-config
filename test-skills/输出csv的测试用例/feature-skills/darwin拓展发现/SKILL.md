@@ -38,7 +38,7 @@ description: 在用例生成过程中发现能力缺口，输出新 intention/fe
 | store 模块 | feature_store | `store-基于test.ts生成` |
 | utils | feature_utils | `utils-基于test.ts生成` |
 | types/enum | feature_types_enum | `types-` / `enum-基于源码生成` |
-| 多模块联调 | feature_integration | `集成-基于源码生成` |
+| 多模块联调 | feature_integration_csv | `联调场景-转CSV步骤`（手工 CSV；pytest HTTP 见 `../../写pytest集成测试`） |
 | E2E | feature_e2e | `端到端-基于场景生成` |
 | expectTypeOf | compile_only_test | 跳过模式文档化 |
 | route 测试在 store 目录 | path_routing_gap | 独立 `router-` feature |

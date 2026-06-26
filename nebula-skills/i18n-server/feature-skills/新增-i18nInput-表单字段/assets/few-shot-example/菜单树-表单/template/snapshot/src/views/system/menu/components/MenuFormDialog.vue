@@ -171,7 +171,7 @@
             <el-radio :value="true">{{ $t("是") }}</el-radio>
             <el-radio :value="false">{{ $t("否") }}</el-radio>
           </el-radio-group>
-          <div v-if="sysLock" class="menu-form-hint">{{ $t("父节点已设为仅系统显示") }}</div>
+          <div v-if="sysLock" class="menu-form-hint">{{ $t("父节点已设为仅平台显示") }}</div>
         </div>
       </el-form-item>
 

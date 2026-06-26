@@ -28,7 +28,7 @@
 | hook-基于源码生成 | planned | `src/hooks/**` |
 | components-基于源码生成 | planned | `src/components/**` |
 | router-基于test.ts生成 | planned | 路由/redirect 类 |
-| 集成-基于源码生成 | planned | 多模块联调 |
+| 联调场景-转CSV步骤 | planned | 多模块联调 → **手工 CSV 步骤**（非 pytest；HTTP 自动化见 `../写pytest集成测试`） |
 | 端到端-基于场景生成 | planned | Playwright/Cypress |
 
 ## 脚本层（无需新 skill）

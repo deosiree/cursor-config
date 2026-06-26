@@ -1,0 +1,7 @@
+{
+  "moduleId": "menu-import-export-0625",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0625/menu-import-export-0625.csv",
+  "casesFile": "configs/menu-import-export-0625.cases.json"
+}
