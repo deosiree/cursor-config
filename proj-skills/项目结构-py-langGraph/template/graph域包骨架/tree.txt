@@ -1,0 +1,22 @@
+graph/<workflow>/
+├── README.md            # 必写：双轨 Mermaid
+├── __init__.py
+├── state.py
+├── constants.py
+├── builder.py
+├── runner.py
+├── domain/
+│   └── __init__.py
+├── edges/
+│   └── after_<node>.py
+├── nodes/
+│   ├── README.md
+│   ├── intentions/
+│   └── features/
+│       ├── io/
+│       ├── rules/
+│       ├── llm/
+│       └── workflow/
+├── utils/
+├── prompts/
+└── tests/

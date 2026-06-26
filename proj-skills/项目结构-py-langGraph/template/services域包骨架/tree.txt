@@ -1,0 +1,7 @@
+services/<domain>/
+├── __init__.py
+├── service.py
+├── single.py          # 可选：单条用例
+├── mappers.py         # 可选：纯函数映射
+└── tests/
+    └── test_<domain>_service.py

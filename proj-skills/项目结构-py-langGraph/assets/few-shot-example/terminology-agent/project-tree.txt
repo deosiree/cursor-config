@@ -1,0 +1,35 @@
+terminology-agent/app/
+├── api/
+│   ├── router.py
+│   └── tests/test_router.py
+├── services/
+│   ├── pre_translate/
+│   │   ├── service.py
+│   │   ├── single.py
+│   │   ├── mappers.py
+│   │   └── tests/
+│   └── term_audit/
+│       ├── service.py
+│       └── tests/
+├── graph/
+│   ├── README.md
+│   ├── shared/visualization.py
+│   └── pre_translate/
+│       ├── README.md
+│       ├── state.py
+│       ├── builder.py
+│       ├── runner.py
+│       ├── domain/
+│       ├── edges/
+│       ├── nodes/
+│       ├── utils/
+│       ├── prompts/
+│       └── tests/
+├── repository/term_repo.py
+├── schemas/agent.py
+├── models/
+├── core/
+├── conftest.py
+├── testing/fixtures/
+├── tests/test_settings_env.py
+└── main.py

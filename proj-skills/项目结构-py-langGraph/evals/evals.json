@@ -1,0 +1,39 @@
+{
+  "skill": "项目结构-py-langGraph",
+  "should_trigger": [
+    {
+      "prompt": "新建一个 FastAPI LangGraph 术语 Agent 项目结构",
+      "expected_intention": "策略-新建Agent项目"
+    },
+    {
+      "prompt": "给 agent 加一个 lexicon 治理工作流，要 graph 包和双轨 README",
+      "expected_intention": "策略-新增图域"
+    },
+    {
+      "prompt": "pre_translate 的 graph README 帮我写双轨 mermaid",
+      "expected_feature": "撰写-graph域README双轨Mermaid"
+    },
+    {
+      "prompt": "terminology-agent 目录混乱，orchestration 和 services 重复",
+      "expected_intention": "策略-重构反模式"
+    },
+    {
+      "prompt": "新增 term_audit 之外的审核域 services 包",
+      "expected_intention": "策略-新增服务域"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "retrieve_similar_node 加重排算法",
+      "reason": "单节点业务逻辑，非结构任务"
+    },
+    {
+      "prompt": "写 seccenter HTTP 集成测试",
+      "reason": "另有写pytest集成测试 skill"
+    },
+    {
+      "prompt": "只改 Navbar 字体颜色",
+      "reason": "与 Agent 结构无关"
+    }
+  ]
+}

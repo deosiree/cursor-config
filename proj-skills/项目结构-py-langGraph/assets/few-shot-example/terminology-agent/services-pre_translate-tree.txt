@@ -1,0 +1,14 @@
+services/pre_translate/
+├── __init__.py
+├── service.py       # PreTranslateService.run_batch
+├── single.py        # run_single_pre_translate → graph runner
+├── mappers.py       # map_graph_state_to_agent_meta
+└── tests/
+    ├── test_pre_translate_service.py
+    └── test_mappers.py
+
+services/term_audit/
+├── __init__.py
+├── service.py       # TermAuditService
+└── tests/
+    └── test_term_audit_service.py

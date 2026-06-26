@@ -94,6 +94,35 @@ description: >-
 | `workflowName` | 图域名，如 `pre_translate` |
 | `domainName` | 服务域名，如 `term_audit` |
 
+## 输出格式（每次任务结束必返）
+
+```markdown
+## Dispatch
+- intention: <路径>
+- taskType: <值>
+
+## 变更摘要
+- 新建: <路径列表>
+- 修改: <路径列表>
+- 删除: <路径列表，重构时>
+
+## 目录树 diff
+<tree 或 bullet>
+
+## 自检
+- [ ] skill-output-checklist 已对照
+- [ ] pytest -v: <待跑 / 已通过>
+
+## 下一步
+<用户需确认或继续的动作>
+```
+
+## 验收与 evals
+
+任务完成后对照 [[evals/evals.json]]：
+- `should_trigger` 场景 → 必须 dispatch 到预期 intention/feature
+- `should_not_trigger` 场景 → 必须拒答或转介其他 skill
+
 ## 使用示例
 
 ```text

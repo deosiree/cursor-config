@@ -1,0 +1,30 @@
+terminology-agent/app/
+├── api/
+│   ├── router.py
+│   └── tests/
+├── services/
+│   └── <domain>/
+│       ├── __init__.py
+│       ├── service.py
+│       ├── single.py          # 可选
+│       ├── mappers.py         # 可选
+│       └── tests/
+├── graph/
+│   ├── README.md
+│   ├── shared/
+│   └── <workflow>/            # 至少一个
+├── repository/
+├── schemas/
+├── models/
+├── core/
+├── conftest.py
+├── testing/fixtures/
+├── tests/
+└── main.py
+
+# 项目根另含
+terminology-agent/
+├── config/
+├── devtools/
+├── pyproject.toml
+└── README.md

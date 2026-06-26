@@ -1,0 +1,5 @@
+name: 项目结构-py-langGraph
+description: >-
+  FastAPI+LangGraph Agent 全项目结构标准：api/services/graph/repository 分层、graph 域包、双轨 Mermaid README。
+  何时用：新建 Agent 项目、新增 graph 工作域、新增 services 领域、目录反模式重构。
+  触发词：LangGraph 项目结构、Agent 目录规范、graph 域 README、双轨 Mermaid。
