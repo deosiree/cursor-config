@@ -1,0 +1,7 @@
+{
+  "moduleId": "tenant-create-submit-loading-0626",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/tenant.csv",
+  "outputPath": "docs/问题单/0626/tenant-create-submit-loading-0626.csv",
+  "casesFile": "configs/tenant-create-submit-loading-0626.cases.json"
+}

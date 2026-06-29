@@ -1,0 +1,90 @@
+{
+  "moduleId": "tenant-project-submit-loading-0626",
+  "source": "租户管理 index.vue 管理项目提交 loading（useTenantPageLoading + useTenantListPage，2026-06-26）；openCLI E2E 见 evals/tenant-project-submit-loading-0626.md",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "租户管理-管理项目提交-初始全绑定-全选确定-变为待绑定-loading至绑定弹窗",
+      "featureSet": "管理项目提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:query、sys:tenant:edit、sys:tenant:bindResource\n2. 列设置已勾选「项目资源绑定」\n3. 测试租户 tenant_test 当前「项目资源绑定」列为「全绑定」\n4. pnpm dev 已启动（localhost:8081）；opencli doctor 为 green",
+      "steps": "1. 进入「安全管理」>「租户管理」，搜索 tenant_test\n2. 记录「项目资源绑定」列为全绑定\n3. 行操作「管理项目」> 项目列表点击「全选」>「确定」\n4. 确定后立即观察表格 loading 遮罩与列文案\n5. 等待列稳定为「待绑定」及「项目资源绑定」弹窗出现",
+      "expected": "1. 从点击确定到列显示「待绑定」前，表格区域持续存在 loading 遮罩（.el-loading-mask），不得先关 loading 再闪「-」\n2. 列稳定后显示「待绑定」tag，不得长时间停留「-」\n3. loading 延续至「项目资源绑定」弹窗打开且相关 API 完成后再结束\n4. 不出现管理项目弹窗 @closed 误杀 loading 导致的空窗期",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /cloud/Apex/tenant；openCLI session=nebula；详见 evals/tenant-project-submit-loading-0626.md Round1（initial=全绑定）",
+      "purpose": "handleSubmitProjectDialog withLoading → fetchList enrich → tryOpen pending",
+      "remark": "openCLI：opencli browser nebula bind → 搜索 tenant_test → 管理项目 → 全选 → 确定 → 轮询 .el-loading-mask 与列文案"
+    },
+    {
+      "name": "租户管理-管理项目提交-初始待绑定-全选确定-变为全绑定-loading列稳定后结束",
+      "featureSet": "管理项目提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:query、sys:tenant:edit、sys:tenant:bindResource\n2. 列设置已勾选「项目资源绑定」\n3. 测试租户 tenant_test 当前「项目资源绑定」列为「待绑定」\n4. pnpm dev 已启动；opencli doctor 为 green",
+      "steps": "1. 进入租户管理，搜索 tenant_test\n2. 记录「项目资源绑定」列为待绑定\n3. 打开「管理项目」>「全选」>「确定」\n4. 观察 loading 与列文案变化\n5. 确认无「项目资源绑定」弹窗自动弹出",
+      "expected": "1. 从确定到列显示「全绑定」前，loading 遮罩持续存在\n2. 列稳定后显示「全绑定」tag，不出现「-」闪烁\n3. 列稳定后 loading 结束，不弹出「项目资源绑定」防呆窗\n4. tryOpen 判定非 pending 时不延长多余 loading",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /cloud/Apex/tenant；openCLI session=nebula；详见 evals/tenant-project-submit-loading-0626.md Round1（initial=待绑定）",
+      "purpose": "handleSubmitProjectDialog；tryOpen 返回 false",
+      "remark": "openCLI：同 Round1 流程；期望 pending→bound"
+    },
+    {
+      "name": "租户管理-管理项目提交-二次全选-待绑定变全绑定-Round2",
+      "featureSet": "管理项目提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 已完成 Round1 且 tenant_test 当前为「待绑定」\n2. 列设置仍勾选「项目资源绑定」",
+      "steps": "1. 再次对 tenant_test 执行「管理项目」>「全选」>「确定」\n2. 观察 loading 与列从待绑定变为全绑定\n3. 确认无绑定弹窗",
+      "expected": "1. loading 持续至列显示「全绑定」后结束\n2. 全程列不出现长时间「-」\n3. 不弹出项目资源绑定弹窗",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；openCLI Round2；initial=待绑定",
+      "purpose": "双向验收 Round2：pending→bound",
+      "remark": "与 Round1 用例1 衔接：全绑定→待绑定 后再测 待绑定→全绑定"
+    },
+    {
+      "name": "租户管理-管理项目提交-二次全选-全绑定变待绑定-Round2",
+      "featureSet": "管理项目提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 已完成 Round1 且 tenant_test 当前为「全绑定」\n2. 列设置仍勾选「项目资源绑定」",
+      "steps": "1. 再次对 tenant_test 执行「管理项目」>「全选」>「确定」\n2. 观察 loading 与列从全绑定变为待绑定\n3. 等待「项目资源绑定」弹窗出现",
+      "expected": "1. loading 持续至列显示「待绑定」且绑定弹窗打开后结束\n2. 列不得闪「-」\n3. 绑定弹窗在 loading 结束前不应出现后又消失",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；openCLI Round2；initial=全绑定",
+      "purpose": "双向验收 Round2：bound→pending",
+      "remark": "与 Round1 用例2 衔接：待绑定→全绑定 后再测 全绑定→待绑定"
+    },
+    {
+      "name": "租户管理-管理项目提交-确定后不得出现列短横线空窗期",
+      "featureSet": "管理项目提交loading",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. tenant_test 存在且可管理项目\n2. 「项目资源绑定」列已显示",
+      "steps": "1. 对 tenant_test 执行管理项目全选提交\n2. 在 Network 可选手动 Slow 3G\n3. 自确定点击起至列出现 tag 前，持续观察「项目资源绑定」列单元格",
+      "expected": "1. 不得出现「loading 已消失但列仍为 -、数秒后才变 tag」的空窗期\n2. loading 与 enrichProjResBind 补数时序一致，由 withLoading 栈统一管理",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；关联单测 pnpm test:unit src/views/tenant/composables/__tests__",
+      "purpose": "fetchList invalidateProjResBind + @closed 不 resetLoading",
+      "remark": "回归：projectDialog.visible=false 触发 @closed 不得 resetLoading 打断栈"
+    }
+  ]
+}

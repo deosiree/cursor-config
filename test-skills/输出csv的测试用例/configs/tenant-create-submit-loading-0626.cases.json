@@ -1,0 +1,76 @@
+{
+  "moduleId": "tenant-create-submit-loading-0626",
+  "source": "租户管理 index.vue 新建租户提交 loading + tryOpen 防呆（2026-06-26）；openCLI E2E 见 evals/tenant-create-submit-loading-0626.md",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "租户管理-新建租户-含项目-确定-loading至绑定弹窗",
+      "featureSet": "新建租户提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:add、sys:tenant:query、sys:tenant:bindResource\n2. 列设置已勾选「项目资源绑定」（可选）\n3. 创建流程步骤3 已勾选至少一个含资源的项目\n4. pnpm dev 已启动（localhost:8081）；opencli doctor 为 green",
+      "steps": "1. 进入「安全管理」>「租户管理」，点击「新增」\n2. 填写基础信息、所有者信息，下一步\n3. 项目配置勾选含资源的项目，下一步\n4. 角色预览页点击「确定」\n5. 观察创建弹窗关闭后表格 loading 与「项目资源绑定」弹窗",
+      "expected": "1. 从点击确定到「项目资源绑定」弹窗打开前，表格区域持续 loading 遮罩\n2. 新建租户成功后自动弹出「项目资源绑定」防呆窗（pending 场景）\n3. loading 延续至弹窗打开且相关 API 完成后再结束\n4. 若列可见，不得出现 loading 消失后列长时间为「-」",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /cloud/Apex/tenant；openCLI session=nebula；详见 evals/tenant-create-submit-loading-0626.md",
+      "purpose": "handleCreateNextOrSubmit withLoading → fetchList enrich → tryOpen pending",
+      "remark": "openCLI：新增 → 填表 → 选项目 → 确定 → 轮询 .el-loading-mask 与 ProjectSourceDialog"
+    },
+    {
+      "name": "租户管理-新建租户-链接激活-pending-绑定窗关闭后激活弹窗",
+      "featureSet": "新建租户提交loading",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 系统激活方式为「链接激活」\n2. 用户具备 sys:tenant:add、sys:tenant:bindResource\n3. 新建租户所选项目含待绑资源（tryOpen pending）",
+      "steps": "1. 新增租户并完成三步，确定\n2. 等待「项目资源绑定」弹窗出现\n3. 完成绑定或关闭绑定弹窗\n4. 观察「激活链接」弹窗是否在绑定窗关闭后出现",
+      "expected": "1. 确定后先出现「项目资源绑定」弹窗，不出现与绑定窗叠层的激活链接弹窗\n2. 绑定窗关闭（完成或取消）后，再弹出「激活链接」弹窗\n3. 全程 loading 时序正确，无双弹窗叠层",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；链接激活模式；openCLI 见 evals/tenant-create-submit-loading-0626.md 链接激活节",
+      "purpose": "pendingActivationResult + watch(dlg.visible) flush 激活弹窗",
+      "remark": "回归：链接激活 + bindOpened 时延后 openActivationDialog"
+    },
+    {
+      "name": "租户管理-新建租户-确定后不得出现列短横线空窗期",
+      "featureSet": "新建租户提交loading",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 「项目资源绑定」列已显示\n2. 可成功新建租户",
+      "steps": "1. 新增租户并确定\n2. 自确定点击起至列表刷新、列出现 tag 前，持续观察「项目资源绑定」列\n3. 可选 Network Slow 3G",
+      "expected": "1. 不得出现「loading 已消失但列仍为 -、数秒后才变 tag」的空窗期\n2. createDialog @closed 不得 resetLoading 打断 withLoading 栈",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；关联单测 tenant-create-submit-flow.test.ts",
+      "purpose": "fetchList invalidateProjResBind + create @closed 不 resetLoading",
+      "remark": "回归：createDialog.visible=false 触发 @closed 不得打断 loading 栈"
+    },
+    {
+      "name": "租户管理-新建租户-无bindResource权限-不弹绑定窗",
+      "featureSet": "新建租户提交loading",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户具备 sys:tenant:add、sys:tenant:query，但无 sys:tenant:bindResource\n2. 可成功新建租户",
+      "steps": "1. 新增租户并完成三步，确定\n2. 观察是否弹出「项目资源绑定」防呆窗\n3. 非链接激活时确认 success toast",
+      "expected": "1. 不自动弹出「项目资源绑定」弹窗\n2. 新建成功 toast 或链接激活弹窗仍正常\n3. loading 在 fetchList 完成后正常结束",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；需无 bindResource 权限的测试账号",
+      "purpose": "canBindResource 为 false 时跳过 tryOpen",
+      "remark": "权限边界：无 bindResource 不防呆绑定"
+    }
+  ]
+}
