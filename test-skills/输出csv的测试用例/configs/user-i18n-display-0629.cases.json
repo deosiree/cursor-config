@@ -1,0 +1,62 @@
+{
+  "moduleId": "user-i18n-display-0629",
+  "source": "用户/个人中心/菜单权限 wire 读侧展示 resolveWireDisplayText（2026-06-29 暂存区）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "用户管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "修改时间": "1970/1/1 0:00",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "用户管理-列表-角色名列随界面语言展示wire",
+      "featureSet": "角色名展示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:user:query\n2. 列表中存在绑定多语言 wire 角色的用户",
+      "steps": "1. 界面语言中文，查看用户列表「角色」列\n2. 切换 English\n3. 再次查看同列",
+      "expected": "1. 角色列显示当前 locale 角色名\n2. 无数据时显示「-」\n3. 不显示 JSON wire",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/user",
+      "purpose": "UserTable resolveWireDisplayText",
+      "remark": ""
+    },
+    {
+      "name": "用户管理-编辑用户-角色下拉随locale展示",
+      "featureSet": "角色名展示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:user:edit\n2. 角色选项含多语言 wire",
+      "steps": "1. 打开用户编辑弹窗\n2. 展开「角色」下拉，观察选项文案\n3. 切换界面语言后重新打开下拉",
+      "expected": "1. 下拉选项 label 为当前 locale 角色名\n2. 选中后保存正常\n3. 不显示 wire JSON",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；user/index roleOptions computed",
+      "purpose": "rawRoleOptions + resolveWireDisplayText",
+      "remark": ""
+    },
+    {
+      "name": "个人中心-所属租户与角色随locale展示",
+      "featureSet": "租户角色展示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 已登录普通用户\n2. 个人资料中租户名/角色名为多语言 wire",
+      "steps": "1. 进入「个人中心」\n2. 中文界面查看「所属租户」「角色」字段\n3. 切换 English 后刷新或重新进入\n4. 再次查看两字段",
+      "expected": "1. 所属租户显示当前 locale 租户名\n2. 角色显示当前 locale 角色名；租户所有者仍显示「租户所有者」\n3. 不显示 wire JSON",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；profile/index displayTenantName displayRoleName",
+      "purpose": "个人中心读侧 wire 解析",
+      "remark": "profile 模块"
+    }
+  ]
+}

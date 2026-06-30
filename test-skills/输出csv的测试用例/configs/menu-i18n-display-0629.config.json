@@ -1,0 +1,7 @@
+{
+  "moduleId": "menu-i18n-display-0629",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0629/menu-i18n-display-0629.csv",
+  "casesFile": "configs/menu-i18n-display-0629.cases.json"
+}

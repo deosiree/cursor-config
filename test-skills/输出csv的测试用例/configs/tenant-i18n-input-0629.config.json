@@ -1,0 +1,7 @@
+{
+  "moduleId": "tenant-i18n-input-0629",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/tenant.csv",
+  "outputPath": "docs/问题单/0629/tenant-i18n-input-0629.csv",
+  "casesFile": "configs/tenant-i18n-input-0629.cases.json"
+}

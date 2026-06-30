@@ -1,0 +1,13 @@
+{
+  "moduleId": "i18n-input-0629",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/tenant.csv",
+  "outputPath": "docs/问题单/0629/i18n-input-0629.csv",
+  "casesFile": "configs/i18n-input-0629.cases.json",
+  "mergeFrom": [
+    "configs/tenant-i18n-input-0629.cases.json",
+    "configs/role-i18n-input-0629.cases.json",
+    "configs/user-i18n-display-0629.cases.json",
+    "configs/menu-i18n-display-0629.cases.json"
+  ]
+}
