@@ -28,8 +28,8 @@ def build_combined_test_steps(steps: str, expected: str) -> str:
 
 
 def clear_result_columns(row: dict, header: list[str]) -> None:
-    """规则 B：用例结果 / 预期结果列留空。"""
-    for col in ("用例结果", "预期结果"):
+    """规则 B/F：用例结果、预期结果、修改时间列留空（由测试系统维护）。"""
+    for col in ("用例结果", "预期结果", "修改时间"):
         if col in header:
             row[col] = ""
 

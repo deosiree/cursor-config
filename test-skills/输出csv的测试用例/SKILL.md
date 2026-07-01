@@ -38,7 +38,7 @@ description: >-
 
 ### RED（先判）
 
-0. **CSV 导出格式**：必读 [`references/csv-export-format-rules.md`](references/csv-export-format-rules.md)（测试步骤合并、用例结果留空、用例ID 规则、**Agent 禁止清单**）
+0. **CSV 导出格式**：必读 [`references/csv-export-format-rules.md`](references/csv-export-format-rules.md)（测试步骤合并、用例结果/修改时间留空、用例ID 规则、**Agent 禁止清单**）
 1. 输入类型：`test.ts` 路径 / 仅要 config / 仅口述默认值 / 已有 cases 只要生成 CSV / **legacy export 迁移** / **功能集合 v2**
 2. `repoRoot`（默认 nebula 根）
 3. CSV 模板路径（默认 `docs/问题单/模板/menu.csv` 表头）

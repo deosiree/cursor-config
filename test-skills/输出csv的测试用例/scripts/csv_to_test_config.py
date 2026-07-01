@@ -16,7 +16,7 @@ SKILL_ROOT = SCRIPT_DIR.parent
 CASE_COLUMNS = {"名称", "前置条件", "测试步骤", "预期结果", "备注", "用例说明"}
 
 # 通常留空的列
-PREFER_EMPTY = {"用例ID", "功能集合", "描述", "创建时间", "环境说明", "需求编号"}
+PREFER_EMPTY = {"用例ID", "功能集合", "描述", "创建时间", "修改时间", "环境说明", "需求编号"}
 
 
 def resolve_path(raw: str, base: Path) -> Path:

@@ -37,7 +37,7 @@
 | `sortOrder` | 排序顺序 | 可选 | 同功能集合内排序 |
 | `legacyId` | 用例ID | 仅迁移 | 保留旧 ID 时写入，否则留空 |
 
-`fieldDefaults` 中 **不要** 写 `"用例结果": "0"` 或任何占位。
+`fieldDefaults` 中 **不要** 写 `"用例结果": "0"` 或任何占位；**不要** 写 `"修改时间"`（导出留空，见 csv-export-format-rules 规则 F）。
 
 ## CSV 测试步骤合并示例
 

@@ -1,0 +1,7 @@
+{
+  "moduleId": "column-filter-tooltip-0630",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/tenant.csv",
+  "outputPath": "docs/问题单/0630/column-filter-tooltip-0630.csv",
+  "casesFile": "configs/column-filter-tooltip-0630.cases.json"
+}

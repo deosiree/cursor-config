@@ -1,0 +1,62 @@
+{
+  "moduleId": "tenant-i18n-submit-fallback-0630",
+  "source": "租户管理 TenantFormFields getSubmitValue 提交兜底（2026-06-30）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "租户管理-新建租户-仅主输入框填中文未开i18n-提交后英文界面展示同名",
+      "featureSet": "租户名提交兜底",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:add、sys:tenant:query\n2. 界面语言为中文（zh-CN）\n3. 可完成三步创建流程",
+      "steps": "1. 进入「新增租户」步骤1\n2. 仅在「租户名」主输入框填写「兜底测试租户A」（不点击 i18n 图标、不填英文）\n3. 完成其余必填项并完成三步创建\n4. 创建成功后切换界面语言为 English\n5. 在租户列表查看该租户「租户名」列",
+      "expected": "1. 创建成功\n2. 英文界面下列表「租户名」显示「兜底测试租户A」，不得为空\n3. 不得因未填英文翻译而切换语言后名称消失",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /cloud/Apex/tenant；TenantFormFields.stringifyTenantNameWire + getSubmitValue",
+      "purpose": "提交 wire 对空 locale 用 sourceValue 回填",
+      "remark": "回归：仅填当前语言主输入框时 en-US 兜底"
+    },
+    {
+      "name": "租户管理-编辑租户-仅主输入框修改未填英文-保存后英文界面不为空",
+      "featureSet": "租户名提交兜底",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:edit、sys:tenant:query\n2. 存在可编辑租户\n3. 界面语言为中文",
+      "steps": "1. 打开租户「管理信息」\n2. 仅在主输入框将租户名改为「兜底编辑租户B」（不打开 i18n 弹窗填英文）\n3. 点击保存\n4. 切换界面语言为 English\n5. 查看列表该租户名称",
+      "expected": "1. 保存成功 toast\n2. 英文界面列表「租户名」显示「兜底编辑租户B」\n3. 不得出现切换英文后名称为空",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；TenantGateway.updateV2 tenantNameWire",
+      "purpose": "编辑态 getSubmitValue 提交兜底",
+      "remark": "info 弹窗编辑流程"
+    },
+    {
+      "name": "租户管理-编辑租户-i18n显式填不同英文-提交后英文仍为显式值",
+      "featureSet": "租户名提交兜底",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:edit、sys:tenant:query\n2. 存在可编辑租户\n3. 界面语言为中文",
+      "steps": "1. 打开租户「管理信息」\n2. 主输入框填写中文「兜底中文租户C」\n3. 打开 i18n 弹窗，英文栏显式填写「Fallback Tenant C En」（与中文不同）\n4. 保存后切换界面语言为 English\n5. 查看列表租户名",
+      "expected": "1. 保存成功\n2. 中文界面显示「兜底中文租户C」\n3. 英文界面显示「Fallback Tenant C En」，不得被中文主输入框值覆盖\n4. getSubmitValue 仅回填空 locale，不覆盖已填外文",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；TenantFormFields tenantNameI18nRef.getSubmitValue",
+      "purpose": "显式填写的外文翻译不被 sourceValue 覆盖",
+      "remark": "与 opsdeck i18nTest submitForm 行为一致"
+    }
+  ]
+}
+

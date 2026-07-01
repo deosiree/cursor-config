@@ -154,6 +154,7 @@ python scripts/generate_test_csv.py --config configs/menu-index-ui.config.json -
 | 用例等级 0、develop 填 0 | 用例等级 / develop结果 |
 | 用例类型 0（**仅 v1/API**） | 用例类型 → `0`；**v2 由 direction 推导**，见 `references/case-type-map.md` |
 | 用例 ID 和功能集合留空 | 用例ID、功能集合 → 空 |
+| 修改时间留空 | 修改时间 → 空（规则 F；测试系统维护，勿填 `1970/1/1 0:00`） |
 
 未提到的列：有参考 CSV 时由脚本按众数推断；无参考时 Agent 按 `references/csv-field-convention.md` 补全。
 

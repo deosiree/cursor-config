@@ -19,6 +19,7 @@ v2 完整说明见 [`csv-format-v2-feature-set.md`](csv-format-v2-feature-set.md
 |----|------|
 | 用例ID | 新增留空；更新场景 `--preserve-ids-from` 回填 |
 | 用例结果 / 预期结果 | **永远留空**（见 csv-export-format-rules 规则 B） |
+| 修改时间 | **永远留空**（见 csv-export-format-rules 规则 F；测试系统维护） |
 | 功能集合 | **v1 强制留空** |
 
 ## v2 必填列（cases.json + CSV）

@@ -1,0 +1,104 @@
+{
+  "moduleId": "column-filter-tooltip-0630",
+  "source": "ColumnFilter SpanByTipsFill 列设置省略文本悬浮显示（2026-06-30）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "租户管理-列设置-英文长列名省略-悬浮显示全文",
+      "featureSet": "列设置省略提示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:query\n2. 已进入「安全管理 > 租户管理」租户列表页\n3. 界面语言为 English",
+      "steps": "1. 点击工具栏「Columns」按钮打开列设置弹层\n2. 在列表中找到显示为省略号的「Project Resource...」项（对应「项目资源绑定」列）\n3. 将鼠标悬停在该省略文本上，等待约 0.3 秒\n4. 观察是否出现 tooltip",
+      "expected": "1. 列名因弹层宽度限制以省略号显示（如 Project Resource...）\n2. 悬浮后出现 tooltip，完整显示「Project Resource Binding」\n3. tooltip 样式与系统其他 Element Plus tooltip 一致",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /cloud/Apex/tenant；ColumnFilter + SpanByTipsFill",
+      "purpose": "修复列设置弹层长列名省略后无悬浮全文的问题",
+      "remark": "回归截图问题：Project Resource Binding 被截断"
+    },
+    {
+      "name": "租户管理-列设置-英文短列名未省略-悬浮无tooltip",
+      "featureSet": "列设置省略提示",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且已进入租户列表\n2. 界面语言为 English\n3. 列设置弹层已打开",
+      "steps": "1. 在列设置列表中找到完整显示的短列名（如「Email」）\n2. 将鼠标悬停在该列名文本上，等待约 0.3 秒\n3. 观察是否出现 tooltip",
+      "expected": "1. 短列名完整显示，无省略号\n2. 悬浮后不出现 tooltip\n3. 仅溢出时才提示，避免干扰短文本",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；SpanByTipsFill scrollWidth > clientWidth 才启用",
+      "purpose": "非溢出列名不应出现多余 tooltip",
+      "remark": "边界：SpanByTipsFill disabled 逻辑"
+    },
+    {
+      "name": "租户管理-列设置-取消勾选列-表格隐藏对应列",
+      "featureSet": "列设置省略提示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且已进入租户列表\n2. 表格当前显示「联系人」列（Contact Name）",
+      "steps": "1. 打开列设置弹层\n2. 取消勾选「Contact Name」（联系人）\n3. 关闭弹层\n4. 观察表格列头",
+      "expected": "1. 勾选状态立即生效\n2. 表格不再显示「联系人/Contact Name」列\n3. 列设置与表格显隐联动正常，tooltip 改动不影响勾选行为",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；ColumnFilter v-model selectedColumns",
+      "purpose": "列设置功能回归：显隐切换",
+      "remark": "共享 ColumnFilter 勾选逻辑"
+    },
+    {
+      "name": "租户管理-列设置-点击重置-恢复默认可见列",
+      "featureSet": "列设置省略提示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且已进入租户列表\n2. 已通过列设置取消勾选若干非必选列",
+      "steps": "1. 打开列设置弹层\n2. 点击「Reset」按钮\n3. 观察勾选状态\n4. 关闭弹层并查看表格列",
+      "expected": "1. 勾选恢复为模块默认可见列配置\n2. 必选列（选择、操作）保持勾选且仍为禁用态\n3. 表格列与重置后勾选一致",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；handleReset 按 visible !== false 恢复",
+      "purpose": "列设置功能回归：重置",
+      "remark": "required 列不参与取消"
+    },
+    {
+      "name": "租户管理-列设置-必选列操作-禁用不可取消勾选",
+      "featureSet": "列设置省略提示",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且已进入租户列表\n2. 列设置弹层已打开",
+      "steps": "1. 找到「Actions」（操作）与「Selection」（选择）列勾选项\n2. 尝试点击取消勾选\n3. 对「Actions」省略文本（若出现）尝试悬浮查看 tooltip",
+      "expected": "1. 「选择」「操作」为禁用态，无法取消勾选\n2. 表格始终保留选择与操作列\n3. 若操作列名被省略，悬浮仍可显示完整「Actions」",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；column.required === true",
+      "purpose": "必选列禁用 + tooltip 并存",
+      "remark": "disabled checkbox 仍可读 tooltip"
+    },
+    {
+      "name": "角色管理-列设置-英文长列名省略-悬浮显示全文",
+      "featureSet": "列设置省略提示",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:query\n2. 已进入「安全管理 > 角色管理」\n3. 界面语言为 English",
+      "steps": "1. 点击「Columns」打开列设置\n2. 找到可能被省略的「Role Descript...」（Role Description）项\n3. 将鼠标悬停在该省略文本上\n4. 观察 tooltip",
+      "expected": "1. 长列名以省略号显示\n2. 悬浮 tooltip 完整显示「Role Description」\n3. 共享 ColumnFilter 组件在各模块行为一致",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "env": "测试环境；路由 /Apex/system/role；同一 ColumnFilter 组件",
+      "purpose": "跨模块回归：角色页列设置 tooltip",
+      "remark": "ColumnFilter 全局复用验证"
+    }
+  ]
+}
+

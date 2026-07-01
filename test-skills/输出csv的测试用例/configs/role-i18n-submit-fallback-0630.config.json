@@ -1,0 +1,7 @@
+{
+  "moduleId": "role-i18n-submit-fallback-0630",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/role.csv",
+  "outputPath": "docs/问题单/0630/role-i18n-submit-fallback-0630.csv",
+  "casesFile": "configs/role-i18n-submit-fallback-0630.cases.json"
+}

@@ -49,6 +49,13 @@ CSV「测试步骤」列必须写入以下结构（由 `build_combined_test_step
 - 脚本须调用 `clear_result_columns(row, header)`
 - cases.json 的 `expected` **仍必填**（撰写与质量自检在 JSON 层校验）
 
+## 规则 F：修改时间列永远留空
+
+- CSV「修改时间」列**不写任何内容**（含 `1970/1/1 0:00` 等占位）
+- 由测试系统在导入/更新时自行维护
+- 脚本须在 `clear_result_columns(row, header)` 中强制留空
+- `fieldDefaults` / cases.json **不要**写 `"修改时间"`；历史 cases 中若存在，导出时仍会被脚本清空
+
 ## 规则 C：用例ID 仅更新场景保留
 
 | 场景 | 用例ID |
@@ -88,7 +95,7 @@ python scripts/regenerate_module_exports.py \
 
 | 组件 | 文件 |
 |------|------|
-| 合并/留空/ID 映射 / 自测人员 | `scripts/csv_step_format.py` |
+| 合并/留空/ID 映射 / 自测人员 | `scripts/csv_step_format.py`（含用例结果、修改时间留空） |
 | v2 功能集合导出 | `scripts/generate_feature_csv.py` |
 | v1 UI 追加 | `scripts/append_ui_cases_to_csv.py` |
 | API/test.ts 导出 | `scripts/generate_test_csv.py` |
@@ -105,8 +112,9 @@ python scripts/regenerate_module_exports.py \
 
 1. 「测试步骤」含 `---` 与「预期结果：」（有 expected 的用例）
 2. 「用例结果」列为空字符串（非 `0`）
-3. 「自测人员」列为 `惠岩`（表头含该列时）
-4. 更新场景下用例ID 与源 CSV 按名称一致；新增用例 ID 为空
+3. 「修改时间」列为空字符串（非 `1970/1/1 0:00`）
+4. 「自测人员」列为 `惠岩`（表头含该列时）
+5. 更新场景下用例ID 与源 CSV 按名称一致；新增用例 ID 为空
 
 ## 历史备份校验
 
@@ -127,6 +135,7 @@ python scripts/regenerate_module_exports.py \
 | # | 禁止 | 替代 |
 |---|------|------|
 | 1 | CSV「用例结果」列填 expected、`0` 或任何占位 | expected 写入 cases.json；脚本合并进「测试步骤」 |
+| 1b | CSV「修改时间」列填 `1970/1/1 0:00` 或任何日期 | 留空；测试系统自行维护 |
 | 2 | 为新增用例手写用例ID | 留空；测试系统分配 |
 | 2b | 测试系统不能更新时仍全量导出并回填旧用例ID | 用 `--only-new-from` / `--only-new-from-dir`，0616 只含新增行 |
 | 3 | UI 模块使用已退役的 `append_ui_cases_to_csv.py`（v1 追加） | 默认 `generate_feature_csv.py` / `regenerate_module_exports.py` |

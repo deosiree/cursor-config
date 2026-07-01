@@ -150,8 +150,9 @@ def generate(
     only_new_from: Path | None = None,
 ) -> int:
     defaults, cases = load_cases(cases_path)
-    if "用例结果" in defaults:
-        defaults["用例结果"] = ""
+    for col in ("用例结果", "修改时间"):
+        if col in defaults:
+            defaults[col] = ""
     header = read_header(template_path)
 
     if only_new_from:
