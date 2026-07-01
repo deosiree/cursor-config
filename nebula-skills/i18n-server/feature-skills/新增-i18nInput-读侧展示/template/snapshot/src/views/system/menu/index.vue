@@ -372,6 +372,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { trans } from "vue-i18n-kit-sy/runtime";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 import { showNotification, handleApiError } from "@/utils/notification";
@@ -443,16 +444,12 @@ const permissionTableData = ref<MenuVO[]>([]);
 const STORAGE_KEY = "menu_manage_table_columns";
 
 const buildTableColumns = () => {
-  t("菜单名称");
-  t("类型");
-  t("路由路径");
-  t("排序");
   return [
-    { prop: "menuName", label: "菜单名称", visible: true },
-    { prop: "type", label: "类型", visible: true },
-    { prop: "routePath", label: "路由路径", visible: true },
-    { prop: "sort", label: "排序", visible: true },
-    { prop: "actions", label: "操作", required: true },
+    { prop: "menuName", label: trans("菜单名称"), visible: true },
+    { prop: "type", label: trans("类型"), visible: true },
+    { prop: "routePath", label: trans("路由路径"), visible: true },
+    { prop: "sort", label: trans("排序"), visible: true },
+    { prop: "actions", label: trans("操作"), required: true },
   ];
 };
 

@@ -72,7 +72,8 @@ description: 当当前目标已经收敛到“这一步该进入哪个源码级�
 - 需要迁移微服务全局入口中的语言选择、布局大小、主题切换：进入 `[[../../feature-skills/新i18n-微服务-语言选择器]]`
 - 结构树已迁到新位置，但仍放旧方案、尚未替换样板：进入 `[[../../feature-skills/迁移i18n-壳层接缝保留]]`
 - 需要打通 qiankun 主子应用语言同步：进入 `[[../../feature-skills/迁移i18n-微服务-qiankun]]`
-- locale JSON 缺 key、value 错或粒度不适合统一消费：进入 `[[../../feature-skills/新i18n-补充翻译json]]`
+- locale JSON 缺 key、value 错或粒度不适合统一消费：进入 `[[../../feature-skills/新i18n-补充翻译json]]`（**前提**：extract 已能扫到 key，或 key 已在其他文件以字面量 t/trans 出现）
+- 英文环境部分 UI 仍显示中文 key + extract 新增 0 + 定义点在 TS 常量：归类 `trans_key_boundary_needed` → `[[../../feature-skills/新i18n-编译宏外的定义点包trans+消费点包t]]`
 - template 中仍有静态文案、本地 translations 或旧消费样板：进入 `[[../../feature-skills/新i18n-Vue模板中使用$t()]]`
 - 纯 TS / util / request / helper 中需要直接 `import i18n` 并使用 `i18n.global.t(...)`：进入 `[[../../feature-skills/新i18n-纯ts中用i18n.global.t]]`
 - `script setup` / 组件内 TS / computed / notification 中仍有运行时硬编码文案：进入 `[[../../feature-skills/新i18n-ts或script setup中使用t(),可以包变量]]`

@@ -12,6 +12,7 @@ description: 当仓库命中“locale JSON 缺 key、value 错误或组织粒度
 ## RED
 
 - 先确认当前问题是否真的属于“新i18n-补充翻译json”而不是邻近节点
+- 若 `extract:i18n` 新增 0 但 UI 仍缺翻译，**先**检查是否应回退到 `新i18n-编译宏外的定义点包trans+消费点包t`（定义点未包 trans 字面量），而非强行手填 JSON。见 `errors/side-effect-t-scan-伪extract.md`
 - 先看主模板对应的真实提交，再看 few-shot 变体
 - 如果现有仓库状态与来源提交差异很大，优先抽共性能力，不要机械套文件
 

@@ -20,6 +20,7 @@ description: 当已有 I18nInput wire，但切换语言侧栏/面包屑不更新
 - 确认 wire 与读侧 V1 已存在；表单未接 → `新增-i18nInput-表单字段`
 - 对照 `template/before`（分散 resolve）与 `template/after`（投影）
 - 投影内聚 **domain repo**（如 `menu-repo.ts`），不新建 `menu-display.map.ts`
+- **table 列头 / 行操作静态词条 i18n 不在本 skill 范围**；正例见 `新i18n-编译宏外的定义点包trans+消费点包t` 的 `apex_dev-menu-row-actions` few-shot
 
 ## 🔴 CHECKPOINT · 路由门禁
 

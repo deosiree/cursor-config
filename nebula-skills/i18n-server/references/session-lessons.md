@@ -6,6 +6,13 @@
 - `t()` 负责真正的运行时翻译
 - 不能把 `trans()` 当成最终展示文案
 
+## 纯 TS 常量定义点 + extract 抽不到
+
+- 消费点 `$t(var)` 正确 ≠ 定义点已可被 extract 扫描
+- side-effect `t(CONST.xxx)` 或 `buildXxxLabels(){ t(CONST) }` **无效**，见 `errors/side-effect-t-scan-伪extract.md`
+- 诊断：`grep locale` 无 key + extract 新增 0 → 查定义点是否 `trans("字面量")`
+- 正例：tenant / menu 的 `*-table-columns.ts`、`menu-row-actions.ts`；few-shot `apex_dev-menu-row-actions`
+
 ## formRules 最小收口
 
 - 保留单文件、内联定义风格是可行的

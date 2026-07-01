@@ -16,5 +16,17 @@
     "prompt": "上游已经把问题定位到编译宏外定义文案这层，你直接按 trans 加 t 的组合处理。",
     "expected": "稳定命中 新i18n-编译宏外的定义点包trans+消费点包t，作为单次功能节点被消费",
     "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
+  },
+  {
+    "id": "trans-wrap-04-extract-zero-menu-actions",
+    "prompt": "菜单管理 Actions 英文环境还显示「新增子项」，pnpm extract:i18n 新增 0，消费点已有 $t(action.label)。",
+    "expected": "稳定命中 新i18n-编译宏外的定义点包trans+消费点包t，定义点改 trans 字面量而非仅补 locale",
+    "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
+  },
+  {
+    "id": "trans-wrap-05-not-locale-only",
+    "prompt": "extract 抽不到 key，是不是消费点没包 $t？菜单行操作 label 来自 TS 常量对象。",
+    "expected": "应识别为定义点问题（需 trans 字面量），不能仅建议补 locale JSON",
+    "expected_feature_skill": "新i18n-编译宏外的定义点包trans+消费点包t"
   }
 ]

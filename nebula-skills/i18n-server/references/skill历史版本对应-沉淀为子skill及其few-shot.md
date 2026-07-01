@@ -44,6 +44,7 @@
 | fix: 用户输入国际化组件重构                                                              | 2b106736cb392f040d19c39ad78d3cf478eba14d | 值得       | 更新      | 更新-i18nInput-localeKey归一   | I18nInput 组件 + 接口语言列表   |
 | fix(utils): 国际化增加接口语言列表归一化                                                    | 7fd591de7f150ec21755bc4a12c31ce9b883dc87 | 值得       | 更新      | 更新-i18nInput-localeKey归一   | 告警配置-locale归一 few-shot |
 | fix(views): 菜单 FormDialog 菜单名 I18nInput localeKey 对齐                           | （MenuFormDialog 对齐）                    | 值得       | 更新      | 更新-i18nInput-localeKey归一   | 菜单树-表单-locale归一 few-shot |
+| fix(i18n): 菜单管理行操作/列头定义点 trans + locale 补 key                              | （待 git commit 后回填 hash）              | 值得       | 更新      | 新i18n-编译宏外的定义点包trans+消费点包t | apex_dev-menu-row-actions |
 
 ## Opsdeck(中台)
 

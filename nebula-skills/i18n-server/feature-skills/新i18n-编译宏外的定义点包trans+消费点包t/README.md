@@ -5,6 +5,7 @@
 ## 使用前提
 
 - 先阅读 `docs/前端国际化方案说明.md`
+- 若遇 extract 新增 0 + 英文 UI 仍显示中文 key，先读 `errors/side-effect-t-scan-伪extract.md`
 - 再根据当前仓库问题判断是否命中本节点
 
 ## 功能
@@ -13,7 +14,8 @@
 
 ## 何时使用
 
-- 定义点不是模板内联文本，而是字段配置、规则中心等编译宏外结构，需要抽取脚本识别 key。
+- 定义点不是模板内联文本，而是字段配置、规则中心、**纯 TS 表格列头 / 行操作常量**等编译宏外结构，需要抽取脚本识别 key。
+- 英文 locale 部分 UI 仍显示中文 key，且 `extract:i18n` 新增 0（消费点 `$t(var)` 已存在）。
 
 ## 来源版本
 
@@ -21,6 +23,7 @@
 - Few-shot 来源：
 - `microfb-462a31d`：仓库 `microfb`，提交 `462a31dbe13af101443bac1869b021803af6e945`，侧重点：formRules 与校验器消费点
 - `microfb-c05f40d`：仓库 `microfb`，提交 `c05f40d07ec4f4092305df331bc94277ef2272da`，侧重点：组件字段定义点使用 trans
+- `apex_dev-menu-row-actions`：菜单管理行操作 + 列头常量；side-effect t hack 反模式修复
 
 ## 模板与 few-shot
 

@@ -7,3 +7,6 @@
 - [ ] 已明确主模板与 few-shot 的选择理由
 - [ ] 已指出本轮改动后的完成态
 - [ ] 已说明不应顺手跨入的相邻 skill
+- [ ] 已区分「locale 缺 key」vs「extract 抽不到定义点」
+- [ ] 已排除 side-effect `t(CONST)` / `buildXxxLabels()` 误用
+- [ ] 已说明 extract 后仍需手填 en_US 英文值

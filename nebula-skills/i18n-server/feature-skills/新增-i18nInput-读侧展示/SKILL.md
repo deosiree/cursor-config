@@ -19,6 +19,7 @@ wire 已在 API/表单 → 在读侧用 `resolveI18nJsonText`（表格/wire）�
 - 确认 wire 已存在；表单未接 → 先 `新增-i18nInput-表单字段`
 - 若要消除 wrapper、做缓存投影 → `更新-i18nInput-缓存投影`
 - 先看 `template/mvp`（utils + gateway），再看 `template/snapshot`（壳层 + 列表）
+- **table 列头 / 行操作静态词条 i18n 不在本 skill 范围**；正例见 `新i18n-编译宏外的定义点包trans+消费点包t` 的 `apex_dev-menu-row-actions` few-shot
 
 ## 🔴 CHECKPOINT · 路由门禁
 
