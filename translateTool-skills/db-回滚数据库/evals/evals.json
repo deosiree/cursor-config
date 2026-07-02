@@ -1,0 +1,51 @@
+{
+  "should-trigger": [
+    {
+      "name": "测试前备份",
+      "input": "测试前备份 translationtool 数据库",
+      "expect": "rollbackMode=backup，运行 backup-database.ps1，输出 backupPath"
+    },
+    {
+      "name": "测试后整库恢复",
+      "input": "测试完了恢复到最新备份",
+      "expect": "rollbackMode=restore，list 备份，确认后 restore -UseLatest -Force"
+    },
+    {
+      "name": "术语同意1小时内回滚",
+      "input": "1小时内英文 admin-proj 术语同意回滚，先 inspect",
+      "expect": "rollbackMode=audit_rollback，inspect 不 execute"
+    },
+    {
+      "name": "mysqldump",
+      "input": "mysqldump 一下 translationtool",
+      "expect": "路由 backup 模式"
+    },
+    {
+      "name": "确认后 audit 执行",
+      "input": "inspect 已确认，直接在数据库中执行回滚",
+      "expect": "audit 四步事务 execute + verify"
+    }
+  ],
+  "should-not-trigger": [
+    {
+      "name": "生产库无授权 restore",
+      "input": "生产环境直接恢复数据库",
+      "expect": "禁止 -Force，只输出步骤"
+    },
+    {
+      "name": "未确认 restore",
+      "input": "直接 DROP DATABASE",
+      "expect": "拒绝，要求 list + 用户确认"
+    },
+    {
+      "name": "UI 术语库单条删除",
+      "input": "在术语库页面删掉一条翻译",
+      "expect": "走 Syk/deleteSykEntry"
+    },
+    {
+      "name": "纯业务代码修改",
+      "input": "修改 TermAuditService.review 逻辑",
+      "expect": "不触发本 skill"
+    }
+  ]
+}

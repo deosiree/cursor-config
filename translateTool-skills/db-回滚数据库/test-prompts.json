@@ -1,0 +1,54 @@
+[
+  {
+    "id": "happy-path-backup",
+    "label": "happy path · 测试前备份",
+    "prompt": "使用 db-回滚数据库 测试前备份 translationtool 数据库",
+    "expectations": [
+      "rollbackMode=backup",
+      "运行 backup-database.ps1",
+      "输出 backupPath 与 sizeHuman",
+      "更新 .latest"
+    ]
+  },
+  {
+    "id": "happy-path-restore",
+    "label": "happy path · 测试后恢复",
+    "prompt": "测试完了，使用 db-回滚数据库 恢复到最新备份",
+    "expectations": [
+      "rollbackMode=restore",
+      "list-backups 展示 .latest",
+      "未确认前不加 -Force",
+      "确认后 restore + verify"
+    ]
+  },
+  {
+    "id": "happy-path-inspect",
+    "label": "audit · inspect only",
+    "prompt": "使用 db-回滚数据库：检查 1 小时内、英文、任务 admin-proj 的术语同意副作用，先 inspect 不要执行。",
+    "expectations": [
+      "rollbackMode=audit_rollback",
+      "task_name=admin-proj",
+      "inspect SQL utf8mb4",
+      "dryRun=true"
+    ]
+  },
+  {
+    "id": "ambiguity-task-vs-dept",
+    "label": "歧义 · admin-proj 当部门",
+    "prompt": "admin-proj 部门 1 小时内英文术语同意全部回滚",
+    "expectations": [
+      "audit_rollback 模式",
+      "纠正 task_name vs department",
+      "先 inspect"
+    ]
+  },
+  {
+    "id": "boundary-auto-approved",
+    "label": "边界 · auto_approved",
+    "prompt": "回滚 1 小时内工作台预翻译 auto_approved 写入的英文翻译",
+    "expectations": [
+      "扩展场景文档",
+      "不 UPDATE term_agent_audit"
+    ]
+  }
+]

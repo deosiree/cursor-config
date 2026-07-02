@@ -1,0 +1,27 @@
+# frontmatter 模板（本地中文模式）
+
+```yaml
+---
+name: db-回滚数据库
+description: 当需要通过 MySQL 回滚 translationtool 库中「术语 Agent 批量同意」等近期写入时使用。支持按时间窗+语种+任务名 inspect，确认后软删除与解绑。
+version: 1.0.0
+tags: [translationtool, mysql, rollback, term_agent_audit]
+metadata:
+  darwin:
+    parent_skill: db-回滚数据库
+---
+```
+
+子 skill 示例：
+
+```yaml
+---
+name: 查询-审核副作用
+description: 当 rollbackScope 已确认后，需要只读查询 term_agent_audit、t_translate、t_entry_info 副作用清单时使用。
+version: 1.0.0
+tags: [db-回滚数据库, translateTool-skills, mysql, inspect]
+metadata:
+  darwin:
+    parent_skill: db-回滚数据库
+---
+```
