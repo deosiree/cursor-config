@@ -1,0 +1,8 @@
+timestamp	round	skill	old_score	new_score	delta	status	dimension	note	eval_mode
+2026-07-02T00:00	0	基于测试用例写后端的pytest自动化测试	-	72.0	baseline	all	初评：dim3/dim4/dim8 短板；无 HL-2 兜底表	dry_run
+2026-07-02T00:01	1	基于测试用例写后端的pytest自动化测试	72.0	78.5	+6.5	keep	dim3+dim4	HL-2 失败兜底 + CHECKPOINT 三连 + Agent 红灯动作	dry_run
+2026-07-02T00:02	2	基于测试用例写后端的pytest自动化测试	78.5	82.8	+4.3	keep	dim2+dim5	工作流 I/O 表 + csvHytestsOutputPlan 字段细化	dry_run
+2026-07-02T00:03	3	基于测试用例写后端的pytest自动化测试	82.8	86.2	+3.4	keep	dim8	evals/dry-run-evaluation.md + test-prompts 推演	dry_run
+2026-07-02T00:04	4	基于测试用例写后端的pytest自动化测试	86.2	87.1	+0.9	keep	dim6+dim9	100分制 rubric 链入 darwin feature + misroute 反例强化	dry_run
+2026-07-02T00:05	5	基于测试用例写后端的pytest自动化测试	87.1	87.6	+0.5	keep	dim2	步骤序号化 + REFACTOR 门禁表	dry_run
+2026-07-02T12:00	6	基于测试用例写后端的pytest自动化测试	87.6	89.2	+1.6	reeval	dim3+dim6	可观测性沉淀后再评；非 hill-climbing	dry_run

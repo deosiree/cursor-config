@@ -1,0 +1,67 @@
+[
+  {
+    "id": "mvp-menu-export",
+    "prompt": "使用 $基于测试用例写后端的pytest自动化测试：targetRepo=nebula/seccenter，csvPath=docs/自测单/用例导出_云平台_安全平台___内测人：惠岩_20260702_131438.csv，caseIds=9909-9913，deliverables=all。写菜单导入导出 MVP pytest，更新 cases_registry.yaml，refs 指向 tests/test_04_menu.py，重生成 README。",
+    "expectedOutput": "test_mvp_menu_9909_9913.py 含 5 个 csv_case；registry status=implemented；README [9909] 含实现位置 L25/L26 与顶格 JSON；9909 含 case_report 与 automation_doc",
+    "expect": {
+      "intention": "策略-从CSV写MVP用例",
+      "features": ["撰写-csv_case标记测试", "接入-用例验证摘要与中文终端", "撰写-cases_registry条目", "生成-README手册", "质量-覆盖率自检"],
+      "mustHave": ["@pytest.mark.csv_case", "cases_registry.yaml", "gen_readme.py", "实现位置", "#L", "case_report"],
+      "mustNotHave": ["<details>", "```text", "tests/test_mvp"]
+    }
+  },
+  {
+    "id": "batch-auth-whitelist",
+    "prompt": "批量补 CSV 9919-9924 鉴权与白名单 hytests 自动化，追加到 test_csv_auth.py / test_csv_whitelist.py 风格，更新 registry 并重生成 README。",
+    "expectedOutput": "6 个 case_id 有 marker + registry；pytest node 正确；README 批量更新",
+    "expect": {
+      "intention": "策略-批量补自动化",
+      "features": ["撰写-csv_case标记测试", "撰写-cases_registry条目", "质量-覆盖率自检", "生成-README手册"],
+      "mustHave": ["9919", "9924", "test_csv_auth", "csv_coverage"],
+      "mustNotHave": ["写 test_08_api_permission 替代 hytests"]
+    }
+  },
+  {
+    "id": "readme-only-fix",
+    "prompt": "deliverables=readme：修复 README 中 HTML details 包裹问题，确保 Obsidian 可渲染 JSON，重跑 gen_readme.py，抽查 [9909] 和 [156]。",
+    "expectedOutput": "README 无 details/summary；步骤为 H6+列表；JSON 顶格",
+    "expect": {
+      "intention": "策略-仅生成README",
+      "features": ["生成-README手册", "质量-覆盖率自检"],
+      "mustHave": ["gen_readme", "readme-format-rules", "无 details"],
+      "mustNotHave": ["修改 test_*.py", "<details>"]
+    }
+  },
+  {
+    "id": "blocked-session-sdk",
+    "prompt": "caseIds=9971-9976 会话 SDK blocked 用例：写 test_csv_session_sdk.py，@pytest.mark.blocked + pytest.skip，registry status=blocked，README 仍含实现位置行号。",
+    "expectedOutput": "6 个 skip 测试 + marker；README 9971 含 L5/L7 链接；status 阻塞",
+    "expect": {
+      "intention": "策略-从CSV写MVP用例",
+      "features": ["撰写-csv_case标记测试", "撰写-cases_registry条目", "生成-README手册"],
+      "mustHave": ["pytest.skip", "blocked", "9971", "实现位置"],
+      "mustNotHave": ["assert_success HTTP 调用 gRPC"]
+    }
+  },
+  {
+    "id": "observability-9910",
+    "prompt": "使用 $基于测试用例写后端的pytest自动化测试：为 CSV 9910 写/改 pytest（导入 YAML 到空项目 B），必须接入 case_report（step/check 对照 CSV）、AAA docstring、中文终端基建、跑通后确认 latest.log；写 docs/automation/9910.md 并更新 registry automation_doc，重生成 README。",
+    "expectedOutput": "test 含 case_report；latest.log 含 [CSV 用例 9910]；registry 含 automation_doc；README [9910] 含断言清单",
+    "expect": {
+      "intention": "策略-批量补自动化",
+      "features": ["撰写-csv_case标记测试", "接入-用例验证摘要与中文终端", "撰写-cases_registry条目", "生成-README手册", "质量-覆盖率自检"],
+      "mustHave": ["case_report", "latest.log", "Arrange", "automation_doc", "G6"],
+      "mustNotHave": ["implemented 无 case_report", "menu/tree 隔离项目"]
+    }
+  },
+  {
+    "prompt": "为 CSV 155 在 seccenter/tests/test_04_menu.py 写官方集成测试，不要 hytests。",
+    "expectedOutput": "Agent 拒绝或路由到写pytest集成测试，说明 CSV ID 应对齐 hytests csv_case",
+    "expect": {
+      "intention": "none-misroute",
+      "features": [],
+      "mustHave": ["写pytest集成测试", "hytests", "csv_case"],
+      "mustNotHave": ["仅写 tests 无 csv_case", "gen_readme hytests"]
+    }
+  }
+]

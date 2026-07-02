@@ -1,6 +1,6 @@
 # 写 pytest 集成测试
 
-← [[SKILL.md]] · 并列 skill：[[../输出csv的测试用例/SKILL.md]]
+← [[SKILL.md]] · 并列 skill：[[../输出csv的测试用例/SKILL.md]] · [[../基于测试用例写后端的pytest自动化测试/SKILL.md]]
 
 为 nebula 后端撰写 **pytest + requests HTTP 黑盒集成测试**，黄金样本：`F:\Documents\Repertory\Sieyuan\nebula\seccenter\tests`。
 

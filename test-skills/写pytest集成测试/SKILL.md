@@ -18,11 +18,13 @@ description: >-
 - 新增或扩充 `tests/test_*.py` API 集成测试
 - 需要 seccenter 风格：中文文件头策略、`Test*` 类分组、`assert_success` 断言链
 - 需要 `conftest.py` / `utils.py` / `config.py` 基建或模块级 fixtures
+- **CSV 自测单** 需映射 `hytests/`（`@pytest.mark.csv_case` + README 手册）→ [[../基于测试用例写后端的pytest自动化测试/SKILL.md]]（本 skill 写 `tests/` 官方套件，可作 hytests `refs`）
 
 ## 何时不要使用
 
 - 仅需 Vitest 单元测试
 - 仅需 CSV 手工用例 → [[../输出csv的测试用例/SKILL.md]]
+- CSV 自测单 ID 对齐 hytests 自动化 + gen_readme 手册 → [[../基于测试用例写后端的pytest自动化测试/SKILL.md]]
 - FastAPI 进程内 mock（terminology-agent TDD）→ 项目内 `agent-testing.md` 或全局 TDD skill
 - UI Playwright E2E → 未来独立 skill
 

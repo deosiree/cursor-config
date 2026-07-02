@@ -1,5 +1,7 @@
 # 输出 CSV 测试用例
 
+← [[SKILL.md]] · 并列 skill：[[../写pytest集成测试/SKILL.md]] · [[../基于测试用例写后端的pytest自动化测试/SKILL.md]]
+
 Agent skill 套件：将 Vitest `test.ts` 与模块配置沉淀为测试系统可导入 CSV。
 
 ## 目录

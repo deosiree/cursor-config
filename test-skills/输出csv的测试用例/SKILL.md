@@ -27,6 +27,7 @@ description: >-
 - 仅运行 Vitest 自动化（无需 CSV）
 - 纯后端 API 契约用例已由 Swagger/Postman 覆盖且不需要前端步骤
 - 需要 **pytest HTTP 黑盒自动化**（非 CSV）→ [[../写pytest集成测试/SKILL.md]]
+- 已有 **CSV 自测单**，需按用例 ID 写 `hytests/` 自动化 + 自测手册 → [[../基于测试用例写后端的pytest自动化测试/SKILL.md]]
 
 ## Agent 工作循环
 
