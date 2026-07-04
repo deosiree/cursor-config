@@ -45,7 +45,7 @@
 | "API配置"按钮 | sys:menu:configApi + **显示状态=显示** | 显示状态为隐藏时不渲染 |
 
 > **关键**：`sys:menu:query` 是行内操作的前提。没有它，树数据不加载，行内按钮不渲染，即使 edit/delete 已授权。
-> **另一关键**：`checkHasPerm` = `permissions` + `permsMap[perm].isVisible`。显示状态为"隐藏"时，即使角色授权正确，按钮也不可见。
+> **另一关键**：`checkHasPerm` = `RoutePermDict.pass(isOwner)` || `RoutePermDict.has(perm)`。`has` 判定当前路由 scope 下 `allowed` 集合（含 function `is_visible` / `is_system_only` 过滤）。显示状态为"隐藏"时，即使角色授权正确，按钮也不可见。
 
 ## 常见环境问题
 

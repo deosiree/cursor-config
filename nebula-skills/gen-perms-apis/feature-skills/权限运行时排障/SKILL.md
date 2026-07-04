@@ -33,14 +33,21 @@ description: 排查权限运行时异常：isOwner 绕过失效、computed 缓�
 ├─ Header 权限入口不显示
 │  ├─ 登录后是否刷新了页面？
 │  │  ├─ 刷新后出现 → computed 缓存问题，需修复依赖
-│  │  └─ 刷新后仍不出现 → perm 未配置或 permsMap 未包含
+│  │  └─ 刷新后仍不出现 → 查 RoutePermDict.getAllowed() 是否含 perm；勿查 permsMap
 │  └─ computed 是否依赖 userInfo ref？
 │     ├─ 只读 sessionStorage → 登录后不重算，需添加 store ref 依赖
 │     └─ 已依赖 store ref → 检查 store 更新时机
+├─ 有 role perm 但按钮不显示
+│  ├─ getScope() 是否 null 或 ambiguous?
+│  ├─ getAllowed() 是否含目标 perm?
+│  ├─ function 是否挂在正确 page 子树?
+│  └─ is_visible / is_system_only 过滤?
 ├─ 页面守卫拦截
 │  ├─ 是 owner 但仍被拦？
-│  │  └─ checkHasPerm 中的 hasPermissionBypass 是否读到 isOwner？
-│  └─ 非 owner 被拦 → 预期行为，检查角色 perm 是否已导入
+│  │  └─ RoutePermDict.pass 是否读到 isOwner?
+│  └─ 非 owner 被拦 → 预期行为，检查 allowed 与角色 perm
+├─ 「当前路由不唯一」告警
+│  └─ ambiguous → 补 page params 消歧
 └─ qiankun 主子应用 perm 不一致
    ├─ 基座 Header 正确但子应用页面被拦 → 子应用未同步 userInfo
    └─ 子应用正确但基座 Header 缺失入口 → 基座 NavbarActions 权限计算问题
@@ -53,7 +60,8 @@ description: 排查权限运行时异常：isOwner 绕过失效、computed 缓�
 | `isOwner` 绕过失效 | `sessionStorage.userInfo.isOwner` 不为 `true` | 重新登录，确保 `loginAfterAuth` 写入了完整 userInfo |
 | Header 登录后不显示 perm 入口 | computed 只读 sessionStorage，不依赖 store ref | computed 中 `void userInfo.value?.isOwner` 建立响应式依赖 |
 | 半登录态 | Cookie 有效但 sessionStorage 为空或过期 | 检测到已登录但 userInfo 不完整时，调 `user/detail` 补全 |
-| 新 perm 不生效 | permsMap 未包含新 perm | 导入菜单补丁后重新登录或刷新权限 |
+| 新 perm 不生效 | routeProjectMap 无节点 / function 挂错 page / 未 relogin | 查 getScope/getAllowed；导入后 syncMenuCacheOnly 或 relogin |
+| ambiguous 告警 | 同 path 多 page 无 params | 补 page params；见 snapshot-03 |
 | microfb vs apex 双重守卫 | 基座和子应用各自判断权限，生命周期不同 | 基座负责 UI 显隐，子应用负责页面守卫；不要双重实现 |
 
 ### microfb 基座排障要点

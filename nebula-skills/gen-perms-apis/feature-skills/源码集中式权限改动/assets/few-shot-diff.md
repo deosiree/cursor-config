@@ -1,65 +1,73 @@
 # 源码集中式权限改动 — few-shot 示例
 
-> 来自 2026-06-03 会话：租户管理集中式改动
+> 租户/用户样本：见 `[[../../../template/sample-run/after-04-页面级静态pagePerms.md]]`。  
+> 以下为简单页 v-hasPerm 示例 + 复杂页 pagePerms 摘要。
 
-## 触发
+## 触发（简单页）
 
 ```text
-按集中式原则改 apex_dev 源码，首页用 v-hasPerm，租户工具栏用 v-if 包整块。
+安全配置只有 2 个按钮，按集中式原则加 v-hasPerm。
 targetRepo=apex_dev。
 ```
 
-## 改动前
+## 简单页：v-hasPerm
 
 ```vue
-<!-- tenant/index.vue（改动前） -->
-<template>
-  <div class="toolbar">
-    <el-button @click="handleAdd">新增</el-button>
-    <el-button @click="handleEdit">编辑</el-button>
-    <el-button @click="handleDelete">删除</el-button>
-    <el-input v-model="searchText" placeholder="搜索" />
-  </div>
-  <TenantTable :data="list" />
-  <BindDeviceDialog v-model:visible="deviceVisible" />
-</template>
+<el-button v-hasPerm="'sys:security:save'">保存</el-button>
+<el-button v-hasPerm="'sys:security:reset'">重置</el-button>
 ```
 
-工具栏所有按钮均无权限控制，`BindDeviceDialog` 无入口守卫。
+无 pagePerms、无 OpItem 行内二次鉴权 → 模式 P1 适用。
 
-## 改动后
+---
+
+## 触发（复杂页 — 租户）
+
+```text
+按集中式原则改 apex_dev 租户管理：tenantPagePerms 静态预算，
+类型放 tenant.models.ts，TenantTable 收 :perms，去掉 OpItem :perm。
+```
+
+## 租户 pagePerms（模式 S 摘要）
+
+```typescript
+// tenant.models.ts
+export interface TenantPagePerms { /* ... */ }
+
+// index.vue
+import type { TenantPagePerms } from "./tenant.models";
+const tenantPagePerms = computed<TenantPagePerms>(() => ({
+  query: checkHasPerm("sys:tenant:query"),
+  add: checkHasPerm("sys:tenant:add"),
+  edit: checkHasPerm("sys:tenant:edit"),
+  delete: checkHasPerm("sys:tenant:delete"),
+}));
+```
 
 ```vue
-<!-- tenant/index.vue（改动后） -->
-<template>
-  <!-- 工具栏：v-if 包裹整块（多按钮共享同一 perm） -->
-  <div v-if="canQuery" class="toolbar">
-    <el-button v-hasPerm="'sys:tenant:add'" @click="handleAdd">新增</el-button>
-    <el-button v-hasPerm="'sys:tenant:edit'" @click="handleEdit">编辑</el-button>
-    <el-button v-hasPerm="'sys:tenant:delete'" @click="handleDelete">删除</el-button>
-    <el-input v-model="searchText" placeholder="搜索" />
-  </div>
-  <!-- 子组件收 props -->
-  <TenantTable :data="list" :action-perms="{ canEdit, canDelete }" />
-  <!-- 弹窗由父组件 v-if 控制 -->
-  <BindDeviceDialog
-    v-if="canBindDevice"
-    v-model:visible="deviceVisible"
-  />
-</template>
+<TenantTable :perms="tenantPagePerms" />
+<!-- TenantTable.vue -->
+<OpItem v-if="perms.edit" ... />
+```
 
-<script setup>
-const canQuery = computed(() => checkHasPerm('sys:tenant:query'));
-const canEdit = computed(() => checkHasPerm('sys:tenant:edit'));
-const canDelete = computed(() => checkHasPerm('sys:tenant:delete'));
-const canBindDevice = computed(() => checkHasPerm('sys:tenant:bindDevice'));
-</script>
+---
+
+## 触发（复杂页 — 用户）
+
+```text
+按集中式原则改 apex_dev 用户管理：userPagePerms 放 user.models.ts，
+子组件统一 :perms。
+```
+
+```typescript
+// user.models.ts — UserPagePerms + DEFAULT_USER_PAGE_PERMS + UserToolbarPerms
+import type { UserPagePerms } from "./user.models";
 ```
 
 ## 改动原则体现
 
-1. **v-hasPerm 优先**：新增/编辑/删除按钮各一个 `v-hasPerm`（单元素，不新增 ref）
-2. **父层 v-if 收敛**：工具栏 `v-if="canQuery"` 包裹整块（多元素共享 query perm）
-3. **子组件收 props**：`TenantTable` 收 `actionPerms`，不内部读 perm
-4. **弹窗 v-if**：`BindDeviceDialog` 由父组件控制挂载
-5. **最小 diff**：不改 `TenantTable` 和 `BindDeviceDialog` 内部实现
+1. **模式 S**：单一 `xxxPagePerms`，每 perm 预算一次
+2. **类型在 models**：`{module}.models.ts`，禁止组件 export
+3. **boolean props**：子组件收 `:perms`，非 actionPerms 字符串
+4. **禁止 OpItem :perm**：行内操作仅 `v-if="perms.xxx"`
+5. **反面**：before-04（v-hasPerm 撒点 + actionPerms 字符串）

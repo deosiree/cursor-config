@@ -6,6 +6,7 @@
 |------|------|------|------|
 | `name` | 是 | string | 中文名称 |
 | `route_path` | 是 | string | 前端路由路径（如 `/Apex/dashboard`） |
+| `params` | 否 | object / array / string | 路由消歧参数；多个 page 共享同一 `route_path` 时**必填**（见 `[[route-scope-auth-chain.md]]`） |
 | `is_visible` | 否 | boolean | 默认 `true`；`false` 为 hidden page |
 | `id` | **是** | number | page 节点 ID（通过 API 查询/创建获取后回填） |
 | `parent_id` | **是** | number | 父节点 ID（顶层 page 的 parent_id 为根节点 ID） |
@@ -92,6 +93,37 @@ patch_children_add:
 3. **严禁**提交 `parent_id: null` 或无 `parent_id` 字段的节点
 
 > **与 `id: 0` 的区别**：`id: 0` 会导致后端报错（`[100000]未知错误`），但 `parent_id: null` **不报错**——导入成功，节点写入数据库但失去父子关联，菜单中静默不显示。排查时需检查每个节点的 `parent_id` 是否为有效值。
+
+## params 消歧规则（路由作用域鉴权）
+
+> apex_dev 自 commit `1851a7dd` 起，`RoutePermDict` 用 page `params` 与 URL query/params 匹配当前路由 scope。
+
+| 场景 | params 配置 |
+|------|------------|
+| 全项目仅此 page 使用该 path | 省略或 `{}` |
+| 多个 page 共享 path | 每个 page 写不同键值，与 URL 一致 |
+| URL 固定 query（如 `?type=platform`） | `params: { type: platform }` 或数组 `[{key: type, value: platform}]` |
+
+```yaml
+# 同 path 双 page 示例
+patch_children_add:
+  - name: 平台工作区
+    route_path: /Apex/workspace
+    params:
+      type: platform
+    id: 20010
+    parent_id: 1
+    children: [...]
+  - name: 租户工作区
+    route_path: /Apex/workspace
+    params:
+      type: tenant
+    id: 20012
+    parent_id: 1
+    children: [...]
+```
+
+未配 params 且多候选命中 → `ambiguous: true`，鉴权可能不准确。详见 `[[../template/sample-run/snapshot-03-路由params消歧.md]]`。
 
 ## API URL 格式
 

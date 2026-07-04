@@ -53,6 +53,8 @@
 
 ## 决策节点 4：源码改动原则
 
+> **⚠️ superseded（2026-07-04）**：决策 4 中「v-hasPerm 优先于 v-if」作为复杂页默认策略已被 **snapshot-04** 取代。复杂列表页应使用 **pagePerms 静态预算**（`tenantPagePerms` + boolean props），简单页才用 v-hasPerm。见 `[[snapshot-04-pagePerms决策.md]]`。
+
 **时机**：用户反馈 "最小化改动+集中式改动"。
 
 **要点**：
@@ -60,9 +62,9 @@
 - API 守卫在入口处一次 `checkHasPerm`
 - 已有合理子级 perm 不强行上提
 
-**后续细化**（本次会话）：能用 `v-hasPerm` 不用 `v-if`，因为 `v-if` 需要新增 computed ref，改动面更大。
+**后续细化**（2026-06-03 会话，**已 superseded**）：能用 `v-hasPerm` 不用 `v-if`，因为 `v-if` 需要新增 computed ref，改动面更大。
 
-**对 skill 的影响**：`源码集中式权限改动` 的优先级链必须是 v-hasPerm > v-if > props。
+**对 skill 的影响（历史）**：`源码集中式权限改动` 曾写 v-hasPerm > v-if。**现行口径**：复杂页 pagePerms > v-hasPerm（简单页）> PageNoPermission。
 
 ---
 

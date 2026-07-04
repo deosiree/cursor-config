@@ -31,7 +31,7 @@
 
 - [ ] `userInfo.isOwner` 存在且为 boolean
 - [ ] `userInfo.permissions` 存在
-- [ ] `permsMap` 存在且包含新增 perm
+- [ ] 导航到目标路由后 `RoutePermDict.getAllowed()` 含已授权 perm
 
 ## 回归
 

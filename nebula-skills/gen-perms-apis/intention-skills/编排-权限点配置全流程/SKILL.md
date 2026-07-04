@@ -81,7 +81,9 @@ description: 当需要比较多阶段方案（分析→设计→补丁→改码�
 | 3. 补丁 | → `生成菜单树权限补丁` | 增量 YAML 补丁 |
 | 4. 合并 | → `合并权限点到菜单树` | 合并后菜单树 |
 | 5. 改码 | `迁移-源码改动落地` → `源码集中式权限改动` | 源码 diff |
-| 6. 验证 | → `OpenCLI端到端验证` + `菜单树导入验证` | 验证报告 |
+| 6. 验证 | → `OpenCLI端到端验证` + `菜单树导入验证` + `权限运行时排障` | 验证报告 |
+
+验证阶段必须包含路由作用域检查：`RoutePermDict.getScope()` / `getAllowed()`（见 `[[../../references/route-scope-auth-chain.md]]`）。**禁止**以 `userInfo.permsMap` 作为验证真相源。
 
 ## Guardrails
 

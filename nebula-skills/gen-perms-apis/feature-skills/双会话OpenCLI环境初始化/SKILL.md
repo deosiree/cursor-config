@@ -15,7 +15,7 @@ description: 首次搭建 OpenCLI 双 profile 环境：预检、双登录、sess
 
 - 没有本 skill 时，容易把 admin 和 test 用户放在同一 Chrome profile 下导致 Cookie 共享
 - 忘记 `--profile` 全局 flag → 两个 session 共用 cookie，只能登录同一用户
-- 跳过 `sessionStorage.clear()` → test 用户读到旧 `userInfo` / `permsMap`，结果不可信
+- 跳过 `sessionStorage.clear()` → test 用户读到旧 `userInfo` / 旧 `routeProjectMap`，结果不可信
 - admin 保存角色后立即切 test 用户验证 → 权限未同步
 
 ## 输入
@@ -30,11 +30,21 @@ description: 首次搭建 OpenCLI 双 profile 环境：预检、双登录、sess
 
 ### 1. 预检
 
+🔴 **CHECKPOINT · 环境门禁**：`opencli profile list` 少于 2 个 profile → **停止**，提示用户新建 Chrome 用户后再继续。
+
 ```bash
 opencli profile list
 ```
 
-确保至少 2 个 Chrome profile 已连接。若只有 1 个 → 提示用户去 Chrome 设置添加用户。
+### 失败兜底（if-then）
+
+| 触发条件 | 一线修复 | 仍失败兜底 |
+|---------|---------|-----------|
+| 只有 1 个 Chrome profile | Chrome 设置 → 添加用户 → 重装 OpenCLI 扩展 | 暂停 E2E，改手动双浏览器 |
+| test 读到旧权限 | 登录前 `sessionStorage.clear()` | logout → confirm → relogin |
+| admin 保存后 test 不生效 | `wait time 3` 再切 test | 检查角色是否勾选新 perm |
+| Cookie 共享（同 profile） | 必须用 `--profile` 分用户 | 禁止继续双会话验证 |
+| routeProjectMap 过期 | test relogin 刷新菜单缓存 | 查基座 syncMenuCache |
 
 ### 2. 初始化双会话
 
@@ -75,6 +85,16 @@ opencli --profile <admin-profile> browser admin wait time 3
 ## 输出
 
 - 两个活跃 browser session（admin + test），分属不同 profile
+
+## 反例黑名单（不要做）
+
+| # | 反模式 | 后果 |
+|---|--------|------|
+| 1 | admin/test 同一 Chrome profile | Cookie 共享，只能登同一用户 |
+| 2 | 省略 `--profile` | session 名不能隔离用户 |
+| 3 | test 登录前不清 sessionStorage | 旧 routeProjectMap / permissions 污染结果 |
+| 4 | admin 保存后立即验证 | 角色权限未同步 |
+| 5 | 用 `location.reload()` 代替 relogin | 掩盖 computed 缓存 bug |
 
 ## REFACTOR
 

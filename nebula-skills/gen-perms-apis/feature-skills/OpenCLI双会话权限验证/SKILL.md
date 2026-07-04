@@ -18,7 +18,7 @@ description: OpenCLI 双会话单轮 E2E：admin 配置角色权限 + test 用�
 - 没有本 skill 时，最常见的失败是 test 用户验证时 sessionStorage 残留旧权限，导致结果不可信
 - 也容易忘记 admin 配置后需要等待生效（角色保存不是即时同步到 test 用户会话）
 - 常见失败：
-  - test 用户未清空 sessionStorage 就登录 → 读到旧 `userInfo` / `permsMap`
+  - test 用户未清空 sessionStorage 就登录 → 读到旧 `userInfo` / 旧 `routeProjectMap`
   - admin 保存角色后立即切 test 用户验证 → 权限未同步
   - **Session A 和 Session B 在同一 Chrome profile → Cookie 共享，只能登录同一用户**
   - **不同 session 名只是不同 tab，不是不同 profile —— 必须用 `--profile` 全局 flag**

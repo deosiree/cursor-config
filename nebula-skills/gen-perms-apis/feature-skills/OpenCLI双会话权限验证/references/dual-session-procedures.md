@@ -129,11 +129,11 @@ opencli --profile test-profile browser perm-b eval "
     url:location.href,
     username:u.username,
     isOwner:u.isOwner,
-    permissions:u.permissions,
-    permsMapKeys:u.permsMap?Object.keys(u.permsMap):null
+    permissions:u.permissions
   });
 "
-# ⚠️ permsMap 在 userInfo 内部，不要查 sessionStorage.getItem('permsMap')
+# 路由作用域验证（须在目标路由页面执行）：
+# RoutePermDict.getScope() / getAllowed()
 ```
 
 ## 逐权限验证命令
@@ -167,14 +167,14 @@ opencli --profile test-profile browser perm-b eval "
 | 未清空 sessionStorage | test 用户读到旧 userInfo | 登录前 `sessionStorage.clear()` |
 | 未等待同步 | admin 保存后立即验证，权限未生效 | 保存后等 2 秒 + 确认 toast |
 | test 用户也是 owner | `isOwner=true` 绕过所有 perm 检查 | 确认 test 用户 `isOwner=false` |
-| `sessionStorage.getItem('permsMap')` | 永远返回 null | permsMap 在 `userInfo` 内部：`JSON.parse(sessionStorage.getItem('userInfo')).permsMap` |
+| `sessionStorage.getItem('permsMap')` | 永远返回 null（已废弃口径） | 用 `RoutePermDict.getScope/getAllowed` 验证路由作用域；见 `route-scope-auth-chain.md` |
 | 登录后 `location.reload()` | 掩盖 computed 缓存不刷新的 bug | 登录后不要 reload，直接验证 |
 | **功能项显示状态为"隐藏"** | **用户有 perm 但按钮不显示**，误判为"未授权" | **去菜单管理 → 对应页面节点 → 权限配置 → 检查功能项"显示状态"是否为"显示"** |
 | **缺少查询权限** | **有 edit/delete 但行内操作按钮不可见** | **`sys:menu:query` 是行内操作的前提——没有它，树数据不加载，行内按钮不渲染** |
 
 ## 功能项显示状态检查（强制）
 
-> **这是「有 perm 但按钮不显示」的根因之一。** 即使角色已授权、permissions 数组正确，如果功能项的显示状态为"隐藏"，前端 `checkHasPerm` 会因 `permsMap[perm].isVisible === false` 而返回 false，按钮不渲染。
+> **这是「有 perm 但按钮不显示」的根因之一。** 即使角色已授权、`user.permissions` 含 code，如果功能项的显示状态为"隐藏"，`RoutePermDict` 会在 `visiblePermSet` 过滤中排除该 perm，`checkHasPerm` 返回 false，按钮不渲染。
 
 ### 检查步骤
 

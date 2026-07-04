@@ -77,10 +77,28 @@ description: 当已有盘点文档，需要设计新权限点的粒度、命名�
 - `view` / `query` 作门控 → 无 perm 时整页 `PageNoPermission`（见 `[[../策略-页面权限空态]]`）
 - 操作级 perm → 有门控时仅 `v-hasPerm` 藏按钮
 
+### 7. 路由 params 消歧决策（路由作用域鉴权）
+
+> 权威参考：`[[../../references/route-scope-auth-chain.md]]`
+
+| 场景 | 决策 | 菜单配置 |
+|------|------|---------|
+| 目标 path 在菜单树中唯一 | `params` 可省略 | 仅 `route_path` |
+| 多个 page 共享同一 path | **必须** params | 每 page 不同键值 |
+| URL 靠 query 区分业务 | params 记录 query | 与 URL 完全一致 |
+| 不确定是否多候选 | 先查已有菜单树同 path 数量 | 有冲突则必须 params |
+
+设计输出必须包含 `routePathParamsPlan`：
+
+- `routePath`：与前端路由一致
+- `paramsDecision`：是否需要 / 键值 / 理由
+- `ambiguousRisk`：若省略 params 的风险说明
+
 ## 输出契约
 
 - `designGoal`
 - `analysisBasis`（引用盘点文档）
+- `routePathParamsPlan`（routePath + paramsDecision + ambiguousRisk）
 - `permGranularityDecisions`
 - `exemptionList`（接口豁免清单）
 - `hiddenPagePlan`

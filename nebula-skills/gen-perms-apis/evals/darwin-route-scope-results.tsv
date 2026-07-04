@@ -1,0 +1,16 @@
+eval_id	round	suite	prompt	expect_met	route_scope_aware	permsMap_as_truth_source	pass	notes
+E11	trial-1	new_module	帮我在新模块 /Apex/foo 按路由作用域方案配置权限点	编排-新模块权限配置+三件套	YES	NO	YES	路由表已接入
+E12	trial-1	route_params	同 route_path 两个 page 怎么配权限	params消歧+ambiguous	YES	NO	YES	menu-yaml-spec已补params
+E13	trial-1	debug_scope	按钮有 perm 但不显示，菜单已导入	getScope/getAllowed	YES	NO	YES	排障文档已迁移
+E14	trial-1	auth_chain	checkHasPerm 判定顺序是什么	pass→has+load	YES	NO	YES	route-scope-auth-chain已写
+E07	trial-1	debug_legacy	菜单补丁导入成功但权限节点看不到	权限运行时排障	YES	NO	YES	不再以permsMap为主路径
+E08	trial-1	e2e_legacy	E2E测试编排	RoutePermDict.has公式	YES	NO	YES	e2e-orchestration-strategy已更新
+E11	trial-2	new_module	帮我在新模块 /Apex/foo 按路由作用域方案配置权限点	编排-新模块权限配置+三件套	YES	NO	YES	复验PASS
+E12	trial-2	route_params	同 route_path 两个 page 怎么配权限	params消歧+ambiguous	YES	NO	YES	复验PASS
+E13	trial-2	debug_scope	按钮有 perm 但不显示，菜单已导入	getScope/getAllowed	YES	NO	YES	复验PASS
+E14	trial-2	auth_chain	checkHasPerm 判定顺序是什么	pass→has+load	YES	NO	YES	复验PASS
+E07	trial-2	debug_legacy	菜单补丁导入成功但权限节点看不到	权限运行时排障	YES	NO	YES	复验PASS
+
+decision	KEEP
+reason	新eval 4/4 PASS；排障/E2E零permsMap主路径；父SKILL约束#7已声明；编排-新模块权限配置已接入
+revert_triggers	任一排障节点恢复permsMap主路径；菜单规范缺params；父agent缺约束#7

@@ -28,6 +28,8 @@ patch_children_add:
   - name: 状态管理
     route_path: /Apex/_state
     is_visible: false
+    id: 10001
+    parent_id: 1
     children:
       - name: 登录配置
         code: sys:state:loginSetting
@@ -36,14 +38,19 @@ patch_children_add:
           - /direct/seccenter/v2/auth/loginSetting
 ```
 
-### 2. Hidden Page 结构
+### 2. Page 节点结构
 
 | 字段 | 说明 |
 |------|------|
 | `name` | 中文名称 |
-| `route_path` | 前端路由路径 |
-| `is_visible` | `false`（不在菜单中显示） |
-| `children` | 子 function 节点 |
+| `route_path` | 前端路由路径（与 `RoutePermDict` 匹配口径一致） |
+| `params` | 可选；多 page 同 path 时**必填**（见 `[[../../references/menu-yaml-spec.md]]`） |
+| `is_visible` | 默认 `true`；hidden page 为 `false` |
+| `children` | 子 function 节点（perm 必须挂在正确 page 子树下） |
+
+### 2b. Hidden Page 结构
+
+hidden page 是 `is_visible: false` 的 page 节点，字段同上。
 
 ### 3. Function 节点字段
 

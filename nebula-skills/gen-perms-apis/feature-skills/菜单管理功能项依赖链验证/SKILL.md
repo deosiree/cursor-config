@@ -263,4 +263,4 @@ opencli --profile p2ejw7ww browser admin wait time 3
 - 新增场景：加 JSON + `--only` 单跑，不必改 SKILL
 - 换页面 E2E：复用 scripts 模式，替换页面名与 ALL_FUNC_ITEMS
 - API 从 merge 改 replace：可去掉 2a 清空步骤
-- permsMap 加载方式变更：改 `run-e2e-scenario.node.js` Step 5 eval
+- routeProjectMap 加载方式变更：改 `run-e2e-scenario.node.js` Step 5 eval，用 `RoutePermDict.getScope/getAllowed`

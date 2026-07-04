@@ -1,6 +1,6 @@
 ---
 name: 梳理权限点与apis
-description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、页面无权限空态、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、PageNoPermission、页面无权限空态、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
+description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、页面无权限空态、路由作用域鉴权（RoutePermDict）、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、新模块配置权限、RoutePermDict、PageNoPermission、页面无权限空态、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
 ---
 
 # 梳理权限点与 APIs（Agent Skill 总入口）
@@ -15,14 +15,17 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
   - 把需要多轮人工确认的问题压成一次性执行
   - 把需要端到端验证的问题收缩成只改源码
   - 漏掉 `targetRepo` 默认约束，错误改动 opsdeck
-  - 用 `v-if` + computed 替代 `v-hasPerm`，增大 diff 面
+  - 复杂页撒 `v-hasPerm` 或 OpItem `:perm` 二次鉴权，同一 perm 调用几十次
+  - 新模块只设计 perm code，不设计 `route_path` / `params` 消歧
+  - 排障仍查 `userInfo.permsMap` 而非 `RoutePermDict.getScope()`
+  - 菜单导入后未刷新 routeProjectMap，scope 为空导致按钮不显示
 
 ## 适用场景
 
 - 需要盘点某个仓库的路由、组件、`v-hasPerm` 与真实 API 调用
 - 已有盘点结果，需要设计新的权限点与 API 映射
 - 需要生成增量菜单树 YAML 补丁
-- 需要按集中式原则改动源码（最小 diff、v-hasPerm 优先）
+- 需要按集中式原则改动源码（复杂页 pagePerms 静态预算；简单页 v-hasPerm）
 - 缺页面门控 perm 时需 `PageNoPermission` 整页空态（禁止表格「暂无数据」冒充无权限）
 - 需要通过 SSH + OpenCLI 做端到端权限验证
 - 需要通过 OpenCLI 双会话（admin 配置角色 + 测试用户验证）做自动化权限 E2E 测试，结果落盘 CSV
@@ -107,6 +110,9 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
   - 若能力缺口判断依赖当前链路事实，先补对应意图 skill
 - 用户要求全局/按范围检查菜单树 API 遗漏、或对比源码与 YAML 缺口 → 进入 `[[feature-skills/检查-菜单树API缺口]]`
   - 与 `扫描源码权限点与API` 区分：范围检查 = 轻量 diff 报告；全量扫描 = 完整盘点文档
+- 用户要在**新模块**按路由作用域方案配置权限（route_path + params + 权限标识）→ 进入 `[[intention-skills/编排-新模块权限配置]]`
+  - 若盘点事实不足，先补 `[[intention-skills/分析-perms-apis现状]]`
+  - 权威参考：`[[references/route-scope-auth-chain.md]]`；清单：`[[template/new-module-perm-config-checklist.md]]`
 
 ## 人工介入门禁
 
@@ -136,11 +142,12 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 以下约束在本父 agent 中声明，下沉到各意图/功能 skill 执行：
 
 1. **targetRepo 默认 apex_dev**：每次只改一个仓库，默认仅改 apex_dev，不动 opsdeck
-2. **v-hasPerm 优先于 v-if**：单个元素用 `v-hasPerm` 不新增 ref；整块区域共享同一 perm 时才用父层 `v-if`
+2. **复杂页 pagePerms 静态预算；简单页才 v-hasPerm**：列表页/多行 OpItem 用单一 `xxxPagePerms` computed + boolean props，禁止 OpItem `:perm` 二次鉴权；仅 1–2 个独立按钮时可用 `v-hasPerm`（见 `[[references/page-perms-static-budget.md]]`）
 3. **菜单补丁 ID 必须回填**：`patch_children_add` 中的 function 必须先查询或创建获取 ID 后回填
 4. **菜单导入先 dry_run**：正式导入前必须先 `dry_run: true` 验证
 5. **API 反查三类硬链路**：`业务层→gateway→api→契约`、`业务层→api→契约`、`子组件 emit→父组件→gateway/api→契约`
 6. **页面门控空态**：缺 `view`/`query` 等 pageGate perm 时必须 `PageNoPermission`，禁止用 `el-table` 默认「暂无数据」代替；对照 `[[template/sample-run/after-02-页面空态/]]`
+7. **路由作用域鉴权**：`checkHasPerm` 真相源为 `RoutePermDict`（`routeProjectMap` + 当前路由 `params` 漏斗）；禁止以 `userInfo.permsMap` 为排障主路径；新模块必须设计 `route_path` + 可选 `params` + function `code`；见 `[[references/route-scope-auth-chain.md]]`
 
 ## 使用示例
 
@@ -205,6 +212,18 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 ```
 
 预期：进入 `[[intention-skills/编排-页面无权限空态落地]]`；对照 `[[template/sample-run/before-02-页面空态/]]` / `[[template/sample-run/after-02-页面空态/]]`
+
+```text
+帮我在新模块 /Apex/foo 按路由作用域方案配置权限点，从分析到菜单导入。
+```
+
+预期：进入 `[[intention-skills/编排-新模块权限配置]]`；产出 routePath + paramsDecision + functionPermList 三件套
+
+```text
+按钮有 perm 但不显示，菜单已导入，帮我按 RoutePermDict 排障。
+```
+
+预期：路由到 `[[feature-skills/权限运行时排障]]`；查 `getScope/getAllowed`，不查 permsMap
 
 ## REFACTOR
 

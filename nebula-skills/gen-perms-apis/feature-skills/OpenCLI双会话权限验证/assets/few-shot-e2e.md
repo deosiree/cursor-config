@@ -80,11 +80,10 @@ opencli --profile test-profile browser perm-b eval "
     url:location.href,
     username:u.username,
     isOwner:u.isOwner,
-    permissions:u.permissions,
-    permsMapKeys:u.permsMap?Object.keys(u.permsMap):null
+    permissions:u.permissions
   });
 "
-// ⚠️ 不要查 sessionStorage.getItem('permsMap') — permsMap 在 userInfo 内部
+// 路由作用域：导航到目标页后 RoutePermDict.getScope() / getAllowed()
 
 # 逐 perm 验证
 opencli --profile test-profile browser perm-b eval "checkHasPerm('sys:dashboard:view')"
@@ -115,5 +114,5 @@ opencli --profile test-profile browser perm-b eval "checkHasPerm('sys:tenant:add
 |------|------|
 | `--profile` | **必须带**，区分 Chrome 用户。不同 session 名只是 tab 区分。 |
 | 单 profile 门禁 | `opencli doctor` 只有 1 个 profile → 停下来，让用户创建第二个 Chrome 用户 |
-| permsMap 路径 | `userInfo.permsMap`，不是 `sessionStorage.permsMap` |
+| 路由作用域验证 | 导航到目标路由后 `RoutePermDict.getScope/getAllowed`；勿查 permsMap |
 | 不 reload | 登录后直接验证，不 `location.reload()` |

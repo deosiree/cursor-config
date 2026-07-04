@@ -7,3 +7,25 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-06-04T03:00	r5	OpenCLI双会话权限验证	77	81	keep	架构+触发性	TL;DR分层+交叉引用	dry_run
 2026-06-04T04:00	r5	双会话OpenCLI环境初始化	71	76	keep	工作流	TL;DR+admin/test统一+瘦身	dry_run
 2026-06-04T04:00	r6	父agent SKILL.md	82	85	keep	具体性+触发性	api契约相对路径+菜单E2E路由	dry_run
+2026-07-04T11:00	baseline	编排-新模块权限配置	-	74.0	baseline	-	路由作用域新节点初始9维	dry_run
+2026-07-04T11:10	r7-opt	编排-新模块权限配置	74.0	87.0	keep	dim2+3+4+9	CHECKPOINT+if-then+opsdeck表+黑名单+test-prompts	dry_run
+2026-07-04T11:10	baseline	双会话OpenCLI环境初始化	76.0	76.0	baseline	-	复评基线	dry_run
+2026-07-04T11:15	r7-opt	双会话OpenCLI环境初始化	76.0	83.5	keep	dim3+4+9	CHECKPOINT+if-then+routeProjectMap+黑名单	dry_run
+2026-07-04T11:20	r8-micro	编排-新模块权限配置	87.0	87.5	keep	dim6	route-scope-auth-chain补opsdeck	dry_run
+2026-07-04T11:20	r8-micro	父agent SKILL.md	85.0	86.0	keep	dim1	触发词补RoutePermDict/新模块	dry_run
+2026-07-04T11:20	HL4	stop	套件	-	-	stop	HL-4	连续2轮Δ<2(0.5+1.0)收手	dry_run
+2026-07-04T12:00	baseline	pagePerms静态鉴权	-	-	baseline	dim1+2+9	page-perms-static-budget+before04/after04+supersede snapshot01	evaluate-only
+2026-07-04T12:00	keep	源码集中式权限改动+迁移-源码改动落地	-	-	keep	dim2+9	模式S默认+OpItem反面+evals2条	evaluate-only
+2026-07-04T12:30	baseline	源码集中式权限改动	-	85.0	baseline	dim2+5+9	pagePerms模式S+黑名单+after04引用	dry_run
+2026-07-04T12:30	baseline	迁移-源码改动落地	-	84.5	baseline	dim2+3	优先链P0+租户行pagePerms	dry_run
+2026-07-04T12:35	r9-opt	角色菜单权限树快速配置	79.0	84.5	keep	dim3+4+9	CHECKPOINT×2+if-then+反例黑名单	dry_run
+2026-07-04T12:35	HL4	stop	套件	-	-	stop	HL-4	r9 Δ=5.5但主路径已达标+再改预期Δ<2	dry_run
+2026-07-04T13:00	full_test	用户管理pagePerms改码	-	88.0	pass	dim8	apex_dev index+UserTable+UserSearchBar；OpItem无perm	full_test
+2026-07-04T13:00	full_test	源码集中式权限改动	84.5	88.5	keep	dim8	用户管理实码验证pagePerms模式S	full_test
+2026-07-04T12:20	keep	租户+skill models对齐	-	-	keep	dim6+9	tenant.models+:perms+page-perms-static-budget更新	evaluate-only
+2026-07-04T12:20	baseline	源码集中式权限改动	88.5	89.0	keep	dim6	models约定+after04同步	full_test
+2026-07-04T12:20	HL4	stop	套件	-	-	stop	HL-4	主路径≥85+双次HL4+user full_test完成	dry_run
+2026-07-04T14:00	full_test	菜单管理pagePerms改码	-	87.0	pass	dim8	menu.models+MenuToolbar/TreeTable/TabActions；子弹窗保留v-hasPerm	full_test
+2026-07-04T14:30	full_test	菜单模态框pagePerms延伸	87.0	90.0	pass	dim8	+configApi+PermissionConfig/ApiConfig/ApiWhitelist :perms下传	full_test
+2026-07-04T15:00	full_test	角色管理pagePerms改码	-	88.0	pass	dim8	role.models+RoleListTable+useRoleList单budget	full_test
+2026-07-04T15:00	full_test	安全配置pagePerms改码	-	89.0	pass	dim8	security-config.models+securityPagePerms单computed	full_test

@@ -1,0 +1,15 @@
+eval_id	suite	target	prompt	expect_key	route_scope_aware	permsMap_as_truth_source	pass	notes
+E01	should_trigger	父agent	先帮我盘点 apex_dev 所有路由的权限点和 API 现状	分析-perms-apis现状	否	否	YES	盘点场景不涉及运行时鉴权
+E02	should_trigger	父agent	已有盘点文档，帮我设计首页、租户管理、安全配置的新权限点	策略-设计权限点	否	否	YES	设计阶段缺 route_path+params 约束
+E03	should_trigger	父agent	给我全流程方案：从分析到菜单补丁、源码改动、端到端验证	编排-权限点配置全流程	否	否	YES	全流程未含路由作用域前置检查
+E04	should_trigger	父agent	权限设计已确认，帮我按集中式原则改 apex_dev 源码	迁移-源码改动落地	否	否	YES	改码原则仍有效
+E05	should_trigger	父agent	我不需要总方案，只想知道当前一步该进扫描、设计、补丁还是改码	路由-选择功能子skill	否	否	YES	单步路由仍有效
+E06	should_trigger	父agent	用 OpenCLI 帮我验证登录后 isOwner 是否正常绕过权限	OpenCLI端到端验证	否	否	PARTIAL	仍引用 hasPermissionBypass 口径
+E07	should_trigger	父agent	菜单补丁导入成功了，但新增的权限节点在菜单里看不到，帮我排查	权限运行时排障	否	是	NO	排障文档以 permsMap 为主真相源
+E08	should_trigger	父agent	我要对 sys:dashboard:view、sys:tenant:query、sys:tenant:add 做 E2E 测试	编排-权限E2E测试	否	是	NO	E2E 策略写 permsMap.isVisible 公式
+E09	should_trigger	父agent	用 OpenCLI 双会话验证本轮权限配置	OpenCLI双会话权限验证	否	是	NO	双会话 eval 查 userInfo.permsMap
+E10	should_not_trigger	父agent	直接帮我设计一个新接口的四层接入方案	不应触发	否	否	YES	边界正确
+E11	new_module	缺失	帮我在新模块 /Apex/foo 配置权限点	编排-新模块权限配置	否	否	NO	eval 不存在
+E12	route_params	缺失	同 route_path 两个 page 怎么配权限	params 消歧	否	否	NO	eval 不存在
+E13	debug_scope	缺失	按钮有 perm 但不显示，菜单已导入	RoutePermDict.getScope	否	是	NO	eval 不存在且文档误导
+E14	auth_chain	缺失	checkHasPerm 判定顺序是什么	RoutePermDict.pass→has	否	是	NO	eval 不存在且文档误导

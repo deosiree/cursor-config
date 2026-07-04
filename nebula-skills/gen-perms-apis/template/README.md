@@ -16,6 +16,16 @@
   - 多轮补全与人工介入闭环样本，用来验证迭代式 few-shot 是否清晰
 - `sample-run/apex_dev-api-backtrace-focus-iteration.md`
   - API 反查与关注路由迭代样本，用来验证 gateway、子组件抬升、补充契约和非关注策略是否清晰
+- `new-module-perm-config-checklist.md`
+  - 新模块路由作用域配置逐步清单（route_path + params + function code）
+- `sample-run/before-03-旧鉴权链路-permsMap.md` / `after-03-路由作用域鉴权.md`
+  - commit 1851a7dd 前后鉴权链路对比（RED / GREEN）
+- `sample-run/snapshot-03-路由params消歧.md` / `mvp-03-新模块最小闭环.md`
+  - params 消歧决策与单模块最短路径
+- `sample-run/before-04-租户权限重复鉴权.md` / `after-04-页面级静态pagePerms.md`
+  - 租户页 pagePerms 静态预算前后对比（RED / GREEN）；supersede snapshot-01 决策 4
+- `sample-run/snapshot-04-pagePerms决策.md`
+  - 何时 pagePerms vs v-hasPerm；OpItem 二次鉴权反模式
 
 ## 约束
 

@@ -97,6 +97,6 @@
     "btns[3] = 功能项清空, btns[2] = 功能项全选",
     "每轮前必须清空，否则权限累积",
     "依赖链: 查询→树加载→编辑→权限配置→配置API",
-    "test用户必须logout→confirm→relogin更新permsMap"
+    "test用户必须logout→confirm→relogin更新routeProjectMap（RoutePermDict.patchMap）"
   ]
 }

@@ -108,7 +108,8 @@
       "input": "权限设计已确认，帮我按集中式原则改 apex_dev 源码，不改 opsdeck。",
       "expect": [
         "路由到 迁移-源码改动落地 intention skill",
-        "v-hasPerm 优先于 v-if",
+        "复杂页用 xxxPagePerms 静态预算 + boolean props",
+        "禁止 OpItem :perm 二次鉴权",
         "默认 targetRepo=apex_dev",
         "产出逐模块改动计划"
       ]
@@ -162,6 +163,59 @@
         "将 E2E 结果映射为 cases.json 字段",
         "委托外部 skill 输出csv的测试用例 生成 CSV",
         "不自己实现 CSV 生成逻辑"
+      ]
+    },
+    {
+      "input": "帮我在新模块 /Apex/foo 按路由作用域方案配置权限点，从分析到菜单导入。",
+      "expect": [
+        "路由到 编排-新模块权限配置 intention skill",
+        "提到 route_path + function code 三件套",
+        "引用 route-scope-auth-chain 或 RoutePermDict",
+        "不查 userInfo.permsMap 作为真相源"
+      ]
+    },
+    {
+      "input": "同 route_path 两个 page 怎么配权限？",
+      "expect": [
+        "提到 page params 消歧",
+        "提到 ambiguous 风险",
+        "引用 snapshot-03 或 menu-yaml-spec params 字段"
+      ]
+    },
+    {
+      "input": "按钮有 perm 但不显示，菜单补丁已导入，帮我排障。",
+      "expect": [
+        "路由到 权限运行时排障 feature skill",
+        "查 RoutePermDict.getScope 或 getAllowed",
+        "不查 userInfo.permsMap 作为主真相源",
+        "检查 function 是否挂在正确 page 子树"
+      ]
+    },
+    {
+      "input": "checkHasPerm 的判定顺序是什么？",
+      "expect": [
+        "RoutePermDict.pass(isOwner) 先于 has",
+        "RoutePermDict.has 基于当前路由 allowed 集合",
+        "router.beforeEach 调用 RoutePermDict.load",
+        "不以 permsMap 为真相源"
+      ]
+    },
+    {
+      "input": "租户列表行内操作鉴权怎么写才不重复调用 checkHasPerm？",
+      "expect": [
+        "单一 tenantPagePerms 或 xxxPagePerms computed 静态预算",
+        "子组件收 boolean pagePerms 而非 perm 字符串",
+        "禁止 OpItem :perm 二次鉴权",
+        "引用 page-perms-static-budget 或 after-04"
+      ]
+    },
+    {
+      "input": "什么时候还可以用 v-hasPerm？",
+      "expect": [
+        "简单页例外：1-2 个独立按钮",
+        "无表格行内 OpItem",
+        "无子组件二次鉴权",
+        "复杂列表页应使用 pagePerms 而非 v-hasPerm 撒点"
       ]
     }
   ],
@@ -235,6 +289,10 @@
     "所有 REFACTOR 章节至少包含 3 条具体收紧规则（非占位符）",
     "菜单补丁 YAML 每个 function 节点 id 不为 0 且 parent_id 不为 null",
     "权限设计方案中每个豁免项附带源码证据（文件:行号）",
+    "新模块配置必须产出 routePath + paramsDecision + functionPermList 三件套",
+    "排障/E2E 以 RoutePermDict.getScope/getAllowed 为验证入口，不以 permsMap 为真相源",
+    "复杂列表页改码使用 xxxPagePerms 静态预算 + boolean props，禁止 OpItem :perm 二次鉴权",
+    "简单页（1-2 控点、无行内 OpItem）仍可用 v-hasPerm",
     "所有 SKILL.md 的 name 和 description 使用中文"
   ]
 }

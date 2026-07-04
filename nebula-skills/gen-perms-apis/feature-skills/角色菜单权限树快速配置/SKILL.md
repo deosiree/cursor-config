@@ -32,6 +32,8 @@ description: 在角色编辑弹窗中，通过搜索树节点+清空功能项+op
 
 总策略：**搜索树节点 → 点击节点 → 清空功能项 → 精准勾选 → 保存**
 
+🔴 **CHECKPOINT · 功能项面板门禁**：点击树节点后 `.el-checkbox__label` 未出现 → **停止**，检查是否误点目录节点或未勾选 page checkbox。
+
 ```
                     ┌─────────────────────────────┐
                     │   点击编辑角色 → 打开弹窗     │
@@ -69,6 +71,17 @@ description: 在角色编辑弹窗中，通过搜索树节点+清空功能项+op
                     │   ⚠️ 勿用 .el-button--primary │
                     └─────────────────────────────┘
 ```
+
+### 失败兜底（if-then）
+
+| 触发条件 | 一线修复 | 仍失败兜底 |
+|---------|---------|-----------|
+| 功能项勾选后 Vue 回滚 | 先确认 page 树节点 checkbox 为 checked | 改用 `opencli check --role checkbox --name` |
+| 点了树的清空，功能项未变 | 用 `#pane-permission button` 的 btns[2]/[3]（功能项面板） | 勿用树面板 btns[0]/[1] |
+| eval click checkbox 无效 | **禁止** nativeSetter 点 `.el-checkbox` | 只用 `opencli check/uncheck --name` |
+| 保存后弹窗仍 open | textContent「确 定」按钮未命中 | 勿用 `.el-button--primary` |
+| 弹窗意外关闭 | 重新打开角色编辑弹窗 | 从 Tab 切换重做 |
+| qiankun 搜索框 Illegal invocation | 改用 `opencli type` | 勿用 eval nativeSetter 设值 |
 
 ### 1. 切换菜单权限 Tab
 
@@ -120,6 +133,8 @@ opencli --profile <admin> browser admin check --role checkbox --name 编辑菜�
 
 ### 5. 保存
 
+🔴 **CHECKPOINT · 保存前确认**：目标功能项 checkbox 状态与预期一致 → 再点「确 定」；否则保存的是旧值。
+
 ```javascript
 // qiankun 子应用中 class selector 不可靠，必须用可见按钮 textContent
 var btns = document.querySelectorAll('button');
@@ -148,6 +163,16 @@ opencli --profile <admin-profile> browser <session> wait time 3
 | 点了树的清空 | 功能项没变 | 树面板和功能项面板各有一套清空/全选，要用 btns[2]/[3] |
 | nativeSetter / eval click checkbox | DOM 变了 Vue 未更新 | 用 `opencli check/uncheck --name` |
 | 弹窗意外关闭 | 配置丢失，admin 退回到角色列表 | 重新打开编辑弹窗，重做配置 |
+
+## 反例黑名单（不要做）
+
+| # | 反模式 | 后果 |
+|---|--------|------|
+| 1 | 未勾选 page 节点直接操作功能项 checkbox | Vue 响应式回滚，保存无效 |
+| 2 | eval/nativeSetter 点 `.el-checkbox` | DOM 变、Vue 状态未更新 |
+| 3 | 用树面板 btns[0]/[1] 当功能项清空 | 功能项面板状态不变 |
+| 4 | 保存用 `.el-button--primary` | qiankun 子应用 selector 不可靠 |
+| 5 | 与完整菜单 E2E 混用本 skill | 8 场景应走 `菜单管理功能项依赖链验证` |
 
 ## REFACTOR
 

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我在新模块 /Apex/report 按路由作用域方案配置权限点，从分析到菜单导入。",
+    "expected": "固定六阶段序列；产出 routePath+paramsDecision+functionPermList；不查 permsMap"
+  },
+  {
+    "id": 2,
+    "prompt": "给 /Apex/workspace 加权限，平台端和租户端各一个 page，靠 type 区分。",
+    "expected": "params 消歧决策；预警 ambiguous；引用 snapshot-03"
+  },
+  {
+    "id": 3,
+    "prompt": "新模块 v-hasPerm 已改，按钮不显示，菜单已导入，按 RoutePermDict 排障。",
+    "expected": "getScope/getAllowed；function 子树检查；禁止 permsMap"
+  }
+]

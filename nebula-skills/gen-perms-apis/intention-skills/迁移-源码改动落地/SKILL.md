@@ -1,6 +1,6 @@
 ---
 name: 迁移-源码改动落地
-description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优先、父组件收敛、最小 diff）改动源码时使用。
+description: 当权限设计已确认，需要按集中式原则（复杂页 pagePerms 静态预算、boolean props、最小 diff）改动源码时使用。
 ---
 
 # 迁移-源码改动落地
@@ -8,10 +8,11 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 ## RED
 
 - 没有本节点时，agent 容易在权限设计未确认时直接改码
-- 也容易在多处子组件上喷洒 `v-hasPerm`，违反集中式原则
+- 也容易在复杂页撒 `v-hasPerm` 或传 `actionPerms` 字符串，导致同一 perm 重复鉴权
 - 常见失败：
-  - 用 `v-if` + computed ref 替代 `v-hasPerm`，增大 diff 面
-  - 在子组件多个元素上分别写 `v-hasPerm`，而不是父组件一层 `v-if` 包整块
+  - 列表页工具栏撒 `v-hasPerm`，与 `canQuery` computed 双挂同一 perm
+  - 子组件收 `actionPerms` 字符串，OpItem `:perm` 每行二次 `checkHasPerm`
+  - 多个平行 `canXxx` computed 而不合并为 `xxxPagePerms`
   - API 守卫写在组件内部而非入口处（`fetchData`/`save`/打开弹窗）
   - 忘记 `targetRepo` 默认约束，错误改动 opsdeck
   - 父、子组件同时对同一 perm 加守卫
@@ -35,24 +36,29 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 
 ### 优先链（从简到繁）
 
-1. **单个元素** → 使用 `v-hasPerm="'perm'"`（不新增 ref 变量）
-2. **多个兄弟元素共享同一 perm** → 父层一个 `v-if="canXxx"`（一个 computed）
-3. **子组件需要感知权限** → 收 `props.perms`，由父组件传入
+| 优先级 | 场景 | 做法 |
+|--------|------|------|
+| **P0** | 列表页 / 多行 OpItem / 工具栏 5+ 控点 | 单一 `xxxPagePerms` computed + boolean props |
+| P1 | 单元素、无行内二次鉴权 | `v-hasPerm` |
+| P2 | 整块共享 perm | `v-if="xxxPagePerms.action"` |
+| P3 | pageGate 缺失 | PageNoPermission |
+
+权威参考：`[[../../references/page-perms-static-budget.md]]`
 
 ### 禁止项
 
-- ❌ 用 `v-if` + computed ref 替代单个元素的 `v-hasPerm`
-- ❌ 在多个子按钮上分别写 `v-hasPerm`，而不在父层统一控制
-- ❌ 父、子组件同时对同一 perm 加守卫
-- ❌ 在组件内部多次调用 `checkHasPerm` 检查同一 perm
+- ❌ 复杂页无 pagePerms 时撒 `v-hasPerm`
+- ❌ 子组件收 perm 字符串 + OpItem `:perm` 二次鉴权
+- ❌ 同一 perm 的 `canXxx` + `v-hasPerm` 双挂
+- ❌ 父、子组件同时对同一 perm 加守卫（数据源不一致）
 - ❌ 改动 `targetRepo` 以外的仓库（默认仅改 apex_dev）
 - ❌ 改动 opsdeck
 
 ### API 守卫位置
 
-- 页面级：`fetchData` / `loadData` 入口调用一次 `checkHasPerm`
-- 表单提交：`handleSave` / `handleSubmit` 入口调用一次
-- 弹窗打开：`openDialog` 入口或弹窗组件 `v-if` 控制挂载
+- 页面级：`fetchData` / `loadData` 入口读 `xxxPagePerms.value.query`
+- 表单提交：`handleSave` / `handleSubmit` 入口读 `xxxPagePerms.value.edit` 等
+- 弹窗打开：`openDialog` 入口读对应 pagePerms 字段
 - 不要求在每个子操作的点击事件上重复守卫
 
 ### 已有合理子级 perm 的处理
@@ -64,9 +70,9 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 | 模块 | 集中式做法 |
 |------|------------|
 | 首页 | `loadDashboardData` 一处守卫 + 顶层 `v-if` |
-| 租户 | 权限集中在 `index.vue`；子组件收 `actionPerms` prop；弹窗由父 `v-if` 控制 |
+| 租户 | `tenant.models.ts` + `tenantPagePerms` 单 computed；子组件收 boolean `:perms`；OpItem 无 `:perm` |
 | 个人中心 | `assertProfilePerm()` 单点 + 主区域一层 `v-if` |
-| 用户 | `index.vue` 定义 `toolbarPerms`；子组件收 `props.perms` |
+| 用户 | `user.models.ts` + `userPagePerms` 单 computed；子组件收 boolean `:perms`；OpItem 无 `:perm` |
 | 角色 | `useRoleList.fetchData` 守卫 |
 | 安全配置 | `useSecurityConfigPage` 按 perm 分支；`index.vue` 过滤 Tab、控制保存栏 |
 | 菜单 | 工具栏 `canQuery/canAdd/canImport/canExport` + `fetchMenuList` 守卫 |
@@ -85,14 +91,14 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 ## Guardrails
 
 - 不允许在权限设计未确认时直接改码
-- 不允许优先使用 `v-if` + ref 替代 `v-hasPerm`（优先链约束）
+- 不允许在复杂页无 pagePerms 时撒 `v-hasPerm`（优先链约束）
 - 不允许改动非 `targetRepo` 的仓库
 - 不允许父、子组件对同一 perm 双重守卫
 - 已有合理子级 perm 不强行上提
 
 ## REFACTOR
 
-- 若 v-hasPerm 优先链被违反（用 v-if+ref 替代 v-hasPerm），收紧改动优先级审查
+- 若复杂页仍用 v-hasPerm 撒点或 actionPerms 字符串，引用 before-04 阻止
 - 若 `targetRepo` 约束被突破（改了 opsdeck），补「仅改 targetRepo」的入口校验
 - 若改动计划缺少逐模块差异（一刀切所有模块），补 `[[references/change-patterns-ref.md]]` 的差异化模式引用
 - 若父组件和子组件对同一 perm 双重守卫，补「单层守卫」强制审查
@@ -105,5 +111,5 @@ description: 当权限设计已确认，需要按集中式原则（v-hasPerm 优
 ```
 
 ```text
-首页和租户管理的改动面较大，帮我确认哪些地方用 v-hasPerm、哪些用父层 v-if。
+租户列表页行内操作怎么改才不重复 checkHasPerm？用 tenantPagePerms + boolean props。
 ```

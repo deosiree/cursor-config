@@ -41,9 +41,9 @@
       "target": "intention — 迁移-源码改动落地",
       "prompts": [
         "权限设计已确认，帮我按集中式原则改 apex_dev 源码。只改 targetRepo=apex_dev，不动 opsdeck。",
-        "首页和租户管理的改动面较大，帮我确认哪些地方用 v-hasPerm、哪些用父层 v-if。"
+        "租户列表行内操作鉴权怎么写才不重复调用 checkHasPerm？"
       ],
-      "expect": "v-hasPerm 优先于 v-if；默认 targetRepo=apex_dev；产出逐模块改动计划"
+      "expect": "复杂页 tenantPagePerms 静态预算 + boolean props；禁止 OpItem :perm；默认 targetRepo=apex_dev"
     },
     {
       "target": "intention — 路由-选择功能子skill",
@@ -87,9 +87,10 @@
     {
       "target": "feature — 源码集中式权限改动",
       "prompts": [
-        "按集中式原则改 apex_dev 源码，首页用 v-hasPerm，租户工具栏用 v-if 包整块。"
+        "按集中式原则改 apex_dev 租户管理：tenantPagePerms 静态预算，TenantTable 收 boolean pagePerms。",
+        "什么时候还可以用 v-hasPerm？"
       ],
-      "expect": "v-hasPerm 未被 v-if 替代；不改非 targetRepo 仓库"
+      "expect": "复杂页 pagePerms + v-if；禁止 actionPerms 字符串与 OpItem :perm；简单页才 v-hasPerm"
     },
     {
       "target": "feature — OpenCLI端到端验证",
@@ -173,6 +174,24 @@
         "扫描 apex_dev 哪些页还在用暂无数据冒充无权限。"
       ],
       "expect": "反模式清单 AP-01~AP-04；对照 before-02 快照；带文件路径"
+    },
+    {
+      "target": "intention — 编排-新模块权限配置",
+      "prompts": [
+        "帮我在新模块 /Apex/foo 按路由作用域方案配置权限点，从分析到菜单导入。",
+        "给 /Apex/workspace 加权限，平台端和租户端各一个 page，靠 type 区分。",
+        "新模块源码已改 v-hasPerm，按钮不显示，菜单已导入，按 RoutePermDict 排障。"
+      ],
+      "expect": "产出三件套 routePath+paramsDecision+functionPermList；验证 getScope/getAllowed；不查 permsMap"
+    },
+    {
+      "target": "路由作用域鉴权知识",
+      "prompts": [
+        "同 route_path 两个 page 怎么配权限？",
+        "checkHasPerm 的判定顺序是什么？",
+        "按钮有 perm 但不显示，菜单已导入，帮我排障。"
+      ],
+      "expect": "RoutePermDict 口径；params 消歧；getScope/getAllowed；不以 permsMap 为真相源"
     },
     {
       "target": "feature — 接入-PageNoPermission空态",
