@@ -1,0 +1,7 @@
+{
+  "moduleId": "tenant-i18n-rules-0704",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/tenant.csv",
+  "outputPath": "docs/问题单/0704/tenant-i18n-rules-0704.csv",
+  "casesFile": "configs/tenant-i18n-rules-0704.cases.json"
+}

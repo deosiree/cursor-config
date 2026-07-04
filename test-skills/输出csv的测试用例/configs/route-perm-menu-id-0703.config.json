@@ -1,0 +1,7 @@
+{
+  "moduleId": "route-perm-menu-id-0703",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0703/route-perm-menu-id-0703.csv",
+  "casesFile": "configs/route-perm-menu-id-0703.cases.json"
+}

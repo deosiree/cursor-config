@@ -1,0 +1,89 @@
+{
+  "moduleId": "role-i18n-rules-0704",
+  "source": "角色管理 RoleBasicFormTab I18nInput rules 模式迁移（嵌套 prop + :rules + validate 自动补全，2026-07-04）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "角色管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "角色管理-编辑角色-不改动直接关闭-console无角色名校验报错",
+      "featureSet": "角色名I18n规则",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 存在可编辑的非系统角色\n3. 浏览器 DevTools Console 已打开",
+      "steps": "1. 进入「安全管理」>「角色管理」\n2. 点击目标角色「编辑」，打开弹窗基础信息 Tab\n3. 不修改任何字段\n4. 点击「取消」或弹窗右上角关闭\n5. 观察 Console 输出",
+      "expected": "1. 弹窗正常关闭\n2. Console 不得出现「角色名称不能为空」或类似 validate 报错栈\n3. 不得出现 I18nInput 误报空名称的 Error",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role；RoleBasicFormTab + RoleEditDialog @closed",
+      "purpose": "关闭/reset 时 blur-only 规则 + 嵌套 prop，避免 legacy 双轨误校验",
+      "remark": "对齐 AlarmFormDialog I18nInput 规则模式"
+    },
+    {
+      "name": "角色管理-编辑角色-清空角色名-blur或确定-仍拦截必填",
+      "featureSet": "角色名I18n规则",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已打开编辑角色弹窗基础信息 Tab",
+      "steps": "1. 清空「角色名称」主输入框全部内容\n2. 点击输入框外区域触发 blur\n3. 观察表单项校验提示\n4. 再次打开编辑弹窗，清空角色名后直接点击弹窗「确定」",
+      "expected": "1. blur 后表单项显示角色名必填/格式错误提示\n2. 点击「确定」后保存被拦截，停留在基础信息 Tab 或校验失败\n3. 不得保存空角色名",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；createRoleNameRules + roleNameFieldRules blur trigger",
+      "purpose": "迁移后必填校验未被削弱",
+      "remark": ""
+    },
+    {
+      "name": "角色管理-新增角色-主输入框有名称i18n其它语言空-提交wire自动补全",
+      "featureSet": "角色名I18n规则",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:add、sys:role:query\n2. 界面语言为中文（zh-CN）",
+      "steps": "1. 打开「新增角色」弹窗\n2. 在「角色名称」主输入框填写「规则模式角色D」（不打开 i18n 弹窗填英文）\n3. 配置菜单权限后点击「确定」保存\n4. 切换界面语言为 English\n5. 在角色列表查看该角色「角色名称」列",
+      "expected": "1. 保存成功\n2. validate 流程调用 roleNameI18nRef.validate 后 wire 含 sourceValue 补全\n3. 英文界面列表「角色名称」显示「规则模式角色D」，不得为空",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；RoleBasicFormTab.validate → stringifyRoleNameWire",
+      "purpose": "I18nInput.validate + buildSubmitI18nData 自动补全",
+      "remark": "aafa491 sourceValue 补全行为"
+    },
+    {
+      "name": "角色管理-编辑角色-描述超过255字-blur或i18n弹框有长度提示",
+      "featureSet": "角色描述I18n规则",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已打开编辑角色弹窗",
+      "steps": "1. 在「描述」textarea 输入超过 255 个字符的文本\n2. 触发 blur 或打开 i18n 弹窗在某一语言栏粘贴超长文本\n3. 点击 i18n 弹窗「确认」或表单「确定」",
+      "expected": "1. 出现描述长度超限相关校验提示（≤255）\n2. 超长内容不得静默提交成功",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；descriptionFieldRules max 255 + I18nInput :rules",
+      "purpose": "描述字段 I18nInput 规则接入",
+      "remark": "textarea overlay 模式"
+    },
+    {
+      "name": "角色管理-新增角色-描述为空-可正常提交",
+      "featureSet": "角色描述I18n规则",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:add\n2. 已打开新增角色弹窗",
+      "steps": "1. 填写合法「角色名称」\n2. 「描述」留空（主输入框与 i18n 弹窗均不填）\n3. 配置菜单权限后点击「确定」保存",
+      "expected": "1. 不因描述为空而拦截提交\n2. 保存成功\n3. 列表该角色描述列为空或占位，无校验 Error",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；descriptionFieldRules 非必填",
+      "purpose": "描述为可选字段",
+      "remark": ""
+    }
+  ]
+}

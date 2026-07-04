@@ -1,0 +1,75 @@
+{
+  "moduleId": "tenant-i18n-rules-0704",
+  "source": "租户管理 TenantFormFields I18nInput rules 模式迁移（嵌套 prop + :rules + validate 自动补全，2026-07-04）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "租户管理界面",
+    "重试次数": "0",
+    "超时时间": "120",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "租户管理-编辑租户-不改动直接关闭-console无租户名校验报错",
+      "featureSet": "租户名I18n规则",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:edit\n2. 存在可编辑租户\n3. 浏览器 DevTools Console 已打开",
+      "steps": "1. 进入「租户管理」\n2. 打开目标租户「管理信息」弹窗/抽屉\n3. 不修改任何字段\n4. 点击取消或关闭\n5. 观察 Console 输出",
+      "expected": "1. 弹窗正常关闭\n2. Console 不得出现「租户名不能为空」或类似 validate 报错栈\n3. 不得出现 reset 触发的误报 Error",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /cloud/Apex/tenant；TenantFormFields 嵌套 prop tenantNameI18n",
+      "purpose": "关闭时 blur-only 规则，避免 legacy syncTenantNameModelFromI18n 误校验",
+      "remark": "对齐 AlarmFormDialog I18nInput 规则模式"
+    },
+    {
+      "name": "租户管理-编辑租户-清空租户名-blur或确定-仍拦截必填",
+      "featureSet": "租户名I18n规则",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:edit\n2. 已打开租户管理信息表单",
+      "steps": "1. 清空「租户名」主输入框全部内容\n2. 点击输入框外区域触发 blur\n3. 观察表单项校验提示\n4. 再次打开编辑，清空租户名后点击「保存」",
+      "expected": "1. blur 后显示租户名必填/格式错误提示\n2. 保存被拦截，不得提交空租户名\n3. 提示文案与 createTenantNameRules 一致",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；tenantNameFieldRules + createTenantNameRules",
+      "purpose": "迁移后必填校验未被削弱",
+      "remark": ""
+    },
+    {
+      "name": "租户管理-新建租户-主输入框有名称i18n其它语言空-提交wire自动补全",
+      "featureSet": "租户名I18n规则",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:add、sys:tenant:query\n2. 界面语言为中文（zh-CN）\n3. 可完成三步创建流程",
+      "steps": "1. 进入「新增租户」步骤1\n2. 在「租户名」主输入框填写「规则模式租户E」（不打开 i18n 弹窗填英文）\n3. 完成其余必填项并完成三步创建\n4. 切换界面语言为 English\n5. 在租户列表查看该租户「租户名」列",
+      "expected": "1. 创建成功\n2. validate 调用 tenantNameI18nRef.validate 后 wire 含 sourceValue 补全\n3. 英文界面列表「租户名」显示「规则模式租户E」，不得为空",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；TenantFormFields.validate → stringifyTenantNameWire",
+      "purpose": "I18nInput.validate + buildSubmitI18nData 自动补全",
+      "remark": "aafa491 sourceValue 补全行为"
+    },
+    {
+      "name": "租户管理-新建租户-三步向导第三步-tenantNameWire缓存仍有效",
+      "featureSet": "租户名I18n规则",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:tenant:add\n2. 使用三步创建租户向导\n3. 步骤1 已填写合法租户名（可仅主输入框）",
+      "steps": "1. 在步骤1填写租户名并完成步骤2\n2. 进入步骤3提交前，观察步骤1 remount 后租户名是否保留\n3. 完成步骤3最终提交\n4. 在租户列表确认新租户名称正确",
+      "expected": "1. 步骤间 remount 后租户名不回退为空\n2. 第三步提交成功\n3. setWire / tenantNameWire 缓存逻辑仍生效，列表展示正确",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；TenantWizardDialog + useCreateTenantNameWireCache",
+      "purpose": "迁移后保留多步向导 wire 缓存",
+      "remark": "validate 返回 tenantNameWire 供父组件缓存"
+    }
+  ]
+}
