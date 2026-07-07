@@ -50,5 +50,25 @@
       "扩展场景文档",
       "不 UPDATE term_agent_audit"
     ]
+  },
+  {
+    "id": "happy-path-adm-reset",
+    "label": "happy path · ADM 矩阵还原",
+    "prompt": "回滚测试用的 ADM 术语，替我清理数据库",
+    "expectations": [
+      "rollbackMode=adm_matrix_reset",
+      "执行 reset-adm-matrix.ps1 -Apply",
+      "verify_adm_data 与 verify_adm_pretranslate --strict 通过",
+      "输出 UI 复测清单"
+    ]
+  },
+  {
+    "id": "boundary-devtools-code",
+    "label": "边界 · 改 devtools 源码",
+    "prompt": "修改 cleanup_adm_test_data.py 里的 KEEP_APPROVED_ENTRIES",
+    "expectations": [
+      "不触发 db-回滚数据库",
+      "走代码修改任务"
+    ]
   }
 ]

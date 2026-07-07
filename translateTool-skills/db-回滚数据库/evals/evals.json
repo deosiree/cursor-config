@@ -24,6 +24,16 @@
       "name": "确认后 audit 执行",
       "input": "inspect 已确认，直接在数据库中执行回滚",
       "expect": "audit 四步事务 execute + verify"
+    },
+    {
+      "name": "ADM矩阵还原",
+      "input": "回滚测试用的 ADM 术语，替我清理数据库",
+      "expect": "rollbackMode=adm_matrix_reset，执行 reset-adm-matrix.ps1 -Apply，verify strict 6行OK"
+    },
+    {
+      "name": "ADM污染检索路径",
+      "input": "多次预翻译 retrieval_method 全一样，还原 ADM 验收矩阵",
+      "expect": "adm_matrix_reset，cleanup+fix_adm+verify，输出UI复测清单"
     }
   ],
   "should-not-trigger": [
@@ -46,6 +56,11 @@
       "name": "纯业务代码修改",
       "input": "修改 TermAuditService.review 逻辑",
       "expect": "不触发本 skill"
+    },
+    {
+      "name": "修改 devtools 源码",
+      "input": "修改 cleanup_adm_test_data.py 业务逻辑",
+      "expect": "走代码任务，不触发 db-回滚数据库"
     }
   ]
 }

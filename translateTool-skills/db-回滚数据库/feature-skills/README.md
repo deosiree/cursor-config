@@ -1,6 +1,6 @@
 # feature-skills
 
-功能层：备份、恢复、audit 查询/执行/验证。
+功能层：备份、恢复、audit 查询/执行/验证、ADM 矩阵还原。
 
 | 子 skill | 职责 |
 |---------|------|
@@ -11,3 +11,6 @@
 | 查询-审核副作用 | audit 只读 inspect |
 | 执行-软删除与解绑 | audit 事务 UPDATE |
 | 验证-回滚结果 | audit 验收 |
+| 执行-ADM污染清理 | devtools.cleanup_adm_test_data |
+| 执行-ADM种子重建 | devtools.fix_adm_test_data |
+| 验证-ADM矩阵验收 | verify_adm_* --strict |

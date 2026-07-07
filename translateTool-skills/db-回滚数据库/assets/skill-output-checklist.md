@@ -4,7 +4,7 @@
 
 ## 模式判定（所有请求）
 
-- [ ] 已走 **分析-回滚模式判定**（backup / restore / audit_rollback）
+- [ ] 已走 **分析-回滚模式判定**（backup / restore / audit_rollback / **adm_matrix_reset**）
 - [ ] Single Dispatch：只进入一个编排 skill
 
 ---
@@ -53,7 +53,35 @@
 
 ---
 
+## adm_matrix_reset 模式
+
+### 执行
+
+- [ ] 已在 shell **实际执行**（非仅输出命令）
+- [ ] `cleanup_adm_test_data`（dry-run 或 apply）
+- [ ] `fix_adm_test_data --apply`
+- [ ] `verify_adm_data --strict` 通过
+- [ ] `verify_adm_pretranslate --strict` 6 行 OK
+
+### 人工门禁
+
+- [ ] 用户说「先看看」时仅 dry-run cleanup
+- [ ] remote/生产未自动 apply
+
+### UI 复测（固定输出）
+
+- [ ] 提示术语学习「清除本地 Mock」
+- [ ] 提示重启 terminology-agent（Trie 缓存）
+- [ ] 提示工作台 6 场景各预翻译一次（勿重复、勿对 S02/decomposed/T99 确认入库）
+
+### 禁止
+
+- [ ] 未跑 `build_word_index --rebuild`（会清空 term_word 需重种）
+
+---
+
 ## 文档引用
 
 - [ ] 测试流程优先 backup+restore（见 `备份与整库恢复说明.md`）
+- [ ] ADM 污染见 `扩展场景-ADM矩阵验收污染.md`
 - [ ] auto_approved 未与 audit/restore 混 execute
