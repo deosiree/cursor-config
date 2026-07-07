@@ -1,0 +1,54 @@
+用例ID,名称,描述,标签,配置文件,用例目的,执行方式,对应进程,进程参数,最新结果,创建时间,备注,用例等级,需求编号,子系统,模块名,功能集合,用例说明,前置条件,测试步骤,环境说明,创建人员,环境版本,重试次数,超时时间,审核状态,审核人员,用例类型,预留字段1,预留字段2,预留字段3,预留字段4,预留字段5,排序顺序,用例结果,修改时间,自测结果,自测人员,内部测试人员,支持系统
+,路由鉴权 — 正向 — 精确匹配命中,路由权限解析 — 正向 — 精确匹配命中,1,,验证 routePath 在 routeProjectMap 中精确匹配命中；matchMode = exact,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,精确匹配命中,"1. 用户已登录且拥有目标页面权限
+2. routeProjectMap 中存在与当前 URL path 完全一致的 key","测试步骤：
+1. 访问 /Opsdeck/projectManage 页面
+---
+预期结果：
+1. RoutePermDict.getScope().matchMode === 'exact'
+2. 页面按钮按 perm 正常显示/隐藏
+3. DEV 控制台日志 key 为 '路由'",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0
+,路由鉴权 — 正向 — 后缀匹配命中,路由权限解析 — 正向 — 后缀匹配命中,1,,验证 key.endsWith("-" + routePath) 命中；matchMode = exact,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,后缀匹配命中,"1. 用户已登录
+2. routeProjectMap 中存在 key 如 'PROJECT--3100-/Opsdeck/projectManage'","测试步骤：
+1. 访问 /Opsdeck/projectManage 页面，当前项目为 PROJECT--3100
+---
+预期结果：
+1. matchMode === 'exact'
+2. scope.params 包含 project 相关参数
+3. 权限正常",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0
+,路由鉴权 — 正向 — 模糊匹配命中父路由,路由权限解析 — 正向 — 模糊匹配命中父路由,1,,验证子路由无精确候选时，前缀模糊匹配命中父路由；matchMode = fuzzy,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,模糊匹配命中父路由,"1. routeProjectMap 中存在 /Opsdeck/projectManage 节点
+2. 不存在 /Opsdeck/projectManage/detail 节点","测试步骤：
+1. 访问 /Opsdeck/projectManage/detail?id=PROJECT--3100
+---
+预期结果：
+1. matchMode === 'fuzzy'
+2. scope.routePath 为 '/Opsdeck/projectManage'
+3. scope.perms 继承父路由的权限码集合
+4. DEV console.warn 输出 '[RoutePermDict] 前缀模糊匹配命中'
+5. logPermAuth 日志 key 为 '最长前缀路由'",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0
+,路由鉴权 — 逆向 — 模糊匹配无候选,路由权限解析 — 逆向 — 模糊匹配无候选,1,,验证无任何前缀匹配时返回空 scope,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,模糊匹配无候选,"1. routeProjectMap 中不存在以当前 routePath 为前缀的节点","测试步骤：
+1. 访问一个完全陌生的路径 /unknown/deep/page
+---
+预期结果：
+1. scope.perms 为空对象 {}
+2. scope.visiblePermSet 为空 Set
+3. RoutePermDict.getAllowed() 为空 Set
+4. 页面按钮全部隐藏（checkHasPerm 返回 false）",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0
+,路由鉴权 — 正向 — 多候选 params 消歧唯一命中,路由权限解析 — 正向 — 多候选 params 消歧唯一命中,1,,验证多个最长前缀候选时通过 params 消歧唯一命中；matchMode = fuzzy,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,多候选消歧唯一命中,"1. 两个不同项目各自配置了同一父路由 /Opsdeck/projectManage
+2. 当前 URL 的 query/params 可唯一区分","测试步骤：
+1. 访问 /Opsdeck/projectManage/detail?projectId=PROJECT--3100
+---
+预期结果：
+1. matchMode === 'fuzzy'
+2. scope.ambiguous === false
+3. scope.params 正确消歧到 PROJECT--3100 对应节点的 params
+4. 权限正常",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0
+,路由鉴权 — 逆向 — 多候选无法消歧走兜底,路由权限解析 — 逆向 — 多候选无法消歧走兜底,1,,验证多个最长前缀候选无法消歧时走 ambiguous OR 合并兜底,4,,,0,,,0,,17,菜单管理界面,路由鉴权前缀模糊匹配,多候选 ambiguous 兜底,"1. 多个项目配置了同一父路由且无 params 区分
+2. 当前 URL 无额外 query/params","测试步骤：
+1. 访问 /Opsdeck/projectManage/detail（无 query/params）
+---
+预期结果：
+1. matchMode === 'fuzzy'
+2. scope.ambiguous === true
+3. DEV console.warn 输出 '[RoutePermDict] 多路径候选且无法唯一区分'
+4. scope.perms 为所有候选节点的 OR 合并
+5. 页面显示 '当前路由不唯一' 错误通知",,惠岩,,0,60,0,,0,,,,,,0,0,1970-01-01 00:00:00,0,,,0

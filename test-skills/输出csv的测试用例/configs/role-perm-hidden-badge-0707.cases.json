@@ -1,0 +1,84 @@
+{
+  "moduleId": "role-perm-hidden-badge-0707",
+  "source": "角色管理菜单权限树与功能项列表标注 isVisible=false 隐藏标签（2026-07-07）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "角色管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "编辑角色-左侧菜单树-隐藏菜单展示绿色隐藏标签",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入「安全管理 > 角色管理」\n3. microfb 与 apex_dev 子应用可用\n4. 菜单管理中已存在显示状态为「否」的菜单/页面节点（如「权限隐藏test」）\n5. 存在非内置测试角色",
+      "steps": "1. 点击测试角色「编辑」，切换到「菜单权限」Tab\n2. 等待左侧菜单权限树加载完成\n3. 在树中定位显示状态为隐藏的菜单节点（如「权限隐藏test」）\n4. 观察该节点名称右侧标签\n5. 对比同树中显示状态为「是」的普通菜单节点",
+      "expected": "1. 显示状态为隐藏的菜单节点名称右侧出现绿色「隐藏」标签\n2. 标签位于菜单名称与「必选」等其它 badge 之间或之后\n3. 显示状态为可见的菜单节点不出现「隐藏」标签\n4. 左侧类型 badge（目录/页面等）仍正常展示",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "MenuPermissionTree isVisible===false → el-tag 隐藏"
+    },
+    {
+      "name": "编辑角色-右侧功能项-隐藏功能项展示绿色隐藏标签",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已进入「安全管理 > 角色管理」\n3. 存在含隐藏功能项的页面（功能项在菜单管理中显示状态为「否」，如「隐藏功能项」）\n4. 测试角色已勾选该页面菜单",
+      "steps": "1. 点击测试角色「编辑」，切换到「菜单权限」Tab\n2. 在左侧点击含隐藏功能项的页面节点（如「权限隐藏test」）\n3. 等待右侧「功能项权限」列表加载\n4. 观察显示状态为隐藏的功能项名称右侧\n5. 对比同页显示状态为可见的功能项（若有）",
+      "expected": "1. 显示状态为隐藏的功能项名称右侧出现绿色「隐藏」标签\n2. 显示状态为可见的功能项不出现「隐藏」标签\n3. 功能项复选框与勾选状态不受标签影响\n4. 标签样式与左侧菜单树「隐藏」标签一致（success 绿色）",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "FunctionPermissionList isVisible===false → el-tag 隐藏"
+    },
+    {
+      "name": "编辑角色-隐藏菜单仍可勾选并保存授权",
+      "featureSet": "菜单权限",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 存在显示状态为隐藏的菜单/页面节点\n3. 测试角色初始未勾选该隐藏菜单",
+      "steps": "1. 打开角色编辑「菜单权限」Tab\n2. 勾选显示状态为隐藏的菜单/页面节点\n3. 若该页含功能项，观察右侧并保留或调整功能项勾选\n4. 保存角色\n5. 重新打开该角色编辑，确认勾选状态",
+      "expected": "1. 隐藏菜单可正常勾选/取消勾选\n2. 「隐藏」标签仅为展示提示，不阻断授权操作\n3. 保存后重开，隐藏菜单勾选状态与保存前一致\n4. 功能项授权一并正确保存",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "隐藏标签纯展示，不影响 MenuPermTab 勾选与保存"
+    },
+    {
+      "name": "编辑角色-菜单树搜索过滤-隐藏标签仍随节点展示",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 权限树中存在名称可唯一匹配的隐藏菜单（如「权限隐藏test」）",
+      "steps": "1. 打开角色编辑「菜单权限」Tab\n2. 在左侧搜索框输入可匹配隐藏菜单的关键词\n3. 观察过滤结果中该节点\n4. 清空搜索框，再次观察该节点",
+      "expected": "1. 搜索过滤后隐藏菜单仍可见且仍展示「隐藏」标签\n2. 清空搜索后标签仍正常展示\n3. 搜索、全选、清空等工具栏行为不受标签影响",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "MenuPermissionTree filterNode 与 hidden badge 共存"
+    },
+    {
+      "name": "编辑角色-功能项搜索过滤-隐藏标签仍随项展示",
+      "featureSet": "菜单权限",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:role:edit\n2. 已打开含隐藏功能项页面的右侧功能项列表",
+      "steps": "1. 在右侧功能项搜索框输入可匹配隐藏功能项的关键词\n2. 观察过滤结果\n3. 点击「全选」后再「清空」\n4. 清空搜索框观察完整列表",
+      "expected": "1. 搜索过滤后隐藏功能项仍展示「隐藏」标签\n2. 全选/清空仅影响勾选，不隐藏标签\n3. 清空搜索后列表与标签恢复正常",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；路由 /Apex/system/role",
+      "purpose": "FunctionPermissionList filteredFunctionNodes 与 hidden badge 共存"
+    }
+  ]
+}

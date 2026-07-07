@@ -1,0 +1,7 @@
+{
+  "moduleId": "role-perm-hidden-badge-0707",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/0707/role-perm-hidden-badge-0707.csv",
+  "casesFile": "configs/role-perm-hidden-badge-0707.cases.json"
+}
