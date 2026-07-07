@@ -1,0 +1,5 @@
+timestamp	round	skill	old_score	new_score	delta	status	dimension	note	eval_mode
+2026-07-07T10:45	0	设计mock服务进行异常测试	-	70.0	baseline	all	初评：dim3/dim4/dim9 短板；仅 1 CHECKPOINT；无 HL-2 兜底表	dry_run
+2026-07-07T10:50	1	设计mock服务进行异常测试	70.0	82.4	+12.4	keep	dim3+dim4+dim9	HL-2 兜底 + CHECKPOINT 三连 + 反模式黑名单 + deliverables	dry_run
+2026-07-07T10:52	2	设计mock服务进行异常测试	82.4	86.8	+4.4	keep	dim2+dim5+dim8	mockOutputPlan 字段细化 + dry-run-evaluation + 资源速查	dry_run
+2026-07-07T10:54	3	设计mock服务进行异常测试	86.8	87.3	+0.5	keep	dim6	evaluate-only-baseline 补 Round 明细 + final-report	dry_run

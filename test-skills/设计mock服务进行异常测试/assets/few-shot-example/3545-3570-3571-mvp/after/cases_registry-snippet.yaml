@@ -1,0 +1,15 @@
+  - case_id: "3545"
+    name: 列表接口失败时页面不白屏
+    module: 用户管理界面
+    status: manual
+    test_mode: "8081-direct-inject-perm"
+    base_url: "http://localhost:8081"
+    route: /cloud/Apex/system/user
+    scenario_active: "3545"
+    mock_endpoint: "POST forward/seccenter/v2/user/list"
+    mock_error_code: 40001
+    mock_readme: mock/README.md
+    workflow_doc: docs/workflow.md
+    automation_doc: docs/automation/3545.md
+    perm_status: ok
+    required_perms: ["sys:user:query"]

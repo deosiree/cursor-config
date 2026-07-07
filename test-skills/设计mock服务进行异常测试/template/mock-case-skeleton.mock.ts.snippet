@@ -1,0 +1,12 @@
+// snippet: 追加到 mock/csv-error*.mock.ts
+// CSV {case_id} — {name}
+{
+  url: "forward/seccenter/v2/{resource}/{action}",
+  method: ["POST"],
+  body({ body }) {
+    if (activeScenario() === "{case_id}") {
+      return { code: {mock_error_code}, message: "{message}（mock）", data: null };
+    }
+    // TODO: 非当前场景返回成功 mock 数据
+  },
+},

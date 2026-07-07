@@ -1,0 +1,46 @@
+[
+  {
+    "id": "mvp-3545-replay",
+    "prompt": "使用 $设计mock服务进行异常测试：targetRepoProfile=apex_dev，csvPath=docs/自测单/异常处理_MVP.csv（含 3545），全量写 mock + registry + automation README；workflow 放 hytests/docs/workflow.md。",
+    "expectedOutput": "csv-error mock 含 forward/seccenter/v2/user/list 3545 分支；automation/3545.md 链 workflow 无全文重复；mock/README.md ≤40 行",
+    "expect": {
+      "intention": "策略-新增异常Mock用例",
+      "features": ["撰写-mock端点", "撰写-用例README", "撰写-cases_registry条目", "维护-error-scenario", "质量-手工自测门禁"],
+      "mustHave": ["forward/seccenter", "error-scenario", "8081", "workflow.md", "automation/3545"],
+      "mustNotHave": ["vite.config", "README.csv-error-mvp", "pytest"]
+    }
+  },
+  {
+    "id": "batch-3570-3571",
+    "prompt": "csvPath=异常处理_角色.csv，caseIds=3570,3571，追加 role/create 与 role/list mock 分支，更新 registry 与两个 automation README。",
+    "expectedOutput": "3570 code 40901 弹窗不关；3571 code 50001 列表失败；scenario active 可切换",
+    "expect": {
+      "intention": "策略-新增异常Mock用例",
+      "features": ["撰写-mock端点", "撰写-用例README", "撰写-cases_registry条目"],
+      "mustHave": ["3570", "3571", "role/create", "role/list"],
+      "mustNotHave": ["8080 作为测试入口"]
+    }
+  },
+  {
+    "id": "readme-only-negative",
+    "prompt": "只润色 hytests README 文案，不要写 mock。",
+    "expectedOutput": "Agent 拒绝或说明需 mock/CSV 才触发本 skill",
+    "expect": {
+      "intention": "none-misroute",
+      "features": [],
+      "mustHave": ["不触发", "mock"],
+      "mustNotHave": ["csv-error.mvp.mock.ts"]
+    }
+  },
+  {
+    "id": "perm-pending-human",
+    "prompt": "csvPath=异常_仪表盘.csv，case 3465 页面权限码无法从源码确认，mock 与 curl 先交付，浏览器步骤 blocked。",
+    "expectedOutput": "registry perm_status=pending_human；README 标 blocked；AskQuestion 或提示人类确认 permissions",
+    "expect": {
+      "intention": "策略-新增异常Mock用例",
+      "features": ["撰写-mock端点", "撰写-用例README", "质量-手工自测门禁"],
+      "mustHave": ["pending_human", "blocked"],
+      "mustNotHave": ["猜测 permissions 并宣称浏览器通过"]
+    }
+  }
+]
