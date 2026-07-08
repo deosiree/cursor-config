@@ -1,0 +1,8 @@
+timestamp	round	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-07-07T17:30	baseline	写说明书	-	69.0	baseline	-	9维加权初评	dry_run
+2026-07-07T17:35	1	写说明书	69.0	82.3	keep	dim3+dim4+dim9	CHECKPOINT+fallback表+反例黑名单+步骤IO	dry_run
+2026-07-07T17:38	2	写说明书	82.3	85.1	keep	dim8	落盘前test-prompt自检表+结构化test-prompts	dry_run
+2026-07-07T18:15	3	写说明书	85.1	87.6	keep	dim5+dim6+dim8	格式五检表+新建-安全配置few-shot+统一规范落盘2篇	dry_run
+2026-07-07T18:18	4	写说明书	87.6	87.9	keep	dim6	few-shot README+改版样本指向紧凑落盘	dry_run
+2026-07-07T18:20	5	写说明书	87.9	88.8	keep	dim5+dim8	截图占位三级规则+安全配置补4卡片占位+反例	dry_run
+2026-07-07T18:25	6	写说明书	88.8	89.2	keep	dim5+dim9	截图占位改【】方括号（Word可见）+同步2篇落盘	dry_run
