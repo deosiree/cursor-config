@@ -11,18 +11,21 @@
 2. RoutePermDict.pass(userInfo) → isOwner 通过
 3. RoutePermDict.has(requiredPerms, userInfo)
    → allowed = visiblePermSet ∩ user.permissions
-   → visiblePermSet 来自当前路由 scope 的 FUNCTION 子树
+   → visiblePermSet 来自命中节点**直接** function 子节点的 perm
 ```
 
 ## 运行时链路
 
 ```
-router.beforeEach
+[基座] beforeEach → 菜单/白名单 → 非法 next('/404')   ← 路由鉴权层
+
+[子应用] beforeEach
   → RoutePermDict.load(to)
-  → resolveScope(routePath + params 漏斗)
-  → collectPerms(routeProjectMap 节点子树)
+  → resolveScope（迭代剥离 + directory 拒绝）
+  → fuzzyRejected 时 perms 为空（子应用不 next('/404')）
+  → const perms = {}; collectPerms(命中节点, perms)  // 就地写入 → scope.perms
   → rebuildAllowed
-  → checkHasPerm / v-hasPerm
+  → checkHasPerm / v-hasPerm          ← 权限鉴权层
 ```
 
 ## 新模块配置示例：/Apex/report
@@ -92,7 +95,8 @@ async function fetchData() {
 </script>
 ```
 
-> **不改** `src/services/permissions.ts`——基础设施已在 commit 1851a7dd 就绪。
+> **不改** `src/services/permissions.ts`——新模块接入时基础设施已就绪。  
+> 但须理解**路由鉴权层**（迭代剥离、directory 拒绝）；详见 `[[after-04-路由鉴权迭代剥离.md]]`。
 
 ### 4. 验证
 
@@ -139,13 +143,13 @@ patch_children_add:
         parent_id: 20012
 ```
 
-URL ` /Apex/workspace?type=platform` 只解析平台工作区子树的 perm。
+URL `/Apex/workspace?type=platform` 只解析平台工作区 page 的**直接** function perm。
 
 ## 与 before-03 的关键差异
 
 | 维度 | before-03（permsMap） | after-03（RoutePermDict） |
 |------|----------------------|--------------------------|
-| 真相源 | `userInfo.permsMap` 全局 | `routeProjectMap` 当前路由子树 |
+| 真相源 | `userInfo.permsMap` 全局 | `routeProjectMap` 当前命中节点的直接 function perm |
 | 路由参数 | 不参与 | `params` 消歧 |
 | 显示状态 | permsMap[perm].isVisible | scope 内 function meta |
 | owner 后门 | hasPermissionBypass | RoutePermDict.pass |

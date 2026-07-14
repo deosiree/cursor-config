@@ -217,6 +217,75 @@
         "无子组件二次鉴权",
         "复杂列表页应使用 pagePerms 而非 v-hasPerm 撒点"
       ]
+    },
+    {
+      "input": "/Opsdeck/projectManage/detail 子路由按钮全灭，但 /Opsdeck/projectManage 父页正常，帮我排查。",
+      "expect": [
+        "路由到 路由鉴权迭代剥离匹配 或 路由-选择功能子skill",
+        "提到迭代剥离路径匹配",
+        "子路由须剥离命中 type=page 父节点",
+        "先查 matchMode / matchedNodeType 而非仅查 role perm"
+      ]
+    },
+    {
+      "input": "DEV 控制台报「路由命中目录节点拒绝」，访问 URL 直接变 404。",
+      "expect": [
+        "提到 fuzzyRejected",
+        "directory 节点不应承载 function perm",
+        "URL 级 404 由基座 microfb 拦截，不是子应用守卫",
+        "禁止建议子应用 fuzzyRejected → next('/404')",
+        "修复方向为菜单 type=page 或调整 route_path 结构"
+      ]
+    },
+    {
+      "input": "子应用 router.beforeEach 要不要根据 fuzzyRejected 跳转到 /404？",
+      "expect": [
+        "不要",
+        "子应用只调用 RoutePermDict.load",
+        "路由鉴权归基座 microfb",
+        "提到个人中心或菜单白名单"
+      ]
+    },
+    {
+      "input": "设计权限时能否把 function perm 挂在 directory 菜单节点下？",
+      "expect": [
+        "拒绝：perm 只能挂在 page 节点",
+        "directory 命中会导致 fuzzyRejected",
+        "引用 route-scope-auth-chain 或 snapshot-04-路由鉴权决策"
+      ]
+    },
+    {
+      "input": "resolveScope 对 /404 路由还在做剥离路径匹配，这正常吗？",
+      "expect": [
+        "不正常：/404 应短路不参与菜单鉴权",
+        "提到 routePath === '/404' 直接返回空 scope",
+        "不应建议恢复 fuzzyMatchByPrefix"
+      ]
+    },
+    {
+      "input": "reportA 页面能看到 reportB 的导出按钮，role 只给了 reportA 的 perm，怎么排查？",
+      "expect": [
+        "提到 leaf page 或 scope.routePath 是否命中 /Apex/system/reportA",
+        "提到 collectPerms 只收直接 function 子节点",
+        "不应仅归因于 role 给了过多 perm",
+        "引用 snapshot-05 或 route-scope-auth-chain"
+      ]
+    },
+    {
+      "input": "collectPerms 没有 return，就地写入 perms 有什么用？消费方怎么用？",
+      "expect": [
+        "提到 resolveScope 创建 perms 对象后 collectPerms 填充",
+        "scope.perms 进入 load → rebuildAllowed → allowed",
+        "checkHasPerm 通过 RoutePermDict.has 消费 allowed"
+      ]
+    },
+    {
+      "input": "设计权限时 function 能直接挂在 directory 菜单节点下吗？",
+      "expect": [
+        "拒绝：function 须为 page 直接子节点",
+        "directory 不承载 function perm",
+        "提到 collectPerms 作用域或 leaf page entry"
+      ]
     }
   ],
   "should_not_trigger": [
@@ -291,6 +360,12 @@
     "权限设计方案中每个豁免项附带源码证据（文件:行号）",
     "新模块配置必须产出 routePath + paramsDecision + functionPermList 三件套",
     "排障/E2E 以 RoutePermDict.getScope/getAllowed 为验证入口，不以 permsMap 为真相源",
+    "区分菜单未命中 page（fuzzyRejected）与权限不足（getAllowed 不含 perm）",
+    "排障优先查 fuzzyRejected / matchedNodeType / matchMode",
+    "禁止建议子应用 beforeEach 按 fuzzyRejected next('/404')；路由 URL 拦截归基座",
+    "禁止建议恢复 fuzzyMatchByPrefix 作为 canonical 算法",
+    "区分菜单 page 子树（YAML 归属）与 collectPerms 作用域（直接 function）",
+    "排障 allowed 偏大时检查 scope 命中节点是否为 leaf page",
     "复杂列表页改码使用 xxxPagePerms 静态预算 + boolean props，禁止 OpItem :perm 二次鉴权",
     "简单页（1-2 控点、无行内 OpItem）仍可用 v-hasPerm",
     "所有 SKILL.md 的 name 和 description 使用中文"

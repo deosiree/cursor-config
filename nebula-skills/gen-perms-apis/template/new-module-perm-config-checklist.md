@@ -25,6 +25,8 @@
 
 - [ ] 确认前端路由 path 与菜单 `route_path` 一致
 - [ ] path 归一化口径与 `normalizeMenuRoutePath` 一致（无尾斜杠）
+- [ ] 承载 perm 的菜单节点 **type=page**（非 directory）
+- [ ] 若有 detail 等子路由，确认可剥离命中该 page（见 `snapshot-04-路由鉴权决策.md`）
 
 ### B2. paramsDecision
 
@@ -108,6 +110,7 @@ checkHasPerm('sys:foo:view')
 | allowed 为空 | routeProjectMap 无该 path | 导入菜单 + patchMap |
 | 改码后仍不生效 | 未重新登录 / 未刷新菜单缓存 | relogin 或 syncMenuCacheOnly |
 | 排障查 permsMap | 过期口径 | 改查 getScope/getAllowed |
+| fuzzyRejected / 基座 404 / 按钮全灭 | 剥离命中 directory 或无 page 父节点 | 改菜单 type=page；**勿**改子应用守卫加 `/404`；见 after-04 |
 
 ## 最小触发示例
 

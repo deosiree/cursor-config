@@ -94,11 +94,37 @@ description: 当已有盘点文档，需要设计新权限点的粒度、命名�
 - `paramsDecision`：是否需要 / 键值 / 理由
 - `ambiguousRisk`：若省略 params 的风险说明
 
+### 8. 路由鉴权设计
+
+> 权威参考：`[[../../references/route-scope-auth-chain.md]]`；样本：`[[../../template/sample-run/snapshot-04-路由鉴权决策.md]]`
+
+| 节点 type | 职责 | perm 挂载 |
+|-----------|------|----------|
+| `directory` | 菜单文件夹，组织导航 | **禁止**挂 function perm |
+| `page` | 可访问页面，承载 scope | function 须为 page **直接**子节点（非跨层） |
+
+| 场景 | 决策 |
+|------|------|
+| 列表页 + detail 子路由 | 列表页为 **page**，detail 靠剥离继承父 page 鉴权 |
+| 仅 directory 无 page 子节点 | 子 URL → `fuzzyRejected` / 空 perms；URL 级拦截至归基座 |
+| 设计子路由 perm | 确认剥离路径能命中 **page** 父节点的 `route_path` |
+| 每个 routable URL | routeProjectMap 须有独立 **leaf page** entry（如 `/Apex/system/reportA`） |
+| function 挂 directory 下 | **禁止**；collectPerms 只收 page 直接 function |
+
+设计输出必须包含 `routeAuthPlan`：
+
+- `parentPageRoutePath`：子路由剥离后应命中的 page path
+- `menuNodeType`：目标节点必须为 `page`
+- `directoryOnlyRisk`：若只有 directory 无 page 的风险说明
+- `leafPageEntryRequired`：true（每个业务 URL 独立 page entry）
+- `functionPlacement`：`direct_child_of_page`（YAML parent_id 指向 page id）
+
 ## 输出契约
 
 - `designGoal`
 - `analysisBasis`（引用盘点文档）
 - `routePathParamsPlan`（routePath + paramsDecision + ambiguousRisk）
+- `routeAuthPlan`（parentPageRoutePath + menuNodeType + directoryOnlyRisk + leafPageEntryRequired + functionPlacement）
 - `permGranularityDecisions`
 - `exemptionList`（接口豁免清单）
 - `hiddenPagePlan`

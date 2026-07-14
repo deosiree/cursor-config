@@ -1,6 +1,6 @@
 ---
 name: 梳理权限点与apis
-description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、页面无权限空态、路由作用域鉴权（RoutePermDict）、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、新模块配置权限、RoutePermDict、PageNoPermission、页面无权限空态、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
+description: 梳理页面/组件/权限点与 API，设计权限点、菜单补丁、源码改动、页面无权限空态、路由作用域鉴权（RoutePermDict）、路由鉴权迭代剥离、OpenCLI 端到端与菜单 E2E 验证。触发词：梳理权限点、gen-perms-apis、新模块配置权限、RoutePermDict、fuzzyRejected、directory 拒绝、子路由鉴权、PageNoPermission、页面无权限空态、菜单管理e2e、权限E2E。父 agent 负责路由与人工门禁。
 ---
 
 # 梳理权限点与 APIs（Agent Skill 总入口）
@@ -19,6 +19,10 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
   - 新模块只设计 perm code，不设计 `route_path` / `params` 消歧
   - 排障仍查 `userInfo.permsMap` 而非 `RoutePermDict.getScope()`
   - 菜单导入后未刷新 routeProjectMap，scope 为空导致按钮不显示
+  - 只查 perm 不查路由命中 type，子路由剥离只落到 directory 仍当权限不足排障
+  - 子路由/detail 页按钮消失时未检查迭代剥离是否命中 page 父节点
+  - reportA 页看到 reportB 按钮 → 未查 scope 命中节点是否为 leaf page、collectPerms 是否误合并 sibling perm
+  - 在子应用 `beforeEach` 加回 `fuzzyRejected → next('/404')`，误杀个人中心等基座白名单路由
 
 ## 适用场景
 
@@ -113,6 +117,7 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 - 用户要在**新模块**按路由作用域方案配置权限（route_path + params + 权限标识）→ 进入 `[[intention-skills/编排-新模块权限配置]]`
   - 若盘点事实不足，先补 `[[intention-skills/分析-perms-apis现状]]`
   - 权威参考：`[[references/route-scope-auth-chain.md]]`；清单：`[[template/new-module-perm-config-checklist.md]]`
+- 子路由/detail 页按钮消失、访问 URL 直接 404、DEV 见「路由命中目录节点拒绝」→ 进入 `[[intention-skills/路由-选择功能子skill]]` → `[[feature-skills/路由鉴权迭代剥离匹配]]` 或 `[[feature-skills/权限运行时排障]]`
 
 ## 人工介入门禁
 
@@ -148,6 +153,8 @@ description: 梳理页面/组件/权限点与 API，设计权限点、菜单补�
 5. **API 反查三类硬链路**：`业务层→gateway→api→契约`、`业务层→api→契约`、`子组件 emit→父组件→gateway/api→契约`
 6. **页面门控空态**：缺 `view`/`query` 等 pageGate perm 时必须 `PageNoPermission`，禁止用 `el-table` 默认「暂无数据」代替；对照 `[[template/sample-run/after-02-页面空态/]]`
 7. **路由作用域鉴权**：`checkHasPerm` 真相源为 `RoutePermDict`（`routeProjectMap` + 当前路由 `params` 漏斗）；禁止以 `userInfo.permsMap` 为排障主路径；新模块必须设计 `route_path` + 可选 `params` + function `code`；见 `[[references/route-scope-auth-chain.md]]`
+8. **路由命中合法 page + 拦截归基座**：权限设计须保证 URL 能命中合法 **page**；`type=directory` 不承载 function perm，剥离命中 directory → `fuzzyRejected` / 空 perms；**URL 级 404 由 microfb 做**，子应用守卫只 `RoutePermDict.load(to)`，禁止加 `fuzzyRejected → next('/404')`；子路由须能剥离到 page 父节点；见 `[[references/route-scope-auth-chain.md]]` 与 `[[feature-skills/路由鉴权迭代剥离匹配]]`
+9. **collectPerms 作用域**：只收集命中 route 节点**直接** function 子节点；function 须为 page 直接子级；每个 routable URL 须有独立 leaf page entry；见 `[[template/sample-run/snapshot-05-collectPerms作用域决策.md]]`
 
 ## 使用示例
 
@@ -224,6 +231,24 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 ```
 
 预期：路由到 `[[feature-skills/权限运行时排障]]`；查 `getScope/getAllowed`，不查 permsMap
+
+```text
+/Opsdeck/projectManage/detail 子路由按钮全灭，父页正常，排查路由鉴权。
+```
+
+预期：进入 `[[intention-skills/路由-选择功能子skill]]` → `[[feature-skills/路由鉴权迭代剥离匹配]]`
+
+```text
+DEV 报路由命中目录节点拒绝，要不要在子应用守卫 next('/404')？
+```
+
+预期：进入 `[[feature-skills/路由鉴权迭代剥离匹配]]`；**否**——修菜单 type；URL 拦截归基座；先查 `fuzzyRejected` / 空 perms
+
+```text
+reportA 页能看到 reportB 的导出按钮，role 只给了 reportA，排查 collectPerms 作用域。
+```
+
+预期：进入 `[[feature-skills/权限运行时排障]]`；查 `scope.routePath` 是否 leaf page、`Object.keys(scope.perms)` 是否含 sibling perm
 
 ## REFACTOR
 

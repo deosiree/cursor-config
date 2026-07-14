@@ -45,9 +45,9 @@
 
 | 层 | 组件 | 权限判断方式 | 常见问题 |
 |----|------|------------|---------|
-| microfb 基座 | NavbarActions | `checkHasPerm` → RoutePermDict | computed 缓存不重算 |
-| microfb 基座 | 路由守卫 | `RoutePermDict.load` + `has` | bypass 失效 |
-| apex 子应用 | router.beforeEach | `RoutePermDict.load(to)` | 未 load → scope null |
+| microfb 基座 | NavbarActions | `checkHasPerm` / Header 侧 | computed 缓存不重算 |
+| microfb 基座 | 路由守卫 | 菜单 routePath + 白名单 → `/404` | 漏白名单（个人中心）；非法 path |
+| apex 子应用 | router.beforeEach | **仅** `RoutePermDict.load(to)` | 误加 `fuzzyRejected→/404`；未 load → scope null |
 | apex 子应用 | 页面 index.vue | `checkHasPerm` / `v-hasPerm` | function 挂错 page |
 | apex 子应用 | 子组件 | props 传入 | props 未传递 |
 

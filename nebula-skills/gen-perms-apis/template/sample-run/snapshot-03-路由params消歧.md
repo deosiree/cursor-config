@@ -20,7 +20,7 @@
 
 1. DEV 环境 `console.warn` 候选 keys
 2. 用户通知：「当前路由不唯一，鉴权可能不准确…」
-3. `ambiguous: true`，OR 合并**全部**候选子树 perm
+3. `ambiguous: true`，OR 合并各 candidate **直接** function perm
 4. allowed 可能偏大（按钮误显示）或偏小（误隐藏）
 
 **修复路径**：为每个冲突 page 补 distinct `params`，确保 URL 可唯一命中。
@@ -29,9 +29,10 @@
 
 改造前 permsMap 全局扁平，function 挂错 page 不影响 isVisible 判定。
 
-改造后 `collectPerms` 只遍历**当前命中 route 节点**的子树：
+改造后 `collectPerms` 只收集**当前命中 route 节点直接挂载**的 function perm：
 
-- function 挂在 page A 下 → 只有访问 page A 对应 URL 时才进入 allowed
+- function 挂在 page A 下 → 只有 scope 命中 page A 对应节点时，其**直接** function 子节点进入 allowed
+- 命中祖先 page/directory 且子节点为嵌套 page → 不会 DFS 合并 sibling page 的 function（perm 集合为空或仅直接层）
 - 挂错 page → 有 role perm 但按钮仍不显示
 
 **设计门禁**：补丁 YAML 中每个 function 的 `parent_id` 必须指向正确的 page id。

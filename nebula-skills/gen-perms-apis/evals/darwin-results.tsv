@@ -29,3 +29,9 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-04T14:30	full_test	菜单模态框pagePerms延伸	87.0	90.0	pass	dim8	+configApi+PermissionConfig/ApiConfig/ApiWhitelist :perms下传	full_test
 2026-07-04T15:00	full_test	角色管理pagePerms改码	-	88.0	pass	dim8	role.models+RoleListTable+useRoleList单budget	full_test
 2026-07-04T15:00	full_test	安全配置pagePerms改码	-	89.0	pass	dim8	security-config.models+securityPagePerms单computed	full_test
+2026-07-08T19:00	baseline	路由鉴权迭代剥离匹配	-	74.0	baseline	dim3+4+9	新建skill有RED/GREEN缺CHECKPOINT/if-then/黑名单/test-prompts	dry_run
+2026-07-08T19:00	keep	父agent+编排-新模块+collectPerms	86.0	86.0	keep	dim6+9	Phase1-2路由+collectPerms文档闭环	evaluate-only
+2026-07-08T19:10	r10-opt	路由鉴权迭代剥离匹配	74.0	83.5	keep	dim3+4+9+8	TL;DR+CHECKPOINT+if-then+反例黑名单+test-prompts×3	dry_run
+2026-07-08T19:10	HL4	stop	套件	-	-	stop	HL-4	主路径≥85+r10主路径Δ=0+连续hill-climb触顶	dry_run
+2026-07-08T19:30	full_test	路由鉴权+collectPerms	83.5	90.0	pass	dim8	apex 15+opsdeck 4 vitest；opsdeck resolveScope同步	full_test
+2026-07-08T19:30	full_test	编排-新模块权限配置	87.5	88.5	keep	dim8	双仓实跑验证新模块+子路由+sibling eval	full_test

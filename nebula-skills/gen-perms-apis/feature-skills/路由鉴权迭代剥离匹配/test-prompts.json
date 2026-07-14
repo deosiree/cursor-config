@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "prompt": "/Opsdeck/projectManage/detail?id=xxx 子路由按钮全灭，父路径 /Opsdeck/projectManage 正常，怎么排？",
+    "expected": "先 getScope；查迭代剥离是否命中 page 父节点；勿先查 role perm；建议补父 page route_path"
+  },
+  {
+    "id": 2,
+    "prompt": "DEV 报「路由命中目录节点拒绝」，访问 URL 直接 404，菜单怎么改？",
+    "expected": "fuzzyRejected + matchedNodeType=directory；改 type=page 或调整 route_path；禁止 fuzzyMatchByPrefix；URL 404 归基座"
+  },
+  {
+    "id": 3,
+    "prompt": "reportA 页面能看到 reportB 的按钮，scope 命中 /Apex/system/，collectPerms 有关吗？",
+    "expected": "区分 YAML page 子树 vs collectPerms 直接 function 层；leaf page；勿 DFS sibling perm"
+  },
+  {
+    "id": 4,
+    "prompt": "fuzzyRejected 时要不要在子应用 beforeEach 里 next('/404')？",
+    "expected": "不要；子应用只 RoutePermDict.load；路由拦截归 microfb；个人中心等白名单会误杀"
+  }
+]

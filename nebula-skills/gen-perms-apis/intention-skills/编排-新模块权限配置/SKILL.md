@@ -42,6 +42,8 @@ description: 当需要在新模块按路由作用域方案（route_path + params
 2. **paramsDecision** — 是否需要 params 消歧及键值（见 `[[../../template/sample-run/snapshot-03-路由params消歧.md]]`）
 3. **functionPermList** — 每个 perm 的 code、粒度、pageGate、管控 API
 
+设计时确认承载 perm 的菜单节点 **type=page**（非 directory）；子路由须能剥离命中该 page。
+
 ### 跨仓库说明（apex_dev / opsdeck）
 
 | 仓库 | RoutePermDict | 菜单 enum | skill 改码默认 |
@@ -59,6 +61,8 @@ opsdeck 配权限仍走本编排（菜单 + 源码 v-hasPerm），但 `permissio
 | `ambiguous: true` | 补 page `params` 与 URL 对齐 | 回退 `策略-设计权限点` 重裁决 |
 | 有 role perm 但按钮不藏 | function 是否挂在**正确 page 子树** | 对照 YAML parent_id |
 | 排障查 permsMap | **停止**，改查 `getAllowed()` | 读 `route-scope-auth-chain.md` |
+| 子路由 `fuzzyRejected` / 基座 404 / 按钮全灭 | 确认父级为 **page** 且 `route_path` 可剥离命中 | 勿在 directory 挂 function；**勿**改子应用守卫加 `/404`；见 `路由鉴权迭代剥离匹配` |
+| allowed 偏大 / sibling 按钮误显 | scope 命中 **leaf page**；function 为 page 直接子节点 | 补独立 page entry；见 snapshot-05 |
 | agent 要改 permissions.ts | **阻止**，引用源码约束 | 只改 pagePerms / v-hasPerm / 菜单树 |
 
 ### 源码约束

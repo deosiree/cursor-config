@@ -37,6 +37,15 @@ description: 排查权限运行时异常：isOwner 绕过失效、computed 缓�
 │  └─ computed 是否依赖 userInfo ref？
 │     ├─ 只读 sessionStorage → 登录后不重算，需添加 store ref 依赖
 │     └─ 已依赖 store ref → 检查 store 更新时机
+├─ 路由/菜单命中失败（先于 perm 检查）
+│  ├─ 访问即基座 /404 → microfb 菜单 path / 白名单（个人中心等）
+│  ├─ getScope()?.fuzzyRejected === true → directory 命中，改菜单；勿加子应用 /404
+│  ├─ matchMode === 'fuzzy' && 按钮正常 → 预期：子路由继承 page 父节点
+│  └─ 禁止恢复子应用 fuzzyRejected → next('/404')
+├─ allowed 偏大 / sibling 页按钮误显
+│  ├─ getScope().routePath 是否为 leaf page（非祖先 path）?
+│  ├─ Object.keys(scope.perms).length 是否 > 当前页 function 数?
+│  └─ 菜单是否缺独立 page entry → 补 route_path + type=page
 ├─ 有 role perm 但按钮不显示
 │  ├─ getScope() 是否 null 或 ambiguous?
 │  ├─ getAllowed() 是否含目标 perm?
@@ -62,7 +71,9 @@ description: 排查权限运行时异常：isOwner 绕过失效、computed 缓�
 | 半登录态 | Cookie 有效但 sessionStorage 为空或过期 | 检测到已登录但 userInfo 不完整时，调 `user/detail` 补全 |
 | 新 perm 不生效 | routeProjectMap 无节点 / function 挂错 page / 未 relogin | 查 getScope/getAllowed；导入后 syncMenuCacheOnly 或 relogin |
 | ambiguous 告警 | 同 path 多 page 无 params | 补 page params；见 snapshot-03 |
-| microfb vs apex 双重守卫 | 基座和子应用各自判断权限，生命周期不同 | 基座负责 UI 显隐，子应用负责页面守卫；不要双重实现 |
+| fuzzyRejected / 基座 404 | 剥离命中 directory 或无 page 父节点 / 白名单漏配 | 改菜单 type=page；URL 拦截归基座；见 `[[../路由鉴权迭代剥离匹配/SKILL.md]]` |
+| allowed 偏大 / sibling 按钮 | scope 命中祖先非 leaf page | 补 leaf page entry；见 `[[../../template/sample-run/snapshot-05-collectPerms作用域决策.md]]` |
+| 子应用误加重定向 | 以为路由鉴权要在子应用 beforeEach | **只** `RoutePermDict.load`；`/404` 归 microfb |
 
 ### microfb 基座排障要点
 

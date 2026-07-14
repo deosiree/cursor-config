@@ -36,6 +36,8 @@
 6. **契约缺失时标记"待人工确认"**：不主观推断 description
 7. **页面门控空态**：缺 pageGate perm 时 `PageNoPermission` 整页空态，禁止表格「暂无数据」冒充无权限
 8. **路由作用域鉴权**：`RoutePermDict`（`route_path` + `params` + 权限标识）；`checkHasPerm` 真相源为当前路由 scope；禁止以 `userInfo.permsMap` 为排障主路径（见 `references/route-scope-auth-chain.md`）
+9. **路由命中合法 page + 拦截归基座**：URL 须能命中合法 **page**；directory → `fuzzyRejected`/空 perms；**URL 404 由 microfb**，子应用只 `load`、禁止 `fuzzyRejected → next('/404')`；子路由须剥离到 page 父节点（见 `feature-skills/路由鉴权迭代剥离匹配`）
+10. **collectPerms 作用域**：只收命中节点**直接** function 子节点；每 routable URL 须有独立 leaf page entry（见 `template/sample-run/snapshot-05-collectPerms作用域决策.md`）
 
 ## 套件结构
 
@@ -69,6 +71,8 @@ gen-perms-apis/
 │   ├── 双会话OpenCLI环境初始化/SKILL.md     # profile 预检 + 双 session 登录
 │   ├── 角色菜单权限树快速配置/SKILL.md     # 角色弹窗内搜索树+功能项勾选
 │   ├── 菜单管理功能项依赖链验证/SKILL.md   # 菜单 8 场景 E2E（node 脚本 + scenarios/）
+│   ├── 路由鉴权迭代剥离匹配/SKILL.md       # 迭代剥离 + fuzzyRejected；URL 拦截归基座
+│   ├── 路由鉴权前缀模糊匹配/SKILL.md       # 【已废弃】→ 路由鉴权迭代剥离匹配
 │   └── 权限测试结果落盘CSV/SKILL.md         # 薄包装 → 委托外部 skill 生成 CSV
 ├── template/                              # 人类可读模板与样本
 │   ├── route-component-perm-api-output.md
@@ -84,6 +88,12 @@ gen-perms-apis/
 │       ├── before-04-租户权限重复鉴权.md   # RED：v-hasPerm 撒点 + OpItem 二次鉴权
 │       ├── after-04-页面级静态pagePerms.md # GREEN：tenantPagePerms 模式
 │       ├── snapshot-04-pagePerms决策.md    # 何时 pagePerms vs v-hasPerm
+│       ├── before-04-路由鉴权单次模糊匹配.md # RED：fuzzyMatchByPrefix 时代
+│       ├── after-04-路由鉴权迭代剥离.md    # GREEN：迭代剥离 + fuzzyRejected
+│       ├── snapshot-04-路由鉴权决策.md       # page vs directory 决策
+│       ├── before-05-collectPerms-DFS-sibling膨胀.md   # RED：DFS sibling perm 膨胀
+│       ├── after-05-collectPerms-直接function子节点.md # GREEN：单层 collectPerms
+│       ├── snapshot-05-collectPerms作用域决策.md       # page 子树 vs collectPerms 作用域
 │       ├── before-02-页面空态/             # RED：.vue/.scss 源码快照
 │       ├── after-02-页面空态/              # GREEN：PageNoPermission + 页面改造
 │       └── reference-02-设备数据UI参考/    # UI 基准（只读）
@@ -153,6 +163,18 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 同 route_path 两个 page 怎么配权限？按钮有 perm 但不显示。
 ```
 
+```text
+/Opsdeck/projectManage/detail 子路由按钮全灭，父页正常，排查路由鉴权。
+```
+
+```text
+DEV 报路由命中目录节点拒绝，访问 URL 直接变 404。
+```
+
+```text
+reportA 页能看到 reportB 导出按钮，role 只给了 reportA，排查 collectPerms。
+```
+
 ## 模板与素材入口
 
 - `[[template/route-component-perm-api-output.md]]`
@@ -170,3 +192,8 @@ admin 配置"权限测试角色"，13813815913 验证，结果落盘 CSV。
 - `[[references/perm-runtime-debugging.md]]`
 - `[[references/route-scope-auth-chain.md]]`
 - `[[template/new-module-perm-config-checklist.md]]`
+- `[[feature-skills/路由鉴权迭代剥离匹配/SKILL.md]]`
+- `[[template/sample-run/after-04-路由鉴权迭代剥离.md]]`
+- `[[template/sample-run/snapshot-04-路由鉴权决策.md]]`
+- `[[template/sample-run/after-05-collectPerms-直接function子节点.md]]`
+- `[[template/sample-run/snapshot-05-collectPerms作用域决策.md]]`

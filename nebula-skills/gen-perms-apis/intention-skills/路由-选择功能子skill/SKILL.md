@@ -34,6 +34,7 @@ description: 当当前目标已收敛到"这一步该进入哪个源码级功能
 11. `e2e_menu_scenarios` — 菜单管理 8 场景矩阵 / 功能项依赖链验证
 12. `csv_output_needed` — 验证结果需要落盘 CSV
 13. `menu_api_gap_check_needed` — 按范围对比菜单树 YAML 与源码 API 缺口
+14. `route_auth_failed` — 菜单未命中 page（fuzzyRejected / 子路由未继承 page / 基座 404）；勿建议子应用加 `/404` 守卫
 
 ## 工作流
 
@@ -59,6 +60,8 @@ description: 当当前目标已收敛到"这一步该进入哪个源码级功能
 - 仅需在角色弹窗内快速勾选某页面功能项（非完整 E2E）→ 进入 `[[../../feature-skills/角色菜单权限树快速配置]]`
 - 验证结果需要落盘为 CSV → 进入 `[[../../feature-skills/权限测试结果落盘CSV]]`
 - 按默认 6 模块（或指定 scope）对比菜单树与源码 API 缺口 → 进入 `[[../../feature-skills/检查-菜单树API缺口]]`（**首选 node 脚本** `scripts/check-menu-api-gap.node.js`）
+- 子路由/detail 按钮全灭、访问即 404、DEV「路由命中目录节点拒绝」→ 进入 `[[../../feature-skills/路由鉴权迭代剥离匹配]]`
+- 路由鉴权与权限鉴权混合症状（不确定 fuzzyRejected）→ 先 `路由鉴权迭代剥离匹配`，仍不明 → `[[../../feature-skills/权限运行时排障]]`
 
 ## 输出
 
