@@ -42,6 +42,19 @@ description: 当需要把已落地的一个或多个 commit 按从旧到新顺�
 5. **默认不 push**；**默认不删源分支**（见 🔴 CHECKPOINT-3）。
 6. **不**做 `rebase -i`、强推、改写无关历史。
 
+## 失败模式（三段式 fallback）
+
+| 触发条件 | 一线修复 | 仍失败兜底 |
+| --- | --- | --- |
+| `git status` 非空（正式合入） | 列出脏路径，`status=blocked`，**🛑 STOP**；请用户提交或改走沙盒 | 用户仍要在脏树上挑 → **拒绝执行**；重申禁止 stash 搬已落地 commit |
+| 缺 `target_branch` 或无法解析 commits | 逐字段追问；不猜测 hash | 用户拒绝提供 → `status=blocked`，结束本轮 |
+| `git rev-parse` / hash 在仓库中不存在 | 用 `git log --oneline <source>` 重列候选，请用户改选 | 仍无效 → **🛑 STOP**，不执行 cherry-pick |
+| `git checkout <target>` 失败 | 报告错误；检查分支名/`git branch -a` | 无法切到目标 → `status=blocked`，不继续 |
+| Windows worktree `Filename too long` | 换短路径（如 `f:\wt\cp`）+ `git -c core.longpaths=true`；`worktree prune` 清残局 | 仍失败 → 放弃沙盒，请用户在干净主树正式跑；见 [[references/Windows-worktree与长路径.md]] |
+| `cherry-pick` 中途冲突 | 进入 🔴 CHECKPOINT-2；按用户选 continue/abort/quit | 用户失联/无选择 → 保持冲突状态，**禁止**擅自 `--abort` |
+| `cherry-pick --continue` 因未 add 失败 | 提示 `git add` 已解决文件后重试 `--continue` | 用户改选 abort/quit → 执行对应命令 |
+| 区间方向写反或顺序新→旧 | 纠正为 old→new / `oldest^..newest`，再 🔴 CHECKPOINT-1 | 用户坚持反序 → **拒绝执行** |
+
 ## 核心流程
 
 1. **输入**：解析 `repo` / 源分支 / 目标分支 / 待挑 commits。**输出**：字段表或缺字段问题。
