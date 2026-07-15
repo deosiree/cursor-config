@@ -1,0 +1,6 @@
+﻿id,词条,英文翻译,俄文翻译,西文翻译,法文翻译,中文翻译,tag,comment,词条来源,备注1
+0010447b-f9ca-4cc0-85e3-6fd38c706f1c,网络_远程节点链路断开,Network_Remote node link disconnected,Сеть_Откл. удал. узла,,,,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,
+02f96da1-ed96-4447-8f13-aa1330ca6b36,启动依赖的本节点应用_app2,Start dependent local node App_app2,Запуск завис. прилож. узла_app2,,,,,,fytest_sysmgr_sysmdl_alias_AppDef,
+0545c805-321c-44e2-bafe-028a44da2b81,包含的进程资源对象,Included process resource objects,Вкл. объ. ресурсов процессов,,,,,,fytest_sysops.run.0_resmdl_alias_NodeRes,
+075903dc-8970-4dd2-a3fa-0273dc58aa12,无符号整型值,Unsigned integer value,Беззн. цел. значение,,,,,,fytest_calc.run.0_calcmdl_alias_CalcResult,
+08dab98c-efee-4d3b-8a2d-be2b2fbb83ba,资源监视_修改配置,Resource Monitor_Modify Configuration,Мониторинг_Измен. конфиг.,,,,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,

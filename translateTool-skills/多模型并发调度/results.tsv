@@ -1,0 +1,50 @@
+# Darwin 评估记录 · 多模型并发调度 v1.0.0
+
+## Phase 1 · Baseline（结构 dry_run）
+
+新建套件首次评估。
+
+| # | 维度 | 权重 | 分 | 加权 | 理由 |
+|---|------|------|----|------|------|
+| 1 | Frontmatter | 7 | 8 | 56 | 触发词覆盖 batch/complex/probe_only |
+| 2 | 工作流 | 12 | 8 | 96 | 意图层 3 节点（分类→路权→编排）链路清晰 |
+| 3 | 失败模式 | 12 | 7 | 84 | 5 条失败基线 + fallback 表，缺实跑验证 |
+| 4 | 检查点 | 6 | 9 | 54 | 🔴 CHECKPOINT 两处（batch/complex 模型确认） |
+| 5 | 可执行性 | 17 | 7 | 119 | LanePoolDispatcher 代码可用，缺真实 API 集成用例 |
+| 6 | 资源 | 4 | 8 | 32 | 路径可达 + models.config.json 共享 |
+| 7 | 架构 | 12 | 9 | 108 | intention/feature 已拆，每层承担独立职责 |
+| 8 | 实测 | 23 | 5 | 115 | 文档路径 OK，实跑数据待后续 full_test |
+| 9 | 反例 | 6 | 8 | 48 | 黑名单独立章节 |
+
+**Baseline = 71.2**（dry_run）
+
+## 与 translate v2.2.0 基线对比
+
+| 维度 | translate v2.2.0 | 多模型并发调度 v1.0.0 | 变化 |
+|------|-----------------|---------------------|------|
+| Frontmatter | 8 | 8 | — |
+| 工作流 | 8 | 8 | — |
+| 失败模式 | 8 | 7 | -1（缺实跑） |
+| 检查点 | 8 | 9 | +1（更细致的门禁） |
+| 可执行性 | 7 | 7 | — |
+| 资源 | 8 | 8 | — |
+| 架构 | 8 | 9 | +1（独立套件解耦更干净） |
+| 实测 | 5 | 5 | — |
+| 反例 | 8 | 8 | — |
+| **总分** | **70.6** | **71.2** | **+0.6** |
+
+## 关键资产
+
+| 文件 | 状态 |
+|------|------|
+| `lib/laneDispatcher.js` | ✅ 代码就绪，22 行测试通过 |
+| `lib/models.config.json` | ✅ 10 模型，27 路免费池 + 3000 路主力池 |
+| `probe-models.js` | ✅ 增强版，支持 --check-pricing |
+| `references/lane-model.md` | ✅ 完整参考文档 |
+
+## 最佳优化方向（若后续迭代）
+
+1. **P0 实测**：用 translate 3842 条输入跑 weighted-lanes full_test，对比旧版 round-robin 吞吐
+2. **P1 集成**：translateCsv.js 中实际替换 runDagScheduler 为 LanePoolDispatcher
+3. **P2 可视化**：路利用率实时看板（per-worker in-flight 百分比）
+4. **P3 复用**：接入第二个调用方（如批量代码审查），验证跨任务通用性

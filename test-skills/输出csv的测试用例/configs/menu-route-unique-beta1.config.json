@@ -1,0 +1,7 @@
+{
+  "moduleId": "menu-route-unique-beta1",
+  "repoRoot": "../../../../Repertory/Sieyuan/nebula",
+  "csvTemplatePath": "docs/问题单/模板/menu.csv",
+  "outputPath": "docs/问题单/beta1/menu-route-unique-beta1.csv",
+  "casesFile": "configs/menu-route-unique-beta1.cases.json"
+}

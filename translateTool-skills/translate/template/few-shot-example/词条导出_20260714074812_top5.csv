@@ -1,0 +1,6 @@
+﻿id,词条,tag,英文翻译,comment,俄文翻译,词条来源,辞典名称,翻译最大长度
+000dfc0c-650b-4cb7-a230-7f1b34529d0e,RLO Start of right-to-left override,QUnicodeControlCharacterMenu,RLO Start of right-to-left override,,,qt,,
+00155f29-6695-4c83-a90a-b705e4e4d139,Launch (4),QShortcut,Launch (4),,,qtbase,,
+002e5018-0af3-45b9-b883-841cac8c3ad7,<h3>About Qt</h3><p>This program uses Qt version %1.</p>,QMessageBox,<h3>About Qt</h3><p>This program uses Qt version %1.</p>,,,qtbase,,
+0059f849-1cb4-421e-a214-f056db8f55c1,list item,QSpiAccessibleBridge,list item,,,qtbase,,
+005aa460-9080-4f66-b6bd-b8f30f75b7e7,Cannot open documentation file %1: %2.,QHelpEngineCore,Cannot open documentation file %1: %2.,,,qt_help,,

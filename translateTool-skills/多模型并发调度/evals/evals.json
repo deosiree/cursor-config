@@ -1,0 +1,53 @@
+{
+  "skill": "多模型并发调度",
+  "version": "1.0.0",
+  "should_trigger": [
+    "全部模型并发",
+    "多模型分摊",
+    "满速翻译",
+    "全模型分路",
+    "路权并发",
+    "所有免费模型一起跑",
+    "多模型跑这个任务",
+    "用全部模型批处理",
+    "并发执行这个批量任务"
+  ],
+  "should_not_trigger": [
+    "只用默认模型",
+    "单模型翻译",
+    "用 deepseek-v4-pro 单独编码",
+    "探测模型（不进调度）"
+  ],
+  "acceptance": [
+    {
+      "id": "acc-001",
+      "name": "任务分类正确",
+      "rule": "batch 类任务（翻译/审查/测试）→ 推荐 free tier；complex 类（编码/推理）→ 推荐 primary tier"
+    },
+    {
+      "id": "acc-002",
+      "name": "模型提案表完整",
+      "rule": "未指定模型时，提案表必须包含：供应商 | 模型 | 路数 | 批大小 | tier | 计费 | URL"
+    },
+    {
+      "id": "acc-003",
+      "name": "人类确认门禁",
+      "rule": "未指定模型 + batch/complex 任务 → 🔴 CHECKPOINT 等人确认后才能执行"
+    },
+    {
+      "id": "acc-004",
+      "name": "路权计算正确",
+      "rule": "totalLanes = Σ lanes；小规模缩批 batchSize = max(minBatchSize, ceil(totalEntries/totalLanes))"
+    },
+    {
+      "id": "acc-005",
+      "name": "免费/主力隔离",
+      "rule": "batch 任务默认只用 free tier 模型；primary tier 模型不进翻译分摊"
+    },
+    {
+      "id": "acc-006",
+      "name": "定价检查可用",
+      "rule": "--check-pricing 能正确标记 >30 天未确认的付费模型"
+    }
+  ]
+}

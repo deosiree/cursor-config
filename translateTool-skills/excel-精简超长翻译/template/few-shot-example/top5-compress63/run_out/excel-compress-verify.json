@@ -1,0 +1,29 @@
+{
+  "input": "F:\\Documents\\Default-Obsidian\\huiyanSkills\\translateTool-skills\\excel-精简超长翻译\\template\\few-shot-example\\top5-compress63\\input.xlsx",
+  "byteLimit": 63,
+  "verifyModel": "deepseek:deepseek-v4-flash",
+  "skipDeepseekVerify": false,
+  "rounds": [
+    {
+      "round": 1,
+      "shortened": 5,
+      "stillTodo": 0
+    },
+    {
+      "round": 2,
+      "shortened": 0,
+      "stillTodo": 0
+    }
+  ],
+  "recommendDeliver": true,
+  "final": {
+    "stillOver": 0,
+    "stillOverRows": [],
+    "cjkInRu": 0,
+    "residualEn": 0,
+    "glossParen": 0,
+    "truncateFallback": 0,
+    "deepseekFailNotes": 0,
+    "maxBytesAfter": 52
+  }
+}

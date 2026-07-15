@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-07-15T19:45	74e1635	按顺序cherry-pick到其他分支	-	62.8	baseline	-	独立judge dry_run; weakest d3/d4/d5/d8; runtime_warn=0	dry_run
+2026-07-15T19:50	bfd3a16	按顺序cherry-pick到其他分支	62.8	74.9	keep	D4	HL-1 CHECKPOINT-1/2/3; judge dry_run	dry_run
+2026-07-15T19:55	7d5e5a2	按顺序cherry-pick到其他分支	74.9	79.7	keep	D3	HL-2 三段式 fallback 8行; judge dry_run	dry_run
+2026-07-15T20:05	b72a69b	按顺序cherry-pick到其他分支	79.7	85.5	keep	D5	命令形态表+输入必填表; judge dry_run; stop>=85	dry_run
+2026-07-15T20:10	116d2a5	按顺序cherry-pick到其他分支	85.5	86.9	keep	D1	frontmatter should-not-trigger; dry_run; delta+1.4	dry_run

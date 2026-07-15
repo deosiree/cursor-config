@@ -665,13 +665,13 @@
       "env": "测试环境；路由 /Apex/system/menu"
     },
     {
-      "name": "新增功能项仅含权限标识字段",
+      "name": "新增功能项含权限标识与可选路由路径",
       "featureSet": "弹窗交互",
       "direction": "正向",
       "level": 0,
       "precondition": "1. 在权限配置内新增",
-      "steps": "1. 查看表单",
-      "expected": "1. 有权限标识\n2. 无路由路径字段",
+      "steps": "1. 查看表单字段",
+      "expected": "1. 有权限标识字段\n2. 有路由路径字段（可选，支持通配）",
       "reserve1": "ui",
       "sortOrder": 15,
       "env": "测试环境；路由 /Apex/system/menu"
@@ -726,17 +726,17 @@
       "env": "测试环境；路由 /Apex/system/menu"
     },
     {
-      "name": "同项目下重复路由路径提交失败",
+      "name": "同项目下页面或目录重复路由路径提交失败",
       "featureSet": "表单校验",
-      "direction": "正向",
+      "direction": "逆向",
       "level": 0,
-      "precondition": "1. 已存在相同 routePath",
-      "steps": "1. 新增页面填重复路径\n2. 确定",
-      "expected": "1. 唯一性错误提示\n2. 不保存",
+      "precondition": "1. 当前项目已存在相同 routePath 的页面或目录节点",
+      "steps": "1. 新增页面（或目录）填重复路径\n2. 确定",
+      "expected": "1. 红字提示「当前项目下的路由路径已存在」\n2. 不保存",
       "reserve1": "ui",
       "sortOrder": 4,
       "env": "测试环境；路由 /Apex/system/menu",
-      "purpose": "ensureRoutePathUnique"
+      "purpose": "chkPathDup"
     },
     {
       "name": "菜单名超长校验失败",
