@@ -1,0 +1,556 @@
+#!/usr/bin/env node
+/**
+ * Excel「俄文翻译」压到 UTF-8 ≤ byteLimit。
+ * 缩短：free 多模型并发；验证：DeepSeek-V4-Flash + 硬门禁。
+ *
+ * Usage:
+ *   node compressExcelRu.js <input.xlsx> <outputDir> \
+ *     --byte-limit 63 --multi-model --models all \
+ *     [--limit 5] [--max-rounds 3] [--skip-deepseek-verify] [--in-place]
+ */
+const fs = require('fs');
+const path = require('path');
+const translateNm = path.join(__dirname, '../translate/node_modules');
+if (!module.paths.includes(translateNm)) module.paths.unshift(translateNm);
+const XLSX = require('xlsx');
+
+const { utf8Len, calcCharBudget, truncateUtf8Boundary } = require('./lib/utf8Budget');
+const { validateRuCompressHard, stripEn2RuEnglishGlossParen } = require('./lib/ruQualityGate');
+const {
+  resolveShortenWorkers,
+  resolveVerifyWorker,
+  parseBatchTranslationResponse,
+  writeXlsxPreviewFile,
+  BATCH_NL_TOKEN
+} = require('./lib/workers');
+
+const COL_ZH = '词条';
+const COL_EN = '英文翻译';
+const COL_RU = '俄文翻译';
+const COL_NOTE = '备注1';
+
+function parseArgs(argv) {
+  const out = {
+    input: '',
+    outputDir: '',
+    targetCol: COL_RU,
+    sourceCol: COL_EN,
+    zhCol: COL_ZH,
+    byteLimit: 63,
+    multiModel: true,
+    models: 'all',
+    limit: 0,
+    maxRounds: 3,
+    skipDeepseekVerify: false,
+    inPlace: false,
+    batchSize: 12,
+    concurrency: 4,
+    force: false
+  };
+  const pos = [];
+  for (let i = 2; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--targetCol') out.targetCol = argv[++i];
+    else if (a === '--sourceCol') out.sourceCol = argv[++i];
+    else if (a === '--zhCol') out.zhCol = argv[++i];
+    else if (a === '--byte-limit') out.byteLimit = Number(argv[++i]) || 63;
+    else if (a === '--multi-model') out.multiModel = true;
+    else if (a === '--models') out.models = argv[++i];
+    else if (a === '--limit') out.limit = Number(argv[++i]) || 0;
+    else if (a === '--max-rounds') out.maxRounds = Number(argv[++i]) || 3;
+    else if (a === '--batch-size') out.batchSize = Number(argv[++i]) || 12;
+    else if (a === '--concurrency') out.concurrency = Math.max(1, Number(argv[++i]) || 4);
+    else if (a === '--skip-deepseek-verify') out.skipDeepseekVerify = true;
+    else if (a === '--in-place') out.inPlace = true;
+    else if (a === '--force') out.force = true;
+    else if (!a.startsWith('-')) pos.push(a);
+  }
+  out.input = pos[0] || '';
+  out.outputDir = pos[1] || '';
+  return out;
+}
+
+function loadPrompt(name) {
+  return fs.readFileSync(path.join(__dirname, 'prompts', name), 'utf8');
+}
+
+function readSheetRows(xlsxPath) {
+  const abs = path.resolve(xlsxPath);
+  const wb = XLSX.readFile(abs);
+  const sheet = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+  const headers =
+    rows.length > 0
+      ? Object.keys(rows[0])
+      : XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' })[0] || [];
+  return { abs, rows, headers: Array.isArray(headers) ? headers : Object.keys(headers) };
+}
+
+function ensureHeaders(headers, needed) {
+  const set = new Set(headers);
+  for (const h of needed) {
+    if (!set.has(h)) {
+      headers.push(h);
+      set.add(h);
+    }
+  }
+  return headers;
+}
+
+function appendNote(row, tag) {
+  const note = String(row[COL_NOTE] || '').trim();
+  if (note.includes(tag)) return;
+  row[COL_NOTE] = note ? `${note};${tag}` : tag;
+}
+
+function buildShortenPrompt(items, byteLimit) {
+  const tpl = loadPrompt('prompt-batch-ru-shorten.md');
+  const budgets = items.map((it) => calcCharBudget(it.ru, byteLimit));
+  const hint = budgets.length ? Math.min(...budgets) : Math.floor(byteLimit / 2);
+  const entryList = items
+    .map((it, i) => {
+      const zh = String(it.zh || '').replace(/\n/g, BATCH_NL_TOKEN);
+      const en = String(it.en || '').replace(/\n/g, BATCH_NL_TOKEN);
+      const ru = String(it.ru || '').replace(/\n/g, BATCH_NL_TOKEN);
+      const bytes = utf8Len(it.ru);
+      const budget = calcCharBudget(it.ru, byteLimit);
+      return `${i + 1}. 字节=${bytes} | 预算≈${budget} | ZH<<<${zh}>>> EN<<<${en}>>> RU<<<${ru}>>>`;
+    })
+    .join('\n');
+  return tpl
+    .replace(/\{\{BYTE_LIMIT\}\}/g, String(byteLimit))
+    .replace(/\{\{CHAR_BUDGET_HINT\}\}/g, String(hint))
+    .replace('{{ENTRY_LIST}}', entryList);
+}
+
+function buildVerifyPrompt(items, byteLimit) {
+  const tpl = loadPrompt('prompt-batch-ru-verify.md');
+  const entryList = items
+    .map((it, i) => {
+      const en = String(it.en || '').replace(/\n/g, BATCH_NL_TOKEN);
+      const ru = String(it.ru || '').replace(/\n/g, BATCH_NL_TOKEN);
+      return `${i + 1}. bytes=${utf8Len(it.ru)} EN<<<${en}>>> RU<<<${ru}>>>`;
+    })
+    .join('\n');
+  return tpl
+    .replace(/\{\{BYTE_LIMIT\}\}/g, String(byteLimit))
+    .replace('{{ENTRY_LIST}}', entryList);
+}
+
+function parsePassFail(text, n) {
+  const lines = String(text || '').split('\n').filter((l) => l.trim());
+  const map = new Map();
+  for (const raw of lines) {
+    const m = raw.trim().match(/^(\d+)[.、]\s*(PASS|FAIL)\b\s*:?\s*(.*)$/i);
+    if (!m) continue;
+    const idx = parseInt(m[1], 10);
+    if (idx < 1 || idx > n) continue;
+    map.set(idx, {
+      ok: String(m[2]).toUpperCase() === 'PASS',
+      reason: String(m[3] || '').trim()
+    });
+  }
+  const out = [];
+  for (let i = 1; i <= n; i++) {
+    out.push(map.get(i) || { ok: false, reason: 'missing_verdict' });
+  }
+  return out;
+}
+
+function sleepMs(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * 对一批超长行跑缩短：按优先序尝试 workers；Busy 只试 1 次即切下一个
+ */
+async function shortenBatch(items, workers, byteLimit, preferredStart = 0) {
+  if (!items.length) return [];
+  if (!workers.length) throw new Error('无可用 free 缩短 worker（检查 XFYUN/SILICONFLOW/ZHIPU API Key）');
+
+  const prompt = buildShortenPrompt(items, byteLimit);
+  const errors = [];
+  const start = preferredStart % workers.length;
+
+  for (let offset = 0; offset < workers.length; offset++) {
+    const w = workers[(start + offset) % workers.length];
+    const maxAttempt = w.provider === 'xfyun' ? 1 : 2;
+    for (let attempt = 1; attempt <= maxAttempt; attempt++) {
+      try {
+        console.log(`  缩短 ${items.length} 条 ← ${w.name} (attempt ${attempt})`);
+        const raw = await w.callBatch(prompt, items.length);
+        let texts;
+        if (Array.isArray(raw) && raw.length === items.length) {
+          texts = raw;
+        } else {
+          texts = parseBatchTranslationResponse(String(raw || ''), items.length);
+        }
+        if (!texts || texts.length !== items.length) {
+          throw new Error(`批结果条数不齐: got ${texts ? texts.length : 0}`);
+        }
+        return texts.map((t) =>
+          String(t || '')
+            .replace(new RegExp(BATCH_NL_TOKEN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '\n')
+            .trim()
+        );
+      } catch (e) {
+        const msg = e && e.message ? e.message : String(e);
+        errors.push(`${w.id}: ${msg}`);
+        console.warn(`  ! ${w.name} 失败: ${msg.slice(0, 160)}`);
+        if (/Busy|Engine Busy|ECONNRESET|timeout|条数不齐/i.test(msg)) {
+          break; // 立刻换下一个 worker
+        }
+        await sleepMs(300 * attempt);
+      }
+    }
+  }
+  throw new Error(`缩短批失败: ${errors.slice(0, 4).join(' | ')}`);
+}
+
+/**
+ * 有限并发跑多批
+ * @template T
+ * @param {T[]} items
+ * @param {number} concurrency
+ * @param {(item: T, index: number) => Promise<void>} fn
+ */
+async function mapPool(items, concurrency, fn) {
+  let next = 0;
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (true) {
+      const i = next++;
+      if (i >= items.length) return;
+      await fn(items[i], i);
+    }
+  });
+  await Promise.all(workers);
+}
+
+async function verifyBatchDeepseek(items, byteLimit, worker) {
+  if (!items.length) return [];
+  const prompt = buildVerifyPrompt(items, byteLimit);
+  const raw = await worker.callBatch(prompt, items.length);
+  let lines;
+  if (Array.isArray(raw)) {
+    lines = raw.map((x, i) => `${i + 1}. ${x}`).join('\n');
+  } else {
+    lines = String(raw || '');
+  }
+  return parsePassFail(lines, items.length);
+}
+
+function unifyByZh(rows, args) {
+  /** @type {Map<string, string>} */
+  const best = new Map();
+  for (const row of rows) {
+    const zh = String(row[args.zhCol] || '').trim();
+    if (!zh) continue;
+    const ru = String(row[args.targetCol] || '').trim();
+    if (!ru) continue;
+    const gate = validateRuCompressHard(ru, row[args.sourceCol], args.byteLimit);
+    if (!gate.ok) continue;
+    const prev = best.get(zh);
+    if (!prev || utf8Len(gate.text) < utf8Len(prev)) {
+      best.set(zh, gate.text);
+    }
+  }
+  let n = 0;
+  for (const row of rows) {
+    const zh = String(row[args.zhCol] || '').trim();
+    if (!zh || !best.has(zh)) continue;
+    const pick = best.get(zh);
+    if (String(row[args.targetCol] || '') !== pick) {
+      row[args.targetCol] = pick;
+      n += 1;
+    }
+  }
+  return n;
+}
+
+function scanOverlong(rows, args) {
+  const idxs = [];
+  for (let i = 0; i < rows.length; i++) {
+    const ru = String(rows[i][args.targetCol] || '');
+    if (!ru.trim()) continue;
+    if (utf8Len(ru) > args.byteLimit) idxs.push(i);
+  }
+  return idxs;
+}
+
+function writeCsv(outPath, headers, rows) {
+  const esc = (v) => {
+    const s = String(v ?? '');
+    if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+    return s;
+  };
+  const lines = [headers.map(esc).join(',')];
+  for (const row of rows) {
+    lines.push(headers.map((h) => esc(row[h])).join(','));
+  }
+  fs.writeFileSync(outPath, `\uFEFF${lines.join('\n')}`, 'utf8');
+}
+
+async function main() {
+  const args = parseArgs(process.argv);
+  if (!args.input || !args.outputDir) {
+    console.error(
+      'Usage: node compressExcelRu.js <input.xlsx> <outputDir> [--byte-limit 63] [--multi-model] [--models all] [--limit N]'
+    );
+    process.exit(2);
+  }
+
+  fs.mkdirSync(args.outputDir, { recursive: true });
+  const { abs, rows: allRows } = readSheetRows(args.input);
+  let rows = allRows.map((r) => ({ ...r }));
+  let headers = ensureHeaders(
+    rows.length ? Object.keys(rows[0]) : [args.zhCol, args.sourceCol, args.targetCol, COL_NOTE],
+    [args.zhCol, args.sourceCol, args.targetCol, COL_NOTE]
+  );
+
+  if (args.limit > 0) {
+    rows = rows.slice(0, args.limit);
+  }
+
+  console.log(`输入: ${abs}`);
+  console.log(`行数: ${rows.length}；byteLimit=${args.byteLimit}`);
+
+  const workers = resolveShortenWorkers({
+    multiModel: args.multiModel,
+    models: args.models
+  });
+  console.log(`缩短 workers (${workers.length}): ${workers.map((w) => w.id).join(', ') || '(none)'}`);
+
+  let verifyWorker = null;
+  if (!args.skipDeepseekVerify) {
+    try {
+      verifyWorker = resolveVerifyWorker();
+      console.log(`验证 worker: ${verifyWorker.id}`);
+    } catch (e) {
+      console.warn(`⚠ DeepSeek 验证不可用: ${e.message}`);
+      console.warn('  将只跑硬门禁；recommendDeliver=false');
+    }
+  }
+
+  const verifyLog = {
+    input: abs,
+    byteLimit: args.byteLimit,
+    verifyModel: verifyWorker ? verifyWorker.id : null,
+    skipDeepseekVerify: args.skipDeepseekVerify,
+    rounds: [],
+    recommendDeliver: false
+  };
+
+  /** @type {Set<number>} */
+  let dsRetryIdxs = new Set();
+
+  for (let round = 1; round <= args.maxRounds; round++) {
+    let overIdxs = scanOverlong(rows, args);
+    // 也把硬门禁失败的纳入本轮缩短
+    const hardFailIdxs = [];
+    for (let i = 0; i < rows.length; i++) {
+      const ru = String(rows[i][args.targetCol] || '');
+      if (!ru.trim()) continue;
+      const g = validateRuCompressHard(ru, rows[i][args.sourceCol], args.byteLimit);
+      if (!g.ok && !overIdxs.includes(i)) hardFailIdxs.push(i);
+    }
+    const todo = [...new Set([...overIdxs, ...hardFailIdxs, ...dsRetryIdxs])];
+    console.log(
+      `\n=== Round ${round}/${args.maxRounds}: 待处理 ${todo.length} (over=${overIdxs.length}, hardFailExtra=${hardFailIdxs.length}, dsRetry=${dsRetryIdxs.size}) ===`
+    );
+
+    if (todo.length === 0) {
+      verifyLog.rounds.push({ round, shortened: 0, stillTodo: 0 });
+      break;
+    }
+    dsRetryIdxs = new Set();
+
+    let shortened = 0;
+    const batches = [];
+    for (let offset = 0; offset < todo.length; offset += args.batchSize) {
+      batches.push(todo.slice(offset, offset + args.batchSize));
+    }
+    console.log(`  批次数=${batches.length}，并发=${args.concurrency}`);
+
+    await mapPool(batches, args.concurrency, async (batchIdxs, bi) => {
+      const items = batchIdxs.map((i) => ({
+        rowIndex: i,
+        zh: rows[i][args.zhCol],
+        en: rows[i][args.sourceCol],
+        ru: rows[i][args.targetCol]
+      }));
+      try {
+        const texts = await shortenBatch(items, workers, args.byteLimit, bi);
+        for (let j = 0; j < batchIdxs.length; j++) {
+          const i = batchIdxs[j];
+          const next = stripEn2RuEnglishGlossParen(texts[j]).text.trim();
+          const gate = validateRuCompressHard(next, rows[i][args.sourceCol], args.byteLimit);
+          if (gate.ok) {
+            rows[i][args.targetCol] = gate.text;
+            shortened += 1;
+          } else if (next) {
+            rows[i][args.targetCol] = next;
+            shortened += 1;
+          }
+        }
+      } catch (e) {
+        console.warn(`  批失败 #${bi}: ${e.message}`);
+      }
+      if ((bi + 1) % 5 === 0 || bi === batches.length - 1) {
+        const ck = path.join(args.outputDir, `_checkpoint_r${round}.json`);
+        fs.writeFileSync(
+          ck,
+          JSON.stringify(
+            {
+              round,
+              doneBatches: bi + 1,
+              totalBatches: batches.length,
+              stillOver: scanOverlong(rows, args).length
+            },
+            null,
+            2
+          ),
+          'utf8'
+        );
+        console.log(`  checkpoint ${bi + 1}/${batches.length} stillOver≈${scanOverlong(rows, args).length}`);
+      }
+    });
+
+    // DeepSeek 批验：对本轮涉及的已缩短且硬门禁过的行（或仍超的抽检）
+    if (verifyWorker) {
+      const candidates = todo
+        .map((i) => i)
+        .filter((i) => {
+          const g = validateRuCompressHard(
+            rows[i][args.targetCol],
+            rows[i][args.sourceCol],
+            args.byteLimit
+          );
+          return g.ok;
+        });
+      /** @type {number[][]} */
+      const verifyBatches = [];
+      for (let offset = 0; offset < candidates.length; offset += args.batchSize) {
+        verifyBatches.push(candidates.slice(offset, offset + args.batchSize));
+      }
+      await mapPool(verifyBatches, Math.min(2, args.concurrency), async (batchIdxs) => {
+        const items = batchIdxs.map((i) => ({
+          en: rows[i][args.sourceCol],
+          ru: rows[i][args.targetCol]
+        }));
+        try {
+          console.log(`  DeepSeek 验证 ${items.length} 条...`);
+          const verdicts = await verifyBatchDeepseek(items, args.byteLimit, verifyWorker);
+          for (let j = 0; j < batchIdxs.length; j++) {
+            if (!verdicts[j].ok) {
+              appendNote(rows[batchIdxs[j]], `ds_fail:${verdicts[j].reason || 'fail'}`);
+              dsRetryIdxs.add(batchIdxs[j]);
+            } else {
+              const note = String(rows[batchIdxs[j]][COL_NOTE] || '');
+              if (note.includes('ds_fail:')) {
+                rows[batchIdxs[j]][COL_NOTE] = note
+                  .split(';')
+                  .map((x) => x.trim())
+                  .filter((x) => x && !x.startsWith('ds_fail:'))
+                  .join(';');
+              }
+            }
+          }
+        } catch (e) {
+          console.warn(`  DeepSeek 验证失败: ${e.message}`);
+        }
+      });
+    }
+
+    verifyLog.rounds.push({
+      round,
+      shortened,
+      stillTodo: scanOverlong(rows, args).length
+    });
+  }
+
+  // 最终截断兜底（仍超字节）
+  let truncateCount = 0;
+  for (let i = 0; i < rows.length; i++) {
+    let ru = String(rows[i][args.targetCol] || '');
+    if (utf8Len(ru) > args.byteLimit) {
+      ru = truncateUtf8Boundary(ru, args.byteLimit);
+      rows[i][args.targetCol] = ru;
+      appendNote(rows[i], 'truncate_fallback');
+      truncateCount += 1;
+    }
+    // 剥括注后再判
+    const gate = validateRuCompressHard(rows[i][args.targetCol], rows[i][args.sourceCol], args.byteLimit);
+    if (gate.text !== String(rows[i][args.targetCol] || '')) {
+      rows[i][args.targetCol] = gate.text;
+    }
+  }
+
+  const unified = unifyByZh(rows, args);
+  console.log(`\n同词条统一最短合规俄文: ${unified} 行；截断兜底: ${truncateCount}`);
+
+  // 终验
+  const stillOver = [];
+  const cjkInRu = [];
+  const residualEn = [];
+  const glossParen = [];
+  for (let i = 0; i < rows.length; i++) {
+    const g = validateRuCompressHard(rows[i][args.targetCol], rows[i][args.sourceCol], args.byteLimit);
+    if (g.issues.some((x) => x.startsWith('over_bytes'))) stillOver.push(i + 2);
+    if (g.issues.includes('cjk_in_ru')) cjkInRu.push(i + 2);
+    if (g.issues.some((x) => x.startsWith('residual_en'))) residualEn.push(i + 2);
+    if (g.issues.includes('gloss_paren')) glossParen.push(i + 2);
+    if (g.ok) rows[i][args.targetCol] = g.text;
+  }
+
+  const dsFailed = rows.filter((r) => String(r[COL_NOTE] || '').includes('ds_fail')).length;
+  verifyLog.final = {
+    stillOver: stillOver.length,
+    stillOverRows: stillOver.slice(0, 40),
+    cjkInRu: cjkInRu.length,
+    residualEn: residualEn.length,
+    glossParen: glossParen.length,
+    truncateFallback: truncateCount,
+    deepseekFailNotes: dsFailed,
+    maxBytesAfter: Math.max(0, ...rows.map((r) => utf8Len(r[args.targetCol])))
+  };
+  verifyLog.recommendDeliver =
+    stillOver.length === 0 &&
+    cjkInRu.length === 0 &&
+    residualEn.length === 0 &&
+    glossParen.length === 0 &&
+    !!verifyWorker &&
+    !args.skipDeepseekVerify;
+
+  const base = path.basename(abs, path.extname(abs));
+  const outXlsx = path.join(args.outputDir, `${base}_已压63.xlsx`);
+  const outCsv = path.join(args.outputDir, `${base}_已压63.csv`);
+  const outJson = path.join(args.outputDir, 'excel-compress-verify.json');
+
+  writeXlsxPreviewFile(outXlsx, headers, rows);
+  writeCsv(outCsv, headers, rows);
+  fs.writeFileSync(outJson, JSON.stringify(verifyLog, null, 2), 'utf8');
+
+  if (args.inPlace) {
+    const backup = abs.replace(/\.xlsx$/i, '_preCompress63.xlsx');
+    if (!fs.existsSync(backup)) {
+      fs.copyFileSync(abs, backup);
+      console.log(`备份: ${backup}`);
+    }
+    fs.copyFileSync(outXlsx, abs);
+    console.log(`已写回: ${abs}`);
+  }
+
+  console.log(`\n写出: ${outXlsx}`);
+  console.log(`写出: ${outCsv}`);
+  console.log(`验证: ${outJson}`);
+  console.log(
+    `stillOver=${stillOver.length} cjk=${cjkInRu.length} residualEn=${residualEn.length} gloss=${glossParen.length} recommendDeliver=${verifyLog.recommendDeliver}`
+  );
+
+  if (stillOver.length > 0) process.exitCode = 1;
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

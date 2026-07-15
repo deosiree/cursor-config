@@ -1,0 +1,3 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-07-15T11:05	n/a	translate/验证-译后防错位	-	-	baseline	anti-misalign	新建 skill + verify-post-translate.js；misalign-10 full_test pass	full_test
+2026-07-15T11:06	n/a	translate/batch-wire	-	-	keep	line-align	Hunyuan 条数0拒收→DeepSeek成功；stillLooksMisaligned=[]	full_test

@@ -1,0 +1,45 @@
+{
+  "case": "mon-1.9.0-dedup-en2ru-all-models",
+  "mode": "en2ru",
+  "policy": "multi-model / models=all",
+  "rows": 3842,
+  "batch_size": 40,
+  "batches_pass1": 97,
+  "models": 8,
+  "dag_concurrency_cap": 20,
+  "pass1": {
+    "started_at": "2026-07-14T13:43:13.501Z",
+    "ended_at": "2026-07-14T13:53:29.865Z",
+    "elapsed_ms": 616364,
+    "elapsed_min": 10.27,
+    "dag_waves": 5,
+    "preferred": {
+      "xfyun:xophunyuan7bmt": 13,
+      "siliconflow:tencent/Hunyuan-MT-7B": 12,
+      "siliconflow:deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": 12,
+      "siliconflow:Qwen/Qwen3-8B": 12,
+      "siliconflow:THUDM/GLM-Z1-9B-0414": 12,
+      "siliconflow:THUDM/GLM-4-9B-0414": 12,
+      "siliconflow:Qwen/Qwen2.5-7B-Instruct": 12,
+      "zhipu:glm-4-flash": 12
+    },
+    "log_success_rows": 3618,
+    "log_error_rows": 224,
+    "mismatch_warnings": 42,
+    "empty_after": 152
+  },
+  "pass2": {
+    "started_at": "2026-07-14T13:54:09.710Z",
+    "ended_at": "2026-07-14T13:55:42.558Z",
+    "elapsed_ms": 92848,
+    "elapsed_min": 1.55,
+    "batches": 4,
+    "final_filled": 3842
+  },
+  "throughput": {
+    "pass1_entries_per_min": 374,
+    "per_route_share_entries_per_min": 47,
+    "pass1_plus_pass2_entries_per_min": 325,
+    "e2e_wall_incl_gap_entries_per_min": 308
+  }
+}

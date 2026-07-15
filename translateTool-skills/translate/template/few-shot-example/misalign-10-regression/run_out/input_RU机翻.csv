@@ -1,0 +1,14 @@
+﻿id,词条,tag,英文翻译,comment,俄文翻译,词条来源,辞典名称,翻译最大长度,备注1
+5a3d1d17-2c22-44d0-8900-6f5611aa7c7b,Invalid QButtonGroup reference '%1' referenced by '%2'.,QAbstractFormBuilder,Invalid QButtonGroup reference '%1' referenced by '%2'.,,"Неверное ссыла́ние на QButtonGroup '%1', ссылающееся из '%2'.",designer,,,
+4eed7ad4-d92d-407b-b489-25ae8e9231c6,"Invalid property assignment: ""%1"" is a read-only property",QDeclarativeCompiler,"Invalid property assignment: ""%1"" is a read-only property",,"Невозможность назначения свойства: свойство ""%1"" является только для чтения.",qt,,,
+6bf5b440-a1e5-49ec-9aa2-d9d316dc8152,Designer UI files (*.%1);;All Files (*),QDesignerActions,Designer UI files (*.%1);;All Files (*),,Файлы дизайна интерфейса (*.%1); Все файлы (*),designer,,,
+ed506c57-5f94-4812-8bab-02c004f5e3a8,Attribute group %1 already defined.,QtXmlPatterns,Attribute group %1 already defined.,,Группа атрибутов %1 уже определена.,qt,,,
+6789d77a-fb65-4541-a9d4-50048b1b2f09,<html>Switching to the audio playback device <b>%1</b><br/>which has higher preference or is specifically configured for this stream.</html>,Phonon::AudioOutput,<html>Switching to the audio playback device <b>%1</b><br/>which has higher preference or is specifically configured for this stream.</html>,,<html>Переход на аудиоустройство воспроизведения <b>%1</b><br/> с большим приоритетом или специально настроенное для этого потока.</html>,qt,,,
+b120a3dd-f6be-46b1-9e66-607624d21e73,The property %1 could not be written. The type %2 is not supported yet.,QFormBuilder,The property %1 could not be written. The type %2 is not supported yet.,,Свойство %1 не может быть записано. Тип %2 пока не поддерживается.,designer,,,
+a60087ed-f3f7-406e-810f-c7a63271fe9c,Invalid color map depth (%1),QTgaFile,Invalid color map depth (%1),,Неверная глубина карты цветов (%1),qtbase,,,
+e68baf72-bb55-414d-b35a-e1d4e6ec58df,Operator %1 cannot be used on type %2.,QtXmlPatterns,Operator %1 cannot be used on type %2.,,Оператор %1 нельзя применять к типу %2.,qt,,,
+1f333ec5-a122-441b-a4aa-e8b2ac4458b4,Value %1 of type %2 exceeds maximum (%3).,QtXmlPatterns,Value %1 of type %2 exceeds maximum (%3).,,Значение %1 типа %2 превышает максимальное значение (%3).,qt,,,
+218c17cf-e311-4cb5-a440-e9695d43cb31,"Connecting to host failed:
+%1",QFtp,"Connecting to host failed:
+%1",,"Ошибка подключения к хосту:
+%1",qt,,,

@@ -1,0 +1,59 @@
+{
+  "skill": "translate",
+  "version": "3.0.0-weighted-lanes",
+  "should_trigger": [
+    "英译俄",
+    "en2ru",
+    "俄文翻译列",
+    "全模型路权并发",
+    "满速翻译",
+    "全模型分路",
+    "路权并发英译俄",
+    "多模型并发翻译",
+    "把英文翻译成俄文回填 xlsx"
+  ],
+  "should_not_trigger": [
+    "中文翻英文（单模型）",
+    "JSON 缩短俄语",
+    "数据库回滚",
+    "仅精简超长 ru_RU 字段",
+    "用主力模型翻译"
+  ],
+  "acceptance": [
+    {
+      "id": "acc-001",
+      "name": "试跑占位符通过率",
+      "rule": "trial 20 条中含占位符条目 validateTranslation 通过率 ≥ 95%"
+    },
+    {
+      "id": "acc-002",
+      "name": "列结构保持",
+      "rule": "输出 xlsx 列数 ≥ 输入列数；仅更新俄文翻译列；源列不变"
+    },
+    {
+      "id": "acc-003",
+      "name": "输出命名",
+      "rule": "en2ru + xlsx 输入时输出为 {原名}_RU机翻.xlsx"
+    },
+    {
+      "id": "acc-004",
+      "name": "误触发防护",
+      "rule": "默认 mode 为 zh2en；仅显式 --mode en2ru 或用户明确英译俄时走 en2ru"
+    },
+    {
+      "id": "acc-005",
+      "name": "路权并发委托",
+      "rule": "用户未指定模型 + 多模型并发请求 → 委托「多模型并发调度」提案流程"
+    },
+    {
+      "id": "acc-006",
+      "name": "免费池隔离",
+      "rule": "翻译任务只用 models.config.json free tier 模型，不走 primary tier"
+    },
+    {
+      "id": "acc-007",
+      "name": "路权吞吐预期",
+      "rule": "3842 条 en2ru 全模型路权并发（27路）吞吐 ≥ 450 条/分钟（vs 旧版 round-robin 374 条/min）"
+    }
+  ]
+}

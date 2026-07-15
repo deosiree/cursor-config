@@ -1,0 +1,10 @@
+{
+  "skill": "excel-精简超长翻译",
+  "cases": [
+    {
+      "id": "top5-utf8-63",
+      "prompt": "把夹具前5条俄文压到UTF-8≤63并DeepSeek验证",
+      "expect": ["stillOver=0", "cjkInRu=[]", "recommendDeliver 相关字段存在"]
+    }
+  ]
+}

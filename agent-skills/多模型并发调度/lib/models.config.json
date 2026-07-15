@@ -1,0 +1,642 @@
+{
+  "_schema": "1.2",
+  "_description": "多模型并发调度 — 模型配置清单（声明式）",
+  "_note": "本文件定义所有可用模型的路数、批大小、定价、供应商、能力参数。机器人/脚本读模型列表；人类看 优势/限制/推荐场景 选模型。换模型、调路数、改定价都改本文件。.env 只存 API Key。限制标签「英翻俄时只能输出英」：translate 在 en2ru/pipeline 全模型并发时自动绕过该模型。en2ru 交付前必须经 DeepSeek-V4-Flash 质量环（scripts/remediate-en2ru-until-clean.js）；无 en2ru-quality-loop.json 不得 recommendDeliver。",
+  "providers": {
+    "xfyun": {
+      "name": "讯飞星辰",
+      "website": "https://maas.xfyun.cn/modelSquare",
+      "docsUrl": "https://www.xfyun.cn/doc/",
+      "pricingUrl": "https://maas.xfyun.cn/modelService",
+      "apiBaseUrl": "https://maas-api.cn-huabei-1.xf-yun.com/v2",
+      "apiKeyEnv": "XFYUN_API_KEY"
+    },
+    "siliconflow": {
+      "name": "硅基流动",
+      "website": "https://cloud.siliconflow.cn/me/models",
+      "docsUrl": "https://api-docs.siliconflow.cn/docs/userguide/introduction",
+      "pricingUrl": "https://cloud.siliconflow.cn/me/models",
+      "apiBaseUrl": "https://api.siliconflow.cn/v1",
+      "apiKeyEnv": "SILICONFLOW_API_KEY"
+    },
+    "zhipu": {
+      "name": "智谱AI",
+      "website": "https://bigmodel.cn/",
+      "docsUrl": "https://bigmodel.cn/dev/api/normal-model/glm-4",
+      "pricingUrl": "https://bigmodel.cn/pricing",
+      "apiBaseUrl": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "apiKeyEnv": "ZHIPU_API_KEY"
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "website": "https://deepseek.com/",
+      "docsUrl": "https://api-docs.deepseek.com/",
+      "pricingUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+      "apiBaseUrl": "https://api.deepseek.com",
+      "apiKeyEnv": "DEEPSEEK_API_KEY"
+    }
+  },
+  "tiers": {
+    "free": {
+      "label": "免费/限免模型池",
+      "description": "限免或永久免费的模型。翻译、批量审查、批量测试等简单批处理任务默认使用此池。",
+      "modelRefs": [
+        "xfyun:xophunyuan7bmt",
+        "siliconflow:tencent/Hunyuan-MT-7B",
+        "siliconflow:deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+        "siliconflow:Qwen/Qwen3-8B",
+        "siliconflow:THUDM/GLM-Z1-9B-0414",
+        "siliconflow:THUDM/GLM-4-9B-0414",
+        "siliconflow:Qwen/Qwen2.5-7B-Instruct",
+        "zhipu:glm-4-flash",
+        "zhipu:glm-4.7-flash"
+      ]
+    },
+    "primary": {
+      "label": "主力付费模型池",
+      "description": "高质量付费模型。编码、数学推理、长文创作等复杂任务默认使用此池。",
+      "modelRefs": [
+        "deepseek:deepseek-v4-pro",
+        "deepseek:deepseek-v4-flash"
+      ]
+    }
+  },
+  "models": [
+    {
+      "id": "xfyun:xophunyuan7bmt",
+      "modelName": "Hy-MT2-7B",
+      "provider": "xfyun",
+      "modelSize": "7B",
+      "capabilities": [
+        "mt"
+      ],
+      "aliases": [
+        "xophunyuan7bmt",
+        "xfyun-mt",
+        "Hy-MT2-7B",
+        "hunyuan-mt-7b-xfyun"
+      ],
+      "lanes": 20,
+      "batchSize": 100,
+      "priority": 1,
+      "tier": "free",
+      "contextLength": "8K",
+      "maxOutputTokens": 4096,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "优势": [
+        "翻译准确率高",
+        "专用翻译模型延迟低",
+        "支持大批量",
+        "讯飞星辰限免"
+      ],
+      "限制": [
+        "仅支持文本翻译",
+        "不支持通用对话/推理/编码",
+        "上下文仅 8K",
+        "未来可能转为付费",
+        "英翻俄易中文夹杂",
+        "英翻俄易假KEEP/英括注残留",
+        "英翻俄须语义验收"
+      ],
+      "推荐场景": "机器翻译专用模型（Hunyuan-MT 系列），适合中英、英俄等多语种批量翻译。是翻译类批处理任务的首选主干，可承担大量批次。en2ru 首翻可用，但交付前必须经 DeepSeek-V4-Flash 质量环验收；不可单独作为终局语义验收模型。不适合通用对话、推理、编码等任务。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "讯飞星辰限免（翻译服务 Hy-MT2-7B）。2026-07-14 仍限免，后续可能变付费。"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://maas.xfyun.cn/modelSquare",
+        "pricing": "https://maas.xfyun.cn/modelService"
+      }
+    },
+    {
+      "id": "siliconflow:tencent/Hunyuan-MT-7B",
+      "modelName": "Hunyuan-MT-7B",
+      "provider": "siliconflow",
+      "modelSize": "7B",
+      "capabilities": [
+        "mt",
+        "chat"
+      ],
+      "aliases": [
+        "Hunyuan-MT-7B",
+        "Hunyuan-MT",
+        "hunyuan-mt"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 2,
+      "tier": "free",
+      "contextLength": "8K",
+      "maxOutputTokens": 4096,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "优势": [
+        "翻译专用模型",
+        "可与讯飞 Hy-MT2-7B 并行（不同供应商）",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "仅 1 路并发",
+        "仅支持文本翻译",
+        "不支持通用对话/推理",
+        "英翻俄易中文夹杂",
+        "英翻俄易假KEEP/英括注残留",
+        "英翻俄须语义验收"
+      ],
+      "推荐场景": "翻译专用模型（Hunyuan-MT 系列），与讯飞 Hy-MT2-7B 同底层但通过硅基流动路由，可作为翻译任务的补充通道。en2ru 首翻可用，但交付前必须经 DeepSeek-V4-Flash 质量环；不可冒充终局语义验收。不适合通用对话、推理、编码。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免（翻译专用）。与讯飞 Hy-MT2-7B 同一底层但路由独立，可同时调用。"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "siliconflow:deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "modelName": "DeepSeek-R1-0528-Qwen3-8B",
+      "provider": "siliconflow",
+      "modelSize": "8B",
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ],
+      "aliases": [
+        "DeepSeek-R1-0528-Qwen3-8B",
+        "DeepSeek-R1",
+        "deepseek-r1"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 3,
+      "tier": "free",
+      "contextLength": "128K",
+      "maxOutputTokens": 8192,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "推理能力强",
+        "128K 长上下文",
+        "支持代码理解和生成",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "推理速度较慢",
+        "非翻译/写作专用",
+        "仅 1 路并发",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "逻辑推理、代码审查、复杂文本分析等需要深度思考的批处理任务。基于 Qwen3-8B + DeepSeek-R1 推理增强，适合需要多步推理的场景。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "siliconflow:Qwen/Qwen3-8B",
+      "modelName": "Qwen3-8B",
+      "provider": "siliconflow",
+      "modelSize": "8B",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "Qwen3-8B",
+        "qwen3-8b"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 4,
+      "tier": "free",
+      "contextLength": "32K",
+      "maxOutputTokens": 8192,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "通用能力强",
+        "多语言支持好",
+        "速度与质量均衡",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "上下文 32K 中等",
+        "仅 1 路并发",
+        "非推理增强",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "通用文本生成、多语言对话、轻量代码辅助。Qwen3 系列（8B）中性能均衡的基础模型，适合各类中等复杂度的批处理任务。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "siliconflow:THUDM/GLM-Z1-9B-0414",
+      "modelName": "GLM-Z1-9B-0414",
+      "provider": "siliconflow",
+      "modelSize": "9B",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "GLM-Z1-9B-0414",
+        "GLM-Z1",
+        "glm-z1"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 5,
+      "tier": "free",
+      "contextLength": "128K",
+      "maxOutputTokens": 4096,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "128K 长上下文",
+        "文档理解和 RAG 能力强",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "最大输出仅 4K",
+        "推理速度一般",
+        "仅 1 路并发",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "长文档处理、RAG 检索增强、知识库问答。128K 上下文适合需要大窗口的批处理任务（如长文摘要、多页报告分析）。输出较短，不适合需要长输出的场景。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "siliconflow:THUDM/GLM-4-9B-0414",
+      "modelName": "GLM-4-9B-0414",
+      "provider": "siliconflow",
+      "modelSize": "9B",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "GLM-4-9B-0414",
+        "GLM-4-9B",
+        "glm-4-9b"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 6,
+      "tier": "free",
+      "contextLength": "128K",
+      "maxOutputTokens": 8192,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "128K 长上下文",
+        "文案写作质量高",
+        "代码生成能力强",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "仅 1 路并发",
+        "非推理增强",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "文案写作、代码生成、通用对话。GLM-4 系列（9B）中输出质量较高的模型，适合需要自然流畅文本生成的批处理任务。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "siliconflow:Qwen/Qwen2.5-7B-Instruct",
+      "modelName": "Qwen2.5-7B-Instruct",
+      "provider": "siliconflow",
+      "modelSize": "7B",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "Qwen2.5-7B-Instruct",
+        "Qwen2.5-7B",
+        "qwen2.5-7b"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 7,
+      "tier": "free",
+      "contextLength": "32K",
+      "maxOutputTokens": 8192,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "文案写作流畅",
+        "代码生成",
+        "指令遵循好",
+        "硅基流动限免"
+      ],
+      "限制": [
+        "上下文 32K 中等",
+        "仅 1 路并发",
+        "非最新 Qwen 系列",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "文案写作、代码生成、指令遵循任务。Qwen2.5 系列（7B）中高性价比的指令微调模型，适合需要严格遵循格式要求的中等复杂度批处理。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "硅基流动限免"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://cloud.siliconflow.cn/me/models",
+        "pricing": "https://cloud.siliconflow.cn/me/models"
+      }
+    },
+    {
+      "id": "zhipu:glm-4-flash",
+      "modelName": "GLM-4-Flash",
+      "provider": "zhipu",
+      "modelSize": "未公开（Flash 系列通常为小参数高效率模型）",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "glm-4-flash",
+        "zhipu-glm4",
+        "glm4"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 8,
+      "tier": "free",
+      "contextLength": "128K",
+      "maxOutputTokens": 16384,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "优势": [
+        "128K 长上下文",
+        "最大输出 16K",
+        "支持 26 种语言",
+        "智谱官方推荐翻译场景",
+        "永久免费",
+        "官方并发保障高（V0=200, V3=3000）"
+      ],
+      "限制": [
+        "非推理模型",
+        "参数规模未公开",
+        "编码能力弱于专用代码模型",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "多语言任务（官方推荐翻译，支持 26 种语言）、数据分类、文件信息提取、通用对话。永久免费且官方并发保障高，适合作为批处理任务的高并发兜底通道。输出上限 16K，适合需要较长回复的场景。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "智谱永久免费模型。官方并发保障 V0=200，本配置保守设 1 路以与硅基模型对齐，实际可按需调高。"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://docs.bigmodel.cn/cn/guide/models/text/glm-4",
+        "pricing": "https://bigmodel.cn/pricing"
+      }
+    },
+    {
+      "id": "zhipu:glm-4.7-flash",
+      "modelName": "GLM-4.7-Flash",
+      "provider": "zhipu",
+      "modelSize": "未公开（Flash 系列通常为小参数高效率模型）",
+      "capabilities": [
+        "chat"
+      ],
+      "aliases": [
+        "glm-4.7-flash",
+        "zhipu-glm4.7",
+        "glm4.7"
+      ],
+      "lanes": 1,
+      "batchSize": 40,
+      "priority": 8,
+      "tier": "free",
+      "contextLength": "128K",
+      "maxOutputTokens": 16384,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "优势": [
+        "128K 长上下文",
+        "最大输出 16K",
+        "glm-4-flash 升级版",
+        "永久免费"
+      ],
+      "限制": [
+        "较新模型，生态和稳定性待验证",
+        "参数规模未公开",
+        "非推理模型",
+        "英翻俄时只能输出英"
+      ],
+      "推荐场景": "glm-4-flash 的升级替代，适用场景类似——多语言任务、数据分类、通用批处理。与 glm-4-flash 可互补：一个模型限流时另一个接管。",
+      "pricing": {
+        "input": 0,
+        "output": 0,
+        "unit": "per-1M-tokens",
+        "free": true,
+        "note": "智谱免费模型（glm-4-flash 的后续版本）"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://docs.bigmodel.cn/cn/guide/models/free/glm-4.7-flash",
+        "pricing": "https://bigmodel.cn/pricing"
+      }
+    },
+    {
+      "id": "deepseek:deepseek-v4-pro",
+      "modelName": "DeepSeek-V4-Pro",
+      "provider": "deepseek",
+      "modelSize": "未公开（MoE 架构，总参数 > 600B，激活参数未披露）",
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ],
+      "aliases": [
+        "v4-pro",
+        "deepseek-v4-pro",
+        "ds-v4-pro"
+      ],
+      "lanes": 500,
+      "batchSize": 40,
+      "priority": 1,
+      "tier": "primary",
+      "contextLength": "1M",
+      "maxOutputTokens": 393216,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "1M 超长上下文",
+        "深度推理能力强",
+        "支持思考模式",
+        "代码/数学顶尖水平",
+        "缓存命中极便宜（$0.0036/1M）"
+      ],
+      "限制": [
+        "付费（$0.435/$0.87 per 1M tokens）",
+        "思考模式消耗更多 output tokens",
+        "不适合批量简单任务（性价比低）"
+      ],
+      "推荐场景": "复杂编码、数学推理、长文创作、架构设计、多轮深度对话。1M 上下文和 384K 输出上限使其适合需要引用大量背景信息的单次高质量任务。不适合翻译、批量审查等简单批处理（成本过高）。",
+      "pricing": {
+        "input": 0.435,
+        "output": 0.87,
+        "unit": "per-1M-tokens",
+        "free": false,
+        "note": "缓存命中 $0.003625/1M input。并发上限 500。上下文 1M，最大输出 384K。"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://deepseek.com/",
+        "pricing": "https://api-docs.deepseek.com/quick_start/pricing"
+      }
+    },
+    {
+      "id": "deepseek:deepseek-v4-flash",
+      "modelName": "DeepSeek-V4-Flash",
+      "provider": "deepseek",
+      "modelSize": "未公开（MoE 架构，总参数 > 600B，激活参数未披露）",
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ],
+      "aliases": [
+        "v4-flash",
+        "deepseek-v4-flash",
+        "ds-v4-flash"
+      ],
+      "lanes": 2500,
+      "batchSize": 40,
+      "priority": 2,
+      "tier": "primary",
+      "contextLength": "1M",
+      "maxOutputTokens": 393216,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text",
+        "code"
+      ],
+      "优势": [
+        "1M 超长上下文",
+        "性价比极高（$0.14/$0.28 per 1M）",
+        "速度比 v4-pro 更快",
+        "并发上限 2500",
+        "缓存命中极便宜（$0.0028/1M）"
+      ],
+      "限制": [
+        "推理深度不如 v4-pro",
+        "付费",
+        "不适合作为免费池大批量首翻（成本高于 MT）"
+      ],
+      "推荐场景": "en2ru 验收与疑难重译（translate 质量环固定模型）、高速推理、批量编码辅助、轻量推理任务。v4-pro 的快速替代，成本仅约 1/3，并发上限 2500。en2ru 硬门禁失败行的整句重译与批级语义验优先用本模型；大批量首翻仍优先 free tier MT。",
+      "pricing": {
+        "input": 0.14,
+        "output": 0.28,
+        "unit": "per-1M-tokens",
+        "free": false,
+        "note": "缓存命中 $0.0028/1M input。并发上限 2500。上下文 1M，最大输出 384K。"
+      },
+      "pricing_last_checked": "2026-07-14",
+      "urls": {
+        "provider": "https://deepseek.com/",
+        "pricing": "https://api-docs.deepseek.com/quick_start/pricing"
+      }
+    }
+  ]
+}

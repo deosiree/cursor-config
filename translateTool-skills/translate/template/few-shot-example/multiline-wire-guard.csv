@@ -1,0 +1,12 @@
+id,词条,tag,英文翻译,comment,俄文翻译,词条来源,辞典名称,翻译最大长度,备注1
+ml-001,"Could not write
+%1",QtCore,"Could not write
+%1",,,,qt,,,
+ml-002,Simple one-liner,QtGui,Simple one-liner,,,,qt,,,
+ml-003,"The file '%1' could not be read:
+%2",QtCore,"The file '%1' could not be read:
+%2",,,,qt,,,
+ml-004,Insert '%1',QtWidgets,Insert '%1',,,,qt,,,
+ml-005,"<html>Line A<br/>
+Line B %1</html>",QtMultimedia,"<html>Line A<br/>
+Line B %1</html>",,,,qt,,,

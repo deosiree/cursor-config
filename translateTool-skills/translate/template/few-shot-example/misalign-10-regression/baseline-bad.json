@@ -1,0 +1,72 @@
+[
+  {
+    "id": "5a3d1d17-2c22-44d0-8900-6f5611aa7c7b",
+    "en": "Invalid QButtonGroup reference '%1' referenced by '%2'.",
+    "badRu": "Свойства флагов (Flags properties) пока не поддерживаются (Flags property are not supported yet).",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "4eed7ad4-d92d-407b-b489-25ae8e9231c6",
+    "en": "Invalid property assignment: \"%1\" is a read-only property",
+    "badRu": "Запуск (Launch)",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "6bf5b440-a1e5-49ec-9aa2-d9d316dc8152",
+    "en": "Designer UI files (*.%1);;All Files (*)",
+    "badRu": "Невозможно сохранить внешний вид при неоднородном масштабировании (Unable to preserve appearance under non-uniform scale).",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "ed506c57-5f94-4812-8bab-02c004f5e3a8",
+    "en": "Attribute group %1 already defined.",
+    "badRu": "Некорректный HTTP-запрос (Bad HTTP request)",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "6789d77a-fb65-4541-a9d4-50048b1b2f09",
+    "en": "<html>Switching to the audio playback device <b>%1</b><br/>which has higher preference or is specifically configured for this stream.</html>",
+    "badRu": "Параметр Default",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "b120a3dd-f6be-46b1-9e66-607624d21e73",
+    "en": "The property %1 could not be written. The type %2 is not supported yet.",
+    "badRu": "<html>Переключаемся на устройство воспроизведения аудио <b>%1</b><br/>",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "a60087ed-f3f7-406e-810f-c7a63271fe9c",
+    "en": "Invalid color map depth (%1)",
+    "badRu": "Функция Henkan",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "e68baf72-bb55-414d-b35a-e1d4e6ec58df",
+    "en": "Operator %1 cannot be used on type %2.",
+    "badRu": "Подробный вид элемента интерфейса (Detailed View)",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "1f333ec5-a122-441b-a4aa-e8b2ac4458b4",
+    "en": "Value %1 of type %2 exceeds maximum (%3).",
+    "badRu": "Элемент интерфейса, доступный для редактирования (Editable)",
+    "hasNewline": false,
+    "issue": "historical_row_misalignment"
+  },
+  {
+    "id": "218c17cf-e311-4cb5-a440-e9695d43cb31",
+    "en": "Connecting to host failed:\n%1",
+    "badRu": "Не удалось подключиться к хосту:",
+    "hasNewline": true,
+    "issue": "historical_row_misalignment"
+  }
+]

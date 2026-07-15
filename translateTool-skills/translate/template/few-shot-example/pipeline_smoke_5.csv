@@ -1,0 +1,6 @@
+id,词条,tag,英文翻译,comment,俄文翻译,词条来源,辞典名称,翻译最大长度
+p1,同步,UI,,,,,test,,
+p2,无法注册文件 '%1': %2,UI,,,,,test,,
+p3,是否删除配置 '%1'？,UI,,,,,test,,
+p4,打开,UI,Open,,,test,,
+p5,关闭,UI,Close,,,test,,
