@@ -43,8 +43,9 @@ function parseArgs(argv) {
     maxRounds: 3,
     skipDeepseekVerify: false,
     inPlace: false,
-    batchSize: 12,
-    concurrency: 4,
+    batchSize: 20,
+    verifyBatchSize: 0, // 0 = 整表一坨验（失败再二分）
+    concurrency: 0, // 0 = 自动 = workers.length
     force: false
   };
   const pos = [];
@@ -58,7 +59,8 @@ function parseArgs(argv) {
     else if (a === '--models') out.models = argv[++i];
     else if (a === '--limit') out.limit = Number(argv[++i]) || 0;
     else if (a === '--max-rounds') out.maxRounds = Number(argv[++i]) || 3;
-    else if (a === '--batch-size') out.batchSize = Number(argv[++i]) || 12;
+    else if (a === '--batch-size') out.batchSize = Number(argv[++i]) || 20;
+    else if (a === '--verify-batch-size') out.verifyBatchSize = Number(argv[++i]) || 0;
     else if (a === '--concurrency') out.concurrency = Math.max(1, Number(argv[++i]) || 4);
     else if (a === '--skip-deepseek-verify') out.skipDeepseekVerify = true;
     else if (a === '--in-place') out.inPlace = true;
@@ -239,6 +241,99 @@ async function verifyBatchDeepseek(items, byteLimit, worker) {
   return parsePassFail(lines, items.length);
 }
 
+/**
+ * 合并验证：默认整表（或整段）一头打完；失败则二分后并行再验。
+ * @returns {Promise<Array<{ ok: boolean, reason: string }>>} 与 idxs 对齐
+ */
+async function verifyMega(idxs, rows, args, verifyWorker) {
+  if (!idxs.length) return [];
+  const items = idxs.map((i) => ({
+    en: rows[i][args.sourceCol],
+    ru: rows[i][args.targetCol]
+  }));
+
+  const forcedChunk = args.verifyBatchSize > 0 ? args.verifyBatchSize : 0;
+
+  async function verifyChunk(sliceItems, depth) {
+    try {
+      console.log(`  DeepSeek 合并验证 ${sliceItems.length} 条 (depth=${depth})...`);
+      return await verifyBatchDeepseek(sliceItems, args.byteLimit, verifyWorker);
+    } catch (e) {
+      const msg = e && e.message ? e.message : String(e);
+      console.warn(`  ! 合并验证失败(${sliceItems.length}): ${msg.slice(0, 120)}`);
+      if (sliceItems.length <= 1) {
+        return [{ ok: false, reason: `verify_error:${msg.slice(0, 80)}` }];
+      }
+      const mid = Math.ceil(sliceItems.length / 2);
+      const [a, b] = await Promise.all([
+        verifyChunk(sliceItems.slice(0, mid), depth + 1),
+        verifyChunk(sliceItems.slice(mid), depth + 1)
+      ]);
+      return a.concat(b);
+    }
+  }
+
+  if (forcedChunk > 0 && items.length > forcedChunk) {
+    const chunks = [];
+    for (let i = 0; i < items.length; i += forcedChunk) {
+      chunks.push(items.slice(i, i + forcedChunk));
+    }
+    console.log(`  DeepSeek 按 --verify-batch-size=${forcedChunk} 分 ${chunks.length} 坨并行验`);
+    const parts = await Promise.all(chunks.map((c) => verifyChunk(c, 0)));
+    return parts.flat();
+  }
+
+  return verifyChunk(items, 0);
+}
+
+/**
+ * 硬门禁失败索引（超长/CJK/残英等）
+ */
+function scanHardFailIdxs(rows, args) {
+  const idxs = [];
+  for (let i = 0; i < rows.length; i++) {
+    const ru = String(rows[i][args.targetCol] || '');
+    if (!ru.trim()) continue;
+    const g = validateRuCompressHard(ru, rows[i][args.sourceCol], args.byteLimit);
+    if (!g.ok) idxs.push(i);
+  }
+  return idxs;
+}
+
+/**
+ * 并发缩短指定行
+ */
+async function shortenWave(todo, rows, workers, args) {
+  if (!todo.length) return 0;
+  let shortened = 0;
+  const batches = [];
+  for (let offset = 0; offset < todo.length; offset += args.batchSize) {
+    batches.push(todo.slice(offset, offset + args.batchSize));
+  }
+  console.log(`  缩短波: ${todo.length} 条 → ${batches.length} 批，并发=${args.concurrency}`);
+  await mapPool(batches, args.concurrency, async (batchIdxs, bi) => {
+    const items = batchIdxs.map((i) => ({
+      zh: rows[i][args.zhCol],
+      en: rows[i][args.sourceCol],
+      ru: rows[i][args.targetCol]
+    }));
+    try {
+      const texts = await shortenBatch(items, workers, args.byteLimit, bi % workers.length);
+      for (let j = 0; j < batchIdxs.length; j++) {
+        const i = batchIdxs[j];
+        const next = stripEn2RuEnglishGlossParen(texts[j]).text.trim();
+        if (!next) continue;
+        const gate = validateRuCompressHard(next, rows[i][args.sourceCol], args.byteLimit);
+        rows[i][args.targetCol] = gate.ok ? gate.text : next;
+        shortened += 1;
+      }
+    } catch (e) {
+      console.warn(`  批失败 #${bi}: ${e.message}`);
+    }
+  });
+  return shortened;
+}
+
 function unifyByZh(rows, args) {
   /** @type {Map<string, string>} */
   const best = new Map();
@@ -318,7 +413,11 @@ async function main() {
     multiModel: args.multiModel,
     models: args.models
   });
+  if (!args.concurrency || args.concurrency < 1) {
+    args.concurrency = Math.max(workers.length, 1);
+  }
   console.log(`缩短 workers (${workers.length}): ${workers.map((w) => w.id).join(', ') || '(none)'}`);
+  console.log(`并发批数=${args.concurrency}，batchSize=${args.batchSize}`);
 
   let verifyWorker = null;
   if (!args.skipDeepseekVerify) {
@@ -340,132 +439,78 @@ async function main() {
     recommendDeliver: false
   };
 
-  /** @type {Set<number>} */
-  let dsRetryIdxs = new Set();
+  /**
+   * 迭代：pending=硬失败∪DS失败 → free并发缩短 → DeepSeek整表一头验 → 更新pending。
+   */
+  let deepseekFailNotes = 0;
+  /** @type {number[]} */
+  let pending = scanHardFailIdxs(rows, args);
 
   for (let round = 1; round <= args.maxRounds; round++) {
-    let overIdxs = scanOverlong(rows, args);
-    // 也把硬门禁失败的纳入本轮缩短
-    const hardFailIdxs = [];
-    for (let i = 0; i < rows.length; i++) {
-      const ru = String(rows[i][args.targetCol] || '');
-      if (!ru.trim()) continue;
-      const g = validateRuCompressHard(ru, rows[i][args.sourceCol], args.byteLimit);
-      if (!g.ok && !overIdxs.includes(i)) hardFailIdxs.push(i);
-    }
-    const todo = [...new Set([...overIdxs, ...hardFailIdxs, ...dsRetryIdxs])];
-    console.log(
-      `\n=== Round ${round}/${args.maxRounds}: 待处理 ${todo.length} (over=${overIdxs.length}, hardFailExtra=${hardFailIdxs.length}, dsRetry=${dsRetryIdxs.size}) ===`
-    );
-
-    if (todo.length === 0) {
-      verifyLog.rounds.push({ round, shortened: 0, stillTodo: 0 });
-      break;
-    }
-    dsRetryIdxs = new Set();
+    console.log(`\n=== Round ${round}/${args.maxRounds} pending=${pending.length} ===`);
 
     let shortened = 0;
-    const batches = [];
-    for (let offset = 0; offset < todo.length; offset += args.batchSize) {
-      batches.push(todo.slice(offset, offset + args.batchSize));
+    if (pending.length > 0) {
+      shortened = await shortenWave(pending, rows, workers, args);
+      console.log(`  缩短完成: ${shortened}`);
     }
-    console.log(`  批次数=${batches.length}，并发=${args.concurrency}`);
 
-    await mapPool(batches, args.concurrency, async (batchIdxs, bi) => {
-      const items = batchIdxs.map((i) => ({
-        rowIndex: i,
-        zh: rows[i][args.zhCol],
-        en: rows[i][args.sourceCol],
-        ru: rows[i][args.targetCol]
-      }));
-      try {
-        const texts = await shortenBatch(items, workers, args.byteLimit, bi);
-        for (let j = 0; j < batchIdxs.length; j++) {
-          const i = batchIdxs[j];
-          const next = stripEn2RuEnglishGlossParen(texts[j]).text.trim();
-          const gate = validateRuCompressHard(next, rows[i][args.sourceCol], args.byteLimit);
-          if (gate.ok) {
-            rows[i][args.targetCol] = gate.text;
-            shortened += 1;
-          } else if (next) {
-            rows[i][args.targetCol] = next;
-            shortened += 1;
-          }
-        }
-      } catch (e) {
-        console.warn(`  批失败 #${bi}: ${e.message}`);
-      }
-      if ((bi + 1) % 5 === 0 || bi === batches.length - 1) {
-        const ck = path.join(args.outputDir, `_checkpoint_r${round}.json`);
-        fs.writeFileSync(
-          ck,
-          JSON.stringify(
-            {
-              round,
-              doneBatches: bi + 1,
-              totalBatches: batches.length,
-              stillOver: scanOverlong(rows, args).length
-            },
-            null,
-            2
-          ),
-          'utf8'
-        );
-        console.log(`  checkpoint ${bi + 1}/${batches.length} stillOver≈${scanOverlong(rows, args).length}`);
-      }
-    });
-
-    // DeepSeek 批验：对本轮涉及的已缩短且硬门禁过的行（或仍超的抽检）
+    /** @type {Set<number>} */
+    const dsFail = new Set();
     if (verifyWorker) {
-      const candidates = todo
-        .map((i) => i)
-        .filter((i) => {
-          const g = validateRuCompressHard(
-            rows[i][args.targetCol],
-            rows[i][args.sourceCol],
-            args.byteLimit
-          );
-          return g.ok;
-        });
-      /** @type {number[][]} */
-      const verifyBatches = [];
-      for (let offset = 0; offset < candidates.length; offset += args.batchSize) {
-        verifyBatches.push(candidates.slice(offset, offset + args.batchSize));
-      }
-      await mapPool(verifyBatches, Math.min(2, args.concurrency), async (batchIdxs) => {
-        const items = batchIdxs.map((i) => ({
-          en: rows[i][args.sourceCol],
-          ru: rows[i][args.targetCol]
-        }));
-        try {
-          console.log(`  DeepSeek 验证 ${items.length} 条...`);
-          const verdicts = await verifyBatchDeepseek(items, args.byteLimit, verifyWorker);
-          for (let j = 0; j < batchIdxs.length; j++) {
-            if (!verdicts[j].ok) {
-              appendNote(rows[batchIdxs[j]], `ds_fail:${verdicts[j].reason || 'fail'}`);
-              dsRetryIdxs.add(batchIdxs[j]);
-            } else {
-              const note = String(rows[batchIdxs[j]][COL_NOTE] || '');
-              if (note.includes('ds_fail:')) {
-                rows[batchIdxs[j]][COL_NOTE] = note
-                  .split(';')
-                  .map((x) => x.trim())
-                  .filter((x) => x && !x.startsWith('ds_fail:'))
-                  .join(';');
-              }
-            }
+      const allIdxs = rows.map((_, i) => i).filter((i) => String(rows[i][args.targetCol] || '').trim());
+      console.log(`  DeepSeek 整表合并验证 ${allIdxs.length} 条（一头/失败再二分）...`);
+      const verdicts = await verifyMega(allIdxs, rows, args, verifyWorker);
+      for (let j = 0; j < allIdxs.length; j++) {
+        const i = allIdxs[j];
+        if (!verdicts[j] || !verdicts[j].ok) {
+          dsFail.add(i);
+          appendNote(rows[i], `ds_fail:${(verdicts[j] && verdicts[j].reason) || 'fail'}`);
+        } else {
+          const note = String(rows[i][COL_NOTE] || '');
+          if (note.includes('ds_fail:')) {
+            rows[i][COL_NOTE] = note
+              .split(';')
+              .map((x) => x.trim())
+              .filter((x) => x && !x.startsWith('ds_fail:'))
+              .join(';');
           }
-        } catch (e) {
-          console.warn(`  DeepSeek 验证失败: ${e.message}`);
         }
-      });
+      }
+      deepseekFailNotes = dsFail.size;
     }
+
+    const hardAfter = scanHardFailIdxs(rows, args);
+    pending = [...new Set([...hardAfter, ...dsFail])];
+    console.log(`  结果: hardFail=${hardAfter.length} dsFail=${dsFail.size} nextPending=${pending.length}`);
 
     verifyLog.rounds.push({
       round,
       shortened,
-      stillTodo: scanOverlong(rows, args).length
+      hardFail: hardAfter.length,
+      dsFail: dsFail.size,
+      stillTodo: pending.length
     });
+    fs.writeFileSync(
+      path.join(args.outputDir, `_checkpoint_r${round}.json`),
+      JSON.stringify(
+        {
+          round,
+          shortened,
+          hardFail: hardAfter.length,
+          dsFail: dsFail.size,
+          stillTodo: pending.length
+        },
+        null,
+        2
+      ),
+      'utf8'
+    );
+
+    if (pending.length === 0) {
+      console.log(`  ✅ 全清`);
+      break;
+    }
   }
 
   // 最终截断兜底（仍超字节）
@@ -478,7 +523,6 @@ async function main() {
       appendNote(rows[i], 'truncate_fallback');
       truncateCount += 1;
     }
-    // 剥括注后再判
     const gate = validateRuCompressHard(rows[i][args.targetCol], rows[i][args.sourceCol], args.byteLimit);
     if (gate.text !== String(rows[i][args.targetCol] || '')) {
       rows[i][args.targetCol] = gate.text;
@@ -488,7 +532,20 @@ async function main() {
   const unified = unifyByZh(rows, args);
   console.log(`\n同词条统一最短合规俄文: ${unified} 行；截断兜底: ${truncateCount}`);
 
-  // 终验
+  // 截断后再整表验一次（仍一头）
+  if (verifyWorker && truncateCount > 0) {
+    console.log(`截断后整表合并复验...`);
+    const allIdxs = rows.map((_, i) => i).filter((i) => String(rows[i][args.targetCol] || '').trim());
+    const verdicts = await verifyMega(allIdxs, rows, args, verifyWorker);
+    deepseekFailNotes = 0;
+    for (let j = 0; j < allIdxs.length; j++) {
+      if (!verdicts[j] || !verdicts[j].ok) {
+        deepseekFailNotes += 1;
+        appendNote(rows[allIdxs[j]], `ds_fail:${(verdicts[j] && verdicts[j].reason) || 'fail'}`);
+      }
+    }
+  }
+
   const stillOver = [];
   const cjkInRu = [];
   const residualEn = [];
@@ -502,7 +559,8 @@ async function main() {
     if (g.ok) rows[i][args.targetCol] = g.text;
   }
 
-  const dsFailed = rows.filter((r) => String(r[COL_NOTE] || '').includes('ds_fail')).length;
+  const dsFailed =
+    deepseekFailNotes || rows.filter((r) => String(r[COL_NOTE] || '').includes('ds_fail')).length;
   verifyLog.final = {
     stillOver: stillOver.length,
     stillOverRows: stillOver.slice(0, 40),
@@ -519,8 +577,8 @@ async function main() {
     residualEn.length === 0 &&
     glossParen.length === 0 &&
     !!verifyWorker &&
-    !args.skipDeepseekVerify;
-
+    !args.skipDeepseekVerify &&
+    dsFailed === 0;
   const base = path.basename(abs, path.extname(abs));
   const outXlsx = path.join(args.outputDir, `${base}_已压63.xlsx`);
   const outCsv = path.join(args.outputDir, `${base}_已压63.csv`);
