@@ -17,3 +17,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-16T00:45	8dd013a	昂惠的工作周报-生成	79.0	80.5	keep	D7	添加资源索引表 (7.0→8.0)	dry_run
 2026-07-16T00:50	e1bdf94	昂惠的工作周报-聚合	84.8	85.8	keep	D6	添加资源索引表 (6.0→8.0)	dry_run
 2026-07-15T20:05	b72a69b	按顺序cherry-pick到其他分支	62.8	85.5	keep	D4+D3+D5	3rounds HL1/2+dim5; eval dry_run; stop>=85	dry_run
+2026-07-15T20:10	116d2a5	按顺序cherry-pick到其他分支	85.5	86.9	keep	D1	frontmatter should-not; dry_run	dry_run
