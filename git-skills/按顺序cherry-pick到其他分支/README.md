@@ -18,10 +18,11 @@
 | 已提交 commit → 另一分支（单挑 / 列表 / 区间） | 未提交工作区的 stash 搬运 |
 | 冲突门控与 continue/abort/quit 指引 | 交互式 rebase、改写历史 |
 | 可选 push / 删源分支（须明确授权） | 默认自动 push 或删分支 |
-| — | 跨仓批提交文案编排（见下方邻近 skill） |
+| — | 整支 merge + 删临时分支（见 merge skill） |
 
 邻近 skill：
 
+- [[../merge临时分支到主分支并删除临时分支/SKILL.md]]：整支合入并删临时分支
 - `git-commit-batching-workflow`：管「未提交改动如何批提交文案与命令」
 - 本 skill：管「**已有 commit** 如何按序落到另一分支」
 

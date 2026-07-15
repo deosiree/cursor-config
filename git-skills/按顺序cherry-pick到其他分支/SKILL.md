@@ -1,6 +1,6 @@
 ---
 name: 按顺序cherry-pick到其他分支
-description: 当需要把已落地的一个或多个 commit 按从旧到新顺序复制到另一分支（单挑、列表或多连续区间）、禁止用 stash/reset 掏已提交改动、处理 cherry-pick 冲突 continue/abort/quit，以及默认不 push、仅在明确要求时删源分支时使用。触发词：cherry-pick、按序捡提交、挪到另一分支、不要 stash 搬 commit。不要用于：尚未 commit 的本地改动、用户明确要求整支 merge、交互式 rebase/-i 改写历史。
+description: 当需要把已落地的一个或多个 commit 按从旧到新顺序复制到另一分支（单挑、列表或多连续区间）、禁止用 stash/reset 掏已提交改动、处理 cherry-pick 冲突 continue/abort/quit，以及默认不 push、仅在明确要求时删源分支时使用。触发词：cherry-pick、按序捡提交、挪到另一分支、不要 stash 搬 commit。不要用于：尚未 commit 的本地改动、整支 merge 并删临时分支（改用 merge临时分支到主分支并删除临时分支）、交互式 rebase/-i 改写历史。
 ---
 
 # 目标
@@ -16,7 +16,8 @@ description: 当需要把已落地的一个或多个 commit 按从旧到新顺�
 ## 何时不要使用
 
 - 改动尚未 commit
-- 用户明确要整支 `merge` / `rebase` / `rebase -i`
+- 用户明确要整支 `merge` 并删临时分支 → [[../merge临时分支到主分支并删除临时分支/SKILL.md]]
+- 用户明确要 `rebase` / `rebase -i`
 
 ## 输入契约
 
@@ -95,7 +96,7 @@ description: 当需要把已落地的一个或多个 commit 按从旧到新顺�
 | 场景 | 做法 |
 | --- | --- |
 | 只要部分/指定顺序 commit | 本 skill |
-| 用户明确整支 merge | 尊重 merge |
+| 整支合入 + 删临时分支 | [[../merge临时分支到主分支并删除临时分支/SKILL.md]] |
 | 「合并但只要某几次」 | 本 skill |
 
 ## 输出契约（每轮必出）
