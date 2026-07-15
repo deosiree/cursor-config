@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "对 misalign-10-regression 这 10 条历史串行毒行做 en2ru，再跑译后防错位验证，确认不会再张冠李戴",
+    "expected": "俄文填满；占位符齐套；acceptanceReport.pass=true；stillLooksMisaligned=[]"
+  },
+  {
+    "id": 2,
+    "prompt": "含换行的 Connecting to host failed:\\n%1 译完后俄文不得残留 ⟦__NL__⟧，且必须保留 %1",
+    "expected": "residualNlTokens=[]；该 id 占位符校验通过；换行数与英源一致"
+  },
+  {
+    "id": 3,
+    "prompt": "en2ru 交付前：verify 有 cjkInRu 或空行时，跑质量环直到 recommendDeliver=true",
+    "expected": "remediate-en2ru-until-clean 写出 en2ru-quality-loop.json pass=true；再 verify recommendDeliver=true；cjkInRu=[]"
+  }
+]

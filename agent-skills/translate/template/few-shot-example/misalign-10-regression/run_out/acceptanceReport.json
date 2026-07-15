@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "total": 10,
+  "filled": 10,
+  "empty": 0,
+  "placeholderFails": [],
+  "dirtyWrites": [],
+  "residualNlTokens": [],
+  "stillLooksMisaligned": [],
+  "enEchoFails": [],
+  "englishGlossParens": [],
+  "cjkInRu": [],
+  "nlParityFails": [],
+  "suspectMisalign": [],
+  "qualityFails": [],
+  "mixedLatinInRu": [
+    "5a3d1d17-2c22-44d0-8900-6f5611aa7c7b",
+    "6789d77a-fb65-4541-a9d4-50048b1b2f09"
+  ],
+  "failIds": [],
+  "recommendDeliver": false,
+  "semanticLoopDone": false
+}

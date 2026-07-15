@@ -1,0 +1,31 @@
+{
+  "startedAt": "2026-07-15T07:28:47.670Z",
+  "verifyModel": "deepseek:deepseek-v4-flash",
+  "rounds": [
+    {
+      "round": 1,
+      "phase": "retranslate",
+      "failIds": 6,
+      "filled": 5
+    },
+    {
+      "round": 2,
+      "phase": "retranslate",
+      "failIds": 1,
+      "filled": 1
+    },
+    {
+      "round": 3,
+      "phase": "semantic_ok",
+      "failIds": 0
+    },
+    {
+      "round": 3,
+      "phase": "done",
+      "failIds": 0,
+      "empty": 0
+    }
+  ],
+  "pass": true,
+  "finishedAt": "2026-07-15T07:29:46.840Z"
+}
