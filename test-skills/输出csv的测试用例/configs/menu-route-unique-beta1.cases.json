@@ -1,0 +1,123 @@
+{
+  "moduleId": "menu-route-unique-beta1",
+  "source": "菜单管理 routePath 按 type 分流唯一性（chkPathDup/chkAncPath，2026-07-15）",
+  "fieldDefaults": {
+    "标签": "1",
+    "执行方式": "4",
+    "最新结果": "0",
+    "创建人员": "惠岩",
+    "子系统": "17",
+    "模块名": "菜单管理界面",
+    "重试次数": "0",
+    "超时时间": "60",
+    "审核状态": "0",
+    "自测结果": "0",
+    "支持系统": "0"
+  },
+  "cases": [
+    {
+      "name": "菜单表单-新增页面填同项目已占用路由路径-提示路径已存在",
+      "featureSet": "表单校验",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 sys:menu:add、sys:menu:query\n2. 当前项目下已存在页面节点，路由路径为 /beta1/page-a\n3. 已进入「系统管理」>「菜单管理」并选中该项目",
+      "steps": "1. 点击「新增」，类型选择「页面」\n2. 填写合法菜单名称与其它必填项\n3. 路由路径输入 /beta1/page-a\n4. 失焦或点击「确定」",
+      "expected": "1. 路由路径字段下方红字提示「当前项目下的路由路径已存在」\n2. 弹窗不关闭，未新增成功",
+      "reserve1": "ui",
+      "sortOrder": 1,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "chkPathDup：directory/page 同项目唯一"
+    },
+    {
+      "name": "菜单表单-新增目录填同项目已占用路由路径-提示路径已存在",
+      "featureSet": "表单校验",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备 add、query\n2. 当前项目已存在目录或页面占用 /beta1/dir-a\n3. 已进入菜单管理该项目",
+      "steps": "1. 点击「新增」，类型选择「目录」\n2. 填写合法名称与必填项\n3. 路由路径输入 /beta1/dir-a\n4. 点击「确定」",
+      "expected": "1. 红字提示「当前项目下的路由路径已存在」\n2. 未保存成功",
+      "reserve1": "ui",
+      "sortOrder": 2,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "chkPathDup 覆盖 directory"
+    },
+    {
+      "name": "功能项-路由路径复用无关页面路径-不报同项目路径已存在",
+      "featureSet": "表单校验",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录且具备权限配置相关权限\n2. 项目中页面 A 路由为 /beta1/page-a\n3. 另有页面 B（父级），其路径与 /beta1/page-a 不同\n4. 在页面 B 下打开权限配置准备新增功能项",
+      "steps": "1. 新增功能项\n2. 填写名称与权限标识（同级唯一）\n3. 路由路径填写 /beta1/page-a（与父链路径不同）\n4. 失焦查看校验，再点「确定」",
+      "expected": "1. 路由路径处不出现「当前项目下的路由路径已存在」\n2. 若其它字段合法，可保存成功（或仅后端其它规则拦截，非本前文案）",
+      "reserve1": "ui",
+      "sortOrder": 3,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "function 不参与 dir/page 全项目 chkPathDup"
+    },
+    {
+      "name": "功能项-路由路径与直接父级相同-提示不能与父链上的路由路径相同",
+      "featureSet": "表单校验",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录\n2. 父页面路由路径为 /beta1/parent\n3. 在该页面下打开权限配置/新增功能项",
+      "steps": "1. 新增功能项，填写名称与合法权限标识\n2. 路由路径输入 /beta1/parent\n3. 失焦或点击「确定」",
+      "expected": "1. 路由路径下方红字提示「不能与父链上的路由路径相同」\n2. 弹窗不关闭，未保存成功",
+      "reserve1": "ui",
+      "sortOrder": 4,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "chkAncPath 直接父节点"
+    },
+    {
+      "name": "功能项-路由路径与祖父目录相同-提示不能与父链上的路由路径相同",
+      "featureSet": "表单校验",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录\n2. 目录 D 路径 /beta1/root，其子页面 P 路径 /beta1/parent\n3. 在页面 P 下新增功能项",
+      "steps": "1. 新增功能项并填写必填项\n2. 路由路径输入 /beta1/root\n3. 失焦或提交",
+      "expected": "1. 红字提示「不能与父链上的路由路径相同」\n2. 未保存成功",
+      "reserve1": "ui",
+      "sortOrder": 5,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "chkAncPath 祖父节点"
+    },
+    {
+      "name": "功能项-填写通配路由且不在父链-前端语法与父链校验通过",
+      "featureSet": "表单校验",
+      "direction": "正向",
+      "level": 0,
+      "precondition": "1. 用户已登录\n2. 父页面路径为 /beta1/parent（非待填通配串）\n3. 在该父下新增功能项",
+      "steps": "1. 新增功能项，填名称与唯一权限标识\n2. 路由路径输入 /beta1/parent/*\n3. 失焦观察，再点「确定」",
+      "expected": "1. 路由路径无「路径段格式不对」「不能与父链上的路由路径相同」「当前项目下的路由路径已存在」\n2. 其它字段合法时可保存成功",
+      "reserve1": "ui",
+      "sortOrder": 6,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "fuzzy * + chkAncPath 非全等通过"
+    },
+    {
+      "name": "功能项-切换父级后父链冲突校验随父链变化",
+      "featureSet": "表单校验",
+      "direction": "边界",
+      "level": 0,
+      "precondition": "1. 用户已登录且可切换功能项父级\n2. 页面 P1 路径 /beta1/p1，页面 P2 路径 /beta1/p2\n3. 正编辑或新增挂在 P1 下的功能项",
+      "steps": "1. 将路由路径设为 /beta1/p1，确认出现「不能与父链上的路由路径相同」\n2. 将父级改为 P2（或等价切换使父链不再含 /beta1/p1）\n3. 再次观察路由路径校验或失焦重验",
+      "expected": "1. 父级为 P1 且 path=/beta1/p1 时出现父链冲突提示\n2. 父级改为 P2 后，同一路径 /beta1/p1 不再报「不能与父链上的路由路径相同」",
+      "reserve1": "ui",
+      "sortOrder": 7,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "handleParentIdUserChange 重验 routePath"
+    },
+    {
+      "name": "功能项-同级权限标识重复-提示权限标识不能重复",
+      "featureSet": "表单校验",
+      "direction": "逆向",
+      "level": 0,
+      "precondition": "1. 用户已登录\n2. 同一父页面下已有功能项权限标识 beta1:edit\n3. 在该父下再新增功能项",
+      "steps": "1. 新增功能项\n2. 权限标识填写 beta1:edit\n3. 失焦或提交",
+      "expected": "1. 权限标识下方红字提示「权限标识不能重复」\n2. 未保存成功",
+      "reserve1": "ui",
+      "sortOrder": 8,
+      "env": "测试环境；路由 /Apex/system/menu",
+      "purpose": "createMenuSiblingPermUniqueRules 保留"
+    }
+  ]
+}
