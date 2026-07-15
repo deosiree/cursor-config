@@ -8,11 +8,11 @@ metadata:
     last_eval: 2026-07-15
     baseline_score: 76.8
     round1_score: 83.5
-    round2_score: null
-    final_score: null
-    rounds: 1
+    round2_score: 86.8
+    final_score: 86.8
+    rounds: 2
     hl4_reached: false
-    stop_reason: "in_progress after quality-loop doc wiring"
+    stop_reason: "independent judge >=85 (STOP_THRESHOLD); weakest d7 redundancy"
     full_tests:
       - batch-wire-multiline
       - test-en2ru-residual

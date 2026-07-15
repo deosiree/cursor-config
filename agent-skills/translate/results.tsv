@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-07-15T16:05	rebase-ql	translate	-	76.8	baseline	dim8	质量环已落地但主SKILL未接线；独立judge重基线	full_test_inferred
+2026-07-15T16:12	r1-ql	translate	76.8	83.5	keep	dim8	主入口接remediate质量环CLI/交付门禁/CJK证据	full_test_inferred
+2026-07-15T16:20	3280240	translate	83.5	86.8	keep	dim8	quality-loop.example入库+misalign契约澄清	full_test_inferred
+2026-07-15T16:21	stop	translate	86.8	86.8	stop	threshold>=85	STOP_THRESHOLD；下一最弱d7精简预期Δ<2	full_test_inferred
