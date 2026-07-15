@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "源分支 auto-optimize/20260715-1605-translate，目标 main。把相对 main 超前的提交按旧到新 cherry-pick 过去；先不要 push，也不要删分支。工作树如果还不干净请先停下告诉我。",
+    "expected": "先 status 查脏树；若脏则 blocked 并列脏文件；若干净则输出 old→new 清单并 🔴 等待确认后再 cherry-pick；默认不 push。"
+  },
+  {
+    "id": 2,
+    "prompt": "我只要 feature 上 abc1111 到 abc3333 这三次连续提交，按顺序捡到 develop。有冲突的话别擅自 abort，先问我。",
+    "expected": "确认三 hash 顺序；checkout develop；cherry-pick abc1111^..abc3333；冲突时停在 conflict 并给出 continue/abort/quit 选择，不擅自 abort。"
+  },
+  {
+    "id": 3,
+    "prompt": "临时分支历史很乱，主仓还有一堆未提交文件。我想先用历史版本沙盒测一下 cherry-pick skill 流程，别动我的暂存区。",
+    "expected": "不碰脏主树；提议短路径 worktree + core.longpaths；列出基座与待挑 commits；确认后沙盒执行；测完可清理分支/worktree。"
+  }
+]
