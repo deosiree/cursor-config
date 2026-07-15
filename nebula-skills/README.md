@@ -20,6 +20,8 @@
    - 面向：新增接口接入、稳定类型补齐、gateway 映射与业务替换点设计
 7. `api-gateway-deprecate`
    - 面向：旧版本接口下线后的旧兼容层、旧 API、旧测试与旧 mock 退化清理
+8. `菜单节点的唯一性和有效性校验`
+   - 面向：按文档规则做菜单唯一性/有效性只读扫描（YAML→JSON→scan）、`page.combo` 解读，以及表单 `chkPathDup`/`chkAncPath` 对齐
 
 ## 使用示例
 1. `使用 $route-api-gateway 根据当前 API 分层链路场景推荐应该执行新增还是退化 skill。`
@@ -29,6 +31,7 @@
 5. `使用 $create-mock-module 为未入 Swagger 的接口增加模块级 mock 开关，并避免误 mock 已有真实接口。`
 6. `使用 $api-gateway-add 为新接口输出 api/types/gateway/business 四层最小改动设计。`
 7. `使用 $api-gateway-deprecate 结合契约判定旧兼容层、旧 API 和旧测试的退化边界。`
+8. `使用 $菜单节点的唯一性和有效性校验 按文档扫导出菜单 YAML，并区分单项目合规与跨项目 page.combo。`
 
 ## 维护规则
 1. 业务规则变更时优先更新这里，再决定是否回流到通用 skills。

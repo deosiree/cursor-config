@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "按《前端的表单校验规则》只读扫描 docs/menu/t-cloud 下 YAML：先转 JSON，再扫 platform 单文件，报告违规码与是否合规。",
+    "expected": "先 convert 再 scan；单文件 0 命中（或按实际报告）；不用 seccenter 全表 perm；给出命令与退出码解读。"
+  },
+  {
+    "id": 2,
+    "prompt": "我把各项目合成了 _all.json，扫出大量 page.combo。是不是 platform 菜单脏了？要不要全改 path？",
+    "expected": "STOP/CHECKPOINT：先对照分文件结果；说明跨项目组合；确认同库共存后再谈改配置/放宽；不把跨项目 combo 当单项目脏数据。"
+  },
+  {
+    "id": 3,
+    "prompt": "新增 function 时提示路由路径与同项目其他菜单重复，但文档说 function 只需不与父链冲突。表单该怎么挂规则？",
+    "expected": "dir/page 用 chkPathDup；function 用 chkAncPath + fuzzy；保留 perm 同级唯一；指出误挂 chkPathDup 是根因。"
+  }
+]
