@@ -5,132 +5,116 @@ description: 当需要把已落地的一个或多个 commit 按从旧到新顺�
 
 # 目标
 
-把**已经落地的 commit**按顺序应用到目标分支，生成新的 commit；不卷进当前分支杂乱历史，也不用 stash 冒充“搬运提交”。
+把已落地 commit 按序应用到目标分支并生成新 commit；禁止 stash 搬运已落地提交。
 
 ## 何时使用
 
-- 只要某一次或某几次已提交改动，落到 `main` / `develop` 等另一分支
-- 临时分支历史“脏”，只需其中连续或离散的若干 commit
-- 用户说「cherry-pick」「挪到另一分支」「按顺序捡提交」「不要 stash 搬已落地 commit」
+- 只要部分已提交改动落到 `main`/`develop`
+- 临时分支历史杂乱，只需其中若干 commit
+- 用户说 cherry-pick / 按序捡提交 / 挪到另一分支 / 不要 stash 搬 commit
 
 ## 何时不要使用
 
-- 改动**尚未 commit**（走提交工作流，不是本 skill）
-- 用户明确要求整支 `merge` / `rebase` / 交互式改写历史
-- 需要拆改单个 commit 内容或 `rebase -i`（超出本 skill）
+- 改动尚未 commit
+- 用户明确要整支 `merge` / `rebase` / `rebase -i`
 
 ## 输入契约
 
-必须解析（缺失则 **🛑 STOP** 询问，不猜测）：
+缺任一必填 → **🛑 STOP** 追问，禁止猜测：
 
-| 字段 | 说明 |
-| --- | --- |
-| `repo` | 仓库绝对路径 |
-| `source_branch` | 源分支（含待挑 commit） |
-| `target_branch` | 目标分支 |
-| `commits` | hash 列表，或连续区间的 oldest…newest |
-| `pull_target` | 是否先 `pull`（默认 `false`） |
-| `push` | 是否 push（默认 `false`） |
-| `delete_source_branch` | 是否删源分支（默认 `false`） |
+| 字段 | 必填 | 默认 |
+| --- | --- | --- |
+| `repo` | 是 | — |
+| `source_branch` | 是 | — |
+| `target_branch` | 是（正式）/沙盒测试分支名 | — |
+| `commits` | 是（列表或 oldest…newest） | — |
+| `pull_target` | 否 | `false` |
+| `push` | 否 | `false` |
+| `delete_source_branch` | 否 | `false` |
 
 ## 硬约束
 
-1. **工作树必须干净**：有未提交改动 → 列出脏文件并 **🛑 STOP**；**禁止**用 stash/reset 把已落地 commit「掏出来」再 pop。
-2. **顺序固定**：始终 **old → new**；连续区间使用 `oldest^..newest`（**含** oldest 与 newest）。
-3. **先清单后执行**：见下方 🔴 CHECKPOINT-1。
-4. **冲突不擅自 abort**：见 🔴 CHECKPOINT-2。
-5. **默认不 push**；**默认不删源分支**（见 🔴 CHECKPOINT-3）。
-6. **不**做 `rebase -i`、强推、改写无关历史。
+1. 正式合入时工作树必须干净；脏 → 列路径 **🛑 STOP**；禁止 stash/reset 掏已落地 commit。
+2. 顺序必须 old→new；区间必须 `oldest^..newest`（含两端）。
+3. 先过 🔴 CHECKPOINT-1，再 checkout/cherry-pick。
+4. 冲突只走 🔴 CHECKPOINT-2；禁止擅自 `--abort`。
+5. push/删源分支只走 🔴 CHECKPOINT-3。
+6. 禁止 `rebase -i`、强推、改写无关历史。
 
-## 失败模式（三段式 fallback）
+## 失败模式（三段式）
 
 | 触发条件 | 一线修复 | 仍失败兜底 |
 | --- | --- | --- |
-| `git status` 非空（正式合入） | 列出脏路径，`status=blocked`，**🛑 STOP**；请用户提交或改走沙盒 | 用户仍要在脏树上挑 → **拒绝执行**；重申禁止 stash 搬已落地 commit |
-| 缺 `target_branch` 或无法解析 commits | 逐字段追问；不猜测 hash | 用户拒绝提供 → `status=blocked`，结束本轮 |
-| `git rev-parse` / hash 在仓库中不存在 | 用 `git log --oneline <source>` 重列候选，请用户改选 | 仍无效 → **🛑 STOP**，不执行 cherry-pick |
-| `git checkout <target>` 失败 | 报告错误；检查分支名/`git branch -a` | 无法切到目标 → `status=blocked`，不继续 |
-| Windows worktree `Filename too long` | 换短路径（如 `f:\wt\cp`）+ `git -c core.longpaths=true`；`worktree prune` 清残局 | 仍失败 → 放弃沙盒，请用户在干净主树正式跑；见 [[references/Windows-worktree与长路径.md]] |
-| `cherry-pick` 中途冲突 | 进入 🔴 CHECKPOINT-2；按用户选 continue/abort/quit | 用户失联/无选择 → 保持冲突状态，**禁止**擅自 `--abort` |
-| `cherry-pick --continue` 因未 add 失败 | 提示 `git add` 已解决文件后重试 `--continue` | 用户改选 abort/quit → 执行对应命令 |
-| 区间方向写反或顺序新→旧 | 纠正为 old→new / `oldest^..newest`，再 🔴 CHECKPOINT-1 | 用户坚持反序 → **拒绝执行** |
+| 正式合入且 `git status --short` 非空 | `status=blocked`，列脏路径，**🛑 STOP** | 仍要脏树挑 → 拒绝；可改沙盒 |
+| 缺 `target_branch`/commits | 逐字段追问 | 拒答 → `blocked` 结束 |
+| hash `rev-parse` 失败 | `git log --oneline <source>` 重列 | 仍无效 → **🛑 STOP** |
+| `checkout` 失败 | 查 `git branch -a` | 仍失败 → `blocked` |
+| Windows `Filename too long` | 短路径如 `f:\wt\cp` + `git -c core.longpaths=true`；prune 残局 | 放弃沙盒，改干净主树；见 [[references/Windows-worktree与长路径.md]] |
+| cherry-pick 冲突 | 🔴 CHECKPOINT-2 | 无用户选择 → 保持冲突，禁擅自 abort |
+| `--continue` 因未 add 失败 | `git add <files>` 后再 `--continue` | 改 abort/quit |
+| 新→旧或区间反写 | 纠正后回 🔴 CHECKPOINT-1 | 坚持反序 → 拒绝 |
+
+详见 [[references/为何不用stash.md]]。
 
 ## 核心流程
 
-1. **输入**：解析 `repo` / 源分支 / 目标分支 / 待挑 commits。**输出**：字段表或缺字段问题。
-2. **输入**：`git status --short`。**输出**：干净或脏文件列表。
-   - 脏且用户要正式合入 → **🛑 STOP**（硬约束 1）。详见 [[references/为何不用stash.md]]。
-   - 脏且用户只要**历史沙盒测试** → worktree 沙盒，见 [[references/Windows-worktree与长路径.md]]（Windows：短路径 + `git -c core.longpaths=true`）。
-3. **输入**：源历史上的待挑 commits。**输出**：`hash + subject` 表（old→new）。
+1. 解析输入 → 输出字段表。2. `git status --short` → 干净/脏列表（脏正式合入则 STOP）。3. 列 `hash subject`（old→new）。
 
-### 🔴 CHECKPOINT-1 · 🛑 STOP：确认待挑清单
+### 🔴 CHECKPOINT-1 · 🛑 STOP：确认清单
 
-在 `git checkout` / `git cherry-pick` **之前**必须展示清单并等到用户确认（或用户消息已给出完整 hash 列表）。未确认 → 禁止执行 cherry-pick。`status=awaiting_confirm`。
+未确认（且用户未给出完整 hash 列表）→ 禁止 cherry-pick。`status=awaiting_confirm`。
 
-4. **输入**：已确认清单。**输出**：当前分支为目标分支（或沙盒分支）。
-   - 正式：`git checkout <target_branch>`；仅 `pull_target=true` 时再 `git pull`。
-   - 沙盒：在 worktree 内操作，不切换主工作区脏树。
-5. **输入**：确认后的 commits。**输出**：cherry-pick 进程结果。详见 [[references/多提交与冲突手册.md]]。
-   - 单个：`git cherry-pick <hash>`
-   - 离散：`git cherry-pick <h1> <h2> ...`（已 old→new）
-   - 连续：`git cherry-pick <oldest>^..<newest>`
+4. 正式：`git checkout <target_branch>`；仅 `pull_target=true` 时 `git pull`。沙盒：不切换主脏树，在 worktree 内操作。
+5. 按形态执行（[[references/多提交与冲突手册.md]]）：
 
-### 🔴 CHECKPOINT-2 · 🛑 STOP：冲突三叉
+| 形态 | 必须执行的命令 |
+| --- | --- |
+| 单挑 | `git cherry-pick <hash>` |
+| 离散 | `git cherry-pick <h_old> … <h_new>` |
+| 连续 | `git cherry-pick <oldest>^..<newest>` |
+| 沙盒（Windows） | `git -c core.longpaths=true worktree add -b <test_branch> <短路径> <base>` → 在该目录 `git -c core.longpaths=true cherry-pick …` → 测完 `worktree remove --force` + `branch -D <test_branch>` |
 
-若冲突：`status=conflict`，报告冲突文件，**停止**。仅在用户选定后执行其一：
+### 🔴 CHECKPOINT-2 · 🛑 STOP：冲突
 
 | 用户选择 | 命令 |
 | --- | --- |
-| 继续 | 解决冲突 → `git add <files>` → `git cherry-pick --continue` |
+| 继续 | 解决 → `git add <files>` → `git cherry-pick --continue` |
 | 全撤 | `git cherry-pick --abort` |
-| 保留已成功并退出 | `git cherry-pick --quit` |
+| 保留已成功 | `git cherry-pick --quit` |
 
-**禁止**在无人授权时执行 `--abort`。
+6. 验收：`git log -5 --oneline` + `git status` → `status=done`。
 
-6. **输入**：cherry-pick 结束。**输出**：`git log -5 --oneline` + `git status` 验收。`status=done`。
+### 🔴 CHECKPOINT-3 · 🛑 STOP：push/删源
 
-### 🔴 CHECKPOINT-3 · 🛑 STOP：push / 删源分支
+仅用户明确要求：`git push <remote> <target_branch>`；`git branch -d <source_branch>`（目标已含变更后）。默认跳过。
 
-仅当用户**明确**要求时：
-
-- `git push <remote> <target_branch>`
-- `git branch -d <source_branch>`（仅当目标分支已含所需变更）
-
-默认跳过。完整叙事见 [[template/示例-临时分支到main.md]]；清单见 [[assets/执行检查清单.md]]。
+模板 [[template/示例-临时分支到main.md]]；清单 [[assets/执行检查清单.md]]。
 
 ## 与 merge 的边界
 
 | 场景 | 做法 |
 | --- | --- |
-| 只要部分或指定顺序的 commit | **本 skill（cherry-pick）** |
-| 用户明确说整支 merge | 尊重 merge，不强行改 cherry-pick |
-| 「合并到 main 但只要某几次提交」 | 仍走本 skill |
+| 只要部分/指定顺序 commit | 本 skill |
+| 用户明确整支 merge | 尊重 merge |
+| 「合并但只要某几次」 | 本 skill |
 
-## 输出契约
+## 输出契约（每轮必出）
 
-每轮必须给出：
-
-- `currentUnderstanding`：源/目标/挑中的 commits
-- `worktreeClean`：是否干净
-- `plannedCommand`：将执行或已执行的命令
-- `status`：`blocked` | `awaiting_confirm` | `in_progress` | `conflict` | `done`
-- `nextAction`：下一步（含是否等待用户）
+`currentUnderstanding` | `worktreeClean` | `plannedCommand` | `status`∈{`blocked`,`awaiting_confirm`,`in_progress`,`conflict`,`done`} | `nextAction`
 
 ## 使用示例
 
 ```text
-源分支 auto-optimize/20260715-1605-translate，目标 main，
-把相对 main 超前的提交按旧到新 cherry-pick 过去；先不要 push。
-工作树干净后再执行。使用 $按顺序cherry-pick到其他分支。
+源分支 auto-optimize/…，目标 main，相对 main 超前提交 old→new cherry-pick；不 push。
+脏树先停。使用 $按顺序cherry-pick到其他分支。
 ```
 
 ## Red flags（不要做）
 
-| 想法 | 现实 |
+| 不要 | 要 |
 | --- | --- |
-| 「先 stash 再切分支 pop」 | 已落地 commit 用 cherry-pick，不是 stash |
-| 「从新到旧挑」 | 会破坏依赖；必须 old→new |
-| 「区间写成 newest^..oldest」 | 错误；oldest 在左 |
-| 「冲突我直接 abort」 | 须过 CHECKPOINT-2 |
-| 「合并完顺便 push/删分支」 | 须过 CHECKPOINT-3 |
-| 「跳过清单确认直接 cherry-pick」 | 须过 CHECKPOINT-1 |
+| stash 搬已落地 commit | cherry-pick |
+| 新→旧 / `newest^..oldest` | old→new / `oldest^..newest` |
+| 擅自 `--abort` | 过 CHECKPOINT-2 |
+| 擅自 push/删分支 | 过 CHECKPOINT-3 |
+| 跳过清单确认 | 过 CHECKPOINT-1 |
