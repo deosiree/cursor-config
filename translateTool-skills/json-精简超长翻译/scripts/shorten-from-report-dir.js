@@ -243,7 +243,19 @@ async function main() {
   if (worker) console.log('shorten worker:', worker.id, 'batch≤', effectiveBatch, 'parallel=', opts.parallel);
   console.log('output:', outDir);
 
-  const reports = fs.readdirSync(opts.dbDir).filter((f) => f.toLowerCase().endsWith('.report')).sort();
+  function findReports(dir, base, acc = []) {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) {
+        if (e.name === 'node_modules' || e.name.endsWith('_new')) continue;
+        findReports(full, base, acc);
+      } else if (e.isFile() && e.name.toLowerCase().endsWith('.report')) {
+        acc.push(path.relative(base, full));
+      }
+    }
+    return acc.sort();
+  }
+  const reports = findReports(opts.dbDir, opts.dbDir);
   const summary = [];
   const tAll = Date.now();
   for (const rep of reports) {
