@@ -28,5 +28,11 @@
     "name": "自定义 byteLimit",
     "input": "使用 $json-精简超长翻译\n  --inputPath test.json\n  --byteLimit 100",
     "expect": "以 100 字节为标准检测，超出标记为 overlong"
+  },
+  {
+    "id": "tp-006",
+    "name": "v2 db 目录性能缩短",
+    "input": "使用 $json-精简超长翻译 dataType=object inputPath=F:\\...\\仍然超长\\db",
+    "expect": "先 T0 规则层；仅 pending 调 LLM；DeepSeek batch≤12 parallel=3；17 unique 目标 <90s；输出 db_new/*.dic verify 全绿"
   }
 ]

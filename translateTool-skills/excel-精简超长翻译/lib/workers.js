@@ -34,16 +34,29 @@ function sortShortenWorkers(workers) {
 }
 
 /**
- * 活跃缩短 workers：multi-model free 池；显式去掉 deepseek；按稳定优先序排序
+ * 活跃缩短 workers：
+ * - models=all（默认）：free 多模型池，去掉 deepseek，按稳定优先序排序
+ * - 显式 --models 列表（非 all）：只解析该列表，不扩 free 池
  * @param {{ multiModel?: boolean, models?: string }} [options]
  */
 function resolveShortenWorkers(options = {}) {
+  const modelsRaw =
+    options.models != null && String(options.models).trim() !== ''
+      ? String(options.models).trim()
+      : 'all';
+  const isAll = /^all$/i.test(modelsRaw);
   const workers = translate.resolveActiveTranslateWorkers({
-    multiModel: options.multiModel !== false,
-    models: options.models != null ? options.models : 'all',
+    // 显式列表必须走 multiModel 分支才能按 ids 选取；all 时尊重 multiModel 开关
+    multiModel: isAll ? options.multiModel !== false : true,
+    models: modelsRaw,
     excludeEn2RuEchoOnly: false
   });
-  return sortShortenWorkers(workers.filter((w) => w.provider !== 'deepseek'));
+  const filtered = workers.filter((w) => w.provider !== 'deepseek');
+  if (!isAll) {
+    // 单点/白名单：保持用户给定顺序，不按 free 优先序重排扩池
+    return filtered;
+  }
+  return sortShortenWorkers(filtered);
 }
 
 function resolveVerifyWorker() {

@@ -32,6 +32,14 @@ const {
   saveTermDecisionCache,
   decideMissingTermsWithLlm
 } = require('./lib/en2ruTermDecide');
+const {
+  loadEntryKeepCache,
+  saveEntryKeepCache,
+  collectUniqueEntryKeepCandidates,
+  decideMissingEntryKeepWithLlm,
+  isEntryKeepByCache,
+  isEntryKeepDecideCandidate
+} = require('./lib/entryKeepDecide');
 
 /** 企业网关/自签证书场景：默认跳过 TLS 校验（可用 TRANSLATE_TLS_INSECURE=0 关闭） */
 const TLS_INSECURE = !['0', 'false', 'no', 'off'].includes(
@@ -218,10 +226,11 @@ const PROMPT_TEMPLATES = {
   single: 'prompt-single.md',
   batch: 'prompt-batch.md',
   'single-en2ru': 'prompt-single-en2ru.md',
-  'batch-en2ru': 'prompt-batch-en2ru.md'
+  'batch-en2ru': 'prompt-batch-en2ru.md',
+  'batch-zh2ru': 'prompt-batch-zh2ru.md'
 };
 
-/** 翻译模式：zh2en | en2ru | pipeline（中→英→俄流水线，共用讯飞池） */
+/** 翻译模式：zh2en | en2ru | pipeline | dual（词条→英/俄并发，共用讯飞池） */
 const MODES = {
   zh2en: {
     id: 'zh2en',
@@ -255,6 +264,17 @@ const MODES = {
     useGlossary: true,
     sourceFallbackCol: '英文翻译',
     stages: ['zh2en', 'en2ru']
+  },
+  dual: {
+    id: 'dual',
+    sourceCol: '词条',
+    targetCol: '俄文翻译',
+    skipIfFilled: true,
+    batchSize: 40,
+    batchSizeZh2en: 100,
+    batchSizeZh2ru: 20,
+    useGlossary: true,
+    stages: ['zh2en', 'zh2ru']
   }
 };
 
@@ -1855,7 +1875,10 @@ function resolveActiveTranslateWorkers(options = {}) {
 
   const modeId = String(options.mode || (options.stages && options.stages[0]) || '').trim();
   const excludeEn2RuEcho =
-    modeId === 'en2ru' || modeId === 'pipeline' || options.excludeEn2RuEchoOnly === true;
+    modeId === 'en2ru' ||
+    modeId === 'pipeline' ||
+    modeId === 'dual' ||
+    options.excludeEn2RuEchoOnly === true;
 
   const filterEcho = (workers) => {
     if (!excludeEn2RuEcho) return workers;
@@ -2361,8 +2384,15 @@ function buildBatchTranslationPrompt(entries, abbreviationMap, fullTranslationMa
     }
   }
 
-  const template = loadPromptTemplate(options.mode === 'en2ru' ? 'batch-en2ru' : 'batch');
-  const useGlossary = !(options && options.mode === 'en2ru');
+  const promptMode = options && options.mode;
+  const template = loadPromptTemplate(
+    promptMode === 'en2ru'
+      ? 'batch-en2ru'
+      : promptMode === 'zh2ru'
+        ? 'batch-zh2ru'
+        : 'batch'
+  );
+  const useGlossary = !(promptMode === 'en2ru' || promptMode === 'zh2ru');
   const relatedTermsSection = (useGlossary && relatedTermsSet.size > 0)
     ? `## 相关术语库条目\n${Array.from(relatedTermsSet).map(t => `- ${t}`).join('\n')}\n`
     : '';
@@ -2712,8 +2742,12 @@ function isAllowedEnRuIdentity(source) {
   // 字母+占位：F%1 / %1C（格式标记，通译无义）
   if (/^[A-Za-z]%\d+$/.test(s) || /^%\d+[A-Za-z]?$/.test(s)) return true;
 
-  // 缩写/协议名：TCP、SSL、HTTP/2（长度≤10，无连续小写词）
+  // 缩写/协议名：TCP、SSL、HTTP/2
+  // 纯字母全大写：仅 ≤5 视为缩写 KEEP（SSL/HTTPS/GOOSE）；BACKUP/PASSWORD 等普通词须送翻
   const bare = s.replace(/[:.…]+$/u, '');
+  if (/^[A-Z]+$/.test(bare)) {
+    return bare.length <= 5;
+  }
   if (
     bare.length <= 10 &&
     /^[A-Za-z0-9][A-Za-z0-9.\-_/]*$/.test(bare) &&
@@ -2772,6 +2806,67 @@ function isAllowedEnRuIdentity(source) {
 }
 
 const CJK_RE = /[\u4e00-\u9fff]/;
+
+/**
+ * 源为全大写英文词且译文含西里尔 → 输出全大写俄文（BACKUP → РЕЗЕРВ…）
+ * @param {string} source
+ * @param {string} translated
+ * @returns {string}
+ */
+function preserveAllCapsCyrillic(source, translated) {
+  const src = String(source || '').trim();
+  const ru = String(translated || '').trim();
+  if (!src || !ru || !CYRILLIC_RE.test(ru)) return ru;
+  // 纯大写字母/数字/少量分隔（排除 SSL 等短缩写由 KEEP 处理）
+  if (!/^[A-Z0-9][A-Z0-9_\s\-./]*$/.test(src)) return ru;
+  if (!/[A-Z]{4,}/.test(src)) return ru;
+  try {
+    return ru.toLocaleUpperCase('ru-RU');
+  } catch (_) {
+    return ru.toUpperCase();
+  }
+}
+
+/**
+ * 词条已是英文/标识符（无 CJK、可打印 ASCII、含拉丁字母）→ 英文列可直接拷贝
+ * @param {string} text
+ * @returns {boolean}
+ */
+function isLatinIdentifierCi(text) {
+  const s = String(text || '').trim();
+  if (!s || CJK_RE.test(s)) return false;
+  if (!/[A-Za-z]/.test(s)) return false;
+  return /^[\x20-\x7E]+$/.test(s);
+}
+
+/**
+ * 英文列 KEEP：无 CJK 拉丁词条可拷到英文翻译（源已是英文，不经 DeepSeek）
+ * @param {string} text
+ * @returns {boolean}
+ */
+function shouldKeepCopyEn(text) {
+  return isLatinIdentifierCi(text);
+}
+
+/**
+ * 俄文列 KEEP：仅认 DeepSeek 整词判定缓存（禁止长度/形态启发式）
+ * @param {string} text
+ * @param {Map<string, { action: string }>|null|undefined} [entryKeepCache]
+ * @returns {boolean}
+ */
+function shouldKeepCopyRu(text, entryKeepCache) {
+  return isEntryKeepByCache(text, entryKeepCache);
+}
+
+/**
+ * @deprecated 请传 entryKeepCache；无缓存时恒为 false
+ * @param {string} text
+ * @param {Map|null|undefined} [entryKeepCache]
+ * @returns {boolean}
+ */
+function shouldKeepCopyCi(text, entryKeepCache) {
+  return shouldKeepCopyRu(text, entryKeepCache);
+}
 
 /**
  * 统计文本中的换行数（\r\n 先归一）
@@ -2846,9 +2941,10 @@ function validateEn2RuQuality(originalText, translatedText) {
  * en2ru 语言门禁：拒写「英文原样回显」与「应出西里尔却无西里尔」的假译
  * @param {string} originalText
  * @param {string} translatedText
+ * @param {{ entryKeepCache?: Map }} [options]
  * @returns {{ isValid: boolean, issues: string[] }}
  */
-function validateEn2RuNotEcho(originalText, translatedText) {
+function validateEn2RuNotEcho(originalText, translatedText, options = {}) {
   const issues = [];
   const src = String(originalText || '').trim();
   const tgt = String(translatedText || '').trim();
@@ -2860,8 +2956,11 @@ function validateEn2RuNotEcho(originalText, translatedText) {
     return { isValid: true, issues: [] };
   }
 
+  const allowIdentity =
+    isAllowedEnRuIdentity(src) || isEntryKeepByCache(src, options.entryKeepCache);
+
   if (src === tgt) {
-    if (!isAllowedEnRuIdentity(src)) {
+    if (!allowIdentity) {
       issues.push('疑似未翻译（俄文与英文相同）');
     }
     return { isValid: issues.length === 0, issues };
@@ -2869,7 +2968,7 @@ function validateEn2RuNotEcho(originalText, translatedText) {
 
   const latinCount = (src.match(/[A-Za-z]/g) || []).length;
   if (latinCount >= 4 && !CYRILLIC_RE.test(tgt)) {
-    if (isAllowedEnRuIdentity(src) && src === tgt) {
+    if (allowIdentity && src === tgt) {
       return { isValid: true, issues: [] };
     }
     const stripped = tgt
@@ -2892,7 +2991,7 @@ function validateEn2RuNotEcho(originalText, translatedText) {
  * @param {string} originalText - 原始文本
  * @param {string} translatedText - 翻译文本
  * @param {Array} placeholders - 占位符数组
- * @param {{ stage?: string }} [options] - stage=en2ru 时启用语言门禁
+ * @param {{ stage?: string, allowIdentityKeep?: boolean }} [options] - stage=en2ru|zh2ru 时启用语言门禁
  * @returns {Object} { isValid: boolean, issues: string[] }
  */
 function validateTranslation(originalText, translatedText, placeholders, options = {}) {
@@ -2920,11 +3019,22 @@ function validateTranslation(originalText, translatedText, placeholders, options
     issues.push('方括号占位符格式被破坏（禁止 "[{ }]" 或 "[ {} ]" 这种写法）');
   }
 
-  if (options && options.stage === 'en2ru') {
-    const echo = validateEn2RuNotEcho(originalText, translatedText);
-    if (!echo.isValid) issues.push(...echo.issues);
-    const quality = validateEn2RuQuality(originalText, translatedText);
-    if (!quality.isValid) issues.push(...quality.issues);
+  const stage = options && options.stage;
+  if (stage === 'en2ru' || stage === 'zh2ru') {
+    // KEEP 整词拷贝：跳过 echo/西里尔门禁（词条原样落盘）
+    if (options && options.allowIdentityKeep) {
+      // DeepSeek 已判 KEEP：只跳过语言门禁
+    } else if (!(stage === 'zh2ru' && CJK_RE.test(String(originalText || '')))) {
+      const echo = validateEn2RuNotEcho(originalText, translatedText, {
+        entryKeepCache: options.entryKeepCache
+      });
+      if (!echo.isValid) issues.push(...echo.issues);
+      const quality = validateEn2RuQuality(originalText, translatedText);
+      if (!quality.isValid) issues.push(...quality.issues);
+    } else {
+      const quality = validateEn2RuQuality(originalText, translatedText);
+      if (!quality.isValid) issues.push(...quality.issues);
+    }
   }
 
   return {
@@ -3226,6 +3336,8 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
     });
     const termCachePath = path.join(outputDirPath, 'en2ru-term-decisions.json');
     const termDecisionCache = loadTermDecisionCache(termCachePath);
+    const entryKeepCachePath = path.join(outputDirPath, 'entry-keep-decisions.json');
+    const entryKeepCache = loadEntryKeepCache(entryKeepCachePath);
     _runtimeTranslateOptions = {
       multiModel: !!(options && options.multiModel),
       models: options && options.models,
@@ -3275,8 +3387,11 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
     const stages = Array.isArray(mode.stages) ? mode.stages : [mode.id];
     const doZh2en = stages.includes('zh2en');
     const doEn2ru = stages.includes('en2ru');
-    const zh2enBatchSize = mode.batchSizeZh2en || (doZh2en && !doEn2ru ? mode.batchSize : 100);
+    const doZh2ru = stages.includes('zh2ru');
+    const doRu = doEn2ru || doZh2ru;
+    const zh2enBatchSize = mode.batchSizeZh2en || (doZh2en && !doRu ? mode.batchSize : 100);
     const en2ruBatchSize = mode.batchSizeEn2ru || mode.batchSize || 40;
+    const zh2ruBatchSize = mode.batchSizeZh2ru || mode.batchSize || 40;
 
     /** @type {Array<object>} */
     const workRows = [];
@@ -3294,6 +3409,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
 
       let needZh2en = false;
       let needEn2ru = false;
+      let needZh2ru = false;
 
       if (mode.id === 'zh2en') {
         needZh2en = !!ci;
@@ -3304,9 +3420,12 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         needZh2en = !!ci && (forceOverwrite || !en);
         const willHaveEn = !!en || needZh2en;
         needEn2ru = willHaveEn && (forceOverwrite || !ru);
+      } else if (mode.id === 'dual') {
+        needZh2en = !!ci && (forceOverwrite || !en);
+        needZh2ru = !!ci && (forceOverwrite || !ru);
       }
 
-      if (!needZh2en && !needEn2ru) {
+      if (!needZh2en && !needEn2ru && !needZh2ru) {
         processedEntries[i] = { ...entry, '备注1': entry['备注1'] || '' };
         continue;
       }
@@ -3319,6 +3438,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         ru,
         needZh2en,
         needEn2ru,
+        needZh2ru,
         comment: commentValue,
         tag: tagValue,
         commentRulesMarkdown
@@ -3339,10 +3459,11 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
 
     const zh2enRows = limitedWorkRows.filter((r) => r.needZh2en);
     const en2ruReadyRows = limitedWorkRows.filter((r) => r.needEn2ru && !r.needZh2en);
+    const zh2ruRows = limitedWorkRows.filter((r) => r.needZh2ru);
     const pipelinePendingEn2ru = limitedWorkRows.filter((r) => r.needZh2en && r.needEn2ru).length;
 
     console.log(
-      `共 ${limitedWorkRows.length} 行待处理（zh2en=${zh2enRows.length}, en2ru就绪=${en2ruReadyRows.length}, 待流水线en2ru=${pipelinePendingEn2ru}）\n`
+      `共 ${limitedWorkRows.length} 行待处理（zh2en=${zh2enRows.length}, en2ru就绪=${en2ruReadyRows.length}, 待流水线en2ru=${pipelinePendingEn2ru}, zh2ru=${zh2ruRows.length}）\n`
     );
     if (TLS_INSECURE) {
       console.log('已启用 TRANSLATE_TLS_INSECURE（跳过 HTTPS 证书校验，适配企业网关）\n');
@@ -3350,7 +3471,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
 
     const inputFilenameBase = path.basename(inputCsvPath, path.extname(inputCsvPath));
     const deliverStem = inputFilenameBase.replace(/_RU机翻$/u, '') || inputFilenameBase;
-    const checkpointCsvPath = (doEn2ru || mode.id === 'pipeline')
+    const checkpointCsvPath = (doRu || mode.id === 'pipeline' || mode.id === 'dual')
       ? path.join(outputDirPath, `${deliverStem}_RU机翻.csv`)
       : (doZh2en ? path.join(outputDirPath, `${deliverStem}_EN机翻.csv`) : null);
     if (checkpointCsvPath) {
@@ -3358,7 +3479,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
     }
 
     const debugPromptEnabled = options && options.debugPrompt;
-    const sortEnabled = doEn2ru
+    const sortEnabled = doRu
       ? !!(options && options.sort === true)
       : !(options && options.sort === false);
     let debugPromptContent = '';
@@ -3375,9 +3496,43 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
       `并发策略: DAG 池上限 ${dagConcurrency}（讯飞≤${xfyunConcurrency}；硅基每模型≤${API_CONFIG.siliconflow.concurrency}；智谱串行1）；mode=${mode.id}\n`
     );
 
+    // 拉丁词条去重 → DeepSeek 判 KEEP/TRANSLATE（俄文列禁止启发式）
+    if (doRu) {
+      const decideTexts = [];
+      for (const row of limitedWorkRows) {
+        if (row.needZh2ru && row.ci) decideTexts.push(row.ci);
+        if (row.needEn2ru) {
+          const src = String(row.en || row.ci || '').trim();
+          if (src) decideTexts.push(src);
+        }
+      }
+      const uniqueEntries = collectUniqueEntryKeepCandidates(decideTexts);
+      if (uniqueEntries.size > 0) {
+        console.log(`整词 KEEP 判定候选（去重）: ${uniqueEntries.size} 条 → DeepSeek\n`);
+        try {
+          const verifyWorker = resolveVerifyWorker();
+          const stats = await decideMissingEntryKeepWithLlm(uniqueEntries, entryKeepCache, {
+            callBatch: (prompt, n) => verifyWorker.callBatch(prompt, n),
+            promptDir: PROMPT_TEMPLATE_DIR,
+            batchSize: 40,
+            onBatch: ({ size }) => {
+              console.log(`  🔤 整词 KEEP 判定批 ${size} 条（缓存 ${entryKeepCache.size}）`);
+            }
+          });
+          saveEntryKeepCache(entryKeepCachePath, entryKeepCache);
+          console.log(
+            `整词 KEEP 判定完成: asked=${stats.asked} keep=${stats.keep} translate=${stats.translate} failBatches=${stats.failedBatches}\n`
+          );
+        } catch (e) {
+          console.warn(`⚠ DeepSeek 整词 KEEP 判定不可用: ${e.message}`);
+          console.warn('  未判定条目将送 MT（不假 KEEP）\n');
+        }
+      }
+    }
+
     function buildStageItem(row, stage) {
       let text = '';
-      if (stage === 'zh2en') {
+      if (stage === 'zh2en' || stage === 'zh2ru') {
         text = row.ci || String(row.entry['词条'] || '');
       } else {
         const pe = processedEntries[row.index];
@@ -3394,14 +3549,17 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         tag: row.tag,
         commentRulesMarkdown: row.commentRulesMarkdown,
         needEn2ru: row.needEn2ru,
+        needZh2ru: row.needZh2ru,
         stage
       };
     }
 
     function makeUnits(stage, rows, batchSize) {
       const chunks = chunkArray(rows, batchSize);
+      const kind =
+        stage === 'zh2en' ? 'zh2en_batch' : stage === 'zh2ru' ? 'zh2ru_batch' : 'en2ru_batch';
       return chunks.map((chunkRows, idx) => ({
-        kind: stage === 'zh2en' ? 'zh2en_batch' : 'en2ru_batch',
+        kind,
         stage,
         unitId: `${stage}-${idx + 1}`,
         items: chunkRows.map((r) => buildStageItem(r, stage))
@@ -3411,10 +3569,13 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
     let unitSeq = 0;
     const initialReady = [
       ...makeUnits('zh2en', zh2enRows, zh2enBatchSize),
-      ...makeUnits('en2ru', en2ruReadyRows, en2ruBatchSize)
+      ...makeUnits('en2ru', en2ruReadyRows, en2ruBatchSize),
+      ...makeUnits('zh2ru', zh2ruRows, zh2ruBatchSize)
     ].map((u) => ({ ...u, unitId: `${u.kind}-${++unitSeq}` }));
 
-    console.log(`初始就绪单元: ${initialReady.length}（zh2en批 + en2ru已就绪批）\n`);
+    console.log(
+      `初始就绪单元: ${initialReady.length}（zh2en批 + en2ru已就绪批 + zh2ru批）\n`
+    );
 
     async function processWorkUnit(unit) {
       const stage = unit.stage;
@@ -3459,10 +3620,22 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
             note1Issues.push(...unitNormalization.note1Issues);
           }
           forcedTranslation = unitNormalization.forcedTranslation;
+          // 英文/标识符词条：直接拷贝，不调 MT
+          if (!forcedTranslation && isLatinIdentifierCi(live.text)) {
+            forcedTranslation = String(live.text).trim();
+            note1Issues.push('预处理: 英文/标识符词条拷贝为英文翻译');
+          }
           const { note1Issues: trimIssues } = detectCommentTagTrimMatchIssues(live.entry, commentRuleMap);
           if (trimIssues.length > 0) note1Issues.push(...trimIssues);
           const { note1Issues: conflictIssues } = detectCommentTagRuleConflict(live.entry, commentRuleMap);
           if (conflictIssues.length > 0) note1Issues.push(...conflictIssues);
+        } else if (stage === 'zh2ru') {
+          const src = String(live.text || '').trim();
+          // 仅代码标识/白名单 KEEP；普通英文词（products/BACKUP）必须走 MT
+          if (shouldKeepCopyRu(src, entryKeepCache)) {
+            forcedTranslation = src;
+            note1Issues.push('预处理: DeepSeek KEEP → 词条拷贝为俄文');
+          }
         }
 
         batchEntries.push({ ...live, note1Issues, forcedTranslation });
@@ -3597,7 +3770,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
           }
         }
 
-        if (stage === 'en2ru' && translatedText) {
+        if ((stage === 'en2ru' || stage === 'zh2ru') && translatedText) {
           const mtPost = postprocessEn2RuMtArrow(translatedText, item.text);
           translatedText = mtPost.text;
           if (mtPost.issues.length > 0) {
@@ -3607,6 +3780,11 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
           translatedText = gloss.text;
           if (gloss.issues.length > 0) {
             item.note1Issues.push(...gloss.issues.map((msg) => `后处理: ${msg}`));
+          }
+          const caps = preserveAllCapsCyrillic(item.text, translatedText);
+          if (caps !== translatedText) {
+            translatedText = caps;
+            item.note1Issues.push('后处理: 全大写源文→全大写俄文');
           }
         }
 
@@ -3627,8 +3805,8 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         preparedTexts[i] = translatedText;
       }
 
-      // en2ru：本批残留英文去重 → 分批 LLM 判定 → 写回（复用 termDecisionCache）
-      if (stage === 'en2ru' && !apiFailed) {
+      // en2ru/zh2ru：本批残留英文去重 → 分批 LLM 判定 → 写回（复用 termDecisionCache）
+      if ((stage === 'en2ru' || stage === 'zh2ru') && !apiFailed) {
         const pendingRows = preparedTexts.map((ru, i) => ({
           id: batchEntries[i].entry.id || `row_${batchEntries[i].index + 1}`,
           ru,
@@ -3672,15 +3850,37 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         let allowWrite = item._allowWrite !== false;
 
         const targetCol = stage === 'zh2en' ? '英文翻译' : '俄文翻译';
+        const ciText = String(
+          processedEntry['词条'] || item.text || (item.entry && item.entry['词条']) || ''
+        ).trim();
+        const keepOk =
+          stage === 'zh2en'
+            ? shouldKeepCopyEn(ciText)
+            : shouldKeepCopyRu(ciText, entryKeepCache);
+        const isKeepForced =
+          !!item.forcedTranslation &&
+          keepOk &&
+          String(item.forcedTranslation).trim() === ciText;
+
+        // 译文为空但可 KEEP → 直接拷贝词条，禁止留空
+        if (!String(translatedText || '').trim() && keepOk) {
+          translatedText = ciText;
+          item.note1Issues.push('兜底: KEEP 词条拷贝（译文为空）');
+        }
+
         if (translatedText) {
           const translationValidation = validateTranslation(
             item.text,
             translatedText,
             item.placeholders,
-            { stage }
+            {
+              stage,
+              entryKeepCache,
+              allowIdentityKeep:
+                isKeepForced || (keepOk && translatedText === ciText)
+            }
           );
           if (!translationValidation.isValid) {
-            allowWrite = false;
             item.note1Issues.push(...translationValidation.issues.map((issue) => `翻译验证失败: ${issue}`));
             errors.push({
               type: 'validation',
@@ -3689,12 +3889,25 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
               translation: translatedText,
               issues: translationValidation.issues
             });
+            if (isKeepForced || (keepOk && translatedText === ciText)) {
+              // KEEP：校验失败也必须落盘词条，不清空
+              allowWrite = true;
+              item.note1Issues.push('KEEP 仍落盘: 词条已拷贝到目标列');
+            } else {
+              allowWrite = false;
+            }
           }
           if (allowWrite) {
             processedEntry[targetCol] = translatedText;
+          } else if (keepOk) {
+            processedEntry[targetCol] = ciText;
+            item.note1Issues.push('兜底: KEEP 词条拷贝（校验未过仍落盘）');
           } else if (forceOverwrite || !String(processedEntry[targetCol] || '').trim()) {
             processedEntry[targetCol] = '';
           }
+        } else if (keepOk) {
+          processedEntry[targetCol] = ciText;
+          item.note1Issues.push('兜底: KEEP 词条拷贝（无译文）');
         } else if (forceOverwrite || !String(processedEntry[targetCol] || '').trim()) {
           processedEntry[targetCol] = '';
         }
@@ -3704,7 +3917,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         processedEntry['备注1'] = [prevNote, newNote].filter(Boolean).join('; ');
         processedEntries[item.index] = processedEntry;
 
-        if (stage === 'zh2en' && item.needEn2ru && String(processedEntry['英文翻译'] || '').trim()) {
+        if (stage === 'zh2en' && doEn2ru && item.needEn2ru && String(processedEntry['英文翻译'] || '').trim()) {
           followUpRows.push({
             index: item.index,
             entry: processedEntry,
@@ -3748,8 +3961,39 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
       }
     });
 
+    // 收尾：KEEP 词条目标列禁止留空（英/俄分别判定）
+    let keepFilled = 0;
+    for (let i = 0; i < entries.length; i++) {
+      if (!processedEntries[i]) {
+        processedEntries[i] = { ...entries[i], '备注1': entries[i]['备注1'] || '' };
+      }
+      const e = processedEntries[i];
+      const ci = String(e['词条'] || '').trim();
+      const notes = [];
+      if (doZh2en && shouldKeepCopyEn(ci) && !String(e['英文翻译'] || '').trim()) {
+        e['英文翻译'] = ci;
+        notes.push('收尾: KEEP 词条拷贝→英文');
+        keepFilled += 1;
+      }
+      if (doRu && shouldKeepCopyRu(ci, entryKeepCache) && !String(e['俄文翻译'] || '').trim()) {
+        e['俄文翻译'] = ci;
+        notes.push('收尾: KEEP 词条拷贝→俄文');
+        keepFilled += 1;
+      }
+      if (notes.length) {
+        const prev = String(e['备注1'] || '').trim();
+        e['备注1'] = [prev, ...notes].filter(Boolean).join('; ');
+      }
+    }
+    if (keepFilled > 0) {
+      console.log(`KEEP 收尾补齐空目标列: ${keepFilled} 处\n`);
+    }
+
     const limitedEntries = limitedWorkRows.map((r) =>
-      buildStageItem(r, doEn2ru && !doZh2en ? 'en2ru' : 'zh2en')
+      buildStageItem(
+        r,
+        doZh2ru ? 'zh2ru' : doEn2ru && !doZh2en ? 'en2ru' : 'zh2en'
+      )
     );
 
     if (debugPromptEnabled && debugPromptSnippets.length > 0) {
@@ -3764,7 +4008,8 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
         tag: item.tag || '',
         commentRulesMarkdown: item.commentRulesMarkdown || ''
       }));
-      const promptMode = mode.id === 'pipeline' ? 'en2ru' : mode.id;
+      const promptMode =
+        mode.id === 'pipeline' ? 'en2ru' : mode.id === 'dual' ? 'zh2ru' : mode.id;
       const rawPrompt = buildBatchTranslationPrompt(
         rawEntriesForPrompt, abbreviationMap, fullTranslationMap, pseudoCodeRuleMap,
         { mode: promptMode, excelTranslationRulesMarkdown, commentRuleMap }
@@ -3810,7 +4055,7 @@ async function main(inputCsvPath, outputDirPath, excelGlossaryPath, options = {}
       '备注1': 80
     };
 
-    if (mode.id === 'en2ru' || mode.id === 'pipeline') {
+    if (mode.id === 'en2ru' || mode.id === 'pipeline' || mode.id === 'dual') {
       // CSV 输入：交付 *_RU机翻.csv；同时写一份 xlsx 便于抽检
       // 若输入本身已是 *_RU机翻.csv（断点续跑），不再叠加后缀
       if (inputExt === '.csv') {
@@ -3895,7 +4140,7 @@ if (require.main === module) {
   if (!inputPath || !outputDir) {
     console.error(
       '用法: node translateCsv.js <输入路径> <输出目录> [Excel术语库路径] ' +
-      '[--mode zh2en|en2ru|pipeline] [--limit N] [--force] [--multi-model] [--models list|all] [--debugPrompt]'
+      '[--mode zh2en|en2ru|pipeline|dual] [--limit N] [--force] [--multi-model] [--models list|all] [--debugPrompt]'
     );
     process.exit(1);
   }
@@ -3939,6 +4184,14 @@ module.exports = {
   validateEn2RuNotEcho,
   validateEn2RuQuality,
   isAllowedEnRuIdentity,
+  isLatinIdentifierCi,
+  shouldKeepCopyEn,
+  shouldKeepCopyRu,
+  shouldKeepCopyCi,
+  isEntryKeepByCache,
+  isEntryKeepDecideCandidate,
+  loadEntryKeepCache,
+  saveEntryKeepCache,
   isSuspectEn2RuMisalign,
   countNewlines,
   resolveActiveTranslateWorkers,

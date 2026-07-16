@@ -23,6 +23,7 @@ const {
   writeXlsxPreviewFile,
   BATCH_NL_TOKEN
 } = require('./lib/workers');
+const translate = require(path.join(__dirname, '../translate/translateCsv.js'));
 
 const COL_ZH = '词条';
 const COL_EN = '英文翻译';
@@ -166,16 +167,19 @@ function sleepMs(ms) {
 /**
  * 对一批超长行跑缩短：按优先序尝试 workers；Busy 只试 1 次即切下一个
  */
-async function shortenBatch(items, workers, byteLimit, preferredStart = 0) {
+async function shortenBatch(items, workers, byteLimit, preferredStart = 0, skippedProviders = null) {
   if (!items.length) return [];
-  if (!workers.length) throw new Error('无可用 free 缩短 worker（检查 XFYUN/SILICONFLOW/ZHIPU API Key）');
+  const skip = skippedProviders || new Set();
+  const active = workers.filter((w) => !skip.has(w.provider));
+  const pool = active.length ? active : workers;
+  if (!pool.length) throw new Error('无可用 free 缩短 worker（检查 XFYUN/SILICONFLOW/ZHIPU API Key）');
 
   const prompt = buildShortenPrompt(items, byteLimit);
   const errors = [];
-  const start = preferredStart % workers.length;
+  const start = preferredStart % pool.length;
 
-  for (let offset = 0; offset < workers.length; offset++) {
-    const w = workers[(start + offset) % workers.length];
+  for (let offset = 0; offset < pool.length; offset++) {
+    const w = pool[(start + offset) % pool.length];
     const maxAttempt = w.provider === 'xfyun' ? 1 : 2;
     for (let attempt = 1; attempt <= maxAttempt; attempt++) {
       try {
@@ -199,8 +203,12 @@ async function shortenBatch(items, workers, byteLimit, preferredStart = 0) {
         const msg = e && e.message ? e.message : String(e);
         errors.push(`${w.id}: ${msg}`);
         console.warn(`  ! ${w.name} 失败: ${msg.slice(0, 160)}`);
-        if (/Busy|Engine Busy|ECONNRESET|timeout|条数不齐/i.test(msg)) {
-          break; // 立刻换下一个 worker
+        if (/ENOTFOUND|ECONNREFUSED|certificate/i.test(msg) && skippedProviders) {
+          skippedProviders.add(w.provider);
+          console.warn(`  → 本轮跳过 provider=${w.provider}`);
+        }
+        if (/Busy|Engine Busy|ECONNRESET|timeout|条数不齐|ENOTFOUND/i.test(msg)) {
+          break;
         }
         await sleepMs(300 * attempt);
       }
@@ -252,7 +260,9 @@ async function verifyMega(idxs, rows, args, verifyWorker) {
     ru: rows[i][args.targetCol]
   }));
 
-  const forcedChunk = args.verifyBatchSize > 0 ? args.verifyBatchSize : 0;
+  // 默认：>120 条时按 100 条并行多坨「一头打完」；显式 --verify-batch-size 覆盖
+  const autoChunk = items.length > 120 ? 100 : 0;
+  const forcedChunk = args.verifyBatchSize > 0 ? args.verifyBatchSize : autoChunk;
 
   async function verifyChunk(sliceItems, depth) {
     try {
@@ -278,7 +288,7 @@ async function verifyMega(idxs, rows, args, verifyWorker) {
     for (let i = 0; i < items.length; i += forcedChunk) {
       chunks.push(items.slice(i, i + forcedChunk));
     }
-    console.log(`  DeepSeek 按 --verify-batch-size=${forcedChunk} 分 ${chunks.length} 坨并行验`);
+    console.log(`  DeepSeek 并行合并验证：${items.length} 条 → ${chunks.length} 坨×≤${forcedChunk}`);
     const parts = await Promise.all(chunks.map((c) => verifyChunk(c, 0)));
     return parts.flat();
   }
@@ -303,8 +313,9 @@ function scanHardFailIdxs(rows, args) {
 /**
  * 并发缩短指定行
  */
-async function shortenWave(todo, rows, workers, args) {
+async function shortenWave(todo, rows, workers, args, skippedProviders = null) {
   if (!todo.length) return 0;
+  const skip = skippedProviders || new Set();
   let shortened = 0;
   const batches = [];
   for (let offset = 0; offset < todo.length; offset += args.batchSize) {
@@ -318,7 +329,7 @@ async function shortenWave(todo, rows, workers, args) {
       ru: rows[i][args.targetCol]
     }));
     try {
-      const texts = await shortenBatch(items, workers, args.byteLimit, bi % workers.length);
+      const texts = await shortenBatch(items, workers, args.byteLimit, bi % workers.length, skip);
       for (let j = 0; j < batchIdxs.length; j++) {
         const i = batchIdxs[j];
         const next = stripEn2RuEnglishGlossParen(texts[j]).text.trim();
@@ -409,6 +420,27 @@ async function main() {
   console.log(`输入: ${abs}`);
   console.log(`行数: ${rows.length}；byteLimit=${args.byteLimit}`);
 
+  const { loadEntryKeepCache } = require(path.join(__dirname, '../translate/lib/entryKeepDecide'));
+  const entryKeepCachePath = path.join(args.outputDir, 'entry-keep-decisions.json');
+  const entryKeepCache = loadEntryKeepCache(entryKeepCachePath);
+  let keepFilled = 0;
+  for (const r of rows) {
+    const ru = String(r[args.targetCol] || '').trim();
+    if (ru) continue;
+    const zh = String(r[args.zhCol] || '').trim();
+    const en = String(r[args.sourceCol] || '').trim();
+    let keepSrc = '';
+    if (translate.shouldKeepCopyRu(zh, entryKeepCache)) keepSrc = zh;
+    else if (translate.shouldKeepCopyRu(en, entryKeepCache)) keepSrc = en;
+    if (!keepSrc) continue;
+    r[args.targetCol] = keepSrc;
+    appendNote(r, 'keep_copy_ci');
+    keepFilled += 1;
+  }
+  if (keepFilled > 0) {
+    console.log(`KEEP 空俄文已从词条/英文拷贝（DeepSeek 缓存）: ${keepFilled} 行`);
+  }
+
   const workers = resolveShortenWorkers({
     multiModel: args.multiModel,
     models: args.models
@@ -445,42 +477,52 @@ async function main() {
   let deepseekFailNotes = 0;
   /** @type {number[]} */
   let pending = scanHardFailIdxs(rows, args);
+  /** @type {Set<string>} */
+  const skippedProviders = new Set();
 
   for (let round = 1; round <= args.maxRounds; round++) {
     console.log(`\n=== Round ${round}/${args.maxRounds} pending=${pending.length} ===`);
 
     let shortened = 0;
     if (pending.length > 0) {
-      shortened = await shortenWave(pending, rows, workers, args);
+      shortened = await shortenWave(pending, rows, workers, args, skippedProviders);
       console.log(`  缩短完成: ${shortened}`);
     }
 
+    const hardAfter = scanHardFailIdxs(rows, args);
+    const hardSet = new Set(hardAfter);
     /** @type {Set<number>} */
     const dsFail = new Set();
+    // 已硬失败（超长/CJK/残英）不必再喂 DeepSeek；只合并验硬门禁已绿的行
     if (verifyWorker) {
-      const allIdxs = rows.map((_, i) => i).filter((i) => String(rows[i][args.targetCol] || '').trim());
-      console.log(`  DeepSeek 整表合并验证 ${allIdxs.length} 条（一头/失败再二分）...`);
-      const verdicts = await verifyMega(allIdxs, rows, args, verifyWorker);
-      for (let j = 0; j < allIdxs.length; j++) {
-        const i = allIdxs[j];
-        if (!verdicts[j] || !verdicts[j].ok) {
-          dsFail.add(i);
-          appendNote(rows[i], `ds_fail:${(verdicts[j] && verdicts[j].reason) || 'fail'}`);
-        } else {
-          const note = String(rows[i][COL_NOTE] || '');
-          if (note.includes('ds_fail:')) {
-            rows[i][COL_NOTE] = note
-              .split(';')
-              .map((x) => x.trim())
-              .filter((x) => x && !x.startsWith('ds_fail:'))
-              .join(';');
+      const softIdxs = rows
+        .map((_, i) => i)
+        .filter((i) => String(rows[i][args.targetCol] || '').trim() && !hardSet.has(i));
+      console.log(
+        `  DeepSeek 合并验证硬绿 ${softIdxs.length} 条（硬失败 ${hardAfter.length} 跳过）...`
+      );
+      if (softIdxs.length) {
+        const verdicts = await verifyMega(softIdxs, rows, args, verifyWorker);
+        for (let j = 0; j < softIdxs.length; j++) {
+          const i = softIdxs[j];
+          if (!verdicts[j] || !verdicts[j].ok) {
+            dsFail.add(i);
+            appendNote(rows[i], `ds_fail:${(verdicts[j] && verdicts[j].reason) || 'fail'}`);
+          } else {
+            const note = String(rows[i][COL_NOTE] || '');
+            if (note.includes('ds_fail:')) {
+              rows[i][COL_NOTE] = note
+                .split(';')
+                .map((x) => x.trim())
+                .filter((x) => x && !x.startsWith('ds_fail:'))
+                .join(';');
+            }
           }
         }
       }
       deepseekFailNotes = dsFail.size;
     }
 
-    const hardAfter = scanHardFailIdxs(rows, args);
     pending = [...new Set([...hardAfter, ...dsFail])];
     console.log(`  结果: hardFail=${hardAfter.length} dsFail=${dsFail.size} nextPending=${pending.length}`);
 
