@@ -247,7 +247,7 @@ const MODES = {
     sourceCol: '词条',
     targetCol: '俄文翻译',
     skipIfFilled: true,
-    // 100 条易触发讯飞超时 / 智谱断连；40 条更稳，便于断点续跑
+    // 100 条易触发讯飞超时 / 智谱断连；40 条更稳，便于断点续跑；Busy 时可临时降到 10
     batchSize: 40,
     useGlossary: false,
     sourceFallbackCol: '英文翻译',
