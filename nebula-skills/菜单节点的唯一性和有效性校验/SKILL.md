@@ -1,6 +1,6 @@
 ---
 name: 菜单节点的唯一性和有效性校验
-description: Use when auditing Nebula menu nodes for uniqueness/validity against docs/plans/前端的表单校验规则.md, converting YAML exports to JSON, running apex_dev pnpm scan:menu-rules, or aligning MenuFormDialog chkPathDup/chkAncPath—not seccenter full-table perm.
+description: Use when auditing Nebula menu nodes for uniqueness/validity against docs/plans/前端的表单校验规则.md, converting YAML exports to JSON, running this skill's node scan-menu-rules.mjs, or aligning MenuFormDialog chkPathDup/chkAncPath—not seccenter full-table perm. Scripts live in this skill, not apex_dev.
 ---
 
 # 目标
@@ -10,7 +10,7 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
 ## 适用场景
 
 1. 「按文档扫一下导出菜单有没有违规」
-2. YAML（snake_case）→ JSON → `pnpm scan:menu-rules`
+2. YAML（snake_case）→ JSON → `node scripts/scan-menu-rules.mjs`
 3. function 被「同项目 path 重复」误拦 → 应对齐 `chkAncPath` 而非 `chkPathDup`
 4. 解读单文件 0 命中 vs 合并 `_all` 的 `page.combo`
 
@@ -23,10 +23,10 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
 ## 工作流 A：存量扫描
 
 1. 确认输入是 YAML 还是已转换 JSON；YAML → 先转换（见 [references/命令与输入格式.md](references/命令与输入格式.md)）。
-2. 在 `apex_dev` 执行：
+2. **在本 skill 根目录**执行（脚本不在 `apex_dev`）：
    ```bash
    python scripts/convert-menu-yaml-to-json.py <yamlDir> <jsonOutDir>
-   pnpm scan:menu-rules -- --input <menu.json> [--out report.json]
+   node scripts/scan-menu-rules.mjs --input <menu.json> [--out report.json]
    ```
 3. **先分文件 / 单 project 扫**，再决定是否扫 `_all.json`。
 4. 按 [references/违规码词典.md](references/违规码词典.md) 解读；给出「改配置 vs 放宽」倾向。
@@ -40,20 +40,21 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
 | 未转 snake_case（仍见 `route_path`） | STOP：先 `convert-menu-yaml-to-json.py` |
 | 用户把多文件合并结果当「单项目脏」 | 纠正：先给分文件结果，再谈跨项目 |
 | 用户要求写接口改库 | 拒绝；只读扫描 |
+| 脚本仍在 `apex_dev/src` 或 `apex_dev/scripts` | 删除之；只用本 skill `scripts/` |
 
-## 工作流 B：表单对齐
+## 工作流 B：表单对齐（apex 产品代码）
 
-1. 读 `menu-formRules.ts`：`chkPathDup`（dir/page 同项目）、`chkAncPath`（function 父链）。
-2. `MenuFormDialog`：dir/page → 精确语法 + `chkPathDup`；function → fuzzy + `chkAncPath`；**保留** perm 同级唯一。
+1. 若改菜单表单：在 `apex_dev` 挂 `chkPathDup`（dir/page）/ `chkAncPath`（function 父链）；**不要**把扫描脚本写回 apex。
+2. `MenuFormDialog`：dir/page → 精确语法 + 同项目判重；function → fuzzy + 父链；**保留** perm 同级唯一。
 3. 失败文案走 i18n（如「不能与父链上的路由路径相同」）。
-4. 测：`__tests__/menu-formRules.test.ts` / `__tests__/scan-menu-rules.test.ts`。
 
 ### 失败分支（B）
 
 | 如果 | 则 |
 |------|-----|
-| function 仍挂 `chkPathDup` | 改为 `chkAncPath`；勿删同项目 route 唯一性 |
+| function 仍挂同项目 path 判重 | 改为父链冲突检查；勿删 dir/page 同项目唯一性 |
 | 有人提议删 perm 同级校验 | 拒绝；文档要求同级唯一 |
+| 为跑扫描把 `scan-menu-rules` 放进 apex | 拒绝；迁回本 skill |
 
 ## 决策表（扫描解读）
 
@@ -75,7 +76,8 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
 3. 不把跨项目 `page.combo` 当成单项目脏数据去改干净项目。
 4. 不对 YAML 直接跑扫描（必须先 convert）。
 5. 不删除 dir/page 的同项目 `routePath` 唯一性来「修好」function。
+6. **不把扫描脚本放进 `apex_dev`**（污染业务树）。
 
-## 脚本位置（不拷贝进本 skill）
+## 脚本位置
 
-指挥 `apex_dev` 既有实现，见 [scripts/README.md](scripts/README.md)。会话样例见 [assets/few-shot-example/t-cloud会话扫描.md](assets/few-shot-example/t-cloud会话扫描.md)。
+本 skill 自包含：见 [scripts/README.md](scripts/README.md)。会话样例见 [assets/few-shot-example/t-cloud会话扫描.md](assets/few-shot-example/t-cloud会话扫描.md)。

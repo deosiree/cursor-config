@@ -2,7 +2,7 @@
   {
     "id": 1,
     "prompt": "按《前端的表单校验规则》只读扫描 docs/menu/t-cloud 下 YAML：先转 JSON，再扫 platform 单文件，报告违规码与是否合规。",
-    "expected": "先 convert 再 scan；单文件 0 命中（或按实际报告）；不用 seccenter 全表 perm；给出命令与退出码解读。"
+    "expected": "在本 skill scripts/ 先 convert 再 node scan-menu-rules.mjs；单文件 0 命中（或按实际）；不用 seccenter 全表 perm；不往 apex_dev 落脚本。"
   },
   {
     "id": 2,

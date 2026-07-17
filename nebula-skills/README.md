@@ -21,7 +21,7 @@
 7. `api-gateway-deprecate`
    - 面向：旧版本接口下线后的旧兼容层、旧 API、旧测试与旧 mock 退化清理
 8. `菜单节点的唯一性和有效性校验`
-   - 面向：按文档规则做菜单唯一性/有效性只读扫描（YAML→JSON→scan）、`page.combo` 解读，以及表单 `chkPathDup`/`chkAncPath` 对齐
+   - 面向：按文档规则做菜单唯一性/有效性只读扫描（YAML→JSON→本 skill `scripts/`）、`page.combo` 解读；脚本不进 `apex_dev`
 
 ## 使用示例
 1. `使用 $route-api-gateway 根据当前 API 分层链路场景推荐应该执行新增还是退化 skill。`

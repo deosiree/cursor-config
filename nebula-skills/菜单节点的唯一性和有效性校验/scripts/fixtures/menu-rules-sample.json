@@ -1,0 +1,47 @@
+[
+  {
+    "id": "d1",
+    "type": "directory",
+    "name": "根目录",
+    "routePath": "/beta1/root",
+    "projectId": "demo",
+    "children": [
+      {
+        "id": "p1",
+        "type": "page",
+        "name": "父页面",
+        "routePath": "/beta1/parent",
+        "parentId": "d1",
+        "projectId": "demo",
+        "children": [
+          {
+            "id": "f1",
+            "type": "function",
+            "name": "撞父链功能",
+            "routePath": "/beta1/parent",
+            "perm": "demo:edit",
+            "parentId": "p1",
+            "projectId": "demo"
+          },
+          {
+            "id": "f2",
+            "type": "function",
+            "name": "可复用无关路径",
+            "routePath": "/other/page",
+            "perm": "demo:edit",
+            "parentId": "p1",
+            "projectId": "demo"
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "type": "page",
+        "name": "重复页面",
+        "routePath": "/beta1/parent",
+        "parentId": "d1",
+        "projectId": "demo"
+      }
+    ]
+  }
+]

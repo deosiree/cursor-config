@@ -6,9 +6,10 @@
 
 ## 动作
 
-1. `convert-menu-yaml-to-json.py` → `_scan_json/`
-2. 分文件 `pnpm scan:menu-rules`
+1. 本 skill `scripts/convert-menu-yaml-to-json.py` → `_scan_json/`
+2. 分文件 `node scripts/scan-menu-rules.mjs --input ...`
 3. 再扫 `_all.json`
+4. 扫描脚本不落在 `apex_dev`
 
 ## 结果（文档口径）
 

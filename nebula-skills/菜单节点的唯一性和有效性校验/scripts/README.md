@@ -1,26 +1,36 @@
-# scripts（跳转清单）
+# scripts（本 skill 自包含）
 
-本 skill **不**内嵌业务扫描实现。一律在 `nebula/apex_dev` 执行。
+菜单扫描工具住在本目录，**不**依赖、也**不**写入 `apex_dev`。
 
-## 命令清单
+## 命令
+
+在任意工作目录均可；以下假设 cwd 为本 skill 根目录。
 
 ```bash
-# 工作目录：apex_dev
+# YAML(snake_case) → MenuVO JSON（文件名作 projectId）
 python scripts/convert-menu-yaml-to-json.py <yamlDir> <jsonOutDir>
-pnpm scan:menu-rules -- --help
-pnpm scan:menu-rules -- --input <path/to/menu.json> [--out report.json] [--project-id <id>]
+
+# 只读扫描
+node scripts/scan-menu-rules.mjs --input <menu.json> [--out report.json] [--project-id <id>]
+node scripts/scan-menu-rules.mjs --help
 ```
 
-## 跳转
+退出码：`0` 无违规 · `1` 有违规 · `2` 参数/读文件错误。
 
-| 用途 | 路径 |
+## 文件
+
+| 路径 | 作用 |
 |------|------|
-| CLI 入口 | `scripts/scan-menu-rules.ts` |
-| YAML 转换 | `scripts/convert-menu-yaml-to-json.py` |
-| vite-node 包装 | `scripts/run-vite-node.mjs` |
-| 人类说明 | `scripts/README-scan-menu-rules.md` |
-| 样例 fixture | `scripts/fixtures/menu-rules-sample.json` |
-| 扫描实现 | `src/views/system/menu/utils/scan-menu-rules.ts` |
-| 表单业务规则 | `src/views/system/menu/utils/menu-formRules.ts` |
+| `scan-menu-rules.mjs` | CLI |
+| `lib/scan-menu-rules.mjs` | 扫描核 |
+| `lib/menu-path-rules.mjs` | `chkPathDup` / `chkAncPath` |
+| `lib/path-syntax.mjs` | 轻量 path 语法（不绑 apex formRules） |
+| `convert-menu-yaml-to-json.py` | YAML→JSON |
+| `fixtures/menu-rules-sample.json` | 样例输入 |
 
-口径与格式细节见 `../references/命令与输入格式.md`。
+依赖：Node.js ≥18；转换脚本需 `PyYAML`（`pip install pyyaml`）。
+
+## 注意
+
+- `route.syntax` 为本 skill 轻量实现；与 apex 表单逐字文案可能略有差异，唯一性/耦合规则以文档为准。
+- 禁止写接口、禁止把脚本再拷回 `apex_dev/src`。
