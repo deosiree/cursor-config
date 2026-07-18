@@ -29,7 +29,7 @@ metadata:
    - `taskName` / `taskId`（可缺省：按 seedProfile 用种子默认）
    - `targetLang`（默认 `英文`）
    - `department`（默认 `通用平台部`）
-   - `seedProfile`：`syk_glossary` | `adm_matrix` | `custom`
+   - `seedProfile`：`syk_glossary` | `adm_matrix` | `custom` | `admin_retrieval`（多检索 6 路径）
    - `doBackup` / `dryRun` / `dbTarget`
 2. 若仅有 `productName`：在库中查询 `t_entry_classify`（type=product）或产品表；**多于 1 行 → STOP 让用户选 id**
 3. 映射种子文件：
@@ -38,6 +38,7 @@ metadata:
    - `custom` → 默认骨架 [[../../template/custom-matrix.md]] + [[../../template/custom-seed.example.sql]]  
      若用户未给现成 SQL：用 `new-custom-seed.ps1` 生成 `db/opt/seed-verify-custom-<slug>.sql`，再改矩阵行；  
      `seedSqlPath` 写入 verifyTarget（custom **必填**）
+   - `admin_retrieval` → ProjectRoot `db/opt/seed-verify-admin-retrieval.sql`（当作 custom + 固定 SeedSqlPath；expectedEntryCount=6）
 4. 输出 `verifyTarget`，路由到 `编排-工作台验数就绪`
 
 ## 输出 verifyTarget

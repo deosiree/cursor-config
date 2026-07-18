@@ -99,6 +99,7 @@ should-not-trigger:
 | `syk_glossary`（产品 admin） | `db/opt/seed-verify-syk-admin-product.sql` |
 | `adm_matrix` / 旧 qt(ts) | `db/opt/seed-verify-term-syk.sql` |
 | `custom` | 先 [[template/custom-matrix.md]] → [[scripts/new-custom-seed.ps1]] → `db/opt/seed-verify-custom-<slug>.sql`（骨架见 [[template/custom-seed.example.sql]]） |
+| 多检索（admin） | ProjectRoot `db/opt/seed-verify-admin-retrieval.sql`（exact/fuzzy/decomposed/none×6）→ apply custom + verify ExpectedEntryCount=6 → `python -m devtools.verify_adm_pretranslate --strict` |
 
 一键灌数：[[scripts/apply-workbench-verify-seed.ps1]]（custom 须 `-SeedSqlPath`）  
 一键验收：[[scripts/verify-workbench-translate-ready.ps1]]（exit 0/1）

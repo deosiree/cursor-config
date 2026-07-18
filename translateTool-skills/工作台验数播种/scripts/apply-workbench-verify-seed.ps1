@@ -3,7 +3,7 @@
 # NEVER: PowerShell pipeline / Set-Content as the mysql client stdin for these seeds.
 param(
     [string]$ProjectRoot = $env:TRANSLATIONTOOL_ROOT,
-    [ValidateSet("syk_glossary", "adm_matrix", "custom")]
+    [ValidateSet("syk_glossary", "adm_matrix", "custom", "admin_retrieval")]
     [string]$SeedProfile = "syk_glossary",
     [string]$ContainerName = "translation-mysql",
     [string]$DbUser = "root",
@@ -37,8 +37,9 @@ if (-not $SeedSqlPath) {
         throw "SeedProfile=custom requires -SeedSqlPath (generate via new-custom-seed.ps1 or copy template/custom-seed.example.sql)"
     }
     $map = @{
-        syk_glossary = "db\opt\seed-verify-syk-admin-product.sql"
-        adm_matrix   = "db\opt\seed-verify-term-syk.sql"
+        syk_glossary     = "db\opt\seed-verify-syk-admin-product.sql"
+        adm_matrix       = "db\opt\seed-verify-term-syk.sql"
+        admin_retrieval  = "db\opt\seed-verify-admin-retrieval.sql"
     }
     $SeedSqlPath = Join-Path $ProjectRoot $map[$SeedProfile]
 } elseif (-not [System.IO.Path]::IsPathRooted($SeedSqlPath)) {
