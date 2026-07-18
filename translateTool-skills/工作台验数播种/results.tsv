@@ -1,3 +1,5 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-18T12:40	baseline	工作台验数播种	-	78.5	baseline	-	MVP 套件首评；dim8 dry_run；未进 Phase2	dry_run
 2026-07-18T12:50	1a1884a	工作台验数播种	78.5	84.6	keep	实测表现	verify-workbench-translate-ready.ps1 + apply/verify/负例 full_test	full_test
+2026-07-18T12:55	1327950	工作台验数播种	84.6	84.9	keep	检查点设计	主 SKILL 🔴 CHECKPOINT + verify exit1 门禁	dry_run
+2026-07-18T12:58	1327950	工作台验数播种	84.9	85.5	keep	反例与黑名单	主 SKILL 七行反例黑名单表	dry_run
