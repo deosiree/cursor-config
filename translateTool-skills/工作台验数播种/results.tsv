@@ -3,4 +3,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-18T12:50	1a1884a	工作台验数播种	78.5	84.6	keep	实测表现	verify-workbench-translate-ready.ps1 + apply/verify/负例 full_test	full_test
 2026-07-18T12:55	1327950	工作台验数播种	84.6	84.9	keep	检查点设计	主 SKILL 🔴 CHECKPOINT + verify exit1 门禁	dry_run
 2026-07-18T12:58	1327950	工作台验数播种	84.9	85.5	keep	反例与黑名单	主 SKILL 七行反例黑名单表	dry_run
-2026-07-18T13:00	pending	工作台验数播种	85.5	88.1	keep	整体架构	custom 模板+new-custom-seed+apply；smoke verify=3 绿；dim6/8 跟涨	full_test
+2026-07-18T13:00	24d4381	工作台验数播种	85.5	88.1	keep	整体架构	custom 模板+new-custom-seed+apply；smoke verify=3 绿；dim6/8 跟涨	full_test
