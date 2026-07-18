@@ -43,6 +43,19 @@ metadata:
 
 详见 [[../../assets/few-shot-example/产品admin-SYK验数就绪.md]]
 
+### custom 默认路径
+
+1. 填 [[../../template/custom-matrix.md]]（≥1 命中 + ≥1 miss）
+2. 生成 SQL：
+   ```powershell
+   & "<skillRoot>\scripts\new-custom-seed.ps1" `
+     -Slug "<slug>" -ProductId "<productId>" -TaskId "<taskId>" -Force
+   ```
+3. 按矩阵改 `db/opt/seed-verify-custom-<slug>.sql` 中 INSERT 行（模板默认 2 命中 + 1 miss）
+4. 输出 `entryMatrix` + `seedSqlPath`；`expectedEntryCount` 与 relation 行数一致
+
+骨架 SQL：[[../../template/custom-seed.example.sql]]
+
 ## 失败模式
 
 | 触发 | 一线修复 | 仍失败 |

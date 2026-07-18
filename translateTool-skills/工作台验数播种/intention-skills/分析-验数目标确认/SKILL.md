@@ -35,7 +35,9 @@ metadata:
 3. 映射种子文件：
    - `syk_glossary` → `db/opt/seed-verify-syk-admin-product.sql`（须与 productId 一致或先改 SQL 变量）
    - `adm_matrix` → `db/opt/seed-verify-term-syk.sql`
-   - `custom` → 要求用户给出 SQL 路径或词条矩阵表
+   - `custom` → 默认骨架 [[../../template/custom-matrix.md]] + [[../../template/custom-seed.example.sql]]  
+     若用户未给现成 SQL：用 `new-custom-seed.ps1` 生成 `db/opt/seed-verify-custom-<slug>.sql`，再改矩阵行；  
+     `seedSqlPath` 写入 verifyTarget（custom **必填**）
 4. 输出 `verifyTarget`，路由到 `编排-工作台验数就绪`
 
 ## 输出 verifyTarget
@@ -59,7 +61,7 @@ metadata:
 | 条件 | 动作 |
 |------|------|
 | 无 product 且无法唯一解析 | `blockedReason=need_product`，停问 |
-| `seedProfile=custom` 且无矩阵/SQL | `blockedReason=need_custom_matrix` |
+| `seedProfile=custom` 且无 `seedSqlPath`、又拒绝用模板生成 | `blockedReason=need_custom_matrix`；提示先跑 `new-custom-seed.ps1` |
 | `dbTarget=remote` | 允许继续编排，但只输出命令 |
 
 ## 边界

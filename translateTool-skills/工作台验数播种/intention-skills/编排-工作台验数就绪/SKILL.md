@@ -35,13 +35,16 @@ metadata:
 
 ### 一键种子（推荐 syk_glossary / adm_matrix）
 
-当 `seedProfile` 非 `custom` 且用户授权写库时，步骤 1–4 可用脚本一次落地：
+当用户授权写库时，步骤 1–4 可用脚本一次落地：
 
 ```powershell
 $skillRoot = "F:\Documents\Default-Obsidian\huiyanSkills\translateTool-skills\工作台验数播种"
+# syk_glossary / adm_matrix
 & "$skillRoot\scripts\apply-workbench-verify-seed.ps1" `
-  -ProjectRoot "<ProjectRoot>" `
-  -SeedProfile "syk_glossary"
+  -ProjectRoot "<ProjectRoot>" -SeedProfile "syk_glossary"
+# custom：先 new-custom-seed.ps1，再
+& "$skillRoot\scripts\apply-workbench-verify-seed.ps1" `
+  -ProjectRoot "<ProjectRoot>" -SeedProfile custom -SeedSqlPath "<seedSqlPath>"
 ```
 
 脚本成功后仍必须跑步骤 5（验证）。Agent 须在 shell **实际执行**，不得只贴命令假装完成。

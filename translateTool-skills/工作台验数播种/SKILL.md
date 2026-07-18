@@ -1,7 +1,7 @@
 ---
 name: 工作台验数播种
 description: 为 translationtool 工作台准备可测任务：创建任务（五人员齐填）、设计验数词条、挂到产品、下发并回填进翻译阶段。触发词：工作台验数、灌测产品、创建验数任务、人员五字段、词条进翻译阶段、getTaskPending 系统服务异常、产品 admin 挂词条、任务下发/回填。
-version: 1.2.0
+version: 1.3.0
 tags: [translationtool, workbench, verify, seed, task, entry_state, translateTool-skills]
 metadata:
   darwin:
@@ -12,10 +12,12 @@ metadata:
     round1_score: 84.6
     round2_score: 84.9
     round3_score: 85.5
-    final_score: 85.5
-    rounds: 3
+    round4_score: 88.1
+    final_score: 88.1
+    rounds: 4
     hl4_reached: true
-    stop_reason: "HL-4: round2 Δ+0.3 and round3 Δ+0.6 both <2; see DARWIN_BASELINE.md"
+    hl4_note: "HL-4 after round3; user requested continue dim7 → round4 keep +2.6"
+    stop_reason: "round4 dim7 custom architecture closed; see DARWIN_BASELINE.md"
 should-trigger:
   - 工作台验数 / 灌测产品 / 给产品挂验数词条
   - 创建验数任务 / 任务人员五字段
@@ -96,8 +98,9 @@ should-not-trigger:
 |-------------|--------------------------|
 | `syk_glossary`（产品 admin） | `db/opt/seed-verify-syk-admin-product.sql` |
 | `adm_matrix` / 旧 qt(ts) | `db/opt/seed-verify-term-syk.sql` |
+| `custom` | 先 [[template/custom-matrix.md]] → [[scripts/new-custom-seed.ps1]] → `db/opt/seed-verify-custom-<slug>.sql`（骨架见 [[template/custom-seed.example.sql]]） |
 
-一键灌数：[[scripts/apply-workbench-verify-seed.ps1]]  
+一键灌数：[[scripts/apply-workbench-verify-seed.ps1]]（custom 须 `-SeedSqlPath`）  
 一键验收：[[scripts/verify-workbench-translate-ready.ps1]]（exit 0/1）
 
 ## 人工门禁

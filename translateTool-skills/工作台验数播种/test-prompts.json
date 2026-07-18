@@ -13,5 +13,10 @@
     "id": 3,
     "prompt": "/taskManage/getTaskPending 报 code 201 系统服务异常，任务里词条都是新建状态。",
     "expected": "诊断 entry_state=0→TaskStateEntity；执行-任务下发到翻译阶段 置 state=3；验证 bad_new=0；不改 Java 除非用户另开任务"
+  },
+  {
+    "id": 4,
+    "prompt": "seedProfile=custom：给产品 admin 生成自定义验数种子（2 命中+1 miss），灌库并验收进翻译阶段。",
+    "expected": "填 custom-matrix → new-custom-seed.ps1 → apply -SeedProfile custom -SeedSqlPath → verify ExpectedEntryCount=3；不要求用户从零手写整份 SQL"
   }
 ]
