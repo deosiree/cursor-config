@@ -78,7 +78,7 @@
 
 1. 先扫描项目专有目录：`nebula-skills/`
 2. 再扫描 IDE/工具类目录：`IDE-skill/`
-3. 再扫描翻译工具套件：`translateTool-skills/`（含 `translate`、`excel-精简超长翻译`、`json-精简超长翻译` 等；原 `agent-skills/translate` 已迁至此）
+3. 再扫描翻译工具套件：`translateTool-skills/`（含 `translate`、`excel-精简超长翻译`、`json-精简超长翻译`、`db-回滚数据库`、`工作台验数播种` 等；原 `agent-skills/translate` 已迁至此）
 4. 再扫描通用目录：`agent-skills/`、`mySkills/`
 5. 再扫描 Obsidian 技能：`common-skills/obsidian-skills/intention-skills/` → `common-skills/obsidian-skills/feature-skills/`
 6. 再扫描其他通用能力：`common-skills/` 下各子目录

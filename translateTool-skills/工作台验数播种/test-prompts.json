@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "prompt": "给产品 admin 灌术语库翻译验数：建任务（人员全填）、挂词条、下发到翻译阶段，测前先备份。",
+    "expected": "走分析→编排；委托 backup；apply syk_glossary 种子或四步 feature；验证 entry_state=3/五人员/relation；输出 UI 路径与验数卡"
+  },
+  {
+    "id": 2,
+    "prompt": "验数任务 verify-syk-admin 只有 creator=admin，其他人员空，工作台看不到翻译阶段，帮我补齐。",
+    "expected": "单调 执行-创建验数任务：UPDATE 五人员全填；再跑 验证-翻译阶段就绪；不误走整库 restore"
+  },
+  {
+    "id": 3,
+    "prompt": "/taskManage/getTaskPending 报 code 201 系统服务异常，任务里词条都是新建状态。",
+    "expected": "诊断 entry_state=0→TaskStateEntity；执行-任务下发到翻译阶段 置 state=3；验证 bad_new=0；不改 Java 除非用户另开任务"
+  },
+  {
+    "id": 4,
+    "prompt": "seedProfile=custom：给产品 admin 生成自定义验数种子（2 命中+1 miss），灌库并验收进翻译阶段。",
+    "expected": "填 custom-matrix → new-custom-seed.ps1 → apply -SeedProfile custom -SeedSqlPath → verify ExpectedEntryCount=3；不要求用户从零手写整份 SQL"
+  }
+]

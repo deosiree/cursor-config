@@ -58,6 +58,7 @@ $skillRoot = "F:\Documents\Default-Obsidian\huiyanSkills\translateTool-skills\db
    - R01/R04 → exact，进翻译审核不进术语学习
    - S02 / 文件、系统、资源 / 文件与系统 / T99 → 不同 retrieval_method
 4. **勿**对 S02、decomposed 触发句、T99 在术语学习点「确认入库」
+5. 若任务/词条尚未进「翻译」阶段（缺人员、`entry_state≠3`、无 relation）→ 改走套件 `工作台验数播种` 的「验证/下发到翻译阶段」，不要在本编排里手搓任务
 
 ## 输出
 

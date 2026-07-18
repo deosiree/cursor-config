@@ -1,7 +1,7 @@
 ---
 name: 执行-mysqldump备份
 description: 当需要把 translationtool 库 mysqldump 到 db/backups/ 并更新 .latest 指针时使用。
-version: 1.0.0
+version: 1.1.0
 tags: [db-回滚数据库, translateTool-skills, mysql, backup]
 metadata:
   darwin:
@@ -10,7 +10,7 @@ metadata:
 
 # 核心任务
 
-调用 `scripts/backup-database.ps1` 生成整库 SQL 备份。
+调用 `scripts/backup-database.ps1`：容器内 `mysqldump --result-file` + `docker cp`，再 `verify-dump-encoding`。
 
 ## 何时触发
 
@@ -32,6 +32,8 @@ $skillRoot = "F:\Documents\Default-Obsidian\huiyanSkills\translateTool-skills\db
   -Label "before_admin_proj_test"
 ```
 
+**禁止** PowerShell `>` / `Set-Content` 接 mysqldump 管道。
+
 ## 输出 backupResult
 
 | 字段 | 说明 |
@@ -40,8 +42,11 @@ $skillRoot = "F:\Documents\Default-Obsidian\huiyanSkills\translateTool-skills\db
 | `fileName` | 文件名 |
 | `sizeBytes` / `sizeHuman` | 大小 |
 | `createdAt` | 本地时间 |
+| `encodingVerify` | 必须为 true |
+| `method` | `result-file+docker-cp` |
 
 ## 边界
 
-- 备份失败（文件 < 1KB）必须报错，不得声称成功。
+- verify 失败：删除坏文件、不写 `.latest`、不得声称成功。
+- 若 `retentionDue`：先问用户是否清理旧备份（禁静默删）。
 - 不执行 restore。

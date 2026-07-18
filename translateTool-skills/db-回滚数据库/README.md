@@ -2,13 +2,15 @@
 
 ## 定位
 
-translationtool MySQL 的 **备份 / 整库恢复 / audit 逐条回滚 / ADM 矩阵还原** 四套能力：
+translationtool MySQL 的 **备份 / 整库恢复 / 指定分类保留还原 / audit 逐条回滚 / ADM 矩阵还原 / 术语学习时间窗清理** 能力：
 
 | 模式 | 场景 | 复杂度 |
 |------|------|--------|
-| **backup + restore** | 本地功能测试前后 | 低（推荐） |
+| **backup + restore** | 本地功能测试前后（`--result-file` + encoding verify） | 低（推荐） |
+| **keep_classify_restore** | 服务器 all-databases → 仅保留指定分类子树+闭包 | 中 |
 | **audit_rollback** | 只撤销部分术语同意 | 中 |
 | **adm_matrix_reset** | ADM 6 路径污染、多次预翻译后全变 exact | 低（不 DROP 整库） |
+| **term_day_cleanup** | 按时间窗清术语学习（dry-run→确认） | 中 |
 
 备份默认目录：[`translationtool/db/backups/`](F:/Documents/Repertory/Sieyuan/translationtool/db/backups/)
 
