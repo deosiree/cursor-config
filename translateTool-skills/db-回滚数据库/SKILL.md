@@ -18,6 +18,7 @@ should-trigger:
   - 按时间窗清理术语学习 / term_day_cleanup
   - 备份保留提醒 / 清理旧 dump（须人审）
   - 用服务器备份还原指定分类（mon-cn-1.9.0 / develop）/ keep_classify_restore
+  - 精简术语库前的备份（空挂/去重/中文占比清理的前置 backup）
 should-not-trigger:
   - 生产库无授权时自动 restore
   - 未确认 inspect/restore 就要 DELETE FROM 或 DROP
@@ -27,6 +28,7 @@ should-not-trigger:
   - 纯改 TermAuditService / cleanup_adm_test_data.py 等业务代码
   - 修改 devtools 脚本逻辑（走代码任务，非本 skill）
   - 仅为工作台建验数任务 / 灌词条进翻译阶段 / 产品挂任务词条 → 走 `工作台验数播种`
+  - 精简术语库 SQL 本身（空挂/去重/中文占比）→ 读 `docs/ops/DEV_DB_CHECKPOINT.md` + `db/opt/cleanup-syk-*.sql`；本 skill 只负责前置 backup / 事后 restore
 ---
 
 # 目标
