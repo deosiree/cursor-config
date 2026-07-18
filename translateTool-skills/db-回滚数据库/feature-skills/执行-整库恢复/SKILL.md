@@ -1,7 +1,7 @@
 ---
 name: 执行-整库恢复
 description: 当用户已确认备份文件且授权后，DROP/CREATE translationtool 并导入 mysqldump 时使用。
-version: 1.0.0
+version: 1.1.0
 tags: [db-回滚数据库, translateTool-skills, mysql, restore]
 metadata:
   darwin:
@@ -10,7 +10,7 @@ metadata:
 
 # 核心任务
 
-调用 `scripts/restore-database.ps1` 执行破坏性整库恢复。
+调用 `scripts/restore-database.ps1`：先 `verify-dump-encoding`，再 `docker cp` + `mysql < file`（禁止 Get-Content 管道）。
 
 ## 何时触发
 
@@ -20,6 +20,7 @@ metadata:
 ## 输入 / 前置条件
 
 - `backupPath` 或 `-UseLatest`
+- encoding verify 通过（失败则停止，不得声称成功）
 - `preRestoreBackup`（默认 true）
 - 用户已确认（脚本需 `-Force`）
 

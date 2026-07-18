@@ -35,6 +35,10 @@ metadata:
 | `latestPath` | .latest 指向的文件 |
 | `count` | 备份数量 |
 | `backups[]` | fileName、fullPath、sizeHuman、modifiedAt、isLatest |
+| `retentionDue` | 月清理提醒是否到期 |
+| `retentionNextDueAt` | 下次提醒时间 |
+
+若 `retentionDue`：展示提醒并 **询问用户** 是否 `prune-backups.ps1 -ConfirmDelete` 或 snooze；禁止静默删。
 
 ## 下一步路由
 

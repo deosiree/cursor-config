@@ -48,13 +48,26 @@ $list = foreach ($f in $files) {
     }
 }
 
-$output = [ordered]@{
-    backupDir   = $BackupDir
-    latestPath  = $latestPath
-    count       = $list.Count
-    backups     = @($list)
+. (Join-Path $PSScriptRoot "lib\Retention-State.ps1")
+$retCheck = Test-RetentionDue -BackupDir $BackupDir
+$retentionReminder = $null
+if ($retCheck.due) {
+    $retentionReminder = Show-RetentionReminder -BackupDir $BackupDir
 }
-$output | ConvertTo-Json -Depth 4 -Compress
+
+$output = [ordered]@{
+    backupDir          = $BackupDir
+    latestPath         = $latestPath
+    count              = $list.Count
+    backups            = @($list)
+    retentionDue       = [bool]$retCheck.due
+    retentionNextDueAt = $retCheck.state.nextDueAt
+    retentionReminder  = $retentionReminder
+}
+$output | ConvertTo-Json -Depth 5 -Compress
 
 Write-Host "Backup count: $($list.Count)"
 if ($latestPath) { Write-Host "Latest (.latest): $latestPath" }
+if ($retCheck.due) {
+    Write-Host "Retention reminder DUE — ask user before prune-backups.ps1 -ConfirmDelete"
+}
