@@ -1,2 +1,3 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-18T12:40	baseline	工作台验数播种	-	78.5	baseline	-	MVP 套件首评；dim8 dry_run；未进 Phase2	dry_run
+2026-07-18T12:50	1a1884a	工作台验数播种	78.5	84.6	keep	实测表现	verify-workbench-translate-ready.ps1 + apply/verify/负例 full_test	full_test

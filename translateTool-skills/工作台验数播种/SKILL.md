@@ -1,15 +1,19 @@
 ---
 name: 工作台验数播种
 description: 为 translationtool 工作台准备可测任务：创建任务（五人员齐填）、设计验数词条、挂到产品、下发并回填进翻译阶段。触发词：工作台验数、灌测产品、创建验数任务、人员五字段、词条进翻译阶段、getTaskPending 系统服务异常、产品 admin 挂词条、任务下发/回填。
-version: 1.0.0
+version: 1.1.0
 tags: [translationtool, workbench, verify, seed, task, entry_state, translateTool-skills]
 metadata:
   darwin:
     parent_skill: 工作台验数播种
     last_eval: 2026-07-18
-    eval_mode: evaluate-only
+    eval_mode: full_test
     baseline_score: 78.5
-    baseline_note: "2026-07-18 evaluate-only dry_run; see DARWIN_BASELINE.md; STOP pending human"
+    round1_score: 84.6
+    final_score: 84.6
+    rounds: 1
+    hl4_reached: false
+    stop_reason: "round1 dim8 full_test keep; continuing Phase2"
 should-trigger:
   - 工作台验数 / 灌测产品 / 给产品挂验数词条
   - 创建验数任务 / 任务人员五字段
@@ -96,17 +100,31 @@ should-not-trigger:
 
 ## 人工门禁
 
+🔴 CHECKPOINT · 🛑 STOP：下列任一成立时**禁止写库**，先问用户或只输出命令。
+
 | 条件 | 动作 |
 |------|------|
 | 缺 product 且无法唯一解析 | 停止询问 |
 | `dbTarget=remote` | 只输出命令，不 execute |
 | 破坏性 DELETE 旧 verify-* | 先 backup 或用户明确「替我执行」 |
 | `dryRun=true` | 只输出计划与 SQL 路径 |
+| `verify-workbench-translate-ready.ps1` exit 1 | 贴 FAIL 行，不得声称翻译阶段就绪 |
+
+## 反例黑名单（不要做）
+
+| # | 不要 | 原因 |
+|---|------|------|
+| 1 | 只填 `creator`，其余人员 NULL | UI 任务流/权限过滤异常 |
+| 2 | 种子 `entry_state=0` 进翻译验数 | `getTaskPending` → 201 系统服务异常 |
+| 3 | 把术语库命中行的 `t_translate.id` 写进 `en_trans_id`（待译测术语库时） | 工作台已非待译，测法变味 |
+| 4 | PowerShell 管道/`Set-Content` 灌 SQL 或 mysqldump | 编码损坏（与 db-回滚红灯相同） |
+| 5 | 无 `t_product_relation` 却声称已下发 | 词条未挂任务，工作台列表空/错 |
+| 6 | 本套件里做整库 DROP/restore | 走 `db-回滚数据库` |
+| 7 | verify 脚本 exit 1 仍告诉用户「可以开测」 | 违反验收门禁 |
 
 ## Darwin
 
-- 基线：`test-prompts.json` + evaluate-only（见 frontmatter `baseline_score`）
-- 优化循环须用户明确「继续优化」后才进入
+- 见 `results.tsv` / `DARWIN_BASELINE.md`；Phase2 记录在 frontmatter `metadata.darwin`
 
 ## 使用示例
 
