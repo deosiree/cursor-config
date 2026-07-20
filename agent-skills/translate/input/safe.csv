@@ -1,0 +1,108 @@
+id,词条,tag,comment,词条来源,英文翻译
+01d266d7-039f-429d-8dc1-1553e5654737,安全配置,ConfigParam,buttonName,gui_grapheditor,Security config
+03d5d095-33cd-4fe3-9e28-693405d968b2,安全通用服务,ProcDef/desc,,fytest_sysmgr_sysmdl_ProcDef,General security service
+0693a2b7-0a76-4998-b07f-5cfbc4fecf8d,安全信息管理,,,import : excel ; fileNametr_gui_integrate.xlsx,Security Info
+07494795-1898-4f20-8127-22b6842b4067,安全白名单,,,import : excel ; fileNametr_gui_integrate.xlsx,Whitelist
+09bfee29-ccc0-41d7-9999-d8e387cbf5d7,安全5区,SecWorkSpace/name,,fytest_sysops.run.0_secinfo_SecWorkSpace,Safety Zone 5
+0b5a1f63-6f21-44cc-8942-831a1d4b98b6,安全审计分析,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security Audit
+0b757ce6-e016-40c1-8ce6-d706ece36562,安全管理_重置密码失败,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Reset password failure
+0f1af413-c7ff-431e-b2b2-6892e7eab961,安全认证服务,SvcProc/desc,,fytest_sysmgr_sysmdl_SvcProc,Security Auth Service
+10030ee8-6a54-4b43-8b94-81aaee02e0b9,安全管理_攻击告警,AlarmItem/desc,,fytest_sysops.run.0_secinfo_auditEventDefine,Security management_attack alert
+10cfaa48-79de-42bf-b1c8-c805ae421cda,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+1112fbd7-cbc7-4faa-9ef5-fee4f3d2713b,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+117ecdd6-456f-407f-924a-6d453a53d3ab,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+11fb746b-e61f-4bef-8912-e33df80d3a71,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+120d626c-ee92-4fed-bd8d-624082d11cd9,安全管理,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security
+122ad9d9-7a75-403b-8c05-89674dcd081e,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+150d04c9-851a-4db4-ac53-b0c1f9effa4d,系统安全参数配置表,,,fytest_sysops.run.0_secinfo_alias,System Security Params Config Table
+15c5dbdc-ca8e-427b-a20f-ca3dbb46dfae,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+16b0aa02-9408-4572-a4f4-26fd306a6961,安全类,auditEventDefine/classType,,fytest_sysops.run.0_secinfo_auditEventDefine,Security type
+16b36a07-6f0c-426c-a4e2-aff12d435772,安全审计_审计记录清理,AlarmItem/desc,,fytest_sysops.run.0_secinfo_auditEventDefine,Security audit_audit record cleanup
+193fce6b-602c-49f4-8f63-38b14f2c8118,安全通用服务,SvcProc/desc,,fytest_sysops.run.0_secinfo_auditEventDefine,General security service
+19f7f2fd-7001-4ad4-9b62-a8e4a167d5ad,安全审计分析,SecFuncGroup/alias,,fytest_sysops.run.0_secinfo_SecFuncGroup,Security Audit Analysis
+1abd85aa-4b1b-48c1-9ddf-eb4e97f90a62,安全信息,TdbMt/desc,,fytest_sysmgr_sysmdl_TdbMt,Security info
+1c2ff586-f794-4440-ba3f-0b10f25aff5e,安全用户表,,,fytest_sysops.run.0_secinfo_alias,Security User Table
+1c484a0f-6bbb-49f2-b42a-8c6f289d49e2,不符合安全策略的访问,auditEventDefine/name,,fytest_sysops.run.0_secinfo_auditEventDefine,Access that does not comply with security policies
+1c75c9de-f9ab-4cdd-9eb3-25cc878604d3,安全信息表,,,fytest_sysops.run.0_secinfo_alias,Safety Info table
+1fa23b22-9bc0-414b-9084-48692b0cb9d1,安全参数,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Params
+217a86c2-4593-4001-92cc-357e3aa95f07,安全管理_越权访问,AlarmItem/desc,,pt/gui_reporteditor,Security management_unauthorized access
+21aa0718-ef24-438c-bcc1-9b2b4f078696,安全管理_登出失败,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Logout failure
+293ac852-a944-49a4-8772-82cd9970a287,安全通用服务,ProcDef/desc,,pt/hisdb_import_export,General security service
+2a13a9bb-ef74-4e8e-9365-22506aee57bd,安全2区,SecWorkSpace/name,,fytest_sysops.run.0_secinfo_SecWorkSpace,Safety Zone 2
+2f398a88-baea-458e-a192-c9bf1cd95db6,安全审计_日志容量超过,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SECAUDIT_Log capacity exceeded
+2fa517ce-160e-4fe1-a6bd-2856b2bca808,安全节点表,,,fytest_sysops.run.0_secinfo_alias,Security node table
+313d0b3c-c946-4d70-a2db-5220734b75ad,安全身份认证已启用，请确保系统管理中已配置了认证服务， 并且用户已设置了认证信息,ConfigParam,,gui_integrate_secusermgr,Secure Auth is enabled. Make sure that the auth service is configured in system administration and that the user has set the auth info
+32ffed36-2a7a-44c5-9f89-9c5c2c7c384f,安全认证服务,ProcDef/desc,,fytest_sysmgr_sysmdl_ProcDef,Security Auth Service
+34a22393-e144-4986-a8a7-3b63771ad5ed,安全平台,SecFuncGroupClass/name,,fytest_sysops.run.0_secinfo_SecFuncGroupClass,Secure Platform
+38479bb1-b66a-4c32-9328-a214f253ad5a,安全密码,,,import : excel ; fileNametr_gui_integrate.xlsx,Security Code
+3e13a9e2-4ff0-4625-a458-6c91f3a36984,安全配置,SecSysConf/confName,,fytest_sysops.run.0_secinfo_SecSysConf,Security configuration
+3e637486-0112-4236-997d-378143dbc748,安全审计_完整性告警,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SECAUDIT_Integrity alarm
+3fc7e72d-79fa-419c-8230-d0eb417ec690,安全功能项表,,,fytest_sysops.run.0_secinfo_alias,Safety function list
+44552a4a-0052-4186-ab5c-e19f179c582b,修改安全密码信息,,,pt/gui_integrate_secpw,Modify security password info
+4b6e4693-b1ea-4975-9989-1e45bace83c9,安全4区,SecWorkSpace/name,,fytest_sysops.run.0_secinfo_SecWorkSpace,Safety Zone 4
+4f959af2-3293-4896-8dc0-9302428c4e37,所属安全功能项,,,fytest_sysops.run.0_secinfo_alias_SecFuncItem,Assigned safety function item
+510b7a6e-bf7e-4084-9990-b96b1780f30f,安全参数,,,import : excel ; fileNametr_gui_integrate.xlsx,Params
+57478309-9a49-4ffb-8417-ee2e07b44a4c,安全审计分析,,,pt/gui_sec_audit,Security Audit Analysis
+57792732-f845-4900-9379-cab9ea8db291,安全审计分析,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Security Audit
+57993546-0766-4838-9075-c305a81aeda6,安全密码配置,,,pt/gui_integrate_secpw,Secure password configuration
+5d91db73-4380-4393-a026-ea1d5f2c769a,安全管理_数据恢复,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Data recovery success
+640e7252-1937-41cf-8077-8678b2f80bed,安全管理_登录失败,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Login failure
+646b62d9-a93c-418c-890a-dd361842b779,安全角色表,,,fytest_sysops.run.0_secinfo_alias,Security Role Table
+68df81dc-b9d9-462d-a76d-975b4bef98ff,安全信息,TdbRun/desc,,fytest_sysmgr_sysmdl_TdbRun,Security info
+6f82c979-8c12-4382-b030-f0f9b3ad180a,安全参数,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Params
+71210323-244d-481b-8066-c89049a40783,安全3区,SecWorkSpace/name,,fytest_sysops.run.0_secinfo_SecWorkSpace,Safety Zone 3
+76178758-5efd-42ec-9e36-aaabc0c4c3aa,安全密码配置,QObject,,gui_integrate_secpw,Secure Password Config
+7e96737c-ea58-45a9-bc66-5fcd2723a910,安全管理_重置密码成功,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Reset password success
+7fd106eb-dd9a-49d2-b939-624b4aa4edfd,安全参数,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Params
+8001bf2a-6730-4908-bd80-073e688854a5,安全白名单,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Whitelist
+820ca6bf-33a1-4da6-9296-f16696b86dbc,修改安全连接白名单信息,,,pt/gui_integrate_secwhite,Modify the secure connection whitelist
+84f1b5e1-6d93-4fe2-a637-0bb9ff9ccab2,安全1区,SecWorkSpace/name,,fytest_sysops.run.0_secinfo_SecWorkSpace,Safety Zone 1
+850e752e-1ea0-4c18-868e-ad65fe45215d,安全管理,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Security
+86c1c434-ea9b-4a39-9b30-0a55be4e39af,安全信息管理,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security Info
+8ab36fe6-753a-4710-9b4e-e9f6ff7c9ca8,安全白名单,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Whitelist
+8b94cf97-7dde-47af-8f80-569caadad574,启用安全身份认证,ConfigParam,,gui_integrate_secusermgr,Enable secure auth
+8edede2c-dadf-4937-919e-25109eb787b1,安全白名单配置,SecFuncGroup/alias,,fytest_sysops.run.0_secinfo_SecFuncGroup,Secure Whitelist
+90ef9330-f6d3-41b1-a1ba-fa3f4731c224,安全运行%1天,iasp::gui::TaskbarWidget,,gui_console,Safe operation for %1 days
+91135e64-a867-4a70-84e7-5a622f0c47cb,安全白名单配置,,,pt/gui_integrate_secwhite,Secure Whitelist
+9204ec01-201b-4a22-81cb-f9d49d5afc70,安全模块自检,SecFuncGroup/alias,,fytest_sysops.run.0_secinfo_SecFuncGroup,Security Module Self-check
+937713de-e735-4e7e-9f1b-f3c2eab458c7,安全密码配置,SecFuncGroup/alias,,fytest_sysops.run.0_secinfo_SecFuncGroup,Secure Password Configuration
+9694bfef-47d5-49ef-93a6-a575b01c9d0d,安全管理_登录成功,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Login success
+96ffaf25-5891-4bb1-8f2c-aaa48c31ac1b,安全管理_登出成功,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Logout success
+a1eb64aa-af54-48d1-acfa-c4effe393149,安全管理_权限修改,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Permission modification
+a4d22782-3e50-455d-a0ec-5a246a7762ff,是否需要从安全库导入数据,MainWindow,,gui_general_sms_plug,Whether to import data from the security DB
+ae67ff7a-5a72-436a-bb91-5009b4944434,安全功能组类别表,,,fytest_sysops.run.0_secinfo_alias,Safety function group category table
+b246f9e2-89b5-4627-96d3-1c761e229822,安全审计分析,,,pt/gui_sec_audit,Security Audit Analysis
+b2a2025b-959b-4b77-ad82-d7985a2fc794,安全参数信息,,,pt/gui_integrate_secusermgr,Security params info
+b4e8bd7d-4148-4927-add2-b69f4323457d,安全管理_攻击告警,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,Security management_attack alert
+b5fad569-7676-4b3d-bdf1-db8cf114ebfc,启用内部安全通讯,ConfigParam,,gui_integrate_secusermgr,Enable internal secure communication
+b7b337d6-9cbe-4ae5-bd60-94052bc570c3,数据库模板名称与配置文件名称不一致或找不到配置名称为：调试配置、工程配置、安全配置的参数,ConfigParam,,gui_integrate_secusermgr,"DB template name does not match the Config file name or the Config name cannot be found: Debug Config, Project config, Security Config params"
+bbe57c07-ff75-4146-8134-3d9d60faf076,安全密码,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Security Code
+bf7470d9-eedf-4899-86b6-0f72cb0d14d1,不符合安全策略的访问,enum_cfg/iaspalarm,,enum_cfg/iaspalarm,Access that does not comply with security policies
+c8d08016-d264-48fc-91c9-4481691f8566,安全密码配置,,,pt/gui_integrate_secpw,Secure password configuration
+c96f8814-9275-400c-b87d-5386cad3487b,安全密码信息,,,pt/gui_integrate_secpw,Secure password info
+cd585f0d-d2cd-42ec-804c-9316103288cc,修改安全参数信息,,,pt/gui_integrate_secusermgr,Modify security params
+cf6eb565-949b-4e98-a37e-e930f0446257,安全管理_数据备份,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Data backup
+cff3c084-edba-4dab-96de-c24be41d2e5b,安全信息管理,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security Info
+d1332e86-a0b5-4361-abf2-65db84d0e656,安全审计分析,,,pt/gui_sec_audit,Security Audit Analysis
+d2226e4c-702a-460e-97d8-aeaafc2287dc,安全密码,Conf/desc,,fytest_sysmgr_sysmdl_Conf,Security Code
+d46cba8c-f18b-45dc-bfdf-e7a2389a9124,安全管理_登录接入异常,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,"Security Management_
+Login Access Exception"
+d6d9b1da-b049-46b7-a28b-0d094219d77b,安全密码,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security Code
+d8c60d95-d7f5-40ec-bd29-8eb1e1373798,安全管理_越权访问,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,Security management_unauthorized access
+da274cce-6325-4d9e-b906-fd95ee07f411,安全连接白名单信息,,,pt/gui_integrate_secwhite,Secure connection whitelist
+da6d03f8-9068-41f2-b9aa-2730ae8002f9,包含的安全功能项,,,fytest_sysops.run.0_secinfo_alias_SecFuncItem,Included security function items
+deb8aba0-1ae0-4892-ad41-b8c04bea647a,安全审计配置,Conf/desc,,fytest_sysmgr_sysmdl_Conf,Security audit configuration
+e123aa7f-f3aa-48c1-b75c-4f8c08888fbd,安全密码,tabBarName,,import : excel ; fileNametr_gui_integrate.xlsx,Security Code
+e2f3ca0e-74b9-4352-9291-de0265b8f426,安全审计_访问审计信息,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SECAUDIT_Access audit info
+e5ef5be6-a38e-4fff-b822-f2b07b5f7e5d,切换当前安全配置模式为：,ConfigParam,,gui_integrate_secusermgr,Switch security mode:
+e6132157-673c-47f7-b068-6d68a9d71bae,安全信息,TdbDef/desc,,fytest_sysmgr_sysmdl_TdbDef,Security info
+e689d4fe-220c-4b23-9aec-f8aa5d050f75,安全信息管理,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Security Info
+e759e026-c05c-48f3-b943-a4a0572b858d,安全配置,ConfigParam,buttonName,gui_integrate_secusermgr,Security config
+e8436352-19bf-4d38-ad73-58a20cc3e2d2,安全白名单,tabBarName,,import : excel ; fileNamegui_integrate_common.xlsx,Whitelist
+eb4f0d6d-3395-4c01-a6ec-19f41f0d614b,安全功能组表,,,fytest_sysops.run.0_secinfo_alias,Safety function group table
+ee66952f-242d-41a4-948b-f156689fba47,安全管理_修改配置失败,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Reset password failure
+f0cdd97a-4d1b-4fac-b19b-4d4052e12d77,安全审计_审计记录清理,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,Security audit_audit record cleanup
+f564504f-ace9-4945-b4d4-6445c7043ee5,本模式需: 启用安全身份认证功能,ConfigParam,,gui_integrate_secusermgr,This mode requires: Enable secure identity auth function
+f57098ec-3fbc-44d0-832c-ece00bcf0d25,安全配置,ConfigParam,,gui_integrate_secusermgr,Security Config
+f93931e7-836f-48c0-b243-54d7753da776,安全审计分析,,,pt/gui_sec_audit,Security Audit Analysis
+fe645e69-b54b-449e-ac82-53becdf56597,安全管理_修改配置成功,AlarmItem/desc,,fytest_sysops.run.0_secinfo_AlarmItem,SEC_Modify config success

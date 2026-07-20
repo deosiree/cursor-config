@@ -1,0 +1,4 @@
+interface:
+  display_name: "翻译词条CSV"
+  short_description: "翻译 CSV 词条并保护占位符与术语一致性，只更新英文列并输出错误日志"
+  default_prompt: "使用 $translate 处理该 CSV，只更新英文翻译列并输出错误日志。"
