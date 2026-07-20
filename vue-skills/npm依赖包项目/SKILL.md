@@ -38,6 +38,26 @@ description: Vue3 组件库仓（以 nebula-ui / @nebula/ui 为样本）的目�
 
 🔴 **CHECKPOINT · STOP**：`taskKind=publish` 时只输出命令与检查清单，**禁止**未经用户同意执行 `npm publish`。
 
+🔴 **CHECKPOINT · STOP**：`taskKind=newComponent` 且将改 `src/index.ts` exports 时，先输出 `componentName` + 文件清单，等人确认命名（`Ne` 前缀）后再写文件。
+
+## GREEN（主入口序号；细节在 intention/feature）
+
+1. **路由**：进入 [[路由-库仓任务]]，输出唯一 `dispatchedIntention`（禁止链式）。
+2. **若缺地图**：[[分析-库结构基线]] → 写出 `libBaseline`（version/components/exports/peers）。
+3. **编排**：[[编排-新组件落地]] 按 `taskKind` 裁剪调用 feature（约定目录 / Vite peer / examples / 宿主接入 / 发布清单）。
+4. **验收**：按「验证要求」命令逐条执行；对照 `evals/expected-outputs.md`。
+5. **收尾**：填「每轮固定输出模板」；`executedPublish` 默认 `false`。
+
+输入 → 输出：
+
+| 步 | 输入 | 输出 |
+|---|---|---|
+| 1 | 用户描述 + `taskKind` | `dispatchedIntention` |
+| 2 | `libRepo` | `libBaseline` |
+| 3 | `componentName` / `consumerRepo` | `libOrchestration.touched` |
+| 4 | 仓库可执行环境 | `buildOk` / 冒烟结论 |
+| 5 | 上列产物 | 完整 YAML 回复 |
+
 ## 机制摘要（nebula-ui）
 
 ```
@@ -66,6 +86,17 @@ publishConfig registry  → Artifactory @nebula scope
 | examples 白屏 | 查 vue-router / vite.examples.config | 对照现有 `NeSecretInputDoc` 路由注册 |
 | `taskKind=publish` 且用户未授权 | 只输出 checklist + 命令 | 🛑 STOP：`executedPublish` 必须为 false |
 | 用户把「跨仓抽取」当成库内任务 | 转交 `封装npm依赖包` | 本 skill 不写业务仓删文件步骤 |
+
+## 资源必读（dim 路径须可达）
+
+执行前打开（相对本 skill 根目录）：
+
+1. `references/nebula-ui拓扑.md`
+2. `references/消费方checklist.md`
+3. `evals/expected-outputs.md`
+4. 样本：`assets/few-shot-example/apex-NeI18nInput消费/SKILL.md`（consume）或 `assets/few-shot-example/NeSecretInput-库内结构/SKILL.md`（newComponent）
+
+缺文件 → 🛑 STOP：先补资源再继续，禁止凭记忆编造 Artifactory URL 或 peer 列表。
 
 ## 子 skill 索引
 
@@ -124,6 +155,8 @@ libOrchestration: # 编排后
   executedPublish: false
 checkpoint: ""
 ```
+
+对照验收：`evals/expected-outputs.md`。三条 test-prompt 缺字段即 fail；`taskKind=publish` 时 `executedPublish` 必须为 `false`。
 
 ## 使用示例
 

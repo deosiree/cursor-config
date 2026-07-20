@@ -1,6 +1,9 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-20T12:05	baseline	封装npm依赖包	-	76.1	baseline	-	初始结构+dry_run；runtime_warn=0	dry_run
-2026-07-20T12:05	baseline	npm依赖包项目	-	76.8	baseline	-	初始结构+dry_run；runtime_warn=0	dry_run
-2026-07-20T12:10	c48e899	封装npm依赖包	76.1	78.1	keep	失败模式编码	主SKILL失败表升三段式+去软词	dry_run
-2026-07-20T12:10	c48e899	npm依赖包项目	76.8	78.1	keep	失败模式编码	主SKILL失败表补publish/跨仓转交兜底	dry_run
-2026-07-20T12:15	c48e899	封装npm依赖包	78.1	80.4	keep	实测表现	增加每轮固定输出模板yaml	dry_run
-2026-07-20T12:15	c48e899	npm依赖包项目	78.1	80.4	keep	实测表现	增加每轮固定输出模板yaml	dry_run
+2026-07-20T12:10	c48e899	封装npm依赖包	76.1	78.1	keep	失败模式编码	失败表三段式	dry_run
+2026-07-20T12:15	c48e899	封装npm依赖包	78.1	80.4	keep	实测表现	输出模板yaml	dry_run
+2026-07-20T12:20	d32c76d	封装npm依赖包	80.4	81.6	keep	可执行具体性	验证改为命令+路径锚点	dry_run
+2026-07-20T12:25	pending	封装npm依赖包	81.6	85.6	keep	实测表现	expected-outputs字段验收+跨仓CHECKPOINT	dry_run
+2026-07-20T12:30	pending	封装npm依赖包	85.6	86.8	keep	失败模式编码	失败表扩至9行	dry_run
+2026-07-20T12:35	pending	封装npm依赖包	86.8	88.0	keep	整体架构	架构边界防主文件膨胀	dry_run
+2026-07-20T12:35	HL-4	封装npm依赖包	88.0	88.0	break	-	连续R5/R6 Δ=1.2/1.2<2 触顶	dry_run

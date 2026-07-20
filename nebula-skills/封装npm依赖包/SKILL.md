@@ -54,6 +54,8 @@ description: Nebula 跨仓把业务仓可复用 UI 抽进 @nebula/ui：边界判
 
 跨仓 surface：实现在 `surface=nebula-ui`；同时改消费者 → `cross-mfe` 或双 surface，先问人。
 
+🔴 **CHECKPOINT · STOP**：`publishMode=artifactory` 或 `consumers` 非空时，先列出将改仓库清单，等人回复「确认」后再执行发版/替换；禁止静默双仓提交。
+
 ## 反模式黑名单
 
 - 把带网关/API/表单校验策略的业务壳整包塞进 `@nebula/ui`
@@ -73,8 +75,15 @@ description: Nebula 跨仓把业务仓可复用 UI 抽进 @nebula/ui：边界判
 | 消费者升版后缺样式 | 确认 `import '@nebula/ui/style.css'` | 查 `package.json` exports `./style.css`；缺则先修库仓 exports |
 | `#suffix` 根上 `v-if` 导致无眼睛 | 始终声明 `#suffix`，`v-if` 只挂图标 | 对照 [[references/NeSecretInput踩坑]] 复现表 |
 | 用户要求密码策略壳一并入库 | 拒绝；引用反模式黑名单 | 🛑 STOP：只允许核入库，壳 path 列在 `stayInRepo` |
+| `sourceComponentPath` 不存在 | 用 `rg`/`Glob` 按组件名反查 | 🛑 STOP：列入 `missingFacts`，禁止猜路径写码 |
+| examples 页挂了但路由未注册 | 对照现有 `NeSecretInputDoc` 导航项补注册 | 先修 examples，再宣称编排完成 |
+| 双仓实现 API 不一致 | 输出 diff 表，以「更通用」列为核 | 问人指定 SSOT 仓后再 [[分析-可抽离边界]] |
 
-## 子 skill 索引
+## 架构边界（防主文件膨胀）
+
+主 `SKILL.md` 只保留：路由表、输入契约、失败表、检查点、验证命令、输出模板。  
+实现步骤、Vite/peer、examples 细节 → 只在 feature-skills；跨仓「抽不抽」决策 → intention `分析-可抽离边界`。  
+禁止把 `npm依赖包项目` 的库内 GREEN 全文复制进本文件。
 
 **intention-skills**
 
@@ -141,6 +150,8 @@ orchestrationResult: # 编排后必填
 checkpoint: # 需要人确认时非空
   question: ""
 ```
+
+对照验收：`evals/expected-outputs.md`（三条 test-prompt 的字段级期望）。跑 eval 时逐条勾选，缺字段即 fail。
 
 ## 使用示例
 
