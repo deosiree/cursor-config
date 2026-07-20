@@ -93,10 +93,21 @@ publishConfig registry  → Artifactory @nebula scope
 - [[references/nebula-ui拓扑]]
 - [[references/消费方checklist]]
 
-## 验证要求
+## 验证要求（按序执行）
 
-- `pnpm build`；相关 `dev:examples` 页可开
-- 宿主侧：已有 `NebulaUI` 注册时冒烟渲染目标组件
+库仓 `nebula-ui`：
+
+1. `pnpm build`（exit 0）
+2. 抽查 `dist/index.d.ts` 或 named export 含目标 `Ne*`
+3. `pnpm run dev:examples` → 打开对应 Doc 页不白屏
+
+宿主（`taskKind=consume` 时，以 apex 为对照）：
+
+4. `package.json` 存在 `"@nebula/ui"`
+5. `src/main.ts` 同时具备：`import NebulaUI from "@nebula/ui"`、`import "@nebula/ui/style.css"`、`app.use(NebulaUI…)`
+6. 按需样例：`import { NeI18nInput } from "@nebula/ui"`（见 `apex_dev/src/views/system/auditConfig/components/AuditFormDialog.vue`）
+
+peer 清单（宿主须已安装，勿写入库 `dependencies`）：`vue`、`element-plus`、`echarts`、`@vueuse/core`。
 
 ## 每轮固定输出模板
 

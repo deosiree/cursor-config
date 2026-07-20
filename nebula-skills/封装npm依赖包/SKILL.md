@@ -101,11 +101,25 @@ description: Nebula 跨仓把业务仓可复用 UI 抽进 @nebula/ui：边界判
 - [[references/跨仓surface决策]]
 - [[references/NeSecretInput踩坑]]
 
-## 验证要求
+## 验证要求（按序执行，全部通过才算完成）
 
-- `pnpm build` 通过；`pnpm run dev:examples` 覆盖新组件场景
-- 消费者 `type-check` 通过；本地组件引用已删除或明确留壳
-- 未误改 Cookie-Session / Bearer
+在 `nebula-ui` 根目录：
+
+1. `pnpm build`（exit 0；`dist/` 含新组件符号）
+2. `pnpm run dev:examples`（浏览器打开对应 `*Doc` 页，空值+有值各测一次）
+
+在每个 `consumers[]` 仓根目录（若本轮有替换）：
+
+3. `pnpm type-check`（或该仓等价脚本）
+4. `rg -n "GuardedSecretInput|旧本地路径" src` → 仅允许业务壳残留；核路径必须为 0 命中
+5. 确认未新增 `Authorization: Bearer`（`rg -n "Authorization:\\s*Bearer" src` 无新增）
+
+路径锚点（对照用，勿猜）：
+
+- 库入口：`nebula-ui/src/index.ts`
+- 组件目录：`nebula-ui/src/components/{componentName}/`
+- examples：`nebula-ui/examples/pages/`、`nebula-ui/examples/demos/`
+- apex 接入样例：`apex_dev/src/main.ts`（`app.use(NebulaUI)` + `@nebula/ui/style.css`）
 
 ## 每轮固定输出模板
 
