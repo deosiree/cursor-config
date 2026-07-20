@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "把 apex_dev 里的 GuardedSecretInput 抽进 @nebula/ui，做成 NeSecretInput；microfb 的 PwdField 不要动业务校验。先分析再入库，本地 link。",
+    "expected": "路由到分析边界→partial；核入库壳留仓；编排实现/导出/examples/link；不自动 publish；不擅自双仓替换除非授权"
+  },
+  {
+    "id": 2,
+    "prompt": "密码策略提示和确认密码校验也一起封装进 nebula-ui 吧。",
+    "expected": "判定为业务壳不可整包入库；STOP 或 mode=partial 只保留输入核；提示用封装检查清单"
+  },
+  {
+    "id": 3,
+    "prompt": "NeSecretInput 已经在 nebula-ui 了，帮我把 apex 本地组件换成 @nebula/ui 并升版。",
+    "expected": "编排从发版/替换步起；CHECKPOINT 确认消费者；grep 清残留；PwdField 若存在则保留"
+  }
+]

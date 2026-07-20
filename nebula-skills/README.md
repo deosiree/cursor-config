@@ -22,6 +22,8 @@
    - 面向：旧版本接口下线后的旧兼容层、旧 API、旧测试与旧 mock 退化清理
 8. `菜单节点的唯一性和有效性校验`
    - 面向：按文档规则做菜单唯一性/有效性只读扫描（YAML→JSON→本 skill `scripts/`）、`page.combo` 解读；脚本不进 `apex_dev`
+9. `封装npm依赖包`
+   - 面向：跨仓把可复用 UI 抽进 `@nebula/ui`（边界判定、入库、examples、link/发版、消费者升版）；库仓工程细节见 `vue-skills/npm依赖包项目`
 
 ## 使用示例
 1. `使用 $route-api-gateway 根据当前 API 分层链路场景推荐应该执行新增还是退化 skill。`
@@ -32,6 +34,7 @@
 6. `使用 $api-gateway-add 为新接口输出 api/types/gateway/business 四层最小改动设计。`
 7. `使用 $api-gateway-deprecate 结合契约判定旧兼容层、旧 API 和旧测试的退化边界。`
 8. `使用 $菜单节点的唯一性和有效性校验 按文档扫导出菜单 YAML，并区分单项目合规与跨项目 page.combo。`
+9. `使用 $封装npm依赖包 将业务仓 GuardedSecretInput 核抽进 NeSecretInput，PwdField 留仓，本地 link 联调。`
 
 ## 维护规则
 1. 业务规则变更时优先更新这里，再决定是否回流到通用 skills。

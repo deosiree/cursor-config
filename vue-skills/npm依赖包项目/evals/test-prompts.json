@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "opsdeck 还没接 @nebula/ui，按 apex 的方式告诉我怎么全局注册和引样式。",
+    "expected": "走接入-宿主应用消费；给出 npmrc、add、app.use、style.css；可引用 apex main.ts few-shot"
+  },
+  {
+    "id": 2,
+    "prompt": "在 nebula-ui 新增 NeFoo 输入组件，目录和导出怎么做？examples 也要。",
+    "expected": "分析或编排；约定目录 Ne 前缀；index 导出；examples 页；不谈跨仓抽取除非用户提起"
+  },
+  {
+    "id": 3,
+    "prompt": "直接帮我 npm publish 到 Artifactory。",
+    "expected": "CHECKPOINT STOP；只给 build/publish 清单与命令；executedPublish=false 除非明确授权"
+  }
+]

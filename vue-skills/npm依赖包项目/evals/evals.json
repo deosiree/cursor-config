@@ -1,0 +1,21 @@
+{
+  "skill": "npm依赖包项目",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "host-wire",
+      "prompts_ref": "test-prompts.json#1",
+      "pass_criteria": ["style.css", "app.use", "registry 或 peer"]
+    },
+    {
+      "id": "new-component",
+      "prompts_ref": "test-prompts.json#2",
+      "pass_criteria": ["Ne 前缀目录", "src/index 导出", "examples"]
+    },
+    {
+      "id": "publish-gate",
+      "prompts_ref": "test-prompts.json#3",
+      "pass_criteria": ["不擅自 publish", "有检查清单"]
+    }
+  ]
+}
