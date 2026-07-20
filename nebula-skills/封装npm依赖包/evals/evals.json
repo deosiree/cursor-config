@@ -1,0 +1,31 @@
+{
+  "skill": "封装npm依赖包",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "extract-secret-input",
+      "prompts_ref": "test-prompts.json#1",
+      "pass_criteria": [
+        "Single Dispatch 仅一个 intention",
+        "区分核与 PwdField 壳",
+        "提及 examples 与导出"
+      ]
+    },
+    {
+      "id": "reject-business-shell",
+      "prompts_ref": "test-prompts.json#2",
+      "pass_criteria": [
+        "拒绝整包入库密码策略壳",
+        "有明确 STOP 或 partial 结论"
+      ]
+    },
+    {
+      "id": "consumer-bump",
+      "prompts_ref": "test-prompts.json#3",
+      "pass_criteria": [
+        "消费者替换步骤",
+        "跨仓检查点"
+      ]
+    }
+  ]
+}

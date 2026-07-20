@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-07-20T12:05	baseline	封装npm依赖包	-	76.1	baseline	-	初始结构+dry_run；runtime_warn=0	dry_run
+2026-07-20T12:05	baseline	npm依赖包项目	-	76.8	baseline	-	初始结构+dry_run；runtime_warn=0	dry_run
+2026-07-20T12:10	round1	封装npm依赖包	76.1	78.1	keep	失败模式编码	主SKILL失败表升三段式+去软词「建议」	dry_run
+2026-07-20T12:10	round1	npm依赖包项目	76.8	78.1	keep	失败模式编码	主SKILL失败表补publish/跨仓转交兜底	dry_run
+2026-07-20T12:15	round2	封装npm依赖包	78.1	80.4	keep	实测表现	增加每轮固定输出模板yaml	dry_run
+2026-07-20T12:15	round2	npm依赖包项目	78.1	80.4	keep	实测表现	增加每轮固定输出模板yaml	dry_run
