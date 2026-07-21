@@ -1,29 +1,28 @@
-# Darwin · 套件重构后基线（evaluate-only）
+# Darwin 优化报告 · 套件版（HL-4）
 
+**Skill：** 创建harness工作流（父 agent 套件）  
 **日期：** 2026-07-21  
-**模式：** evaluate-only（重构后首次）  
-**结构：** 父 agent + 5 intention + 6 feature  
+**退出：** 连续 2 轮 Δ &lt; 2（+1.6 / +0.9）
 
-## 父 SKILL 9 维（约）
+## 分数轨迹
 
-| # | 维 | 分 | 备注 |
-| --- | --- | --- | --- |
-| 1 | Frontmatter | 9 | 含同步/darwin 触发词 |
-| 2 | 工作流 | 9 | 速查路由 + intention 表 |
-| 3 | 失败模式 | 8 | 细则在子节点；父留黑名单 |
-| 4 | 检查点 | 9 | 路径/同步确认/darwin |
-| 5 | 可执行性 | 9 | 双输出契约 |
-| 6 | 资源 | 9 | 13 个 SKILL 可达 |
-| 7 | 架构 | 9.5 | 无/旧/同步/darwin 分责 |
-| 8 | 实测 | 9 | full_test 同步路径 Judge 9/10 |
-| 9 | 黑名单 | 9 | 含禁堆父 SKILL |
+| 轮次 | 分数 | Δ | 主攻 | 状态 |
+| --- | --- | --- | --- | --- |
+| suite baseline | 88.5 | — | 重构后 | — |
+| round1 | 90.1 | **+1.6** | dim3 父路由失败表 | keep · full_test |
+| round2 | 91.0 | **+0.9** | dim5/8 同轮 RED→GREEN | keep · **HL-4 break** |
 
-**总分 ≈ 88.5 / 100**（架构重构优先于单文件凑分；相对单体 91.4 略降可接受）
+## 主要改动
 
-## full_test
+1. 父 SKILL 增加路由层三段式失败表（路径/mode/Single Dispatch/反拷贝/禁堆父文件）  
+2. 明确「同轮衔接」：分析得 mode 后可同回复进创建/升级，最终 route 写编排名  
 
-test-prompts #3（同步 skill 收益）：route 正确；portable/rejected 分离；darwinFollowUp=evaluate-only；未堆父 SKILL。
+## 仍最值得优化的点（结构外）
 
-## 🔴 CHECKPOINT
+**真实「编排-同步skill收益」写盘闭环**：把 Nebula 已有质量 Loop 等范式，经 CHECKPOINT 真正写入 `可迁移能力.md`，再让陌生仓跑一次「旧升级」对照。这抬的是产品收益与 dim8 置信度，不是再改父 SKILL 措辞。
 
-是否进入 `optimize`（对父或最弱子节点 hill-climb）？默认建议：**先用人跑一次真实同步**，结构优化等有实测痛点再开。  
+次优：给 `编排-同步skill收益` 单独加 2 条 live eval，而不是继续 hill-climb 父文件。
+
+## 建议
+
+**收手（对父 SKILL / 套件结构优化）。** 再改正文预期 Δ≪2。有精力做一次 **live 同步收益**，别继续 Darwin 抠主文档。  

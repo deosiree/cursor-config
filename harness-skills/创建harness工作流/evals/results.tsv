@@ -1,4 +1,6 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-21T06:55:00Z	baseline	创建harness工作流	-	81.0	baseline	-	单体初评	dry_run
-2026-07-21T07:50:00Z	hl4	创建harness工作流	81.0	91.4	keep	-	单体 HL-4 收手	full_test
-2026-07-21T08:30:00Z	suite-refactor	创建harness工作流	91.4	88.5	baseline	架构	父agent+intention/feature；同步收益+darwin intention；evaluate-only	full_test
+2026-07-21T07:50:00Z	hl4	创建harness工作流	81.0	91.4	keep	-	单体 HL-4	full_test
+2026-07-21T08:30:00Z	suite-refactor	创建harness工作流	91.4	88.5	baseline	架构	父agent套件重构后基线	full_test
+2026-07-21T09:00:00Z	suite-r1	创建harness工作流	88.5	90.1	keep	dim3	父路由三段式失败表；full_test 创建8/升级9	full_test
+2026-07-21T09:10:00Z	suite-r2	创建harness工作流	90.1	91.0	keep	dim5/8	同轮分析→编排衔接；创建路径9/10；Δ=+0.9；HL-4 break	full_test

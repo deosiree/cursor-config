@@ -26,7 +26,9 @@ description: 判定目标仓是无 harness、旧 harness，还是仅对照缺口
 | targetPath 不可用 | `blocked` |
 
 3. 调 `[[../../feature-skills/对照可迁移能力/SKILL.md]]` 生成初版 `gapChecklist`（audit-only / legacy / none 均需要）  
-4. 输出 `mode` + `nextIntention` 建议，**停止**（Single Dispatch：留给父 agent 再进编排）
+4. 输出 `mode` + `nextIntention` 建议  
+5. 若父 agent 已声明「同轮衔接」且 `mode` 为 `none|legacy`、关键 blockers 可标在 `stopOrCheckpoint`：允许同一回复继续进入对应编排；最终 YAML 的 `route` 写**编排**名，并在正文标明已完成分析  
+6. 若 `mode=blocked|audit-only`：**停止**，不进入创建/升级编排  
 
 ## 失败分支
 

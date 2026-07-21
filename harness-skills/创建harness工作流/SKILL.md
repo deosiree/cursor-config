@@ -57,6 +57,21 @@ description: 父级 agent：为任意仓创建/升级 harness，或把源仓新�
 
 **Single Dispatch：** 一次只进一个 intention；需要 feature 时由该 intention 点名，禁止一次拉齐全部 feature。
 
+**同轮衔接（创建/升级）：** 用户已给 `targetPath` 且意图明确时，允许**同一条回复内**先输出 `分析-harness现状` 的 `mode`，随即进入对应编排 intention（仍算两次逻辑步骤、一份最终 YAML 用最终 `route`）。禁止跳过分析直接写文件；禁止并行拉多个 intention。
+
+## 失败分支（父路由层）
+
+| 触发条件 | 一线修复 | 仍失败兜底 |
+| --- | --- | --- |
+| `targetPath` 缺失且非同步/非 Darwin | 🔴 问绝对路径；YAML 全 `unknown` | `route` 停在分析；禁止写正式文件 |
+| 同步场景缺 `sourceHarnessPath` | 🔴 问源仓路径 | 不进提炼；不得改 `可迁移能力.md` |
+| 无/旧未分清就开写 | 先 `分析-harness现状` 得 `mode` | mode 未知 → 🛑 不调度创建/升级 |
+| 一次拉齐全部 feature | 打回：只保留 intention 点名的节点 | 超范围输出作废 |
+| 用户要拷样例业务/L2 路径 | 🛑 + `反拷贝与泄漏扫描` | 终止本轮；不得 DONE |
+| 同步想把细则堆进父 SKILL | 🛑 只改能力表/样例/feature | 拒绝写父文件长流程 |
+
+子节点细则失败表仍以其自身 SKILL 为准；本表只管**路由与派发**。
+
 ## Feature 索引（按需）
 
 | 能力 | 读 |
