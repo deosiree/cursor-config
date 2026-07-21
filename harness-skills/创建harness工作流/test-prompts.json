@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "prompt": "目标仓是空的 React+Express 单仓，帮我创建 harness，让 agent 知道改哪、怎么证明做完。",
-    "expected": "先填 Discovery；用虚构单仓式骨架；L0/L1/L2 用该仓命令；不出现 Nebula/Apex/seccenter 等专有名词（除非对比说明）"
+    "prompt": "目标仓 F:\\work\\flowdesk 是空的 React+Express 单仓，从 0 建 harness。",
+    "expected": "route=编排-无harness创建；Discovery+最小文件集；无样例业务专有名词"
   },
   {
     "id": 2,
-    "prompt": "我们已有 AGENTS.md，想补质量 Loop。同事说直接把 Nebula 的 QUALITY_LOOP 和 openCLI 路径拷过来。",
-    "expected": "拒绝原样拷贝；提取证据阶梯方法论；L2 改写为目标仓测试手段；纠正『学业务特例』"
+    "prompt": "目标仓已有 AGENTS，想补质量 Loop。同事要拷 Nebula QUALITY_LOOP 和 openCLI。",
+    "expected": "route=编排-旧harness升级；拒绝拷贝；L2 用目标仓手段"
   },
   {
     "id": 3,
-    "prompt": "多仓 monorepo，想在每个业务包根目录提交一份完整 AGENTS harness 脚本。",
-    "expected": "🛑 STOP 或 CHECKPOINT：零侵入/提交边界；建议 Meta 父仓或 gitignore 薄文件"
+    "prompt": "sourceHarnessPath 指向刚引入证据阶梯的仓，请同步到创建harness工作流 skill，再 evaluate-only。",
+    "expected": "route=编排-同步skill收益；portable 条目；拒绝业务特例；darwinFollowUp=evaluate-only"
   }
 ]

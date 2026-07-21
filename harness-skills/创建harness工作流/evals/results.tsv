@@ -1,6 +1,4 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
-2026-07-21T06:55:00Z	baseline	创建harness工作流	-	81.0	baseline	-	初评+反例表；人确认保留	dry_run
-2026-07-21T07:20:00Z	round1	创建harness工作流	81.0	86.2	keep	dim5/dim8	强制交付YAML模板；full_test×2均~9/10；暴露未给路径时用工作区预填	full_test
-2026-07-21T07:35:00Z	round2	创建harness工作流	86.2	89.4	keep	dim3/dim4/dim8	三段式失败表；targetPath缺失禁工作区冒充；反例补一条；full_test歧义路径9/10	full_test
-2026-07-21T07:45:00Z	round3	创建harness工作流	89.4	90.6	keep	dim7	速查决策树；Δ=+1.2<2	full_test
-2026-07-21T07:50:00Z	round4	创建harness工作流	90.6	91.4	keep	dim5	发出前自检三条；Δ=+0.8<2；HL-4触顶break	dry_run
+2026-07-21T06:55:00Z	baseline	创建harness工作流	-	81.0	baseline	-	单体初评	dry_run
+2026-07-21T07:50:00Z	hl4	创建harness工作流	81.0	91.4	keep	-	单体 HL-4 收手	full_test
+2026-07-21T08:30:00Z	suite-refactor	创建harness工作流	91.4	88.5	baseline	架构	父agent+intention/feature；同步收益+darwin intention；evaluate-only	full_test

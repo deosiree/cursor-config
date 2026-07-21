@@ -1,41 +1,29 @@
-# Darwin 优化报告 · 创建harness工作流
+# Darwin · 套件重构后基线（evaluate-only）
 
 **日期：** 2026-07-21  
-**人确认：** 保留初轮反例补强后进入 Phase 2  
-**退出：** HL-4（连续 2 轮 Δ &lt; 2）
+**模式：** evaluate-only（重构后首次）  
+**结构：** 父 agent + 5 intention + 6 feature  
 
-## 分数轨迹
-
-| 轮次 | 分数 | Δ | 主攻维 | 状态 |
-| --- | --- | --- | --- | --- |
-| baseline | 81.0 | — | — | keep（人确认） |
-| round1 | 86.2 | **+5.2** | dim5/8 交付模板 | keep · full_test |
-| round2 | 89.4 | **+3.2** | dim3/4/8 路径纪律+三段式失败 | keep · full_test |
-| round3 | 90.6 | **+1.2** | dim7 速查决策树 | keep |
-| round4 | 91.4 | **+0.8** | dim5 发出前自检 | keep · **HL-4 break** |
-
-## 终态 9 维（约）
+## 父 SKILL 9 维（约）
 
 | # | 维 | 分 | 备注 |
 | --- | --- | --- | --- |
-| 1 | Frontmatter | 9 | 触发词充足 |
-| 2 | 工作流 | 9 | 三幕+决策树 |
-| 3 | 失败模式 | 10 | 三段式+targetPath |
-| 4 | 检查点 | 9 | 路径/拷贝/零侵入 |
-| 5 | 可执行性 | 9.5 | YAML 模板+自检 |
-| 6 | 资源 | 9 | references 齐全 |
-| 7 | 架构 | 9 | 决策树降冗余导航成本 |
-| 8 | 实测 | 9 | full_test 主路径 9/10；歧义路径合规 |
-| 9 | 黑名单/反例 | 9.5 | 含工作区冒充反例 |
+| 1 | Frontmatter | 9 | 含同步/darwin 触发词 |
+| 2 | 工作流 | 9 | 速查路由 + intention 表 |
+| 3 | 失败模式 | 8 | 细则在子节点；父留黑名单 |
+| 4 | 检查点 | 9 | 路径/同步确认/darwin |
+| 5 | 可执行性 | 9 | 双输出契约 |
+| 6 | 资源 | 9 | 13 个 SKILL 可达 |
+| 7 | 架构 | 9.5 | 无/旧/同步/darwin 分责 |
+| 8 | 实测 | 9 | full_test 同步路径 Judge 9/10 |
+| 9 | 黑名单 | 9 | 含禁堆父 SKILL |
 
-## HL-4
+**总分 ≈ 88.5 / 100**（架构重构优先于单文件凑分；相对单体 91.4 略降可接受）
 
-Round3 Δ=1.2、Round4 Δ=0.8，连续两轮 &lt; 2 → **停止**，避免为凑分堆段落。
+## full_test
 
-## 仍最值得优化的点（结构外）
+test-prompts #3（同步 skill 收益）：route 正确；portable/rejected 分离；darwinFollowUp=evaluate-only；未堆父 SKILL。
 
-**dim8 置信度 / full_test 覆盖：** 分数已高，但 Round4 为 dry_run；若继续，应换**真实陌生仓**（非当前 IDE 工作区）做 1 次 live 迁移试跑，而不是再改 `SKILL.md` 措辞。结构 hill-climbing 已触顶。
+## 🔴 CHECKPOINT
 
-## 建议
-
-**收手（结构优化）。** 继续改主文档预期 Δ≪2，属 over-engineering。有余力则做一次 live full_test 验收，不写进主 SKILL 正文。  
+是否进入 `optimize`（对父或最弱子节点 hill-climb）？默认建议：**先用人跑一次真实同步**，结构优化等有实测痛点再开。  
