@@ -4,3 +4,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-21T08:30:00Z	suite-refactor	创建harness工作流	91.4	88.5	baseline	架构	父agent套件重构后基线	full_test
 2026-07-21T09:00:00Z	suite-r1	创建harness工作流	88.5	90.1	keep	dim3	父路由三段式失败表；full_test 创建8/升级9	full_test
 2026-07-21T09:10:00Z	suite-r2	创建harness工作流	90.1	91.0	keep	dim5/8	同轮分析→编排衔接；创建路径9/10；Δ=+0.9；HL-4 break	full_test
+2026-07-21T09:35:00Z	sync-live	创建harness工作流	91.0	91.0	sync	可迁移能力	真实同步质量Loop范式：+证据阶梯/对抗审查/失败入库；样例槽位更新；evaluate-only	dry_run

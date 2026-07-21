@@ -14,10 +14,10 @@
 | 会话/鉴权约束 | 本产品选定 Cookie-Session；宪法禁止擅自改会话模型（**这是产品决策，不是通用 harness 真理**） |
 | 命名陷阱 | 包名与微前端注册名不一致时，以注册名/路由为准（**项目事实**） |
 | L0 验证 | 各子仓 `pnpm type-check` 等写在子仓 AGENTS |
-| L1 / L2 | 单测 + 项目自有 UI/矩阵脚本；无则先补再 DONE |
+| L1 / L2 | 单测 + 项目自有 UI/矩阵脚本；无则先补再 DONE（**勿**把样例 hytests/openCLI 路径当唯一真理） |
 | 改宪法门禁 | `node evals/scripts/ci-smoke.mjs`；人工/Agent 触发，不加自动 hook |
-| 审查导览 | `docs/HARNESS_REVIEW.md` 五模块 + 心智索引 + 写入流程 |
-| 质量 Loop | `docs/QUALITY_LOOP.md` 证据阶梯、对抗审查、停条件 |
+| 审查导览 | `docs/HARNESS_REVIEW.md` 五模块 + 心智索引 + 写入流程；地图挂质量 Loop |
+| 质量 Loop | `docs/QUALITY_LOOP.md`：Proof-or-stop；L0/L1/L2 证据阶梯；对抗审查；停条件；失败入库 |
 | Skills 分层 | 宪法 > 领域 skills > write/darwin；禁盲升 |
 | 提交边界 | 业务 commit 在子仓；父 harness 目录不 push |
 
