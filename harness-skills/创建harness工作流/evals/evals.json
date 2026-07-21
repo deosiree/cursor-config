@@ -1,0 +1,37 @@
+{
+  "skill": "创建harness工作流",
+  "should_trigger": [
+    {
+      "id": "T1",
+      "prompt": "给我们新仓库从 0 建一套 Agent Harness，要能让 agent 认识项目边界。",
+      "expect": "走三幕；先 Discovery；不拷贝样例业务规则"
+    },
+    {
+      "id": "T2",
+      "prompt": "旧仓有 AGENTS，但没有质量 Loop 和审查导览，帮我升级 harness。",
+      "expect": "对照 P1 缺口合并；保留历史"
+    },
+    {
+      "id": "T3",
+      "prompt": "把 harness 工作流方法论迁到另一个产品仓，不要学 Nebula 业务。",
+      "expect": "能力迁移 + 样例仅附录；产物无 Nebula 专有名词残留"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "N1",
+      "prompt": "修一下登录页验证码倒计时 bug。",
+      "expect": "业务修复，不激活本 skill"
+    },
+    {
+      "id": "N2",
+      "prompt": "解释 Cookie-Session 和 Bearer 哪个好。",
+      "expect": "会话模型讨论，不是创建/升级 harness"
+    }
+  ],
+  "acceptance": [
+    "discoveryTable 必填",
+    "gapChecklist 对照可迁移能力",
+    "黑名单含勿照搬样例业务规则、勿用 L0 冒充 Loop"
+  ]
+}
