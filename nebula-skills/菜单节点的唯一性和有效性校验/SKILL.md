@@ -1,22 +1,23 @@
 ---
 name: 菜单节点的唯一性和有效性校验
-description: Use when auditing Nebula menu nodes for uniqueness/validity against docs/plans/前端的表单校验规则.md, converting YAML exports to JSON, running this skill's node scan-menu-rules.mjs, or aligning MenuFormDialog chkPathDup/chkAncPath—not seccenter full-table perm. Scripts live in this skill, not apex_dev.
+description: Use when auditing Nebula menu nodes for uniqueness/validity against humanDocs/规则工厂/菜单管理校验规则.md, converting YAML exports to JSON, running this skill's node scan-menu-rules.mjs, or aligning MenuFormDialog chkPathDup/chkAncPath—not seccenter full-table perm. Scripts live in this skill, not apex_dev.
 ---
 
 # 目标
 
-对照文档规则，对菜单节点做**只读**唯一性/有效性校验；或对齐菜单表单挂载。产物可为扫描报告解读或表单改动要点，**禁止**写接口/推送。
+对照规则工厂文档，对菜单节点做**只读**唯一性/有效性校验；或对齐菜单表单挂载。产物可为扫描报告解读或表单改动要点，**禁止**写接口/推送。本 skill 是执行镜像+扫描，**不是**第三份规则 SSOT。
 
 ## 适用场景
 
 1. 「按文档扫一下导出菜单有没有违规」
 2. YAML（snake_case）→ JSON → `node scripts/scan-menu-rules.mjs`
 3. function 被「同项目 path 重复」误拦 → 应对齐 `chkAncPath` 而非 `chkPathDup`
-4. 解读单文件 0 命中 vs 合并 `_all` 的 `page.combo`
+4. 解读单文件 0 命中 vs 合并 `_all` 的 `route.combo`
 
 ## 规则真源（硬约束）
 
-- 真源：`nebula/docs/plans/前端的表单校验规则.md`
+- 真源：`nebula/humanDocs/规则工厂/菜单管理校验规则.md`（细则+伪代码）
+- Harness 薄入口：`nebula/docs/product/menu-validation.md`（只摘要，不双写）
 - **禁止**用未上传的 seccenter「perm 全表唯一」覆盖文档「同 `parent_id`」
 - 细节见 [references/规则真源与口径.md](references/规则真源与口径.md)
 
@@ -30,7 +31,7 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
    ```
 3. **先分文件 / 单 project 扫**，再决定是否扫 `_all.json`。
 4. 按 [references/违规码词典.md](references/违规码词典.md) 解读；给出「改配置 vs 放宽」倾向。
-5. 输出：命中数、按 code 分组、单项目结论、合并扫描若有 `page.combo` 的单独说明。
+5. 输出：命中数、按 code 分组、单项目结论、合并扫描若有 `route.combo` 的单独说明。
 
 ### 失败分支（A）
 
@@ -61,22 +62,23 @@ description: Use when auditing Nebula menu nodes for uniqueness/validity against
 | 现象 | 决策 |
 |------|------|
 | 单文件 0 命中 | 该项目在文档口径下合规 |
-| `_all` 大量 `page.combo`，分文件为 0 | 跨项目 path+params；问是否同库共存再改/放宽 |
-| 删克隆项目后仍余少数 `page.combo` | 余对属真实跨项目冲突（如 test↔test_data） |
+| `_all` 大量 `route.combo`，分文件为 0 | 跨项目 path+params（directory\|page）；问是否同库共存再改/放宽 |
+| 删克隆项目后仍余少数 `route.combo` | 余对属真实跨项目冲突（如 test↔test_data） |
 | 仅跨页复用同 perm、不同 parent | **合法**；勿用全表 perm 规则误报 |
 
 ## 🔴 CHECKPOINT
 
-出现跨项目 `page.combo`（典型：合并 `_all`）时 **STOP**：先确认「多项目是否必须同库共存」，再谈改配置或放宽全库 page 组合唯一。
+出现跨项目 `route.combo`（典型：合并 `_all`）时 **STOP**：先确认「多项目是否必须同库共存」，再谈改配置或放宽全库 directory\|page 组合唯一。
 
 ## 反例 / 黑名单
 
 1. 不扫写接口、不批量推送菜单。
 2. 不用 seccenter 全表 `perm` 唯一替代文档同级规则。
-3. 不把跨项目 `page.combo` 当成单项目脏数据去改干净项目。
+3. 不把跨项目 `route.combo` 当成单项目脏数据去改干净项目。
 4. 不对 YAML 直接跑扫描（必须先 convert）。
 5. 不删除 dir/page 的同项目 `routePath` 唯一性来「修好」function。
 6. **不把扫描脚本放进 `apex_dev`**（污染业务树）。
+7. **勿恢复旧码 `page.combo`**（已更名为 `route.combo`，覆盖 page\|directory）。
 
 ## 脚本位置
 

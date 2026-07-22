@@ -1,6 +1,6 @@
 /**
  * 菜单规则只读扫描核（skill 自包含）。
- * 口径：《前端的表单校验规则》；禁止 seccenter「perm 全表唯一」。
+ * 口径：humanDocs/规则工厂/菜单管理校验规则.md；禁止 seccenter「perm 全表唯一」。
  */
 import { getFuzzyPathError, getRoutePathError } from "./path-syntax.mjs";
 import { chkAncPath, chkPathDup } from "./menu-path-rules.mjs";
@@ -70,7 +70,12 @@ export function normalizeParams(raw) {
   }));
 }
 
+/** @deprecated 旧名；请用 routeComboKey */
 export function pageComboKey(routePath, params) {
+  return routeComboKey(routePath, params);
+}
+
+export function routeComboKey(routePath, params) {
   const list = normalizeParams(params)
     .filter((p) => p.key || p.value)
     .map((p) => ({ key: p.key, value: p.value }))
@@ -107,12 +112,13 @@ function collectPermDupIds(nodes) {
   return bad;
 }
 
-function collectPageComboDupIds(nodes) {
+/** 全库 directory|page 的 (route_path, params) 冲突 id → detail */
+function collectRouteComboDupIds(nodes) {
   const bad = new Map();
   const seen = new Map();
   for (const n of nodes) {
-    if (!isPage(n.type) || !n.routePath) continue;
-    const key = pageComboKey(n.routePath, n.params);
+    if (!isDirOrPage(n.type) || !n.routePath) continue;
+    const key = routeComboKey(n.routePath, n.params);
     const prev = seen.get(key);
     if (prev) {
       bad.set(
@@ -177,7 +183,7 @@ export function scanMenuRules(tree, options = {}) {
   const projectTrees = splitTreesByProject(Array.isArray(tree) ? tree : []);
   const hits = [];
   const permSiblingDup = collectPermDupIds(nodes);
-  const pageComboDup = globalScope ? collectPageComboDupIds(nodes) : new Map();
+  const routeComboDup = globalScope ? collectRouteComboDupIds(nodes) : new Map();
 
   for (const n of nodes) {
     const projectTree = projectTrees.get(n.projectId || "__none__") ?? tree ?? [];
@@ -242,16 +248,6 @@ export function scanMenuRules(tree, options = {}) {
     if (isPage(n.type)) {
       const pe = paramsError(n.params);
       if (pe) hits.push({ ...base, code: "params.invalid", source: "frontend", message: pe });
-      const comboDetail = pageComboDup.get(n.id);
-      if (comboDetail) {
-        hits.push({
-          ...base,
-          code: "page.combo",
-          source: "doc",
-          message: "路由路径+路由参数（type=page）全库唯一冲突",
-          detail: comboDetail,
-        });
-      }
     } else if (hasParams(n.params)) {
       hits.push({
         ...base,
@@ -259,6 +255,19 @@ export function scanMenuRules(tree, options = {}) {
         source: "doc",
         message: "非 page 的 params 必须为空",
       });
+    }
+
+    if (isDirOrPage(n.type)) {
+      const comboDetail = routeComboDup.get(n.id);
+      if (comboDetail) {
+        hits.push({
+          ...base,
+          code: "route.combo",
+          source: "doc",
+          message: "路由路径与路由参数组合已存在（directory|page 全库）",
+          detail: comboDetail,
+        });
+      }
     }
   }
 

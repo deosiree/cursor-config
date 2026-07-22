@@ -1,13 +1,13 @@
 [
   {
     "id": 1,
-    "prompt": "按《前端的表单校验规则》只读扫描 docs/menu/t-cloud 下 YAML：先转 JSON，再扫 platform 单文件，报告违规码与是否合规。",
-    "expected": "在本 skill scripts/ 先 convert 再 node scan-menu-rules.mjs；单文件 0 命中（或按实际）；不用 seccenter 全表 perm；不往 apex_dev 落脚本。"
+    "prompt": "按《菜单管理校验规则》只读扫描 docs/menu/t-cloud 下 YAML：先转 JSON，再扫 platform 单文件，报告违规码与是否合规。",
+    "expected": "在本 skill scripts/ 先 convert 再 node scan-menu-rules.mjs；单文件 0 命中（或按实际）；真源指规则工厂；不用 seccenter 全表 perm；不往 apex_dev 落脚本。"
   },
   {
     "id": 2,
-    "prompt": "我把各项目合成了 _all.json，扫出大量 page.combo。是不是 platform 菜单脏了？要不要全改 path？",
-    "expected": "STOP/CHECKPOINT：先对照分文件结果；说明跨项目组合；确认同库共存后再谈改配置/放宽；不把跨项目 combo 当单项目脏数据。"
+    "prompt": "我把各项目合成了 _all.json，扫出大量 route.combo。是不是 platform 菜单脏了？要不要全改 path？",
+    "expected": "STOP/CHECKPOINT：先对照分文件结果；说明跨项目 directory|page 组合；确认同库共存后再谈改配置/放宽；不把跨项目 combo 当单项目脏数据；勿用旧码 page.combo。"
   },
   {
     "id": 3,
