@@ -1,0 +1,11 @@
+case_id	round	dim	old_score	new_score	delta	keep	eval_mode	notes	ran_at
+baseline	R0	all		73.8		—	dry_run	parent baseline	2026-07-23
+continue-goal	R0	trial				dry_run	route=核验 OK	2026-07-23
+raise-thresholds	R0	trial				dry_run	route=分析-缺口 OK	2026-07-23
+cross-module-mine	R0	trial				dry_run	route=跨模块 OK	2026-07-23
+opt-specificity	R1	指令具体性	73.8	78.3	+4.5	keep	dry_run	Intake YAML+命令+状态行	2026-07-23
+opt-workflow	R2	工作流	78.3	81.2	+2.9	keep	dry_run	DoD表+降阈值门禁	2026-07-23
+opt-export	R3	指令具体性(导出)	81.2	83.0	+1.8	keep	dry_run	jsonl契约抬实测	2026-07-23
+opt-boundary	R4	边界条件	83.0	84.5	+1.5	keep	dry_run	误路由表	2026-07-23
+opt-frontmatter	R5	Frontmatter	84.5	85.5	+1.0	keep	dry_run	should_trigger	2026-07-23
+opt-journey	R6	指令具体性(旅程)	85.5	85.8	+0.3	keep	dry_run	边际极低·HL-4停	2026-07-23

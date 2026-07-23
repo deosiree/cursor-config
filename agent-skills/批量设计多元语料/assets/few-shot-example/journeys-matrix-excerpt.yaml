@@ -1,0 +1,21 @@
+version: 1
+# 摘录：journeys-matrix 条目形态（实战）
+journeys:
+  J-EXCEL-LOOP:
+    title: 工作台导入到Excel人工译再到更新翻译与归档回写
+    path: journeys/工作台-Excel人工译-更新翻译-归档回写.md
+    modules: [workbench, entry, toolbox]
+    hops:
+      - 工作台词条导入
+      - 工作台词条审核
+      - 词条管理批量选择与已选词条
+      - 已选词条导出Excel
+      - 线下Excel人工翻译
+      - 词条管理或工具箱更新翻译
+      - 工作台翻译审核
+      - 归档或已选词条回写
+  J-DEDUP-BACKFILL:
+    title: 文件送翻去重到工具箱去重回填
+    path: journeys/送翻去重-工具箱去重回填.md
+    modules: [file, toolbox]
+    hops: [送翻去重, 导出映射, 去重回填, 失败词条导出]

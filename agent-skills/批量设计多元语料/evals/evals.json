@@ -1,0 +1,37 @@
+{
+  "skill": "批量设计多元语料",
+  "version": "1.2.0",
+  "notes": "Darwin optimize 已至 HL-4（见 darwin-final-report.md）；默认不再 hill-climb。",
+  "cases": [
+    {
+      "id": "continue-goal",
+      "prompt": "继续语料 Goal",
+      "expect": [
+        "路由到核验-门禁脚本与续跑或编排 intention",
+        "先跑门禁脚本",
+        "只修 FAIL，不新开空计划",
+        "不以人工勾选宣称 PASS"
+      ]
+    },
+    {
+      "id": "raise-thresholds",
+      "prompt": "把门禁汉字量升到 120000，每旅程金标至少 8 条",
+      "expect": [
+        "走分析-语料缺口与阈值提案",
+        "给出新旧对比提案表",
+        "等待人工确认",
+        "确认后升 EVAL_GATES 版本号再改常量"
+      ]
+    },
+    {
+      "id": "cross-module-mine",
+      "prompt": "我们只有单模块 FAQ，请补跨模块旅程，参考 Excel 人工译闭环",
+      "expect": [
+        "调用挖掘-跨模块旅程",
+        "产出含前置/步骤/模块切换/失败/证据的旅程文",
+        "更新 journeys-matrix 与 journey_id 金标",
+        "不臆造 UI 文案"
+      ]
+    }
+  ]
+}

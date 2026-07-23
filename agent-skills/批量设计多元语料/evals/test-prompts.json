@@ -1,0 +1,14 @@
+[
+  {
+    "id": "continue-goal",
+    "prompt": "继续语料 Goal"
+  },
+  {
+    "id": "raise-thresholds",
+    "prompt": "把门禁汉字量升到 120000，每旅程金标至少 8 条"
+  },
+  {
+    "id": "cross-module-mine",
+    "prompt": "我们只有单模块 FAQ，请补跨模块旅程，参考 Excel 人工译闭环"
+  }
+]
