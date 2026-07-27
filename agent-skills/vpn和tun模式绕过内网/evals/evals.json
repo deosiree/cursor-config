@@ -1,0 +1,183 @@
+[
+  {
+    "id": "eval-001",
+    "category": "trigger",
+    "prompt": "我配置了 FlClash TUN 后，内网 ping 不通了，但外网可以访问",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "诊断-网络拓扑分析",
+      "should_identify_issue": "缺少静态路由，TUN 拦截了内网流量"
+    },
+    "notes": "典型症状：内网不通，外网正常"
+  },
+  {
+    "id": "eval-002",
+    "category": "trigger",
+    "prompt": "Kiro AI 报错 Too many requests，说地区不支持",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "诊断-网络拓扑分析",
+      "should_check": "代理是否生效，节点是否在大陆"
+    },
+    "notes": "Kiro 地区检测问题，需要确认代理生效"
+  },
+  {
+    "id": "eval-003",
+    "category": "trigger",
+    "prompt": "curl 能访问 Google，但浏览器打不开 www.google.com",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "验证-网络连通性测试",
+      "should_identify_issue": "系统代理未启用 (ProxyEnable=0)"
+    },
+    "notes": "浏览器和命令行差异，系统代理问题"
+  },
+  {
+    "id": "eval-004",
+    "category": "trigger",
+    "prompt": "帮我配置双网卡环境，公司内网走以太网，外网走手机热点",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "诊断-网络拓扑分析",
+      "should_provide": "完整四层配置方案"
+    },
+    "notes": "完整配置流程"
+  },
+  {
+    "id": "eval-005",
+    "category": "trigger",
+    "prompt": "ping 10.17.196.39 请求超时，怎么排查？",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "故障排查-常见问题决策树",
+      "should_provide_diagnostics": [
+        "检查静态路由",
+        "检查以太网网关",
+        "检查 FlClash 配置"
+      ]
+    },
+    "notes": "故障排查场景"
+  },
+  {
+    "id": "eval-006",
+    "category": "boundary",
+    "prompt": "怎么配置 Linux 双网卡环境？",
+    "expected_behavior": {
+      "should_trigger": false,
+      "reason": "本 skill 专注于 Windows，不处理 Linux"
+    },
+    "notes": "边界测试：不同操作系统"
+  },
+  {
+    "id": "eval-007",
+    "category": "boundary",
+    "prompt": "我的 VPN 连不上，怎么办？",
+    "expected_behavior": {
+      "should_trigger": false,
+      "reason": "通用 VPN 问题，不是多网卡 + TUN 场景"
+    },
+    "notes": "边界测试：通用 VPN 问题"
+  },
+  {
+    "id": "eval-008",
+    "category": "coverage",
+    "prompt": "外网 curl 失败，报 SSL/TLS connection failed",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_check": [
+        "FlClash 是否运行",
+        "interface-name 是否为 WLAN",
+        "WiFi metric 是否过高",
+        "代理节点是否可达"
+      ]
+    },
+    "notes": "外网不通，完整诊断流程"
+  },
+  {
+    "id": "eval-009",
+    "category": "coverage",
+    "prompt": "我添加了静态路由，但内网还是不通",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_check": [
+        "静态路由是否真的存在 (route print)",
+        "以太网网关是否可达",
+        "FlClash 是否排除了内网",
+        "接口索引是否正确"
+      ]
+    },
+    "notes": "配置后仍失败，深度排查"
+  },
+  {
+    "id": "eval-010",
+    "category": "edge_case",
+    "prompt": "我有三张网卡：以太网（内网）、WiFi（外网 1）、USB 网卡（外网 2），怎么配置？",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_stop_for_user_confirmation": true,
+      "should_ask": "哪张网卡作为主外网接口？是否需要配置备用外网？",
+      "should_provide_guide": "three-nic-scenario.md"
+    },
+    "notes": "边缘情况：多个外网接口，必须停下来询问用户"
+  },
+  {
+    "id": "eval-011",
+    "category": "integration",
+    "prompt": "帮我验证配置是否正确",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_enter_phase": "验证-网络连通性测试",
+      "should_test": [
+        "内网 ping",
+        "外网 curl",
+        "浏览器访问（需人工确认）"
+      ]
+    },
+    "notes": "验证场景"
+  },
+  {
+    "id": "eval-012",
+    "category": "failure_pattern",
+    "prompt": "我只配置了 FlClash 的 inet4-route-exclude-address，内网还是不通",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_identify_failure_pattern": "只配 FlClash 不配 OS 静态路由",
+      "should_provide": "必须同时配置 OS 静态路由"
+    },
+    "notes": "识别典型失败模式"
+  },
+  {
+    "id": "eval-013",
+    "category": "terminology",
+    "prompt": "怎么调整网卡优先级？",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_clarify": "Windows 使用 metric（跃点数）控制优先级",
+      "should_provide": "Set-NetIPInterface -InterfaceMetric 命令"
+    },
+    "notes": "术语转换：优先级 → metric"
+  },
+  {
+    "id": "eval-014",
+    "category": "multi_turn",
+    "prompt": "我配置完了，内网通了，但外网还是不通",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_continue_diagnosis": true,
+      "should_enter_phase": "故障排查-常见问题决策树",
+      "should_focus": "外网问题（WiFi metric、FlClash interface-name）"
+    },
+    "notes": "多轮对话，部分成功场景"
+  },
+  {
+    "id": "eval-015",
+    "category": "prevention",
+    "prompt": "我还没配置，先告诉我需要哪些步骤",
+    "expected_behavior": {
+      "should_trigger": true,
+      "should_provide": "完整四层配置概览",
+      "should_explain": "为什么需要四层配合"
+    },
+    "notes": "预防性指导"
+  }
+]

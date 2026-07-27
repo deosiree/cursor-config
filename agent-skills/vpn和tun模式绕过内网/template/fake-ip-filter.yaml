@@ -1,0 +1,99 @@
+# fake-ip-filter 配置模板
+# 用途：DNS 层面绕过内网域名解析，使其使用真实 DNS 而非 fake-ip
+# 适用场景：仅解决 DNS 污染问题，不解决路由劫持
+# 限制：无法处理直接 IP 访问（如 10.17.196.39）
+
+# ============ 配置说明 ============
+# 1. 将此配置合并到 Clash/FlClash 配置文件的 dns 部分
+# 2. fake-ip-filter 中的域名会使用真实 DNS 解析
+# 3. 支持通配符 (*) 和正则表达式
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  
+  # fake-ip 地址池
+  fake-ip-range: 198.18.0.0/16
+  
+  # fake-ip-filter: 排除列表（使用真实 DNS）
+  fake-ip-filter:
+    # ============ 系统关键域名 ============
+    - 'localhost'
+    - '*.local'
+    - '*.localdomain'
+    - 'localhost.localdomain'
+    
+    # ============ 内网域名通配符 ============
+    # 根据实际内网 DNS 后缀修改
+    - '*.corp'              # 企业内网通用后缀
+    - '*.internal'          # 内部域名
+    - '*.lan'               # 局域网
+    - '*.intranet'          # 内网
+    - '*.local'             # 本地域名
+    
+    # ============ 具体内网服务域名 ============
+    # 示例：根据实际情况添加
+    - 'gitlab.company.com'
+    - 'jira.company.com'
+    - 'jenkins.company.com'
+    - '*.k8s.local'
+    - '*.cluster.local'
+    
+    # ============ Windows 特定 ============
+    - '+.mshome.net'        # Windows 网络发现
+    - 'WORKGROUP'
+    
+    # ============ mDNS/Bonjour ============
+    - '*._tcp.local'
+    - '*._udp.local'
+    
+    # ============ NTP 时间同步 ============
+    - 'time.windows.com'
+    - 'time.apple.com'
+    - 'ntp.*.com'
+    - '*.ntp.org'
+    
+    # ============ 路由器管理界面 ============
+    - 'router.asus.com'
+    - 'routerlogin.net'
+    - 'tplogin.cn'
+    - 'miwifi.com'
+    
+    # ============ 反向 DNS 查询 ============
+    - '*.in-addr.arpa'
+    - '*.ip6.arpa'
+  
+  # ============ DNS 服务器配置 ============
+  nameserver:
+    - 223.5.5.5           # 阿里 DNS
+    - 119.29.29.29        # 腾讯 DNS
+    
+  # 备用 DNS（当主 DNS 失败时使用）
+  fallback:
+    - 8.8.8.8             # Google DNS
+    - 1.1.1.1             # Cloudflare DNS
+    
+  # fallback-filter: 判断是否使用 fallback DNS
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4       # 保留地址
+      - 0.0.0.0/32        # 无效地址
+
+# ============ 使用说明 ============
+# 1. 复制此配置到 Clash 配置文件的 dns 部分
+# 2. 根据实际内网环境添加/修改 fake-ip-filter 列表
+# 3. 如何判断是否需要添加：
+#    - 如果域名解析后访问失败，考虑添加到 filter
+#    - 如果是直接 IP 访问失败，fake-ip-filter 无法解决，需使用 TUN 路由排除
+# 4. 验证方法：
+#    nslookup <内网域名>
+#    应返回真实内网 IP，而非 198.18.x.x
+
+# ============ 注意事项 ============
+# ⚠️ fake-ip-filter 仅解决 DNS 层面问题
+# ⚠️ 如果内网使用 IP 直连（如 10.17.196.39），此方案无效
+# ⚠️ 推荐配合 inet4-route-exclude-address 使用
+# ⚠️ 修改后需重启 Clash 客户端生效
