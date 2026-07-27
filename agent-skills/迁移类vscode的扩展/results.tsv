@@ -1,0 +1,4 @@
+version	date	total_score	flow_completeness	error_handling	user_guidance	output_quality	compatibility_coverage	notes
+1.0.0	2024-01-15	42	9	8	9	9	7	基线版本，Windows PowerShell 完成
+1.1.0	2024-01-15	46	10	9	10	10	7	Iter1: +预检查 +智能推断 +进度 +摘要
+1.2.0	2024-01-15	47	10	10	10	10	7	Iter2: +自动回滚 +增强fallback +测试用例

@@ -1,0 +1,84 @@
+{
+  "test_prompts": [
+    {
+      "id": "prompt-001",
+      "category": "一次性迁移",
+      "prompt": "我想把 VSCode 的扩展迁移到 Kiro，迁移后检查一遍看哪些失效，失效的我手动重装，最后删掉不需要的冗余扩展。",
+      "expected_intent": "一次性迁移",
+      "expected_features": [
+        "扩展目录复制",
+        "兼容性检测",
+        "失效扩展分析",
+        "冗余扩展识别"
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "prompt-002",
+      "category": "一次性迁移",
+      "prompt": "VSCode 迁移到 Kiro，只复制不检查",
+      "expected_intent": "一次性迁移",
+      "expected_features": ["扩展目录复制"],
+      "note": "用户明确跳过验证和清理",
+      "priority": "medium"
+    },
+    {
+      "id": "prompt-003",
+      "category": "持续同步",
+      "prompt": "我在 Cursor 和 VSCode 之间频繁切换，希望两边的扩展保持一致。",
+      "expected_intent": "持续同步",
+      "expected_features": ["增量同步", "双向检测"],
+      "priority": "medium"
+    },
+    {
+      "id": "prompt-004",
+      "category": "批量部署",
+      "prompt": "团队有 10 台开发机，需要统一安装相同的扩展。",
+      "expected_intent": "批量部署",
+      "expected_features": ["扩展清单生成", "批量安装脚本"],
+      "priority": "medium"
+    },
+    {
+      "id": "prompt-005",
+      "category": "边缘场景",
+      "prompt": "复制扩展，但我不确定 Kiro 装在哪",
+      "expected_intent": "一次性迁移",
+      "expected_features": ["编辑器路径自动检测", "扩展目录复制"],
+      "note": "测试智能路径推断",
+      "priority": "high"
+    },
+    {
+      "id": "prompt-006",
+      "category": "错误恢复",
+      "prompt": "迁移失败了，怎么回滚？",
+      "expected_intent": "错误恢复",
+      "expected_features": ["rollback脚本"],
+      "note": "测试失败恢复机制",
+      "priority": "high"
+    },
+    {
+      "id": "prompt-007",
+      "category": "部分迁移",
+      "prompt": "只迁移 Python 相关的扩展到 Kiro",
+      "expected_intent": "一次性迁移",
+      "expected_features": ["选择性复制", "按类别筛选"],
+      "note": "测试条件迁移（待实现）",
+      "priority": "low"
+    },
+    {
+      "id": "prompt-008",
+      "category": "预检查",
+      "prompt": "先检查能不能迁移，不要直接开始",
+      "expected_intent": "预检查",
+      "expected_features": ["pre-check脚本"],
+      "note": "测试单独预检查",
+      "priority": "medium"
+    }
+  ],
+  "evaluation_criteria": {
+    "route_accuracy": "是否正确识别用户意图并路由到对应 intention",
+    "feature_coverage": "是否调用了所有必需的 feature skills",
+    "error_handling": "遇到错误时是否提供清晰的 fallback",
+    "user_experience": "流程是否流畅，无需用户额外提问"
+  }
+}
