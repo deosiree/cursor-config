@@ -24,3 +24,10 @@ commit-workflow-artifacts/
 .env
 .env.local
 .env.*.local
+
+# Excel 临时锁文件（打开中的 xlsx/xlsm 会产生 ~$ 前缀文件）
+~$*
+
+# Python 缓存
+__pycache__/
+*.pyc
