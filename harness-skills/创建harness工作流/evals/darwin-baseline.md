@@ -19,10 +19,10 @@
 
 ## 仍最值得优化的点（结构外）
 
-**真实「编排-同步skill收益」写盘闭环**：把 Nebula 已有质量 Loop 等范式，经 CHECKPOINT 真正写入 `可迁移能力.md`，再让陌生仓跑一次「旧升级」对照。这抬的是产品收益与 dim8 置信度，不是再改父 SKILL 措辞。
+**live 旧升级对照（P0）**：用 test-prompt id:5 / evals T6 在陌生仓实测「HARNESS 420 行 → 解耦 route」——抬 dim8，不是再改父 SKILL。
 
-次优：给 `编排-同步skill收益` 单独加 2 条 live eval，而不是继续 hill-climb 父文件。
+次优：`编排-同步skill收益` 2 条 live eval（darwin-baseline 2026-07-21 建议）。
 
 ## 建议
 
-**收手（对父 SKILL / 套件结构优化）。** 再改正文预期 Δ≪2。有精力做一次 **live 同步收益**，别继续 Darwin 抠主文档。  
+**收手（对父 SKILL / 子 SKILL 措辞 optimize）。** 2026-08-14 再触 HL-4（+1.2 / +0.6）；详见 [`darwin-optimize-2026-08-14.md`](./darwin-optimize-2026-08-14.md)。有精力做 **live 试跑**，别继续 Darwin 抠主文档。  

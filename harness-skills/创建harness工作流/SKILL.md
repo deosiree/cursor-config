@@ -82,6 +82,7 @@ description: 父级 agent：为任意仓创建/升级 harness，或把源仓新�
 | 从 0 写最小文件集 | `[[feature-skills/落地最小文件集/SKILL.md]]` |
 | 合并旧文档 | `[[feature-skills/合并升级缺口/SKILL.md]]` |
 | 新范式→能力条目 | `[[feature-skills/提炼可迁移能力条目/SKILL.md]]` |
+| HARNESS 膨胀 / SSOT 解耦 | `[[feature-skills/Harness解耦与反漂移/SKILL.md]]` |
 
 清单 SSOT：`[[references/可迁移能力.md]]`。
 

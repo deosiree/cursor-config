@@ -21,6 +21,16 @@
       "id": "T4",
       "prompt": "对本套件跑 Darwin evaluate-only",
       "expect": "编排-skill质量迭代"
+    },
+    {
+      "id": "T5",
+      "prompt": "旧 harness HARNESS 400 行要瘦身，同步 skill 收益",
+      "expect": "编排-同步skill收益；Harness解耦与反漂移；不堆父 SKILL"
+    },
+    {
+      "id": "T6",
+      "prompt": "目标仓 HARNESS 420 行想升级 harness",
+      "expect": "编排-旧harness升级；Harness解耦与反漂移 decouplePlan；禁 HARNESS 追加长节"
     }
   ],
   "should_not_trigger": [

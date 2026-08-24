@@ -13,5 +13,15 @@
     "id": 3,
     "prompt": "sourceHarnessPath 指向刚引入证据阶梯的仓，请同步到创建harness工作流 skill，再 evaluate-only。",
     "expected": "route=编排-同步skill收益；portable 条目；拒绝业务特例；darwinFollowUp=evaluate-only"
+  },
+  {
+    "id": 4,
+    "prompt": "Nebula 刚完成 Harness SSOT 解耦（WRITE_RULES、drift-audit、期末卷），同步到创建harness工作流 skill，再 evaluate-only。",
+    "expected": "route=编排-同步skill收益；+6 P1 能力；Harness解耦与反漂移 feature；拒绝 WRITE_RULES 进父 SKILL；darwinFollowUp=evaluate-only"
+  },
+  {
+    "id": 5,
+    "prompt": "目标仓 HARNESS.md 420 行、11 个用户习惯节，想升级 harness 补 SSOT。",
+    "expected": "route=编排-旧harness升级；对照缺口→Harness解耦与反漂移 decouplePlan；禁止 HARNESS 追加长节；sampleLeakScan"
   }
 ]

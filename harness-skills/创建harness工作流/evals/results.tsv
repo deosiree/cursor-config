@@ -5,3 +5,6 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-07-21T09:00:00Z	suite-r1	创建harness工作流	88.5	90.1	keep	dim3	父路由三段式失败表；full_test 创建8/升级9	full_test
 2026-07-21T09:10:00Z	suite-r2	创建harness工作流	90.1	91.0	keep	dim5/8	同轮分析→编排衔接；创建路径9/10；Δ=+0.9；HL-4 break	full_test
 2026-07-21T09:35:00Z	sync-live	创建harness工作流	91.0	91.0	sync	可迁移能力	真实同步质量Loop范式：+证据阶梯/对抗审查/失败入库；样例槽位更新；evaluate-only	dry_run
+2026-08-14T08:20:00Z	sync-ssot-decouple	创建harness工作流	91.0	93.0	keep	dim-capability	SSOT解耦同步：+6 P1（写入约束/四址/协议解耦/漂移审计/置信度门禁/期末三层卷）+2合并；新 feature Harness解耦与反漂移；父SKILL+1行153行；test-prompt id:4 pass；sampleLeakScan pass；HL-4 不 optimize 父文件	dry_run
+2026-08-14T09:00:00Z	opt-r1	创建harness工作流	93.0	94.2	keep	dim3	编排-旧harness升级：SSOT漂移分流→Harness解耦；失败分支HARNESS>320；test-prompt id:5	dry_run
+2026-08-14T09:15:00Z	opt-r2	创建harness工作流	94.2	94.8	keep	dim4	Harness解耦：步骤8 CHECKPOINT后再Darwin；evals T6；Δ=+0.6；HL-4 break	dry_run

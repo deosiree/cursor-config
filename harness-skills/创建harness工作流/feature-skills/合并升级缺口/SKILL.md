@@ -13,8 +13,9 @@ description: 旧 harness 按 gapChecklist 合并补缺：保留历史，旁路 E
 
 1. 过滤 `status=无|部分`  
 2. 每个缺口对应「改哪一文件、插入/增链什么要点」写入 `filesToWrite`  
-3. 已有 Eval / score-history：默认旁路；覆盖须 🔴  
-4. 同事要拷样例全文 → 只保留能力槽位说明，L2 改目标仓手段  
+3. **HARNESS 习惯堆叠 / SSOT 漂移**（gap 含写入约束、四址、协议习惯解耦）→ 路由 `[[../Harness解耦与反漂移/SKILL.md]]`，默认**合并迁出**而非在 HARNESS 追加段落  
+4. 已有 Eval / score-history：默认旁路；覆盖须 🔴  
+5. 同事要拷样例全文 → 只保留能力槽位说明，L2 改目标仓手段  
 
 ## 失败分支
 
