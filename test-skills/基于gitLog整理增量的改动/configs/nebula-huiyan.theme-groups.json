@@ -1,0 +1,16 @@
+{
+  "route-auth": {
+    "title": "路由鉴权（守卫与读侧；杨欣静主责，惠岩辅助）",
+    "subs": {
+      "路由鉴权-守卫": "子应用路由守卫与最长前缀匹配",
+      "路由鉴权-读侧": "路由权限读侧 pageURL/funcURL"
+    }
+  },
+  "secret-input": {
+    "title": "密码框组件与防误填输入",
+    "subs": {
+      "密码框": "组件实现（NeSecretInput/GuardedSecretInput）",
+      "密码框-依赖升级": "消费者依赖升级 @nebula/ui"
+    }
+  }
+}

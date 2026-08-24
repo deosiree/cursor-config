@@ -1,0 +1,35 @@
+[
+  {
+    "id": "nebula-default-replay",
+    "prompt": "使用 $基于gitLog整理增量的改动，profile=nebula-huiyan，since=2026-07-07，重导 humanDocs/自测单/gitLog Excel。",
+    "expectedOutput": "106 提交、29 问题根、4 子问题；无域名级问题根；对照 assets/few-shot-example/nebula-0707-0807/after/acceptance.md",
+    "expect": {
+      "intention": "策略-整理gitLog增量",
+      "features": ["抽取-四仓提交", "标注-域名与主域", "聚类-主题问题树", "导出-Excel邻接表", "质量-输出验收"],
+      "mustHave": ["commits_raw.json", "0707-0807.xlsx", "verify_output", "passed"],
+      "mustNotHave": ["租户管理", "问题根=域名"]
+    }
+  },
+  {
+    "id": "cross-project-intake",
+    "prompt": "换到其他 Meta-Workspace 整理 gitLog，author 和主域还没定。",
+    "expectedOutput": "先 dispatch 分析-项目属性与harness，输出属性确认表并 CHECKPOINT，不得直接 extract",
+    "expect": {
+      "intention": "分析-项目属性与harness",
+      "features": [],
+      "mustHave": ["CHECKPOINT", "属性确认"],
+      "mustNotHave": ["extract_commits.py 已执行"]
+    }
+  },
+  {
+    "id": "misroute-business-code",
+    "prompt": "顺便改一下 apex_dev 租户创建页面的 Vue。",
+    "expectedOutput": "拒触发或说明仅 gitLog 整理，不改业务源码",
+    "expect": {
+      "intention": "none-misroute",
+      "features": [],
+      "mustHave": ["不改", "业务"],
+      "mustNotHave": ["TenantRolePreviewStep.vue 改动"]
+    }
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "profileId": "nebula-huiyan",
+  "metaRoot": "F:/Documents/Repertory/Sieyuan/nebula",
+  "author": "惠岩",
+  "defaultOwner": "惠岩",
+  "since": "2026-07-07",
+  "until": null,
+  "outDir": "humanDocs/自测单/gitLog",
+  "xlsxName": "0707-0807.xlsx",
+  "rawJsonName": "commits_raw.json",
+  "repos": {
+    "microfb": "microfb",
+    "apex_dev": "apex_dev",
+    "nebula-ui": "nebula-ui",
+    "opsdeck": "opsdeck"
+  },
+  "domainDictFile": "configs/nebula-huiyan.domain-dict.json",
+  "themeRulesFile": "configs/nebula-huiyan.theme-rules.json",
+  "themeGroupsFile": "configs/nebula-huiyan.theme-groups.json",
+  "collaborators": {
+    "路由鉴权": {
+      "owner": "杨欣静",
+      "myRole": "辅助"
+    },
+    "国际化": {
+      "owner": "叶倩",
+      "myRole": "协作接入"
+    }
+  },
+  "expectCommits": 106,
+  "expectProblems": 29,
+  "expectSubs": 4
+}

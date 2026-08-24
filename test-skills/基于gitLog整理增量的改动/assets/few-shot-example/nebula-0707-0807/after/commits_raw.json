@@ -1,0 +1,1861 @@
+[
+  {
+    "repo": "apex_dev",
+    "commit_id": "595b39d756e1345c09904631f58bb87e53e13e9b",
+    "commit_short": "595b39d",
+    "date": "2026-07-07",
+    "subject": "fix(api): 菜单管理：白名单的导入导出",
+    "body": "",
+    "message": "fix(api): 菜单管理：白名单的导入导出",
+    "files": [
+      "src/api/seccenter/api-whitelist.v2.api.ts",
+      "src/gateway/system/api-whitelist/api-whitelist.gateway.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/types/api-whitelist.ts",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistImportDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistImportPreviewPanel.vue"
+    ],
+    "stat_summary": " 8 files changed, 545 insertions(+), 7 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "84bec2e80a4bdc178436d9d0d6ae39eeb7aaa62b",
+    "commit_short": "84bec2e",
+    "date": "2026-07-07",
+    "subject": "fix(views): 角色管理：父级取勾清子权限；取勾loading防误保存；取勾子目录保父级",
+    "body": "",
+    "message": "fix(views): 角色管理：父级取勾清子权限；取勾loading防误保存；取勾子目录保父级",
+    "files": [
+      "src/gateway/system/menu/menu-ids-helper.ts",
+      "src/views/system/role/components/MenuPermissionTree.vue",
+      "src/views/system/role/components/PermissionTab.vue",
+      "src/views/system/role/components/role/RoleEditDialog.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupEditDialog.vue",
+      "src/views/system/role/services/menu-perm-tab.ts"
+    ],
+    "stat_summary": " 6 files changed, 398 insertions(+), 114 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "3b61f5ae22b5e17d04a7b519e12514ed1edf8bdb",
+    "commit_short": "3b61f5a",
+    "date": "2026-07-08",
+    "subject": "fix(services): 路由鉴权：子应用增加路由守卫判路由权限；最长前缀匹配1.还要判断模糊命中的节点类型，若为目录则404；2.改成递归的；查权限标识不dfs",
+    "body": "",
+    "message": "fix(services): 路由鉴权：子应用增加路由守卫判路由权限；最长前缀匹配1.还要判断模糊命中的节点类型，若为目录则404；2.改成递归的；查权限标识不dfs",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/router/index.ts",
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 3 files changed, 221 insertions(+), 169 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "5f1c976cecd5a313ec664e0f695c03e09bafbebb",
+    "commit_short": "5f1c976",
+    "date": "2026-07-08",
+    "subject": "fix(views): 租户管理：修复bug:i18n组件在切换模态框之后传值断链",
+    "body": "",
+    "message": "fix(views): 租户管理：修复bug:i18n组件在切换模态框之后传值断链",
+    "files": [
+      "src/views/tenant/components/TenantFormFields.vue",
+      "src/views/tenant/components/TenantWizardDialog.vue",
+      "src/views/tenant/composables/useCreateTenantNameWireCache.ts",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 4 files changed, 23 insertions(+), 35 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "70a258cff9ca49290d71e97ffe704d9971d49541",
+    "commit_short": "70a258c",
+    "date": "2026-07-08",
+    "subject": "fix(views): GuardedSecretInput防浏览器密码管理器误填的密钥输入框",
+    "body": "",
+    "message": "fix(views): GuardedSecretInput防浏览器密码管理器误填的密钥输入框",
+    "files": [
+      "src/components/form/GuardedSecretInput.readme.md",
+      "src/components/form/GuardedSecretInput.vue",
+      "src/views/profile/index.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/components/UserResetPasswordDialog.vue",
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 6 files changed, 221 insertions(+), 30 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "fbc2b39bb6e18af302d397a8ee7ec1114767f3bd",
+    "commit_short": "fbc2b39",
+    "date": "2026-07-08",
+    "subject": "fix(ui): 修改中文提示信息",
+    "body": "",
+    "message": "fix(ui): 修改中文提示信息",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/formRules.ts"
+    ],
+    "stat_summary": " 3 files changed, 18 insertions(+), 8 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "d9e0c5a4424eadb048e9e36c3a00a77b244d549e",
+    "commit_short": "d9e0c5a",
+    "date": "2026-07-08",
+    "subject": "fix(views): GuardedSecretInput防浏览器密码管理器误填的密钥输入框",
+    "body": "",
+    "message": "fix(views): GuardedSecretInput防浏览器密码管理器误填的密钥输入框",
+    "files": [
+      "src/components/auth/field/GuardedSecretInput.readme.md",
+      "src/components/auth/field/GuardedSecretInput.vue",
+      "src/components/auth/field/PwdField.vue",
+      "src/views/login/components/Login.vue"
+    ],
+    "stat_summary": " 4 files changed, 209 insertions(+), 17 deletions(-)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "40e2779c106bd22e072c9d2402ac33b988407c93",
+    "commit_short": "40e2779",
+    "date": "2026-07-08",
+    "subject": "fix(services): 路由鉴权：子应用增加路由守卫判路由权限；最长前缀匹配1.还要判断模糊命中的节点类型，若为目录则404；2.改成递归的；查权限标识不dfs",
+    "body": "",
+    "message": "fix(services): 路由鉴权：子应用增加路由守卫判路由权限；最长前缀匹配1.还要判断模糊命中的节点类型，若为目录则404；2.改成递归的；查权限标识不dfs",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/router/index.ts",
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 3 files changed, 210 insertions(+), 174 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "af9225ba4ad7a906270ecb3ae65e2d8966ba9d2c",
+    "commit_short": "af9225b",
+    "date": "2026-07-09",
+    "subject": "revert(views): :rewind: 子应用不做路由鉴权",
+    "body": "",
+    "message": "revert(views): :rewind: 子应用不做路由鉴权",
+    "files": [
+      "src/router/index.ts"
+    ],
+    "stat_summary": " 1 file changed, 6 insertions(+), 5 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d7954f4a3e830086d8f6ac8a9db36d63a3e71f4f",
+    "commit_short": "d7954f4",
+    "date": "2026-07-09",
+    "subject": "fix(views): 前端密码限长72字符",
+    "body": "",
+    "message": "fix(views): 前端密码限长72字符",
+    "files": [
+      "src/views/profile/index.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/components/UserResetPasswordDialog.vue"
+    ],
+    "stat_summary": " 3 files changed, 7 insertions(+), 7 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "e829b92440299668ffbccd8e9090fef51c8fe0ac",
+    "commit_short": "e829b92",
+    "date": "2026-07-09",
+    "subject": "fix(views): 租户管理：统一为用户名",
+    "body": "",
+    "message": "fix(views): 租户管理：统一为用户名",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/tenant/components/tenant-table-columns.ts"
+    ],
+    "stat_summary": " 3 files changed, 1 insertion(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f1133c845cf5a007654478e7a0e752a48c862129",
+    "commit_short": "f1133c8",
+    "date": "2026-07-09",
+    "subject": "fix(views): 角色管理：废弃特殊角色与角色必选的口子",
+    "body": "",
+    "message": "fix(views): 角色管理：废弃特殊角色与角色必选的口子",
+    "files": [
+      "src/constants/storage-keys.ts",
+      "src/types/role.d.ts",
+      "src/views/system/role/components/MenuPermissionTree.vue",
+      "src/views/system/role/components/PermissionDialogWithTree.vue",
+      "src/views/system/role/components/PermissionTab.vue",
+      "src/views/system/role/components/role/RoleEditDialog.vue",
+      "src/views/system/role/components/role/index.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupEditDialog.vue",
+      "src/views/system/role/composables/role-permission.utils.ts",
+      "src/views/system/role/index_callback.vue",
+      "src/views/system/role/services/menu-perm-tab.ts",
+      "src/views/system/role/utils/role-i18n.ts"
+    ],
+    "stat_summary": " 12 files changed, 26 insertions(+), 529 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "bcb91db4e89bfa7ae487056ac580892344b0b334",
+    "commit_short": "bcb91db",
+    "date": "2026-07-09",
+    "subject": "fix(views): 前端密码限长72字符",
+    "body": "",
+    "message": "fix(views): 前端密码限长72字符",
+    "files": [
+      "src/components/auth/field/PwdField.vue"
+    ],
+    "stat_summary": " 1 file changed, 2 insertions(+)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "f9cb1b93bfb14533c0763be7ac9598221afa9ca5",
+    "commit_short": "f9cb1b9",
+    "date": "2026-07-09",
+    "subject": "revert(views): ⏪ 子应用不做路由鉴权",
+    "body": "",
+    "message": "revert(views): ⏪ 子应用不做路由鉴权",
+    "files": [
+      "src/router/index.ts"
+    ],
+    "stat_summary": " 1 file changed, 6 insertions(+), 5 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "9f9f157e54134c52508dcdd6bf41b3da527ddd84",
+    "commit_short": "9f9f157",
+    "date": "2026-07-10",
+    "subject": "chore(views): 菜单管理：去兼容menu类型的菜单节点",
+    "body": "",
+    "message": "chore(views): 菜单管理：去兼容menu类型的菜单节点",
+    "files": [
+      "mock/seccenter.menu.v2.mock.ts",
+      "src/views/system/role/services/menu-perm-tab.ts"
+    ],
+    "stat_summary": " 2 files changed, 5 insertions(+), 5 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "c16693ada3433f14115d8dcd771668a64c16803c",
+    "commit_short": "c16693a",
+    "date": "2026-07-10",
+    "subject": "chore(views): 菜单管理：去兼容menu类型的菜单节点",
+    "body": "",
+    "message": "chore(views): 菜单管理：去兼容menu类型的菜单节点",
+    "files": [
+      "src/enums/system/menu.enum.ts",
+      "src/gateway/system/menu/menu.gateway.ts",
+      "src/store/modules/permission.store.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/index.vue",
+      "src/views/system/menu/utils/menu-row-actions.ts",
+      "src/views/system/role/services/menu-perm-tab.ts"
+    ],
+    "stat_summary": " 7 files changed, 19 insertions(+), 51 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f306ed89884087e42e216f967b3dabe156859f09",
+    "commit_short": "f306ed8",
+    "date": "2026-07-10",
+    "subject": "fix(views): 菜单管理：给功能项权限放开路由参数;function允许使用模糊路由，和精确路由的表单校验区别：`*` 通配：任意段均可出现",
+    "body": "",
+    "message": "fix(views): 菜单管理：给功能项权限放开路由参数;function允许使用模糊路由，和精确路由的表单校验区别：`*` 通配：任意段均可出现",
+    "files": [
+      "src/enums/system/menu.enum.ts",
+      "src/utils/formRules.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/menu/index.vue",
+      "src/views/system/role/components/FunctionPermissionList.vue"
+    ],
+    "stat_summary": " 6 files changed, 124 insertions(+), 14 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "c7feef3c590b635b65fa94e5c3d3760df713d82e",
+    "commit_short": "c7feef3",
+    "date": "2026-07-13",
+    "subject": "fix(views): OpCol增加特殊行：当前用户、平台租户、内置角色和其他行的按钮数不同",
+    "body": "",
+    "message": "fix(views): OpCol增加特殊行：当前用户、平台租户、内置角色和其他行的按钮数不同",
+    "files": [
+      "src/components/OperationColumn/README.md",
+      "src/components/OperationColumn/index.vue",
+      "src/components/OperationColumn/operationWidth.ts",
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/user/components/UserTable.vue",
+      "src/views/tenant/components/TenantTable.vue"
+    ],
+    "stat_summary": " 6 files changed, 41 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f3c3b35d8ba0516a8a470777f059e7cef7d15e46",
+    "commit_short": "f3c3b35",
+    "date": "2026-07-13",
+    "subject": "fix(个人中心): 前端需要配合后端，如果修改自己密码成功，就跳转到登录页面",
+    "body": "",
+    "message": "fix(个人中心): 前端需要配合后端，如果修改自己密码成功，就跳转到登录页面",
+    "files": [
+      "src/views/profile/index.vue"
+    ],
+    "stat_summary": " 1 file changed, 3 insertions(+)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "42321cb2da6caba57dbfff2938a2b5b1b751f257",
+    "commit_short": "42321cb",
+    "date": "2026-07-13",
+    "subject": "fix(views): 激活页：将状态校验提前至路由守卫，若激活已失效，前端显示一个“链接已失效”的全局遮罩，点击确定重定向回登录页",
+    "body": "",
+    "message": "fix(views): 激活页：将状态校验提前至路由守卫，若激活已失效，前端显示一个“链接已失效”的全局遮罩，点击确定重定向回登录页",
+    "files": [
+      "src/components/auth/field/PwdField.vue",
+      "src/constants/error-codes.ts",
+      "src/gateway/auth.gateway.ts",
+      "src/views/login/components/LoginActivate.vue"
+    ],
+    "stat_summary": " 4 files changed, 142 insertions(+), 8 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "e2e3a9d7a07f951336498ed69749c08449029fa0",
+    "commit_short": "e2e3a9d",
+    "date": "2026-07-13",
+    "subject": "fix(views): 图形验证码：1.密码错误后根据错误码130127判断需要显示验证码；2.显示验证码时，密码错误，验证码正确，没有刷新验证码",
+    "body": "",
+    "message": "fix(views): 图形验证码：1.密码错误后根据错误码130127判断需要显示验证码；2.显示验证码时，密码错误，验证码正确，没有刷新验证码",
+    "files": [
+      "src/constants/error-codes.ts",
+      "src/views/login/composables/use-captcha.ts"
+    ],
+    "stat_summary": " 2 files changed, 14 insertions(+), 1 deletion(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "5cb4d72edadfd7234993b2eb11de7e1474b9ba76",
+    "commit_short": "5cb4d72",
+    "date": "2026-07-16",
+    "subject": "fix(views): 规则工厂：统一租户、用户、角色、菜单的名称规则，长度限制各有不同",
+    "body": "",
+    "message": "fix(views): 规则工厂：统一租户、用户、角色、菜单的名称规则，长度限制各有不同",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/formRules.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 5 files changed, 38 insertions(+), 106 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "6e1ff52aa8ddaaa1dff03d40dd48943ddc79c7be",
+    "commit_short": "6e1ff52",
+    "date": "2026-07-16",
+    "subject": "fix(views): 规则工厂：密码",
+    "body": "",
+    "message": "fix(views): 规则工厂：密码",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/formRules.ts"
+    ],
+    "stat_summary": " 3 files changed, 22 insertions(+), 1 deletion(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "78883e2a77dfea3dbfaed91d6ea719386835f0b7",
+    "commit_short": "78883e2",
+    "date": "2026-07-16",
+    "subject": "fix(views): 更新菜单管理的表单校验规则",
+    "body": "",
+    "message": "fix(views): 更新菜单管理的表单校验规则",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/formRules.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/utils/menu-formRules.ts"
+    ],
+    "stat_summary": " 5 files changed, 132 insertions(+), 99 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "2df6332a4c478c9c7fb78ab908c5182251dfaaf9",
+    "commit_short": "2df6332",
+    "date": "2026-07-17",
+    "subject": "fix(views): 移除菜单表单 routePath 校验 trigger 的 as const，修复 vue-tsc 类型错误",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(views): 移除菜单表单 routePath 校验 trigger 的 as const，修复 vue-tsc 类型错误\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/menu/components/MenuFormDialog.vue"
+    ],
+    "stat_summary": " 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "6a43a0ccedf413a137c38fec8627d6a203f6e257",
+    "commit_short": "6a43a0c",
+    "date": "2026-07-17",
+    "subject": "fix(views): 创建租户、用户成功时优先使用后端msg",
+    "body": "",
+    "message": "fix(views): 创建租户、用户成功时优先使用后端msg",
+    "files": [
+      "src/views/system/user/index.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 2 files changed, 10 insertions(+), 6 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "773574b60d9b5ba890bf9a0197d03d8b99261bde",
+    "commit_short": "773574b",
+    "date": "2026-07-17",
+    "subject": "feat(views): 个人中心：手机与邮箱绑定改为验证码校验",
+    "body": "",
+    "message": "feat(views): 个人中心：手机与邮箱绑定改为验证码校验",
+    "files": [
+      "src/api/seccenter/user.v2.api.ts",
+      "src/gateway/system/user.gateway.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/types/user.d.ts",
+      "src/views/profile/components/BindContactDialog.vue",
+      "src/views/profile/components/SendCodeCaptchaDialog.vue",
+      "src/views/profile/composables/useBindContact.ts",
+      "src/views/profile/index.vue"
+    ],
+    "stat_summary": " 9 files changed, 851 insertions(+), 197 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "80161ef5e99c8758a7461540b74223de683d1880",
+    "commit_short": "80161ef",
+    "date": "2026-07-17",
+    "subject": "fix(views): 激活流程：创建与重发改为成功通知并注释激活弹窗",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(views): 激活流程：创建与重发改为成功通知并注释激活弹窗\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/user/index.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 2 files changed, 76 insertions(+), 90 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "9007dde26b280cd7c09d4b0152b1954fdff55df0",
+    "commit_short": "9007dde",
+    "date": "2026-07-17",
+    "subject": "refactor(resource): 拆分 devicebind API/gateway，与 project 解耦",
+    "body": "EOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "refactor(resource): 拆分 devicebind API/gateway，与 project 解耦\nEOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/resource/devicebind.api.ts",
+      "src/api/resource/project.api.ts",
+      "src/composables/useDeviceProjectResourceBind.ts",
+      "src/gateway/resource/devicebind.gateway.ts",
+      "src/gateway/resource/project/project.gateway.ts",
+      "src/views/tenant/composables/useTenantProjectResourceBind.ts"
+    ],
+    "stat_summary": " 6 files changed, 130 insertions(+), 108 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "af3cd41af5c7ca6813580b33ac96cbd59cb7c559",
+    "commit_short": "af3cd41",
+    "date": "2026-07-17",
+    "subject": "fix(views): 激活方式：安全配置与创建收敛为仅邮箱激活",
+    "body": "",
+    "message": "fix(views): 激活方式：安全配置与创建收敛为仅邮箱激活",
+    "files": [
+      "src/api/seccenter/config.v2.api.ts",
+      "src/gateway/system/config.gateway.ts",
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/gateway/system/user.gateway.ts",
+      "src/views/system/securityConfig/components/LoginPolicyCard.vue",
+      "src/views/system/securityConfig/useSecurityConfigPage.ts",
+      "src/views/system/user/components/UserEditDialog.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/index.vue",
+      "src/views/tenant/components/TenantFormStep.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 11 files changed, 27 insertions(+), 192 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "c8bb084b9d9f02fe51413e4afce4ebd7c1c8cd91",
+    "commit_short": "c8bb084",
+    "date": "2026-07-17",
+    "subject": "refactor(role): 菜单权限 SSOT 勾选与全集缓存，加载失败关窗防误清空",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "refactor(role): 菜单权限 SSOT 勾选与全集缓存，加载失败关窗防误清空\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/gateway/system/menu/menu-ids-helper.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/types/role.d.ts",
+      "src/views/system/role/components/FunctionPermissionList.vue",
+      "src/views/system/role/components/MenuPermissionTree.vue",
+      "src/views/system/role/components/PermissionDialogWithTree.vue",
+      "src/views/system/role/components/PermissionTab.vue",
+      "src/views/system/role/components/role/RoleEditDialog.vue",
+      "src/views/system/role/components/role/index.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupEditDialog.vue",
+      "src/views/system/role/components/types.ts",
+      "src/views/system/role/composables/perm-filter.utils.ts",
+      "src/views/system/role/composables/useMenuCheck.ts",
+      "src/views/system/role/composables/usePermFilter.ts",
+      "src/views/system/role/composables/usePermSelect.ts",
+      "src/views/system/role/index_callback.vue",
+      "src/views/system/role/services/menu-perm-tab.ts"
+    ],
+    "stat_summary": " 18 files changed, 1450 insertions(+), 606 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "de338c0311cd4d29c244fbc9e38ca98d0179b9f9",
+    "commit_short": "de338c0",
+    "date": "2026-07-17",
+    "subject": "fix(api): 业务接口统一从 /direct 改为 /forward，避免权限越权",
+    "body": "EOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(api): 业务接口统一从 /direct 改为 /forward，避免权限越权\nEOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "mock/org.mock.ts",
+      "mock/project.mock.ts",
+      "mock/tenant.mock.ts",
+      "src/api/dataManage/dataManage.api.ts",
+      "src/api/dataManage/edgeData.ts",
+      "src/api/device/device.api.ts",
+      "src/api/seccenter/route-channel.ts",
+      "src/api/system/api.api.ts",
+      "src/api/system/org.api.ts",
+      "src/api/system/tenant.api.ts"
+    ],
+    "stat_summary": " 10 files changed, 23 insertions(+), 102 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f19704a03ec4151c1ebf53a9ef97ff86c71b05da",
+    "commit_short": "f19704a",
+    "date": "2026-07-17",
+    "subject": "fix(views): 管理信息关闭 fillHeight，修复到期日期首屏截断",
+    "body": "EOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(views): 管理信息关闭 fillHeight，修复到期日期首屏截断\nEOF\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 1 file changed, 1 insertion(+)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f900f7e0cfc48631338f59a2a413c618bdc09f4b",
+    "commit_short": "f900f7e",
+    "date": "2026-07-17",
+    "subject": "fix(views): 注册表单：创建用户与租户隐藏手机号并停传字段",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(views): 注册表单：创建用户与租户隐藏手机号并停传字段\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/gateway/system/user.gateway.ts",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/index.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 5 files changed, 3 insertions(+), 19 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "5bf292462a02426b41e9b53aa776fca0f48cb6ef",
+    "commit_short": "5bf2924",
+    "date": "2026-07-17",
+    "subject": "fix(views): 验证码登录：发送OTP前必须先人机验证-图形验证码，才能拿OTP；验证码登录接口不需要再传图形验证码",
+    "body": "",
+    "message": "fix(views): 验证码登录：发送OTP前必须先人机验证-图形验证码，才能拿OTP；验证码登录接口不需要再传图形验证码",
+    "files": [
+      "src/api/seccenter/__tests__/auth.v2.api.test.ts",
+      "src/api/seccenter/auth.v2.api.ts",
+      "src/gateway/auth.gateway.ts",
+      "src/types/auth.d.ts",
+      "src/views/login/components/Login.vue",
+      "src/views/login/components/SendCodeCaptchaDialog.vue"
+    ],
+    "stat_summary": " 6 files changed, 189 insertions(+), 23 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "83352387c5f977625b17a2ecd3dde58e409513cc",
+    "commit_short": "8335238",
+    "date": "2026-07-17",
+    "subject": "fix(views): 激活页：token预检改用activate/check接口",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(views): 激活页：token预检改用activate/check接口\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/seccenter/__tests__/auth.v2.api.test.ts",
+      "src/api/seccenter/__tests__/route-channel.test.ts",
+      "src/api/seccenter/auth.v2.api.ts",
+      "src/api/seccenter/route-channel.ts",
+      "src/gateway/auth.gateway.ts",
+      "src/views/login/components/LoginActivate.vue"
+    ],
+    "stat_summary": " 6 files changed, 58 insertions(+), 68 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "42a89c83085f0945a7f1b26761da5a50085e9f25",
+    "commit_short": "42a89c8",
+    "date": "2026-07-18",
+    "subject": "fix(views): 组件内的下拉框既不显示不完整，也不会在拖拽后离体",
+    "body": "",
+    "message": "fix(views): 组件内的下拉框既不显示不完整，也不会在拖拽后离体",
+    "files": [
+      "src/components/Dialog/BaseDialog.vue",
+      "src/components/IconSelect/index.vue",
+      "src/views/profile/index.vue",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 6 files changed, 144 insertions(+), 18 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "1e7513c5edb382a31ab0b8ccd394ba15537d68f8",
+    "commit_short": "1e7513c",
+    "date": "2026-07-20",
+    "subject": "fix(types): 兼容 Element Plus 表格 DefaultRow，消除 vue-tsc 统编报错",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(types): 兼容 Element Plus 表格 DefaultRow，消除 vue-tsc 统编报错\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/components/OperationColumn/index.vue",
+      "src/views/config/index.vue",
+      "src/views/deviceManage/device/index.vue",
+      "src/views/deviceManage/deviceType/components/UpgradePackageManager.vue",
+      "src/views/deviceManage/deviceType/index.vue",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupTable.vue",
+      "src/views/tenant/components/TenantProjectSelectStep.vue",
+      "src/views/tenant/components/TenantTable.vue"
+    ],
+    "stat_summary": " 9 files changed, 19 insertions(+), 14 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "713da4c4d13e29ab2c683e782c7de92bfcdf05b0",
+    "commit_short": "713da4c",
+    "date": "2026-07-20",
+    "subject": "fix(views): 统一名称的规则tips",
+    "body": "",
+    "message": "fix(views): 统一名称的规则tips",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/profile/index.vue",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 7 files changed, 165 insertions(+), 45 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "7e45644ecf0b5de3c864d1a728359e9cb26d0af0",
+    "commit_short": "7e45644",
+    "date": "2026-07-20",
+    "subject": "fix(views): 菜单节点废弃字段component,redirect,keepAlive,status",
+    "body": "",
+    "message": "fix(views): 菜单节点废弃字段component,redirect,keepAlive,status",
+    "files": [
+      "mock/seccenter.auth.v2.mock.ts",
+      "mock/seccenter.menu.v2.mock.ts",
+      "mock/seccenter.user.v2.mock.ts",
+      "src/api/seccenter/menu.v2.api.ts",
+      "src/gateway/system/menu/menu.gateway.ts",
+      "src/gateway/system/role/role.gateway.ts",
+      "src/store/modules/menu-route-normalization.ts",
+      "src/store/modules/permission.store.ts",
+      "src/types/menu.d.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/composables/usePermissionConfigState.ts",
+      "src/views/system/menu/utils/menu-tree.ts"
+    ],
+    "stat_summary": " 12 files changed, 15 insertions(+), 207 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "81fa2f0f617b4ed25c6f4a11190e7335f28219cc",
+    "commit_short": "81fa2f0",
+    "date": "2026-07-20",
+    "subject": "fix(types): 兼容 @nebula/ui 插件类型，消除 main.ts vue-tsc 报错",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(types): 兼容 @nebula/ui 插件类型，消除 main.ts vue-tsc 报错\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/main.ts"
+    ],
+    "stat_summary": " 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "92963e6f1cca5d097df45503b541614035fcfa4c",
+    "commit_short": "92963e6",
+    "date": "2026-07-20",
+    "subject": "fix(api): 修复安全配置 detail 路径双斜杠",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(api): 修复安全配置 detail 路径双斜杠\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/seccenter/config.v2.api.ts"
+    ],
+    "stat_summary": " 1 file changed, 9 insertions(+), 1 deletion(-)"
+  },
+  {
+    "repo": "nebula-ui",
+    "commit_id": "e5a07c563581994812a44e0d5dae540fac89fb16",
+    "commit_short": "e5a07c5",
+    "date": "2026-07-20",
+    "subject": "feat: 防误填密码框；组件文档站",
+    "body": "",
+    "message": "feat: 防误填密码框；组件文档站",
+    "files": [
+      "CHANGELOG.md",
+      "README.md",
+      "examples/App.vue",
+      "examples/components/DemoBlock.vue",
+      "examples/demos/secret-input/basic.vue",
+      "examples/demos/secret-input/disabled.vue",
+      "examples/demos/secret-input/native-pwd.vue",
+      "examples/demos/secret-input/no-clear.vue",
+      "examples/demos/secret-input/no-eye.vue",
+      "examples/env.d.ts",
+      "examples/index.html",
+      "examples/layout/DocsLayout.vue",
+      "examples/main.ts",
+      "examples/pages/NeSecretInputDoc.vue",
+      "examples/pages/PlaceholderDoc.vue",
+      "examples/router.ts",
+      "examples/styles/docs.css",
+      "package.json",
+      "pnpm-lock.yaml",
+      "src/components/NeSecretInput/README.md",
+      "src/components/NeSecretInput/constants.ts",
+      "src/components/NeSecretInput/index.vue",
+      "src/components/NeSecretInput/useSecretMask.ts",
+      "src/components/index.ts",
+      "src/index.ts",
+      "tsconfig.node.json",
+      "vite.config.ts",
+      "vite.examples.config.ts"
+    ],
+    "stat_summary": " 28 files changed, 1310 insertions(+), 9 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "8842a9b0f5b75f17b3ef02210c6c1c29be0f6a80",
+    "commit_short": "8842a9b",
+    "date": "2026-07-21",
+    "subject": "feat(seccenter): 对接批量删除并去掉租户删前设备解绑",
+    "body": "租户/用户/角色/白名单/菜单走 batchDelete；单用户删除仍走单条 delete，避免权限误伤。删租户不再前端聚合 device/list。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(seccenter): 对接批量删除并去掉租户删前设备解绑\n租户/用户/角色/白名单/菜单走 batchDelete；单用户删除仍走单条 delete，避免权限误伤。删租户不再前端聚合 device/list。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/seccenter/api-whitelist.v2.api.ts",
+      "src/api/seccenter/batch-del.ts",
+      "src/api/seccenter/menu.v2.api.ts",
+      "src/api/seccenter/role.v2.api.ts",
+      "src/api/seccenter/user.v2.api.ts",
+      "src/api/system/tenant.api.ts",
+      "src/gateway/device/device.gateway.ts",
+      "src/gateway/system/api-whitelist/api-whitelist.gateway.ts",
+      "src/gateway/system/menu/menu.gateway.ts",
+      "src/gateway/system/role/role.gateway.ts",
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/gateway/system/user.gateway.ts",
+      "src/utils/notification.ts",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/role/composables/useRoleList.ts",
+      "src/views/system/role/index_callback.vue",
+      "src/views/system/user/index.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 19 files changed, 401 insertions(+), 91 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "c59ade3f028fdac39c7fea6ef04945718c84af15",
+    "commit_short": "c59ade3",
+    "date": "2026-07-21",
+    "subject": "fix(views): 菜单管理：路由路径：directory/page 必填；function 选填",
+    "body": "",
+    "message": "fix(views): 菜单管理：路由路径：directory/page 必填；function 选填",
+    "files": [
+      "src/views/system/menu/components/MenuFormDialog.vue"
+    ],
+    "stat_summary": " 1 file changed, 5 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d6db65ea92389a0a0c22d3df82b3c2df1f2a01fc",
+    "commit_short": "d6db65e",
+    "date": "2026-07-21",
+    "subject": "fix(menu): 空路由参数改为传空串，导入兼容历史 params=[]",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(menu): 空路由参数改为传空串，导入兼容历史 params=[]\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/gateway/system/menu/menu.gateway.ts"
+    ],
+    "stat_summary": " 1 file changed, 7 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "ebb2a53248e4253f21986a562e1ba8e0f672ade3",
+    "commit_short": "ebb2a53",
+    "date": "2026-07-21",
+    "subject": "fix(package): 密码框使用nebulaUI",
+    "body": "",
+    "message": "fix(package): 密码框使用nebulaUI",
+    "files": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "src/components/form/GuardedSecretInput.readme.md",
+      "src/components/form/GuardedSecretInput.vue",
+      "src/views/profile/index.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/components/UserResetPasswordDialog.vue",
+      "src/views/tenant/components/TenantFormFields.vue",
+      "vite.config.ts"
+    ],
+    "stat_summary": " 9 files changed, 20 insertions(+), 214 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "27b1c1eecc16c28d7bcd331233c5b919899c990f",
+    "commit_short": "27b1c1e",
+    "date": "2026-07-21",
+    "subject": "fix(package): nebulaUI升级",
+    "body": "",
+    "message": "fix(package): nebulaUI升级",
+    "files": [
+      "package.json",
+      "pnpm-lock.yaml"
+    ],
+    "stat_summary": " 2 files changed, 6 insertions(+), 25 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "83a2f5c50b45333008db35afb430baa9cebeb8be",
+    "commit_short": "83a2f5c",
+    "date": "2026-07-21",
+    "subject": "feat(views): 📦 更新nubula/ui版本；引入密码框",
+    "body": "",
+    "message": "feat(views): 📦 更新nubula/ui版本；引入密码框",
+    "files": [
+      ".gitignore",
+      "src/components/auth/field/AcctField.vue",
+      "src/components/auth/field/GuardedSecretInput.readme.md",
+      "src/components/auth/field/GuardedSecretInput.vue",
+      "src/components/auth/field/PwdField.vue",
+      "src/main.ts",
+      "src/views/login/components/Login.vue"
+    ],
+    "stat_summary": " 7 files changed, 34 insertions(+), 206 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "ea35e329b102dda6900ba6693c7a0752852a2ee9",
+    "commit_short": "ea35e32",
+    "date": "2026-07-21",
+    "subject": "feat(package): 引入内网地址platform-npm-dev-local和nebulaUI依赖包",
+    "body": "",
+    "message": "feat(package): 引入内网地址platform-npm-dev-local和nebulaUI依赖包",
+    "files": [
+      ".npmrc",
+      "package.json",
+      "pnpm-lock.yaml"
+    ],
+    "stat_summary": " 3 files changed, 20 insertions(+)"
+  },
+  {
+    "repo": "nebula-ui",
+    "commit_id": "19636aaa4c7a72e657882e134226d5ef130e9e08",
+    "commit_short": "19636aa",
+    "date": "2026-07-21",
+    "subject": "fix: NeSecretInput mask 自管后缀，发布 1.0.5",
+    "body": "跨 EP 版本固定清空在左、眼睛最右；补充 CHANGELOG / README。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix: NeSecretInput mask 自管后缀，发布 1.0.5\n跨 EP 版本固定清空在左、眼睛最右；补充 CHANGELOG / README。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      ".gitignore",
+      "CHANGELOG.md",
+      "README.md",
+      "package.json",
+      "src/components/NeSecretInput/README.md",
+      "src/components/NeSecretInput/index.vue"
+    ],
+    "stat_summary": " 6 files changed, 61 insertions(+), 12 deletions(-)"
+  },
+  {
+    "repo": "nebula-ui",
+    "commit_id": "7ab31ba82b34b45951703d40b6645ee5470ebcee",
+    "commit_short": "7ab31ba",
+    "date": "2026-07-21",
+    "subject": "fix: 密码框增加和输入框的密码提示联动的示例",
+    "body": "",
+    "message": "fix: 密码框增加和输入框的密码提示联动的示例",
+    "files": [
+      "CHANGELOG.md",
+      "examples/demos/secret-input/native-pwd.vue",
+      "examples/demos/secret-input/non-login-reuse.vue",
+      "examples/pages/NeSecretInputDoc.vue",
+      "src/components/NeSecretInput/README.md",
+      "src/components/NeSecretInput/index.vue"
+    ],
+    "stat_summary": " 6 files changed, 326 insertions(+), 39 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "0127d70a8ce574aad24fc211f721f340c680ee29",
+    "commit_short": "0127d70",
+    "date": "2026-07-22",
+    "subject": "fix(api): 绑定设备：后端不允许绑定/选择禁用设备，故不查 DISABLED",
+    "body": "",
+    "message": "fix(api): 绑定设备：后端不允许绑定/选择禁用设备，故不查 DISABLED",
+    "files": [
+      "src/gateway/device/device.gateway.ts"
+    ],
+    "stat_summary": " 1 file changed, 4 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "26340878245a2280ca94519a5c2abf20cf4ead50",
+    "commit_short": "2634087",
+    "date": "2026-07-22",
+    "subject": "fix(services): 权限鉴权放过状态为隐藏的权限",
+    "body": "",
+    "message": "fix(services): 权限鉴权放过状态为隐藏的权限",
+    "files": [
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 1 file changed, 21 insertions(+), 21 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d97c65d320730ce48e41cb8cf909ecc9d9847fe2",
+    "commit_short": "d97c65d",
+    "date": "2026-07-22",
+    "subject": "feat(iam): 菜单/租户/角色多语言输入切换为 NeI18nInput",
+    "body": "按语言 rules 校验菜单名，并补齐 es-ES 布局限长；租户名与角色名/描述对齐同一组件范式。",
+    "message": "feat(iam): 菜单/租户/角色多语言输入切换为 NeI18nInput\n按语言 rules 校验菜单名，并补齐 es-ES 布局限长；租户名与角色名/描述对齐同一组件范式。",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/plugins/locale-layout.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/composables/useMenuNameI18nRules.ts",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/tenant/components/TenantFormFields.vue",
+      "src/views/tenant/components/TenantWizardDialog.vue"
+    ],
+    "stat_summary": " 8 files changed, 348 insertions(+), 305 deletions(-)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "a048d3600d87e547c218884317c2fee814fdce21",
+    "commit_short": "a048d36",
+    "date": "2026-07-22",
+    "subject": "fix(services): 权限鉴权放过状态为隐藏的权限",
+    "body": "",
+    "message": "fix(services): 权限鉴权放过状态为隐藏的权限",
+    "files": [
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 1 file changed, 21 insertions(+), 21 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "27d44fece484af96fdac147c544809c8b80778af",
+    "commit_short": "27d44fe",
+    "date": "2026-07-23",
+    "subject": "fix(request): 401 会话过期不再弹错误通知",
+    "body": "跳登录与防重入锁保留，弹窗代码注释以便还原，仅 console.error。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(request): 401 会话过期不再弹错误通知\n跳登录与防重入锁保留，弹窗代码注释以便还原，仅 console.error。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/utils/request.ts"
+    ],
+    "stat_summary": " 1 file changed, 4 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "4bd5e9f80275ef7d4f7b4d87ff6de92d960a9627",
+    "commit_short": "4bd5e9f",
+    "date": "2026-07-23",
+    "subject": "fix(iam): 搜索框 maxlength 对齐并补齐菜单弹窗检索",
+    "body": "内测要点：\n- 上限 100：用户/角色/租户/菜单列表；角色权限树与功能项；\n  角色组内角色过滤；新增权限配置弹窗本地搜（名称/perm/路径）\n- 上限 512：新增 API 配置弹窗本地搜；新增 API 白名单 apiUrl 搜索\n- 超长粘贴应被截断；用户/角色/租户搜索不再「系统内部错误」\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(iam): 搜索框 maxlength 对齐并补齐菜单弹窗检索\n内测要点：\n- 上限 100：用户/角色/租户/菜单列表；角色权限树与功能项；\n  角色组内角色过滤；新增权限配置弹窗本地搜（名称/perm/路径）\n- 上限 512：新增 API 配置弹窗本地搜；新增 API 白名单 apiUrl 搜索\n- 超长粘贴应被截断；用户/角色/租户搜索不再「系统内部错误」\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/utils/formRules.ts",
+      "src/views/system/menu/components/ApiConfigDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/MenuToolbar.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/menu/composables/useListKwFilter.ts",
+      "src/views/system/menu/utils/list-kw-filter.ts",
+      "src/views/system/role/components/FunctionPermissionList.vue",
+      "src/views/system/role/components/MenuPermissionTree.vue",
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupBasicFormTab.vue",
+      "src/views/system/user/components/UserSearchBar.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 13 files changed, 266 insertions(+), 107 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d92650d51868e0e644b6817cd583aa835d58fff4",
+    "commit_short": "d92650d",
+    "date": "2026-07-23",
+    "subject": "feat(menu): API 配置支持批量删除并补齐确认文案词条",
+    "body": "对接 menu/api/batchDelete，弹窗勾选批量删；行内仍走单删，并修复 count 插值缺失。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(menu): API 配置支持批量删除并补齐确认文案词条\n对接 menu/api/batchDelete，弹窗勾选批量删；行内仍走单删，并修复 count 插值缺失。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/seccenter/menu.v2.api.ts",
+      "src/gateway/system/menu/menu.gateway.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/system/menu/components/ApiConfigDialog.vue"
+    ],
+    "stat_summary": " 5 files changed, 95 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "95720ab25286986df39de2038d26d87b5dc66a3c",
+    "commit_short": "95720ab",
+    "date": "2026-07-23",
+    "subject": "fix(auth): 401 会话过期不再弹错误通知",
+    "body": "跳登录与防重入锁保留，弹窗代码注释以便还原，仅 console.error。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(auth): 401 会话过期不再弹错误通知\n跳登录与防重入锁保留，弹窗代码注释以便还原，仅 console.error。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/utils/session-expired.ts"
+    ],
+    "stat_summary": " 1 file changed, 7 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "1c9746fe9a5cfc1a3f50342d60b94ef76e3f0e61",
+    "commit_short": "1c9746f",
+    "date": "2026-07-27",
+    "subject": "fix(i18n): 移除 resolveI18nTextAtLocale 的 vue-i18n key 查找逻辑",
+    "body": "纯文本原样返回，以数据库用户输入为准，避免伪本地化问题",
+    "message": "fix(i18n): 移除 resolveI18nTextAtLocale 的 vue-i18n key 查找逻辑\n纯文本原样返回，以数据库用户输入为准，避免伪本地化问题",
+    "files": [
+      "src/utils/i18n.ts"
+    ],
+    "stat_summary": " 1 file changed, 33 insertions(+), 7 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "a1e8e3ea09ed7195922b99f253e1994c28fecf17",
+    "commit_short": "a1e8e3e",
+    "date": "2026-07-27",
+    "subject": "feat(views): 主域表格列对齐与 expand 模式列宽策略",
+    "body": "列表页采用 max-height 100% 与固定/自适应列组合，弹窗表格保持固定高度；长文本左对齐可拖拽补宽，短列居中定宽，并调整租户/用户列顺序及弹窗滚动归零。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(views): 主域表格列对齐与 expand 模式列宽策略\n列表页采用 max-height 100% 与固定/自适应列组合，弹窗表格保持固定高度；长文本左对齐可拖拽补宽，短列居中定宽，并调整租户/用户列顺序及弹窗滚动归零。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/menu/components/ApiConfigDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/MenuTreeTable.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/menu/index.vue",
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/user/components/UserTable.vue",
+      "src/views/system/user/components/user-table-columns.ts",
+      "src/views/tenant/components/TenantProjectSelectStep.vue",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/components/tenant-table-columns.ts"
+    ],
+    "stat_summary": " 11 files changed, 762 insertions(+), 439 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "21a6222b0f5330c76d489fd50fd9e1f0d2dc9be1",
+    "commit_short": "21a6222",
+    "date": "2026-07-28",
+    "subject": "chore(perm): 内测临时放开鉴权调试日志",
+    "body": "注释 v-hasPerm/checkHasPerm 与 page 歧义 warn 的 DEV 环境限制，便于内测人员在 staging 构建观察鉴权结果；内测结束后恢复。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "chore(perm): 内测临时放开鉴权调试日志\n注释 v-hasPerm/checkHasPerm 与 page 歧义 warn 的 DEV 环境限制，便于内测人员在 staging 构建观察鉴权结果；内测结束后恢复。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 2 files changed, 9 insertions(+), 23 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "32f55908b87fdbbc1f9845ff69d24188b844962b",
+    "commit_short": "32f5590",
+    "date": "2026-07-28",
+    "subject": "feat(perm): 路由权限读侧改为 pageURL 精确与 funcURL 模糊并集",
+    "body": "RoutePermDict 重写 resolveScope 与 collectFuncTree DFS；菜单表单支持 function 多子路由 ; 配置；v-hasPerm 调试日志对齐新语义。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(perm): 路由权限读侧改为 pageURL 精确与 funcURL 模糊并集\nRoutePermDict 重写 resolveScope 与 collectFuncTree DFS；菜单表单支持 function 多子路由 ; 配置；v-hasPerm 调试日志对齐新语义。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/services/permissions.ts",
+      "src/utils/formRules.ts",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/utils/menu-formRules.ts"
+    ],
+    "stat_summary": " 5 files changed, 408 insertions(+), 248 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d31f283d70d846ec9c0e6a8ff30436b7fdeda39c",
+    "commit_short": "d31f283",
+    "date": "2026-07-28",
+    "subject": "chore(build): 内测临时保留生产构建 console 输出",
+    "body": "关闭 terser drop_console，便于内测人员在 t-cloud 观察权限鉴权调试日志；内测结束后恢复 drop_console: true。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "chore(build): 内测临时保留生产构建 console 输出\n关闭 terser drop_console，便于内测人员在 t-cloud 观察权限鉴权调试日志；内测结束后恢复 drop_console: true。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "vite.config.ts"
+    ],
+    "stat_summary": " 1 file changed, 3 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f7976f4a9348c3488c73722be5f46ab7498eae4e",
+    "commit_short": "f7976f4",
+    "date": "2026-07-28",
+    "subject": "fix(menu): 恢复菜单树表 PageTabShell 像素高度绑定",
+    "body": "菜单表嵌在 el-tabs + overflow:hidden 内，max-height:100% 无法撑出纵向滚动。\n\n改回 contentHeight → :height，保留 expand 列宽策略。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(menu): 恢复菜单树表 PageTabShell 像素高度绑定\n菜单表嵌在 el-tabs + overflow:hidden 内，max-height:100% 无法撑出纵向滚动。\n\n改回 contentHeight → :height，保留 expand 列宽策略。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/menu/components/MenuTreeTable.vue",
+      "src/views/system/menu/index.vue"
+    ],
+    "stat_summary": " 2 files changed, 13 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "68772dfa4eca33c0daf7e71d7c686418c50ba0ea",
+    "commit_short": "68772df",
+    "date": "2026-07-28",
+    "subject": "feat(auth): 登录写侧支持 function 多子路由展开",
+    "body": "新增 expand-multi-route 模块：登录时将 function 的 ; 多路径拆成扁平 routeProjectMap key，同路径 function 融合为 function-union；menu-cache 与子应用加载分析复用 splitFuncPaths。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(auth): 登录写侧支持 function 多子路由展开\n新增 expand-multi-route 模块：登录时将 function 的 ; 多路径拆成扁平 routeProjectMap key，同路径 function 融合为 function-union；menu-cache 与子应用加载分析复用 splitFuncPaths。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/store/modules/user/user.store.ts",
+      "src/utils/expand-multi-route.ts",
+      "src/utils/menu-cache.ts"
+    ],
+    "stat_summary": " 3 files changed, 256 insertions(+), 52 deletions(-)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "92813f4fa585b74b32cd7434af6b55e520d92c79",
+    "commit_short": "92813f4",
+    "date": "2026-07-28",
+    "subject": "chore(perm): 内测临时放开鉴权调试日志",
+    "body": "注释 v-hasPerm、RoutePermDict:load 与 page 歧义 warn 的 DEV 环境限制，便于内测观察；内测结束后恢复。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "chore(perm): 内测临时放开鉴权调试日志\n注释 v-hasPerm、RoutePermDict:load 与 page 歧义 warn 的 DEV 环境限制，便于内测观察；内测结束后恢复。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 2 files changed, 11 insertions(+), 20 deletions(-)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "bbfdc821d10cd12ed505ffec36d25c3c4ec14fd4",
+    "commit_short": "bbfdc82",
+    "date": "2026-07-28",
+    "subject": "feat(perm): 路由权限读侧对齐 pageURL 与 funcURL 并集模型",
+    "body": "RoutePermDict 与菜单类型枚举同步多子路由读侧语义，供页面内鉴权消费 routeProjectMap。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(perm): 路由权限读侧对齐 pageURL 与 funcURL 并集模型\nRoutePermDict 与菜单类型枚举同步多子路由读侧语义，供页面内鉴权消费 routeProjectMap。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/directive/permission/index.ts",
+      "src/enums/system/menu.enum.ts",
+      "src/services/permissions.ts"
+    ],
+    "stat_summary": " 3 files changed, 393 insertions(+), 219 deletions(-)"
+  },
+  {
+    "repo": "opsdeck",
+    "commit_id": "cffff57afe07fb9f7d21618e1690ae94390f64f3",
+    "commit_short": "cffff57",
+    "date": "2026-07-28",
+    "subject": "chore(build): 内测临时保留生产构建 console 输出",
+    "body": "关闭 terser drop_console，便于内测人员在 t-cloud 观察权限鉴权调试日志；内测结束后恢复 drop_console: true。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "chore(build): 内测临时保留生产构建 console 输出\n关闭 terser drop_console，便于内测人员在 t-cloud 观察权限鉴权调试日志；内测结束后恢复 drop_console: true。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "vite.config.ts"
+    ],
+    "stat_summary": " 1 file changed, 3 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "6e87120bf26b7d0754cd790ef7e5c1381f26c0b6",
+    "commit_short": "6e87120",
+    "date": "2026-07-29",
+    "subject": "fix(form): 自定义 label 必填星号与改密弹窗布局优化",
+    "body": "PwdPolicyTip 始终占位防闪白；个人中心/菜单/用户表单补 required 星号，改密弹窗固定 label 宽度并预拉密码策略。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(form): 自定义 label 必填星号与改密弹窗布局优化\nPwdPolicyTip 始终占位防闪白；个人中心/菜单/用户表单补 required 星号，改密弹窗固定 label 宽度并预拉密码策略。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/components/form/PwdPolicyTip.vue",
+      "src/views/profile/index.vue",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/components/UserResetPasswordDialog.vue"
+    ],
+    "stat_summary": " 5 files changed, 15 insertions(+), 8 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "aa7375e58e1a39161c913190274ee4c7ac9969fe",
+    "commit_short": "aa7375e",
+    "date": "2026-07-29",
+    "subject": "fix(profile): 对齐个人中心绑定错反馈与人机校验 UI",
+    "body": "OTP 可重试错误字段回填与提交态空校；补充联系方式 placeholder；抽取 BindCaptchaField 单边框组合控件，修复安全验证弹窗错误文案与 footer 重叠。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(profile): 对齐个人中心绑定错反馈与人机校验 UI\nOTP 可重试错误字段回填与提交态空校；补充联系方式 placeholder；抽取 BindCaptchaField 单边框组合控件，修复安全验证弹窗错误文案与 footer 重叠。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/constants/error-codes.ts",
+      "src/views/profile/components/BindCaptchaField.vue",
+      "src/views/profile/components/BindContactDialog.vue",
+      "src/views/profile/components/SendCodeCaptchaDialog.vue",
+      "src/views/profile/composables/useBindContact.ts"
+    ],
+    "stat_summary": " 5 files changed, 311 insertions(+), 51 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "816c9d4b74594beaafa01f913381541c92e873c3",
+    "commit_short": "816c9d4",
+    "date": "2026-07-29",
+    "subject": "fix(auth): 对齐登录鉴权表单错反馈与回车防原生提交",
+    "body": "可重试业务错 toast 后回填字段红错；图形码/页失效按语义分流；各鉴权 el-form 拦截原生 submit，避免 MFA 回车刷新丢 token。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(auth): 对齐登录鉴权表单错反馈与回车防原生提交\n可重试业务错 toast 后回填字段红错；图形码/页失效按语义分流；各鉴权 el-form 拦截原生 submit，避免 MFA 回车刷新丢 token。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/seccenter/config.v2.api.ts",
+      "src/components/auth/field/CaptchaFld.vue",
+      "src/components/auth/field/CodeField.vue",
+      "src/components/auth/field/PwdField.vue",
+      "src/components/auth/layout/FieldShell.vue",
+      "src/components/auth/layout/MainBtn.vue",
+      "src/components/auth/layout/MixShell.vue",
+      "src/constants/error-codes.ts",
+      "src/gateway/auth.gateway.ts",
+      "src/gateway/security-config.gateway.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/formRules.ts",
+      "src/views/login/components/ForgotResetStep.vue",
+      "src/views/login/components/ForgotVerifyStep.vue",
+      "src/views/login/components/Login.vue",
+      "src/views/login/components/LoginActivate.vue",
+      "src/views/login/components/LoginForgotPassword.vue",
+      "src/views/login/components/SendCodeCaptchaDialog.vue",
+      "src/views/login/components/VerifyTwoFactor.vue"
+    ],
+    "stat_summary": " 22 files changed, 491 insertions(+), 93 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "a4dac85b1fed62b65d5e7a232f04527e427959d8",
+    "commit_short": "a4dac85",
+    "date": "2026-07-30",
+    "subject": "feat(tenant): 创建租户 precheck 字段红错与契约防护",
+    "body": "下一步前 precheckCreate 回填 .be-field-err，模态框遮罩 loading，抽离表单聚焦工具，并约束 precheck 不改写 model。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(tenant): 创建租户 precheck 字段红错与契约防护\n下一步前 precheckCreate 回填 .be-field-err，模态框遮罩 loading，抽离表单聚焦工具，并约束 precheck 不改写 model。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/system/tenant.api.ts",
+      "src/constants/error-codes.ts",
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/utils/formErrorFocus.ts",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/tenant/components/TenantFormFields.vue",
+      "src/views/tenant/components/TenantFormStep.vue",
+      "src/views/tenant/components/TenantWizardDialog.vue",
+      "src/views/tenant/composables/__tests__/useTenantPrecheck.contract.test.ts",
+      "src/views/tenant/composables/useTenantPrecheck.ts",
+      "src/views/tenant/index.vue",
+      "src/views/tenant/utils/precheck-map.ts"
+    ],
+    "stat_summary": " 12 files changed, 1082 insertions(+), 54 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "2944008901b0d27b4dce87f85faa253a9dd4e94d",
+    "commit_short": "2944008",
+    "date": "2026-07-31",
+    "subject": "feat(user): 用户管理权限收敛为查/写二分",
+    "body": "将页级鉴权从多 function 合并为 sys:user:query 与 sys:user:write，无写权限时隐藏操作列与多选列，便于角色勾选简化试点。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(user): 用户管理权限收敛为查/写二分\n将页级鉴权从多 function 合并为 sys:user:query 与 sys:user:write，无写权限时隐藏操作列与多选列，便于角色勾选简化试点。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/user/components/UserSearchBar.vue",
+      "src/views/system/user/components/UserTable.vue",
+      "src/views/system/user/index.vue",
+      "src/views/system/user/user.models.ts"
+    ],
+    "stat_summary": " 4 files changed, 39 insertions(+), 63 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "48f5298bf2fc433a869e812dc493821e6598baa4",
+    "commit_short": "48f5298",
+    "date": "2026-07-31",
+    "subject": "refactor(role): 角色模板列表时间展示改用 @nebula/ui",
+    "body": "与 855824f 迁移对齐，formatUtcDateTime 不再依赖已删除的本地 datetime 工具。",
+    "message": "refactor(role): 角色模板列表时间展示改用 @nebula/ui\n与 855824f 迁移对齐，formatUtcDateTime 不再依赖已删除的本地 datetime 工具。",
+    "files": [
+      "src/views/system/role/components/roleTemplate/RoleTemplateListTable.vue"
+    ],
+    "stat_summary": " 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "69bbce2d1ed6e697e6fa13f8278456443d795967",
+    "commit_short": "69bbce2",
+    "date": "2026-07-31",
+    "subject": "feat(role): 角色管理查写二分，编辑无 write 只读",
+    "body": "收敛为 role/roleTemplate 的 query+write；编辑同入口可开，无 write 禁表单树与穿梭。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(role): 角色管理查写二分，编辑无 write 只读\n收敛为 role/roleTemplate 的 query+write；编辑同入口可开，无 write 禁表单树与穿梭。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/types/role.d.ts",
+      "src/views/system/role/components/DeviceTab.vue",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/system/role/components/role/RoleEditDialog.vue",
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/role/components/role/index.vue",
+      "src/views/system/role/composables/useRoleList.ts",
+      "src/views/system/role/index.vue",
+      "src/views/system/role/role.models.ts"
+    ],
+    "stat_summary": " 9 files changed, 65 insertions(+), 40 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "a86f2c038cc612265c3f2f80aeeae509438f02f4",
+    "commit_short": "a86f2c0",
+    "date": "2026-07-31",
+    "subject": "feat(tenant): 管理*无 write 自动只读，穿梭组件支持 disabled",
+    "body": "仅 query 可开管理弹窗浏览；DeviceTransfer/面板全选灰禁勾选，写操作仍仅 write。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(tenant): 管理*无 write 自动只读，穿梭组件支持 disabled\n仅 query 可开管理弹窗浏览；DeviceTransfer/面板全选灰禁勾选，写操作仍仅 write。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/components/transfer/README.md",
+      "src/components/transfer/src/transfer-panel.vue",
+      "src/components/transfer/src/transfer_v2/DeviceTransfer.vue",
+      "src/components/transfer/src/transfer_v2/README.md",
+      "src/views/deviceManage/device/components/ProjectResourceBindPanel.vue",
+      "src/views/deviceManage/device/components/ProjectSourceDialog.vue",
+      "src/views/tenant/components/BindDeviceDialog.vue",
+      "src/views/tenant/components/TenantProjectSelectStep.vue",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/index.vue",
+      "src/views/tenant/tenant.models.ts"
+    ],
+    "stat_summary": " 11 files changed, 175 insertions(+), 70 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "be22a33922aa73d0ae25e1bda9e460f0f87c4e6e",
+    "commit_short": "be22a33",
+    "date": "2026-07-31",
+    "subject": "fix(tenant): 去掉租户名失焦写 wire，修复国际化弹窗丢字",
+    "body": "失焦会透传到 NeI18n 弹窗并触发 validate 覆盖草稿；wire 仅在第 0 步校验通过后写入即可。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(tenant): 去掉租户名失焦写 wire，修复国际化弹窗丢字\n失焦会透传到 NeI18n 弹窗并触发 validate 覆盖草稿；wire 仅在第 0 步校验通过后写入即可。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 1 file changed, 16 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d2e7ccd150d46995ea427497c8c336b8d3b28a79",
+    "commit_short": "d2e7ccd",
+    "date": "2026-07-31",
+    "subject": "fix(role): 角色列表分页改为单线页码绑定",
+    "body": "去掉 RoleListTable/角色模板列表的 innerPage 镜像与 payload 回写，改用 defineModel 直连 queryParams，修复尾页改页容量不回首页。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(role): 角色列表分页改为单线页码绑定\n去掉 RoleListTable/角色模板列表的 innerPage 镜像与 payload 回写，改用 defineModel 直连 queryParams，修复尾页改页容量不回首页。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/role/components/role/index.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateListTable.vue",
+      "src/views/system/role/components/roleTemplate/index.vue",
+      "src/views/system/role/composables/useRoleList.ts",
+      "src/views/system/role/index_callback.vue"
+    ],
+    "stat_summary": " 6 files changed, 30 insertions(+), 103 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "de122577f31e7f6234a3d3513cccffa4c09e1405",
+    "commit_short": "de12257",
+    "date": "2026-07-31",
+    "subject": "feat(role): 角色管理增加角色模板 Tab（查写二分）",
+    "body": "平台侧维护 isForSystem=false 模板供创建租户铺默认角色；权限树支持只读高亮门控与仅平台 tag；描述长度对齐 descMaxLen=1024。",
+    "message": "feat(role): 角色管理增加角色模板 Tab（查写二分）\n平台侧维护 isForSystem=false 模板供创建租户铺默认角色；权限树支持只读高亮门控与仅平台 tag；描述长度对齐 descMaxLen=1024。",
+    "files": [
+      "src/api/seccenter/role-template.v2.api.ts",
+      "src/composables/usePersistedTab.ts",
+      "src/gateway/system/role/role-template.gateway.ts",
+      "src/types/role-template.d.ts",
+      "src/types/role.d.ts",
+      "src/utils/formRules.ts",
+      "src/views/system/role/components/FunctionPermissionList.vue",
+      "src/views/system/role/components/MenuPermissionTree.vue",
+      "src/views/system/role/components/PermissionTab.vue",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateBasicFormTab.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateEditDialog.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateListTable.vue",
+      "src/views/system/role/components/roleTemplate/index.vue",
+      "src/views/system/role/index.vue",
+      "src/views/system/role/role.models.ts"
+    ],
+    "stat_summary": " 16 files changed, 1399 insertions(+), 31 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "fe97082f7d1371345b48a22f2071c56af340d710",
+    "commit_short": "fe97082",
+    "date": "2026-07-31",
+    "subject": "feat(menu): 菜单管理查写二分，配置类无 write 只读",
+    "body": "收敛为 sys:menu:query|write；权限/API/白名单同入口可开，导出跟 query，增删改导入跟 write。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(menu): 菜单管理查写二分，配置类无 write 只读\n收敛为 sys:menu:query|write；权限/API/白名单同入口可开，导出跟 query，增删改导入跟 write。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/menu/components/ApiConfigDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/MenuTabActions.vue",
+      "src/views/system/menu/components/MenuToolbar.vue",
+      "src/views/system/menu/components/MenuTreeTable.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/menu/index.vue",
+      "src/views/system/menu/menu.models.ts",
+      "src/views/system/menu/utils/menu-row-actions.ts"
+    ],
+    "stat_summary": " 9 files changed, 98 insertions(+), 136 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "061f65649e50f1c479c91621bb0603ca20a2a73f",
+    "commit_short": "061f656",
+    "date": "2026-08-03",
+    "subject": "feat(api): 租户管理：引入操作列-按钮“更换所有者”",
+    "body": "",
+    "message": "feat(api): 租户管理：引入操作列-按钮“更换所有者”",
+    "files": [
+      "src/api/system/tenant.api.ts",
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/components/TransferOwnerDialog.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 5 files changed, 269 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "2beb42dd4af82efaab82a041d059d6dc1ddb342e",
+    "commit_short": "2beb42d",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 角色管理-角色模块仅平台可见",
+    "body": "",
+    "message": "fix(vue): 角色管理-角色模块仅平台可见",
+    "files": [
+      "src/views/system/role/index.vue"
+    ],
+    "stat_summary": " 1 file changed, 12 insertions(+), 4 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "7765496e857aa4f23369dee350e44372b4095ae2",
+    "commit_short": "7765496",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 表单校验：邮箱全串锚定，避免子串命中（如 ada@qq@qq.com）",
+    "body": "",
+    "message": "fix(vue): 表单校验：邮箱全串锚定，避免子串命中（如 ada@qq@qq.com）",
+    "files": [
+      "src/utils/formRules.ts",
+      "src/views/profile/composables/useBindContact.ts",
+      "src/views/profile/index.vue"
+    ],
+    "stat_summary": " 3 files changed, 21 insertions(+), 29 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "83f6fa2d45c1f60c19d910712b21034dfde71175",
+    "commit_short": "83f6fa2",
+    "date": "2026-08-03",
+    "subject": "chore(vue): 更换所有者->转移所有者",
+    "body": "",
+    "message": "chore(vue): 更换所有者->转移所有者",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 6 files changed, 100 insertions(+), 40 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "88f6965589c76d875109310aeb153cb7d402d429",
+    "commit_short": "88f6965",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 租户管理：beta2不上转移所有者",
+    "body": "",
+    "message": "fix(vue): 租户管理：beta2不上转移所有者",
+    "files": [
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 2 files changed, 60 insertions(+), 54 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "a1e413cc47b7ed28a22af477273036f7f55e5e2e",
+    "commit_short": "a1e413c",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 前端侧MFA长度收口为 4–6",
+    "body": "",
+    "message": "fix(vue): 前端侧MFA长度收口为 4–6",
+    "files": [
+      "src/gateway/system/config.gateway.ts",
+      "src/views/system/securityConfig/components/LoginPolicyCard.vue"
+    ],
+    "stat_summary": " 2 files changed, 3 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "cb595dc9eda19f1601afb4b57ed83cfca589951b",
+    "commit_short": "cb595dc",
+    "date": "2026-08-03",
+    "subject": "refactor(i18n): 主域读侧统一 getLocalizedValue",
+    "body": "将租户、用户、角色、个人中心与菜单主域的多语言展示统一改为\n@nebula/ui 的 getLocalizedValue，去掉调用点显式 locale 传参，\n与 NebulaUI 当前语言注入保持一致。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "refactor(i18n): 主域读侧统一 getLocalizedValue\n将租户、用户、角色、个人中心与菜单主域的多语言展示统一改为\n@nebula/ui 的 getLocalizedValue，去掉调用点显式 locale 传参，\n与 NebulaUI 当前语言注入保持一致。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/gateway/system/menu/menu.gateway.ts",
+      "src/services/menu/menu-repo.ts",
+      "src/utils/i18n.ts",
+      "src/views/profile/index.vue",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/menu/components/PermissionConfigDialog.vue",
+      "src/views/system/menu/composables/useMenuPage.ts",
+      "src/views/system/menu/composables/usePermissionConfigState.ts",
+      "src/views/system/menu/utils/list-kw-filter.ts",
+      "src/views/system/menu/utils/menu-tree.ts",
+      "src/views/system/role/components/PermissionDialogWithTree.vue",
+      "src/views/system/role/components/role/RoleListTable.vue",
+      "src/views/system/role/components/role/index.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupBasicFormTab.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateListTable.vue",
+      "src/views/system/role/components/roleTemplate/index.vue",
+      "src/views/system/user/components/UserTable.vue",
+      "src/views/system/user/index.vue",
+      "src/views/tenant/components/BindDeviceDialog.vue",
+      "src/views/tenant/components/ProjectDeviceConfigDialog.vue",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 22 files changed, 67 insertions(+), 101 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "2f14ab9ceadc3eb8e045cce49a394cbb4785364a",
+    "commit_short": "2f14ab9",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 前端侧MFA长度收口为 4–6",
+    "body": "",
+    "message": "fix(vue): 前端侧MFA长度收口为 4–6",
+    "files": [
+      "src/utils/formRules.ts",
+      "src/views/login/components/VerifyTwoFactor.vue"
+    ],
+    "stat_summary": " 2 files changed, 5 insertions(+), 5 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "33204c87e94145be573a5a186d394d0c33df9f22",
+    "commit_short": "33204c8",
+    "date": "2026-08-03",
+    "subject": "fix(auth): MFA 发码后灰禁渠道并对齐绿提示间距",
+    "body": "发码/倒计时中禁用短信邮箱单选，避免切渠道误用验证码；绿提示改为输入框附属行，并对齐 EP large 红错间距。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(auth): MFA 发码后灰禁渠道并对齐绿提示间距\n发码/倒计时中禁用短信邮箱单选，避免切渠道误用验证码；绿提示改为输入框附属行，并对齐 EP large 红错间距。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/login/components/VerifyTwoFactor.vue"
+    ],
+    "stat_summary": " 1 file changed, 35 insertions(+), 25 deletions(-)"
+  },
+  {
+    "repo": "microfb",
+    "commit_id": "80d1f5096ccf8fd08b0d67527b612c77a9c5e78b",
+    "commit_short": "80d1f50",
+    "date": "2026-08-03",
+    "subject": "fix(vue): 表单校验：邮箱全串锚定，避免子串命中（如 ada@qq@qq.com）",
+    "body": "",
+    "message": "fix(vue): 表单校验：邮箱全串锚定，避免子串命中（如 ada@qq@qq.com）",
+    "files": [
+      "src/utils/formRules.ts"
+    ],
+    "stat_summary": " 1 file changed, 17 insertions(+), 2 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "bb9c42551d0c01cee0d7e8d7ea8b7a029b70d126",
+    "commit_short": "bb9c425",
+    "date": "2026-08-04",
+    "subject": "feat(tenant): 项目资源绑定弹窗改用 pubagg detail",
+    "body": "弹窗 open/tryOpen 经网关 getTenantBindDetailCtx 聚合。\n不再前端拼 projects/resource/devicebind；列表 enrich 留待阶段2。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(tenant): 项目资源绑定弹窗改用 pubagg detail\n弹窗 open/tryOpen 经网关 getTenantBindDetailCtx 聚合。\n不再前端拼 projects/resource/devicebind；列表 enrich 留待阶段2。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/gateway/pubagg/pubagg.gateway.ts",
+      "src/gateway/pubagg/pubagg.map.ts",
+      "src/views/tenant/composables/useTenantProjectResourceBind.ts"
+    ],
+    "stat_summary": " 3 files changed, 91 insertions(+), 37 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "d77cc0377d8d67a80789de86c0ff2e3cfc74335c",
+    "commit_short": "d77cc03",
+    "date": "2026-08-04",
+    "subject": "feat(tenant): 列表 enrich 改用 pubagg bound/check",
+    "body": "列表列状态走聚合 check；稳定类型下沉 types；提交用打开时 cache 判 isUpdate；列设置只盯本列开关；修复 check 解包多剥一层。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(tenant): 列表 enrich 改用 pubagg bound/check\n列表列状态走聚合 check；稳定类型下沉 types；提交用打开时 cache 判 isUpdate；列设置只盯本列开关；修复 check 解包多剥一层。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/api/pubagg/index.api.ts",
+      "src/composables/useDeviceProjectResourceBind.ts",
+      "src/gateway/pubagg/pubagg.gateway.ts",
+      "src/gateway/pubagg/pubagg.map.ts",
+      "src/types/tenant.ts",
+      "src/views/deviceManage/device/components/ProjectSourceDialog.vue",
+      "src/views/tenant/composables/useTenantPage.ts",
+      "src/views/tenant/composables/useTenantProjectResourceBind.ts"
+    ],
+    "stat_summary": " 8 files changed, 236 insertions(+), 219 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "fd59be19911c929b4e147db8c4777fb6a2018c08",
+    "commit_short": "fd59be1",
+    "date": "2026-08-04",
+    "subject": "refactor(views): 重构 租户管理页为index + hook useTenantPage",
+    "body": "",
+    "message": "refactor(views): 重构 租户管理页为index + hook useTenantPage",
+    "files": [
+      "src/gateway/resource/project/project.gateway.ts",
+      "src/gateway/system/tenant/tenant.gateway.ts",
+      "src/types/tenant.ts",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/tenant/components/BindDeviceDialog.vue",
+      "src/views/tenant/components/TenantTable.vue",
+      "src/views/tenant/components/TenantWizardDialog.vue",
+      "src/views/tenant/composables/useTenantListPage.ts",
+      "src/views/tenant/composables/useTenantPage.ts",
+      "src/views/tenant/composables/useTenantPageLoading.ts",
+      "src/views/tenant/composables/useTenantProjectResourceBind.ts",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 12 files changed, 1409 insertions(+), 1221 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "0a45e5881bb4d3b749858ad9f12ce7a0dc529fc3",
+    "commit_short": "0a45e58",
+    "date": "2026-08-05",
+    "subject": "refactor(i18n): 主域 NeI18nInput 改为 wire 单槽并升级 @nebula/ui 至 1.0.12",
+    "body": "去掉角色/菜单/租户侧展示↔wire 映射与租户 name wire cache；依赖 1.0.12 的展示兜底与提交回填。回填/地球图标若异常由 nebula-ui 侧继续排查。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "refactor(i18n): 主域 NeI18nInput 改为 wire 单槽并升级 @nebula/ui 至 1.0.12\n去掉角色/菜单/租户侧展示↔wire 映射与租户 name wire cache；依赖 1.0.12 的展示兜底与提交回填。回填/地球图标若异常由 nebula-ui 侧继续排查。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateBasicFormTab.vue",
+      "src/views/tenant/components/TenantFormFields.vue",
+      "src/views/tenant/components/TenantFormStep.vue",
+      "src/views/tenant/components/TenantWizardDialog.vue",
+      "src/views/tenant/composables/__tests__/useTenantPrecheck.contract.test.ts",
+      "src/views/tenant/composables/useCreateTenantNameWireCache.ts",
+      "src/views/tenant/composables/useTenantPage.ts",
+      "src/views/tenant/composables/useTenantPrecheck.ts"
+    ],
+    "stat_summary": " 12 files changed, 78 insertions(+), 282 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "2c18a21170cd53837a5984fef74040e32a6bb2a7",
+    "commit_short": "2c18a21",
+    "date": "2026-08-05",
+    "subject": "feat(securityConfig): 安全配置查写二分，三 Tab 无 write 只读",
+    "body": "页级 perms 移至 index.vue：sys:securityConfig:query/write。\n\ncomposable 仅消费 canQuery/canWrite；无 write 时三 Tab 表单 disabled。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(securityConfig): 安全配置查写二分，三 Tab 无 write 只读\n页级 perms 移至 index.vue：sys:securityConfig:query/write。\n\ncomposable 仅消费 canQuery/canWrite；无 write 时三 Tab 表单 disabled。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/securityConfig/components/LoginPolicyCard.vue",
+      "src/views/system/securityConfig/components/PasswordPolicyCard.vue",
+      "src/views/system/securityConfig/components/SessionPolicyCard.vue",
+      "src/views/system/securityConfig/index.vue",
+      "src/views/system/securityConfig/security-config.models.ts",
+      "src/views/system/securityConfig/useSecurityConfigPage.ts"
+    ],
+    "stat_summary": " 6 files changed, 94 insertions(+), 158 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "523bce23c9a4060426bd1b17b07f600674fdce9d",
+    "commit_short": "523bce2",
+    "date": "2026-08-05",
+    "subject": "chore(deps): 升级 @nebula/ui 至 1.0.13",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "chore(deps): 升级 @nebula/ui 至 1.0.13\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "package.json",
+      "pnpm-lock.yaml"
+    ],
+    "stat_summary": " 2 files changed, 6 insertions(+), 6 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "be8dd84337538328d5cef742ef964edaf38ac628",
+    "commit_short": "be8dd84",
+    "date": "2026-08-05",
+    "subject": "fix(i18n): 补充i18n翻译",
+    "body": "",
+    "message": "fix(i18n): 补充i18n翻译",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json"
+    ],
+    "stat_summary": " 4 files changed, 63 insertions(+), 79 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "dd109a0c6300742576048e3451adcb4ec2d6825a",
+    "commit_short": "dd109a0",
+    "date": "2026-08-05",
+    "subject": "fix(securityConfig): 禁回车提交、数字空值回落 min，并按语言加宽 label",
+    "body": "主域表单加 @submit.prevent；安全配置数字非法输入回落各自 min；并发会话说明 0 不限制；新增 securityLabel 布局档位。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(securityConfig): 禁回车提交、数字空值回落 min，并按语言加宽 label\n主域表单加 @submit.prevent；安全配置数字非法输入回落各自 min；并发会话说明 0 不限制；新增 securityLabel 布局档位。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/plugins/locale-layout.ts",
+      "src/views/system/menu/components/ApiConfigDialog.vue",
+      "src/views/system/menu/components/ApiWhitelistDialog.vue",
+      "src/views/system/menu/components/MenuFormDialog.vue",
+      "src/views/system/role/components/role/RoleBasicFormTab.vue",
+      "src/views/system/role/components/roleGroup/RoleGroupBasicFormTab.vue",
+      "src/views/system/role/components/roleTemplate/RoleTemplateBasicFormTab.vue",
+      "src/views/system/securityConfig/components/LoginPolicyCard.vue",
+      "src/views/system/securityConfig/components/PasswordPolicyCard.vue",
+      "src/views/system/securityConfig/components/SessionPolicyCard.vue",
+      "src/views/system/user/components/UserFormFields.vue",
+      "src/views/system/user/components/UserResetPasswordDialog.vue",
+      "src/views/tenant/components/TenantFormFields.vue"
+    ],
+    "stat_summary": " 17 files changed, 66 insertions(+), 25 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "551e462fe2c64596469025740d332f2457494f65",
+    "commit_short": "551e462",
+    "date": "2026-08-06",
+    "subject": "fix(menu): 菜单名称列拖宽后钉住，避免自适应回填导致拖不窄",
+    "body": "Co-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(menu): 菜单名称列拖宽后钉住，避免自适应回填导致拖不窄\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/views/system/menu/components/MenuTreeTable.vue"
+    ],
+    "stat_summary": " 1 file changed, 3 insertions(+), 3 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "a04d00ce8cf51dcbb93f2bd1c93d1ee1cf836584",
+    "commit_short": "a04d00c",
+    "date": "2026-08-06",
+    "subject": "feat(tenant): 创建租户 Step3 角色模板联动",
+    "body": "修复角色模板卡片菜单数量文案 i18n，占位符不再显示 {0}\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "feat(tenant): 创建租户 Step3 角色模板联动\n修复角色模板卡片菜单数量文案 i18n，占位符不再显示 {0}\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/constants/tenant.ts",
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/tenant/components/TenantRolePreviewStep.vue",
+      "src/views/tenant/composables/useTenantPage.ts",
+      "src/views/tenant/index.vue"
+    ],
+    "stat_summary": " 8 files changed, 120 insertions(+), 131 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "b450046423be4e7235e03325189e736bfdadbe64",
+    "commit_short": "b450046",
+    "date": "2026-08-06",
+    "subject": "fix(vue): 用户管理：在关闭编辑模态框后销毁，避免模态框常驻导致的先打开编辑再打开新建，不能触发mount生命周期时不表单校验的初始化行为",
+    "body": "",
+    "message": "fix(vue): 用户管理：在关闭编辑模态框后销毁，避免模态框常驻导致的先打开编辑再打开新建，不能触发mount生命周期时不表单校验的初始化行为",
+    "files": [
+      "src/views/system/user/index.vue"
+    ],
+    "stat_summary": " 1 file changed, 23 insertions(+), 21 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "198f162fc8512ae2c4d44a8091ac8f5e50ebbee1",
+    "commit_short": "198f162",
+    "date": "2026-08-07",
+    "subject": "fix(views): 修改【租户管理-创建租户-角色确认】页面字段提示",
+    "body": "",
+    "message": "fix(views): 修改【租户管理-创建租户-角色确认】页面字段提示",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/views/tenant/components/TenantRolePreviewStep.vue"
+    ],
+    "stat_summary": " 5 files changed, 5 insertions(+), 5 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "85651efa6d9da2df6cc010397ced86eb54c7ed27",
+    "commit_short": "85651ef",
+    "date": "2026-08-07",
+    "subject": "fix(utils): 批量删除部分成功 toast 同时展示成功与失败数量",
+    "body": "统一 toastBatchOut 文案为「成功删除 N 条，失败 M 条：原因」，角色/租户/用户/菜单等共用。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "message": "fix(utils): 批量删除部分成功 toast 同时展示成功与失败数量\n统一 toastBatchOut 文案为「成功删除 N 条，失败 M 条：原因」，角色/租户/用户/菜单等共用。\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+    "files": [
+      "src/i18n/locales/en_US.json",
+      "src/i18n/locales/es_ES.json",
+      "src/i18n/locales/ru_RU.json",
+      "src/i18n/locales/zh_CN.json",
+      "src/utils/notification.ts"
+    ],
+    "stat_summary": " 5 files changed, 27 insertions(+), 8 deletions(-)"
+  },
+  {
+    "repo": "apex_dev",
+    "commit_id": "f45cd33771660fb98c6cfa34290fe9b2de736277",
+    "commit_short": "f45cd33",
+    "date": "2026-08-07",
+    "subject": "fix(views): 用户管理：去掉了下拉框里的“未确定”，因为status=0后端也会全查，和默认为空行为一致",
+    "body": "",
+    "message": "fix(views): 用户管理：去掉了下拉框里的“未确定”，因为status=0后端也会全查，和默认为空行为一致",
+    "files": [
+      "src/views/system/user/components/UserSearchBar.vue"
+    ],
+    "stat_summary": " 1 file changed, 7 insertions(+), 1 deletion(-)"
+  }
+]
