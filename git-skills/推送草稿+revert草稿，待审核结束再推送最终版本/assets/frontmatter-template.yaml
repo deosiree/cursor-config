@@ -1,0 +1,6 @@
+name: 推送草稿+revert草稿，待审核结束再推送最终版本
+description: >
+  当需要在共享分支（默认 develop）先推草稿给人看，再在本地临时分支 reset
+  收回改动做审查，审查结束后用 revert 消除远端草稿效果并 push 最终版时使用。
+  触发词：推草稿、revert 草稿、本地审查后再推。
+  不要用于：force-with-lease 覆盖、reset --hard、整支 merge、只挑 commit、沙盒 worktree。

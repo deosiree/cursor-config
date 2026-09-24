@@ -1,0 +1,4 @@
+name: 创建沙盒分支
+description: >
+  当需要基于基线分支用 git worktree 开 sibling 沙盒，或安全删除沙盒
+  worktree 与本地分支时使用。不要用于整支 merge 或 cherry-pick。

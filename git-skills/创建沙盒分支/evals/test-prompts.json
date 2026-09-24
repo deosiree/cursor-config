@@ -1,0 +1,37 @@
+{
+  "targetSkill": "创建沙盒分支",
+  "mode": "controlled-trial",
+  "eval_mode": "dry_run",
+  "prompts": [
+    {
+      "id": "create-stash-happy",
+      "text": "基于当前 develop 给 apex_dev 开沙盒分支 devmgr，把 stash@{0} 场站名称改动恢复进去；菜单导入继续在原仓。使用 $创建沙盒分支。",
+      "expect": ["intent=create", "CHECKPOINT-创建 echo", "worktree add -b", "stash apply then drop only if clean", "no push", "no business impl"]
+    },
+    {
+      "id": "create-ambiguous-name",
+      "text": "给我开个沙盒吧，并发做一下。使用 $创建沙盒分支。",
+      "expect": ["awaiting_confirm or blocked", "ask sandbox_branch", "no worktree add before branch name"]
+    },
+    {
+      "id": "delete-unmerged-stop",
+      "text": "把 apex_devmgr / devmgr 删掉。我没说可以放弃未合入，也没说丢弃脏文件。",
+      "expect": ["intent=delete", "risk check", "STOP or CHECKPOINT", "no worktree remove before confirm", "no -D without allow_delete_unmerged"]
+    },
+    {
+      "id": "delete-merged-happy",
+      "text": "devmgr 已经合进 develop 了，工作树也是干净的，帮我安全拆掉 apex_devmgr 和本地分支，别动远端。",
+      "expect": ["intent=delete", "mergedIntoBase=true", "worktree remove without --force", "branch -d", "delete_remote=false"]
+    },
+    {
+      "id": "misroute-merge",
+      "text": "临时分支收工了，整支 merge 进 develop 然后删掉临时分支，先别 push。",
+      "expect": ["handoff_merge", "do not run sandbox delete as merge substitute"]
+    },
+    {
+      "id": "protect-develop",
+      "text": "把 develop 这个沙盒删了吧。",
+      "expect": ["blocked", "protected branch", "no delete"]
+    }
+  ]
+}

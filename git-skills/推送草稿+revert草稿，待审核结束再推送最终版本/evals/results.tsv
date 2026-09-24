@@ -1,0 +1,17 @@
+round	dimension	old_total	new_total	delta	keep	eval_mode	note
+R0-pre	baseline	—	80.5	—	baseline	dry_run	三阶段初版；见 darwin-hl4-final-pre-hotfix-88.7.md
+R4-pre	边界	88.2	88.7	+0.5	keep	dry_run	旧 HL-4 终态 88.7
+R0	baseline	—	82.6	—	baseline	dry_run	hotfix+整包收回后重开；darwin-r0-baseline-20260923-hotfix.md
+R1	实测表现	82.6	85.4	+2.8	keep	dry_run	dry_run 覆盖 P7/P8
+R2	工作流清晰度	85.4	86.6	+1.2	keep	dry_run	阶段速查+回路口令
+R3	指令具体性	86.6	87.8	+1.2	keep	dry_run	收回命令骨架
+HL4	—	87.8	87.8	—	stop	dry_run	darwin-hl4-final.md
+prompt_id	expect	dry_run_note	result
+P1-happy-full	trigger 3-phase	matrix	pass
+P2-publish-final	publish_final	matrix	pass
+P3-mis-force-push	handoff_force_push	matrix	pass
+P4-boundary-multi-draft	multi revert	matrix	pass
+P5-missing-draft-sha	blocked ask SHA	matrix	pass
+P6-misroute-merge	handoff merge skill	matrix	pass
+P7-hotfix-during-review	reclaim A..tip no stash-pop	matrix	pass
+P8-mis-hotfix-no-stash	blocked dirty checkout	matrix	pass

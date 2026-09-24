@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-09-22T09:40	baseline	创建沙盒分支	-	84.9	baseline	-	首轮结构落地后 baseline（检查点偏软）	dry_run
+2026-09-22T09:45	opt-r1	创建沙盒分支	84.9	88.6	keep	检查点设计	硬化 CHECKPOINT-创建 + 父级失败模式表	dry_run
+2026-09-22T10:50	opt-r2	创建沙盒分支	88.6	90.4	keep	指令具体性	为分析/策略/切仓/移除/删分支/验收补示例 I/O	dry_run
+2026-09-22T10:55	opt-r3	创建沙盒分支	90.4	91.6	keep	实测表现	扩 test-prompts（歧义创建+已合入删除）+ results.tsv	dry_run

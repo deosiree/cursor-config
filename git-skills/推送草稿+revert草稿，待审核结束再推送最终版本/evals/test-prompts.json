@@ -1,0 +1,67 @@
+{
+  "skill": "推送草稿+revert草稿，待审核结束再推送最终版本",
+  "mode": "optimize",
+  "eval_mode": "dry_run",
+  "prompts": [
+    {
+      "id": "P1-happy-full",
+      "expect_trigger": true,
+      "expect_phase_seq": ["push_draft", "local_review", "publish_final"],
+      "must_checkpoint": ["CHECKPOINT-DRAFT-PUSH", "CHECKPOINT-TEMP-RESET", "CHECKPOINT-REVERT", "CHECKPOINT-FINAL-PUSH"],
+      "forbid": ["--force", "reset --hard"],
+      "text": "当前改动先 commit 并 push 到 develop 给后端看，然后我要本地临时分支 reset 回来改冗余；改完再 revert 草稿推最终版。不要强推。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P2-publish-final",
+      "expect_trigger": true,
+      "expect_phase": "publish_final",
+      "must_checkpoint": ["CHECKPOINT-REVERT", "CHECKPOINT-FINAL-PUSH", "CHECKPOINT-DELETE-TEMP"],
+      "must_output": ["draftSha", "finalSha"],
+      "text": "草稿 SHA=abc1234，最终提交=def5678 在 temp/review-after-draft。请在 develop 上 pull、revert 草稿、cherry-pick 最终版、push，再删临时分支。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P3-mis-force-push",
+      "expect_trigger": false,
+      "expect_phase": "handoff_force_push",
+      "forbid_exec": ["push --force", "push --force-with-lease"],
+      "text": "我的 feature/api-draft 没人用，直接 git push --force-with-lease 把草稿盖成最终版。"
+    },
+    {
+      "id": "P4-boundary-multi-draft",
+      "expect_trigger": true,
+      "expect_phase": "publish_final",
+      "must_behavior": "revert newest-to-oldest or authorized range",
+      "text": "草稿其实是连续 3 个 commit，都要 revert 掉再上最终版到 develop。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P5-missing-draft-sha",
+      "expect_trigger": true,
+      "expect_status": "blocked",
+      "must_ask": "draft_commit",
+      "text": "审查完了，把最终版推到 develop，之前的草稿 revert 掉。我忘了草稿 SHA 是多少。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P6-misroute-merge",
+      "expect_trigger": false,
+      "expect_handoff": "merge临时分支到主分支并删除临时分支",
+      "text": "临时分支收工了，merge 进 main 然后删掉临时分支，先别 push。"
+    },
+    {
+      "id": "P7-hotfix-during-review",
+      "expect_trigger": true,
+      "expect_phase": "hotfix_during_review",
+      "must_checkpoint": ["CHECKPOINT-HOTFIX-STASH", "CHECKPOINT-HOTFIX-PUSH", "CHECKPOINT-RECLAIM-SERIES"],
+      "must_output": ["hotfixSha", "draftSha", "seriesTip", "reviewBase"],
+      "forbid": ["--force", "commit --amend", "reset --hard", "stash pop as review baseline"],
+      "text": "我在临时审查分支上，Jenkins 报缺 js-yaml。先修到 develop 并 push origin/upstream；回来后不要恢复修 bug 前的改动，要把草稿和热修几个提交都收回本地，基于已修复代码整批审查。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P8-mis-hotfix-no-stash",
+      "expect_trigger": true,
+      "expect_phase": "hotfix_during_review",
+      "expect_status": "blocked",
+      "forbid_exec": ["checkout develop without stash when dirty"],
+      "text": "审查分支很脏，别 stash 了，直接 checkout develop 改完再回来。"
+    }
+  ]
+}
