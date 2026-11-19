@@ -1,7 +1,7 @@
 # CC-Switch Skill 中文索引大全
 
-> 共 276 个 skill，按场景分类。
-> 更新日期：2026-05-31
+> 共 277 个 skill，按场景分类。
+> 更新日期：2026-11-18
 
 ---
 
@@ -116,6 +116,7 @@
 | **agent-introspection-debugging** | Agent 失败时的结构化自检流程 |
 | **agent-payment-x402** | 为 AI agent 添加 x402 支付能力 |
 | **agent-sort** | 为特定仓库裁剪 ECC 安装包 |
+| **ai-collaboration-rules** | 多步任务中的澄清、范围控制、验证与如实交付 |
 | **agentic-engineering** | 使用 eval-first、分解、成本感知模型路由 |
 | **ai-first-engineering** | AI agent 主导实现的工程运营模式 |
 | **ai-regression-testing** | AI 开发的回归测试（捕捉同模型写审盲区） |

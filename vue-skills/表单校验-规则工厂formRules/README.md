@@ -26,6 +26,7 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 ├── feature-skills/配置-路径类规则
 ├── feature-skills/配置-密码对规则          ← pwdPair + getPwdPolicy + 动态 rules
 ├── feature-skills/接入-页面表单字段规则
+├── feature-skills/维护-同步前后端交互规则文档 ← 两仓 formRules.ts 改动后必跑
 ├── feature-skills/编排-未知规则MVP与落地
 └── feature-skills/维护-从业务仓同步样本  ← apex 真源 → skill 模板 + sync-samples
 ```
@@ -40,6 +41,7 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 
 | 子 skill | 你怎么说（关键词） | 典型场景 |
 |----------|-------------------|----------|
+| **维护-同步前后端交互规则文档** | apex/microfb 改了 formRules、同步前后端规则总目录、核对消费端与后端契约 | 两边工厂增删改后审查工厂、页面补充校验、API 契约并更新唯一产品文档 |
 | **维护-从业务仓同步样本** | 同步 skill 样本、formRules 样本对齐、apex 改了 formRules、业务仓 drift | apex 落地后对齐 skill 模板，不改业务仓 |
 | **盘点-推荐下一表单字段** | 盘点、下一项、覆盖度、最值得完善哪个字段、先不要改代码 | 只读扫描，输出 `fields[]` 建议 |
 | **配置-路径类规则** | 路由 path、apiUrl、pathLike、拼参 `/user?`、分段 path | 扩展 `createRoutePathRules` / `createApiPathRules` |
@@ -50,6 +52,17 @@ SKILL.md（父级：定位 + 风格路由 + 验收）
 | **编排-未知规则MVP与落地** | 新字段语义、端口号、还没有 formRules、未命中风格 | 调研 → Plan → mvp，无 formRules 时禁止跳过 Plan |
 
 **不要触发本套件**：补 `zh_CN.json` / 批量翻译、OperationColumn、纯后端 API 无表单。
+
+---
+
+### 规则工厂变更后的双项同步
+
+只要当前任务新增、修改或删除 `microfb/src/utils/formRules.ts` 或 `apex_dev/src/utils/formRules.ts`，工厂和页面实现完成后必须分别运行：
+
+- `维护-同步前后端交互规则文档`：盘点两仓工厂、生产消费点、页面业务补充与后端契约，更新 `nebula/docs/product/frontend-form-validation-rules.md`。
+- `维护-从业务仓同步样本`：按其 Apex 真源策略同步或报告 skill 模板差异。
+
+两项产物相互独立。仅改 locale、页面接入或样式且两个工厂未变时，不触发这条强制流程。
 
 ---
 

@@ -5,7 +5,12 @@ R0	baseline	—	82.6	—	baseline	dry_run	hotfix+整包收回后重开；darwin-
 R1	实测表现	82.6	85.4	+2.8	keep	dry_run	dry_run 覆盖 P7/P8
 R2	工作流清晰度	85.4	86.6	+1.2	keep	dry_run	阶段速查+回路口令
 R3	指令具体性	86.6	87.8	+1.2	keep	dry_run	收回命令骨架
-HL4	—	87.8	87.8	—	stop	dry_run	darwin-hl4-final.md
+HL4	—	87.8	87.8	—	stop	dry_run	hotfix 后 HL-4；见 bak-20260929…
+R0-reclaim	baseline	—	84.7	—	baseline	dry_run	revert_and_reclaim 后重开；darwin-r0-baseline-20260929-reclaim.md
+R1-reclaim	工作流清晰度	84.7	85.9	+1.2	keep	dry_run	三易混 phase 对照
+R2-reclaim	边界条件覆盖	85.9	86.5	+0.6	keep	dry_run	midstream 失败模式
+R3-reclaim	指令具体性	86.5	87.4	+0.9	keep	dry_run	alreadyReverted 检测命令
+HL4-reclaim	—	87.4	87.4	—	stop	dry_run	darwin-hl4-final.md 2026-09-29
 prompt_id	expect	dry_run_note	result
 P1-happy-full	trigger 3-phase	matrix	pass
 P2-publish-final	publish_final	matrix	pass
@@ -15,3 +20,5 @@ P5-missing-draft-sha	blocked ask SHA	matrix	pass
 P6-misroute-merge	handoff merge skill	matrix	pass
 P7-hotfix-during-review	reclaim A..tip no stash-pop	matrix	pass
 P8-mis-hotfix-no-stash	blocked dirty checkout	matrix	pass
+P9-revert-and-reclaim	reclaim then revert: push no F	matrix	pass
+P10-publish-after-midstream-revert	skip revert cherry-pick F	matrix	pass

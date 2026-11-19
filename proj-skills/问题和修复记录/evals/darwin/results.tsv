@@ -1,0 +1,6 @@
+timestamp	round	target	old_score	new_score	delta	status	dimension	eval_mode	note
+2026-10-20	R0	问题和修复记录/SKILL.md	-	78.1	-	baseline	-	dry_run	Darwin baseline；尚未执行受控提示词或本项目实跑
+2026-10-20	T0	问题和修复记录/SKILL.md	78.1	83.1	+5.0	keep	实测表现 6.0→8.0	dry_run	三条合成提示词通过；仅文档模拟，不代表真实输入运行
+2026-10-20	R1	问题和修复记录/SKILL.md	83.1	84.5	+1.4	keep	检查点设计 7.0→9.0	dry_run	三条提示词复跑通过；新增 G0-G4 阶段门禁
+2026-10-20	R2	问题和修复记录/SKILL.md	84.5	85.3	+0.8	keep	Frontmatter 质量 8.0→9.0	dry_run	复用三条提示词并通过；达到 HL-4，不再改目标 skill
+2026-10-20	R3	问题和修复记录/SKILL.md	85.3	85.8	+0.5	keep	边界条件覆盖 9.0→9.5	dry_run	八条 Darwin 提示词通过；区分版本快照、原表多状态并核验引用路径，仍无独立盲测
