@@ -1,0 +1,57 @@
+{
+  "skill": "打包本地项目",
+  "should_trigger": [
+    {
+      "prompt": "把 F:\\Documents\\Repertory\\Own\\sub2api 打包成 ZIP，我要迁移到自己的另一台电脑；保留所有本地配置，只排除依赖。",
+      "expected_behavior": "使用绝对 sourcePath，includeLocalFiles 默认为 true，输出到源目录旁，说明依赖安装命令"
+    },
+    {
+      "prompt": "请压缩 D:\\项目\\我的 App，保留隐藏配置和输出目录。",
+      "expected_behavior": "支持中文与空格路径，保留隐藏文件、输出目录和原项目顶层目录"
+    },
+    {
+      "prompt": "把 C:\\work\\demo 打 ZIP，但不要带 node_modules、vendor 或 Python 虚拟环境。",
+      "expected_behavior": "排除常见已安装依赖目录，同时保留依赖清单和锁文件"
+    },
+    {
+      "prompt": "将 F:\\project 打包，但这次不要本地状态文件。先告诉我会排除什么。",
+      "expected_behavior": "设置 includeLocalFiles=false，先展示 .gitignore 与本地状态候选清单，等待确认后再打包"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "只想把三个 PDF 文件合并到一个 PDF。",
+      "reason": "不是项目目录迁移打包"
+    },
+    {
+      "prompt": "生成一个 Linux Docker 发布镜像并推送到生产环境。",
+      "reason": "需要容器构建和发布流程，不是本地项目 ZIP 迁移"
+    }
+  ],
+  "implementation_cases": [
+    {
+      "case": "sourcePath 必须是存在的绝对目录路径",
+      "expected": "相对路径、路径不存在或文件路径均失败且不创建 ZIP"
+    },
+    {
+      "case": "includeLocalFiles 默认 true",
+      "expected": ".git、.env、缓存、tmp、日志、构建产物、输出文件、隐藏项和空目录保留"
+    },
+    {
+      "case": "依赖目录过滤",
+      "expected": "任意层级 node_modules、vendor、虚拟环境被排除，清单与锁文件保留"
+    },
+    {
+      "case": "includeLocalFiles false",
+      "expected": "完整展示本地排除候选；只预览时不创建 ZIP；无显式确认时停止"
+    },
+    {
+      "case": "目的地和归档结构",
+      "expected": "默认相邻 ZIP、保留顶层目录；拒绝覆盖现有 ZIP 和位于源目录内的目的地"
+    },
+    {
+      "case": "安装命令识别",
+      "expected": "按 pnpm-lock.yaml/package.json、go.mod 等清单报告命令，不执行安装"
+    }
+  ]
+}
