@@ -1,13 +1,13 @@
 ---
 name: 表单校验-规则工厂formRules
-description: formRules、表单校验、routePath、apiUrl、pathLike、pwdPair、密码策略、同步 skill 样本、formRules 样本对齐、trimFieldOnBlur、createApiPathRules、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；componentPath 或 repoRoot+moduleHint；可先盘点；不含 i18n locale。
+description: formRules、表单校验、routePath、apiUrl、pathLike、pwdPair、密码策略、同步 skill 样本、前后端校验规则文档、formRules 样本对齐、trimFieldOnBlur、createApiPathRules、标识符命名、ruleStyle、盘点下一项。Vue+Element Plus 集中式 rules 模块扩展与页面接入；componentPath 或 repoRoot+moduleHint；可先盘点；不含 i18n locale。
 ---
 
 # 表单校验-规则工厂 formRules
 
 在集中式 **rules 模块**（如 `formRules.ts`）扩展校验工厂，并在目标表单组件接入。跨项目通用；样本代码见 `template/sample-nebula/` 与 `assets/few-shot-example/`。
 
-**TL;DR**：只盘点 → 盘点 feature；**apex 改了 formRules 要更新 skill** → [维护-从业务仓同步样本](feature-skills/维护-从业务仓同步样本/SKILL.md)；有 `fields[]` → Step1–5 + 阶段 A/B；**无 `rulesModule`** → 仅 unknown→Plan；改 skill 样本 → **只改** [`formRules.ts`](template/sample-nebula/after/formRules.ts) → [`sync-samples.js`](scripts/sync-samples.js)（`.cursor` 提交时 pre-commit 自动跑，见 [`scripts/README.md`](scripts/README.md)）。
+**TL;DR**：只盘点 → 盘点 feature；`microfb` 或 `apex_dev` 的 `src/utils/formRules.ts` 增删改后，必须分别完成 [前后端规则文档同步](feature-skills/维护-同步前后端交互规则文档/SKILL.md) 与 [业务仓样本同步](feature-skills/维护-从业务仓同步样本/SKILL.md)；有 `fields[]` → Step1–5 + 阶段 A/B；**无 `rulesModule`** → 仅 unknown→Plan；改 skill 样本 → **只改** [`formRules.ts`](template/sample-nebula/after/formRules.ts) → [`sync-samples.js`](scripts/sync-samples.js)（`.cursor` 提交时 pre-commit 自动跑，见 [`scripts/README.md`](scripts/README.md)）。
 
 ## 何时使用
 
@@ -17,6 +17,7 @@ description: formRules、表单校验、routePath、apiUrl、pathLike、pwdPair�
 - 用户提到 **formRules**、**表单校验**、**路由路径校验**、**标识符命名**、**pwdPair**、**密码策略**、**密码对**
 - 只给 **repoRoot**（或 **repoRoot + moduleHint**），要「最值得完善的表单元素 / 下一项 / 覆盖度」→ 先走盘点子 skill
 - **apex_dev / microfb 的 `formRules.ts` 已落地，要对齐 skill 样本** → 走 [维护-从业务仓同步样本](feature-skills/维护-从业务仓同步样本/SKILL.md)
+- 当前任务新增、修改或删除 `microfb/src/utils/formRules.ts` 或 `apex_dev/src/utils/formRules.ts` → 文档同步与样本同步两个 feature 都必须执行，前者盘点两仓规则工厂及全部消费端，后者独立处理 skill 样本
 
 ## 何时不要使用
 
@@ -83,6 +84,14 @@ fields:
 2. 默认 `dryRun` → 用户确认后再 `apply`
 3. **不**进入 Step 1–5 页面接入
 
+### 分支：工厂变更 → 前后端交互规则文档同步
+
+当本任务新增、修改或删除 `microfb/src/utils/formRules.ts` 或 `apex_dev/src/utils/formRules.ts`：
+
+1. 规则工厂及消费页实现完成后，委派 [维护-同步前后端交互规则文档](feature-skills/维护-同步前后端交互规则文档/SKILL.md)。即使只改了一个仓库，也要检查两个工厂和两边所有生产消费点。
+2. 独立委派 [维护-从业务仓同步样本](feature-skills/维护-从业务仓同步样本/SKILL.md)；样本同步不能替代规则文档同步，反之亦然。
+3. 只有翻译、页面消费端或组件交互变化而工厂文件未变时，不因本条自动触发规则文档同步。
+
 ### 分支：已知字段直接实施
 
 | Step | 动作 | 产出 |
@@ -144,6 +153,7 @@ Step 3 中 `maxlength`（UI）与 `validateMax`（校验）不一致时，**先�
 | 未命中 / 新语义 | [`feature-skills/编排-未知规则MVP与落地`](feature-skills/编排-未知规则MVP与落地/SKILL.md) |
 | 仅 `repoRoot` / 要下一项推荐 / 覆盖度 | [`feature-skills/盘点-推荐下一表单字段`](feature-skills/盘点-推荐下一表单字段/SKILL.md) |
 | apex/microfb `formRules` drift / 同步 skill 样本 | [`feature-skills/维护-从业务仓同步样本`](feature-skills/维护-从业务仓同步样本/SKILL.md) |
+| 两仓 `formRules.ts` 增删改 / 更新前后端规则总目录 | [`feature-skills/维护-同步前后端交互规则文档`](feature-skills/维护-同步前后端交互规则文档/SKILL.md)；并单独执行样本同步 |
 
 判定口诀：**先定 ruleStyle，再进子 skill；语义已有只接入，语义没有先配置/新增工厂。全仓推进时先盘点再实施。**
 

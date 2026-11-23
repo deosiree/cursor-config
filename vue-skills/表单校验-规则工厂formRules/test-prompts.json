@@ -28,5 +28,20 @@
     "id": 6,
     "prompt": "apex_dev 刚改了 src/utils/formRules.ts，请把 formRules skill 样本对齐，apex 路径 F:/Documents/Repertory/Sieyuan/nebula/apex_dev，先 dry-run。",
     "expected": "委派维护-从业务仓同步样本；sync-from-repos --dry-run；有 drift 再经用户确认 --apply；不改 locale；microfb 仅 diff 报告"
+  },
+  {
+    "id": 7,
+    "prompt": "apex_dev/src/utils/formRules.ts 的菜单 routePath 规则已改好。请核对两仓工厂、菜单表单消费点与后端契约，更新跨仓规则文档，并完成独立的 skill 样本同步。",
+    "expected": "在工厂实现后分别运行维护-同步前后端交互规则文档与维护-从业务仓同步样本；检查 microfb/apex 全部消费端和后端；菜单接受集合冲突暂停并给证据；更新唯一 docs/product 正文和索引"
+  },
+  {
+    "id": 8,
+    "prompt": "只改登录页 zh_CN 翻译，不改 microfb 或 apex_dev 的 formRules.ts。",
+    "expected": "不触发规则文档同步，也不触发样本同步；翻译超出本 skill 职责"
+  },
+  {
+    "id": 9,
+    "prompt": "microfb/src/utils/formRules.ts 的登录密码规则刚修改。请检查 microfb 与 apex_dev 的规则工厂、登录和改密消费端，以及 seccenter 密码契约；分别同步产品规则文档与 skill 样本。若后端接受范围冲突，先列证据并暂停统一口径。",
+    "expected": "工厂变更触发文档同步和样本同步两个独立 feature；扫描两仓生产消费与业务追加校验，核对后端源码/API；更新唯一 docs/product 正文；冲突项等待裁决，不虚构 DDL 证据"
   }
 ]

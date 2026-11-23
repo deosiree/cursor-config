@@ -15,5 +15,8 @@
 - apex 用户重置密码对话框也要 validate-on-rule-change false
 - apex 改了 formRules.ts，把 skill 样本同步一下（先 dry-run）
 - formRules 样本对齐 microfb 和 apex，更新 template 里的 formRules.ts
+- apex_dev/src/utils/formRules.ts 菜单路径规则刚修改；检查菜单表单消费点和 seccenter 接口规则，并同步 Nebula 产品侧前后端校验总目录
+- microfb/src/utils/formRules.ts 密码规则刚修改；审查两边工厂与消费页、核对后端密码契约，分别更新产品规则文档和 skill 样本
+- microfb/src/utils/formRules.ts 登录密码规则刚修改；扫描登录和改密消费端、核对 seccenter 密码契约，并独立同步产品规则文档与 skill 样本
 - 给密码对配 tips，PwdPolicyTip 和 pwdPair 用同一套 policy
 - 忘记密码页标题下要显示密码复杂度说明（microfb ForgotStepPanel）
