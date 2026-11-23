@@ -1,20 +1,23 @@
 ---
 name: 收回草稿与热修区间到审查工作区
-description: 当热修已推上共享分支后，需要把「原始草稿 + 历次热修」整段提交的改动一并收回临时审查分支工作区（mixed reset 到草稿父提交），供在已修 bug 的基础上做整批审查优化时使用。不是 stash pop 回热修前的旧 WIP。
+description: 当需要把「原始草稿 + 历次热修」整段提交的改动一并收回临时审查分支工作区（mixed reset 到草稿父提交）时使用。调用方可以是 hotfix_during_review（热修后整包收回）或 revert_and_reclaim（推 revert 前回收）。不是 stash pop 回旧 WIP。
 ---
 
 # 核心任务
 
-以共享分支上 **草稿系列 tip**（含原始草稿 B 与其后热修 H…）为内容来源，把临时审查分支指到该 tip，再 **mixed reset 到草稿父提交 A**，使工作区 = `A..tip` 的全部改动。随后审查优化的是「已含 bug 修复」的整包 diff，而不是热修前的旧本地 WIP。
+以共享分支上 **草稿系列 tip**（含原始草稿 B 与其后热修 H…）为内容来源，把临时审查分支指到该 tip，再 **mixed reset 到草稿父提交 A**，使工作区 = `A..tip` 的全部改动。
+
+- **hotfix 路径**：tip 含已推热修；审查基线是已修 bug 的整包，不是热修前旧 stash。
+- **revert_and_reclaim 路径**：须在推 `revert:` **之前**调用；`series_tip` = **`pre_revert_tip`**（revert 前 tip）。若误用 revert 之后的 tip，工作区会空或只剩无关 diff。
 
 ## 前置
 
 - `draft_commit`（系列起点 B）已知
-- `series_tip` 已知：默认当前 `shared_branch` tip / 刚推上的 `hotfixSha`（须祖先包含 B）
+- `series_tip` 已知：默认当前 `shared_branch` tip / 刚推上的 `hotfixSha` / `pre_revert_tip`（须祖先包含 B）
 - `temp_branch` 已知
-- 热修已 push（至少一侧 remote 成功）
+- hotfix 路径：热修已 push（至少一侧 remote 成功）
+- revert_and_reclaim 路径：远端尚未对本系列完成回滚（或 tip 仍指向含系列内容的 pre-revert SHA）
 - 已过 🔴 CHECKPOINT-RECLAIM-SERIES
-
 ## 区间定义
 
 ```text
@@ -72,12 +75,18 @@ git -C "<repo>" status --short          # 应有大量改动 = 草稿+热修合�
 ## 边界
 
 - 不 push；不更新远端
-- 不在此节点 `git revert`（那是 publish 阶段）
+- 不在此节点 `git revert`（那是 publish / revert_and_reclaim 的后续步骤）
 - 「收回」= mixed reset 取消本地提交指针，**不是** `git revert` 生成反向提交
+- `series_tip` **必须是 revert 前 tip**；revert 后再 reclaim 时仍应传入当时记下的 `pre_revert_tip`，禁止用已回滚后的共享 tip
 
 ## 使用示例
 
 ```text
 草稿 f2e80622，热修 tip 0e14f561。把 A..tip 整包收回 temp-review 工作区继续审查。
+使用 $收回草稿与热修区间到审查工作区。
+```
+
+```text
+phase=revert_and_reclaim：先用 pre_revert_tip 收回 A..tip，再推 revert:。
 使用 $收回草稿与热修区间到审查工作区。
 ```

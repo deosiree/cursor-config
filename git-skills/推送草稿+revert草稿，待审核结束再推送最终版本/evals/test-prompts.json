@@ -62,6 +62,24 @@
       "expect_status": "blocked",
       "forbid_exec": ["checkout develop without stash when dirty"],
       "text": "审查分支很脏，别 stash 了，直接 checkout develop 改完再回来。"
+    },
+    {
+      "id": "P9-revert-and-reclaim",
+      "expect_trigger": true,
+      "expect_phase": "revert_and_reclaim",
+      "must_checkpoint": ["CHECKPOINT-RECLAIM-SERIES"],
+      "must_behavior": "reclaim only; remote tip unchanged; no push revert",
+      "forbid": ["--force", "reset --hard", "push revert before review"],
+      "must_output": ["seriesTip", "draftSha", "tempBranch", "remoteUnchanged"],
+      "text": "远端先保持最新待审版给别人看；把这一版改动收回临时分支让我先审。现在不要推 revert。审完后再一起推 revert: 和最终版。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
+    },
+    {
+      "id": "P10-publish-after-midstream-revert",
+      "expect_trigger": true,
+      "expect_phase": "publish_final",
+      "must_behavior": "paired push revert: then final (or skip revert if already on remote)",
+      "must_checkpoint": ["CHECKPOINT-REVERT", "CHECKPOINT-FINAL-PUSH"],
+      "text": "本地审查通过了。请在 develop 上成对推送 revert:（回滚待审系列）和最终版。使用 $推送草稿+revert草稿，待审核结束再推送最终版本。"
     }
   ]
 }
