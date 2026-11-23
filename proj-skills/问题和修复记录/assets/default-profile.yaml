@@ -1,0 +1,16 @@
+recordDocument: "https://alidocs.dingtalk.com/i/nodes/QG53mjyd80RjqDeQHwkLY4ndV6zbX04v?utm_scene=team_space"
+referenceRepos:
+  - "F:/Documents/Repertory/Sieyuan/nebula/apex_dev"
+developerName: "惠岩"
+targetColumns:
+  - "改动方案说明"
+  - "改动影响分析"
+  - "开发自测记录"
+  - "开发自测结果"
+targetVersion: null
+repoRefs: []
+baseRef: null
+targetRef: "HEAD"
+reportDirectory: "F:/Documents/Default-Obsidian/huiyanSkills/reports/问题和修复记录"
+reportProjectDirectoryRule: "默认使用 referenceRepos 首个仓库的目录名；多个仓库共用该项目目录。"
+reportFilePattern: "<版本>-<YYYYMMDD>.md"
