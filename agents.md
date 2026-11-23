@@ -83,6 +83,13 @@
 5. 再扫描 Obsidian 技能：`common-skills/obsidian-skills/intention-skills/` → `common-skills/obsidian-skills/feature-skills/`
 6. 再扫描其他通用能力：`common-skills/` 下各子目录
 
+## 通用 AI 协作规则
+
+- 多步调查、实现、文档整理或知识摄取任务，可使用 `agent-skills/ai-collaboration-rules/SKILL.md` 统一澄清、范围控制、验证与交付。
+- 简单问答、纯翻译或一次性改写不需要单独套用；领域专项 Skill 和目标项目规则优先处理具体流程。
+- 该 Skill 只提炼跨来源共通原则，不推广作者个人偏好或项目专属命令。
+- B 端编码/改码规则仍以 `system-skills/my-skills/SKILL.md` 为唯一源，不在新 Skill 或入口文件中复制。
+
 ## 响应要求
 - 选择最合适的技能内部使用
 - 除非被询问，否则不要提及技能名称
