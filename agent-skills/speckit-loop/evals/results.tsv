@@ -1,0 +1,7 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-11-23	baseline-A	speckit-loop	-	83.5	baseline	9维综合	独立评审A；82.7/99，归一化百分制	dry_run
+2026-11-23	baseline-B	speckit-loop	-	80.1	baseline	9维综合	独立评审B；79.3/99，归一化百分制	dry_run
+2026-11-23	iteration-1-A	speckit-loop	83.5	86.1	keep	具体性/资源	新增YAML输出模板、Spec Kit映射与评分记录；raw 85.2/99	dry_run
+2026-11-23	iteration-1-B	speckit-loop	80.1	82.8	keep	具体性/资源	新增阶段证据格式、映射与 baseline；raw 82.0/99	dry_run
+2026-11-24	iteration-2-A	speckit-loop	86.1	90.0	keep	检查点/风险边界/效果	补齐批量导出门禁、删除证据、small简洁输出；paired trial；raw 89.1/99	paired_trial
+2026-11-24	iteration-2-B	speckit-loop	82.8	87.3	keep	检查点/风险边界/效果	配对提示执行3/3符合；raw 864/99；非运行时集成测试	paired_trial
