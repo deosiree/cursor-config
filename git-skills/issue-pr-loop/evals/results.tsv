@@ -1,0 +1,5 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-11-24	baseline	issue-pr-loop	-	-	baseline	-	Darwin 静态体检：错误 0 / 警告 0 / 提示 0；主入口 114 行	e0
+2026-11-24	baseline	issue-pr-loop	-	-	baseline	1-7,9	早期 E1 快照：8 个静态维度已评分；当时第 8 维缺 E2 实跑，整体不可比	e1
+2026-11-24	baseline	issue-pr-loop	-	-	baseline	manual dry-run	早期记录：3 条手工推演通过；当时尚未运行独立 agent 对照	dry_run
+2026-11-24	baseline	issue-pr-loop	-	97	baseline	8	开发集 1 胜 1 平 0 负；检查项裸跑 6/8、带 skill 8/8；留出集未跑	e2-dev
