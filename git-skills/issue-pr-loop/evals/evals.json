@@ -1,0 +1,35 @@
+{
+  "skill": "issue-pr-loop",
+  "cases": [
+    {
+      "id": "trigger-project-issue-plan",
+      "should_trigger": true,
+      "prompt": "这个功能跨了后端和管理端，帮我拆成有前置关系的 issue，再按每个 issue 逐步开发。"
+    },
+    {
+      "id": "trigger-goal-continuation",
+      "should_trigger": true,
+      "prompt": "根据项目最初目标和任务依赖，继续做已经解锁的那一项，并把测试结果带到 PR 里。"
+    },
+    {
+      "id": "trigger-project-convergence",
+      "should_trigger": true,
+      "prompt": "PR 都并进去了，确认这个项目的用户流程、负载能力、安全测试和文档是否都完成。"
+    },
+    {
+      "id": "no-trigger-single-bug",
+      "should_trigger": false,
+      "prompt": "修复这个函数空数组时抛错的问题，只改这一处并运行对应单测。"
+    },
+    {
+      "id": "no-trigger-git-usage",
+      "should_trigger": false,
+      "prompt": "GitHub Issue 的 blocked-by 依赖关系 API 怎么调用？"
+    },
+    {
+      "id": "no-trigger-daily-contribution",
+      "should_trigger": false,
+      "prompt": "每天扫描几个热门开源仓库，挑一个 issue 修复并创建 PR。"
+    }
+  ]
+}
