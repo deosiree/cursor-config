@@ -4,6 +4,7 @@
 
 ## 文件
 
+- [[request-inbox.md]]：独立的旧项目通知反馈 intake 案例，不属于下方资产盘点 Goal。
 - [[goal.md]]：初始目标和 `G-*` 验收条件。
 - [[issue-graph.md]]：`I-01 → I-02 → I-03` 的依赖关系。
 - [[issues/I-01/develop.md]]：单 Issue 开发计划与证据记录。
@@ -19,6 +20,8 @@ flowchart LR
   I1 -. "develop.md + PR + 证据" .-> I2
   I2 -. "端到端、性能、安全、文档" .-> I3
 ```
+
+通知反馈示例从 `request-inbox.md` 开始，待维护者确认后再映射到 Issue。它演示维护项目候选受理，不与资产盘点示例共享 Goal 或验收 ID。
 
 ## 示例状态
 

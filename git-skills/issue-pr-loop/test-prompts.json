@@ -30,6 +30,35 @@
     ]
   },
   {
+    "id": "dev-3",
+    "split": "dev",
+    "source": "user",
+    "prompt": "我收到同事关于 translationtool 的通知反馈：后端和前端错误通知样式不同；部分前端错误通知不会消失，消息多时会堆积；希望统一、自动关闭并放右下角，参考 Apex 中显示 [错误码] 的做法；如果需要保留记录，希望用全局抽屉查看最近一段时间的通知。请检查给定仓库代码和可访问的现有 Issue，判断哪些是 bug、需求或待验证项，先整理候选池并给我可评审的 Issue 草稿。只读规划，不实现、不创建 GitHub 内容。代码检查范围至少包括 src/http/request.js、src/utils/notificationUtils.js 及其生产调用点。",
+    "files": [
+      "F:\\Documents\\Repertory\\Sieyuan\\translationtool\\translation 中的 src/http/request.js、src/utils/notificationUtils.js、生产调用点和 GitHub Issue 状态；F:\\Documents\\Repertory\\Sieyuan\\nebula\\apex_dev 中的 src/utils/notification.ts"
+    ],
+    "checks": [
+      "只有在找到违反已接受需求/验收契约的证据时才判为 bug；否则区分体验需求和待验证事实",
+      "检查请求拦截器、通知 helper 和生产调用点，不从单个 helper 推断全局通知行为",
+      "把 Apex 的 3000ms 和错误码展示当作参考，不把未确认时长、错误码映射或历史留存策略写成已决定要求",
+      "按独立可验收结果决定是否拆分通知样式/自动关闭与全局历史抽屉，并标出真实依赖",
+      "Issue 草稿脱离聊天可理解，包含范围、非目标、可观察验收标准、待澄清项和 readiness",
+      "未获得本用例的远端写入授权时只给草稿，不创建 Issue、实现代码或创建 PR"
+    ]
+  },
+  {
+    "id": "dev-4",
+    "split": "dev",
+    "source": "user",
+    "prompt": "团队已有四个 Issue：I-10 冻结共享 API schema，未阻塞，范围 src/api/**；I-11 实现通知设置页，blocked_by I-10，范围 src/views/notification/**；I-12 补充通知使用文档，未阻塞，范围 docs/notifications/**；I-13 端到端回归，blocked_by I-11，范围 tests/e2e/notification/**。本轮两个 AI 实现名额、一位人工 PR reviewer，用户负责合并。只给出安全排程建议，不创建 Issue/PR、不改代码、不虚构日期或指派。",
+    "checks": [
+      "正确将 I-10 与 I-12 识别为目前唯一可执行的候选，将 I-11 和 I-13 保持阻塞",
+      "只在依赖满足、接口冻结、路径与测试数据隔离、独立工作区可用时建议并行 I-10 与 I-12",
+      "明确 Issue 作者、实现者、PR 作者、reviewer 和合并者可分离，并保留用户合并决定",
+      "排程不虚构人员、工期、日期，不创建远端对象或启动代理"
+    ]
+  },
+  {
     "id": "holdout-1",
     "split": "holdout",
     "source": "user",
@@ -51,6 +80,28 @@
       "不虚构 Issue 编号、PR URL 或合并 SHA",
       "I-01 缺少实时合并证据时不解锁依赖它的 I-02",
       "说明恢复 GitHub 后读取实时 Issue/PR 状态并核对合并 SHA，再更新图谱的步骤"
+    ]
+  },
+  {
+    "id": "holdout-3",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "同事刚提了一个‘以后让设置页更清楚些’的想法。我现在只想先记下来，下周集中评审；不要创建 Issue、不要给它排优先级，也不要改代码。",
+    "checks": [
+      "只登记一条待评审候选，不把模糊描述扩写成具体功能或验收承诺",
+      "不创建 GitHub Issue、不排期、不分派、不实现",
+      "缺少目标用户和‘更清楚’定义时标为 needs-info 或类似待澄清状态"
+    ]
+  },
+  {
+    "id": "holdout-4",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "修复这个纯函数传入空数组时抛异常的问题，只改这一处并运行对应单测。这是一个小修复，不需要 Issue 拆分或排期。",
+    "checks": [
+      "尊重用户要求立即处理单点修复，不强制生成 request-inbox、Goal 或 Issue 图",
+      "不增加未要求的 backlog/Issue/PR 流程",
+      "将验证范围限制在对应函数和相关单测"
     ]
   }
 ]

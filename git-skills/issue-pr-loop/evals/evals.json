@@ -17,6 +17,16 @@
       "prompt": "PR 都并进去了，确认这个项目的用户流程、负载能力、安全测试和文档是否都完成。"
     },
     {
+      "id": "trigger-maintenance-intake",
+      "should_trigger": true,
+      "prompt": "我每周都会收到几条维护意见。先记下来、检查是不是重复，周五再一起决定要做哪些。"
+    },
+    {
+      "id": "trigger-parallel-scheduling",
+      "should_trigger": true,
+      "prompt": "这个旧系统积累了一批问题和想法，帮我看实际影响，排一下我和两个自动编码助手的并行工作。"
+    },
+    {
       "id": "no-trigger-single-bug",
       "should_trigger": false,
       "prompt": "修复这个函数空数组时抛错的问题，只改这一处并运行对应单测。"
@@ -30,6 +40,16 @@
       "id": "no-trigger-daily-contribution",
       "should_trigger": false,
       "prompt": "每天扫描几个热门开源仓库，挑一个 issue 修复并创建 PR。"
+    },
+    {
+      "id": "no-trigger-copy-edit",
+      "should_trigger": false,
+      "prompt": "把这句版本发布说明润色一下，不用查仓库。"
+    },
+    {
+      "id": "no-trigger-single-doc-edit",
+      "should_trigger": false,
+      "prompt": "在 changelog 里补一行本次发版说明，直接改这一处即可。"
     }
   ]
 }
