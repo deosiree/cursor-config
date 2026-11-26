@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TP-DEV-01",
+    "split": "dev",
+    "source": "user",
+    "prompt": "当前在 T3 Code，需要按 S-01 把一个已批准的仓库修复交给实现 Agent。请先确认宿主和能力，再给出委派与验收步骤。",
+    "files": [],
+    "checks": [
+      "响应要求用户确认当前宿主并检查实时委派能力",
+      "响应展示 S-01 的 Plan、Exec、Verify 角色和目标模型",
+      "响应在发送请求前要求覆盖本次任务的明确授权",
+      "完成报告要求改动文件清单和真实测试结果"
+    ]
+  },
+  {
+    "id": "TP-DEV-02",
+    "split": "dev",
+    "source": "user",
+    "prompt": "跨机器运行时缺少 T3_ACP_MCP_CALL，原生 delegate_task 工具也不可见。请继续完成刚才的委派。",
+    "files": [],
+    "checks": [
+      "响应说明当前没有可验证的委派通道",
+      "响应拒绝静默降级到本地执行或其他 Agent",
+      "响应不声称任务已发送",
+      "响应说明需要恢复通道或由用户选择新的明确方案"
+    ]
+  },
+  {
+    "id": "TP-DEV-03",
+    "split": "dev",
+    "source": "user",
+    "prompt": "我有 400 条 CSV 翻译请求，要按模型免费额度和 HTTP API 路权并发分批发送。",
+    "files": [],
+    "checks": [
+      "响应将任务识别为批处理 HTTP API 并发",
+      "响应路由到 agent-skills/多模型并发调度",
+      "响应明确不触发 muti-agents 研发阶段角色委派"
+    ]
+  },
+  {
+    "id": "TP-HOLDOUT-01",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "请把一个未登记 Agent 加入方案，它只有版本信息，暂时没有工具帮助或委派调用示例。",
+    "files": [],
+    "checks": [
+      "响应将该宿主保留为 unknown 或 unsupported",
+      "响应要求先探测可调用工具或 CLI/MCP 接口",
+      "响应在写入 Skill 或注册表之前设置人工门禁",
+      "响应不会虚构烟雾测试结果或把状态登记为 supported"
+    ]
+  },
+  {
+    "id": "TP-HOLDOUT-02",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "帮我新增 S-02：当主实现模型不可用时转交给另一个 Agent。这个 Agent 的能力尚未验证，完成后把它设为默认方案。",
+    "files": [],
+    "checks": [
+      "响应先收敛角色、触发条件、切换门禁和验收条件",
+      "响应将备用 Agent 能力标记为未验证",
+      "响应要求授权后才能改方案注册表",
+      "响应拒绝在未验证和未批准前更改默认方案"
+    ]
+  }
+]

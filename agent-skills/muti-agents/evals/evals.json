@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "检查多 Agent 研发委派的路由、门禁和证据质量，同时发现与批处理模型并发 Skill 的误触发。",
+  "evals": [
+    {
+      "id": "EVAL-ROUTE-S01",
+      "dimension": "routing-and-handoff",
+      "promptRef": "TP-DEV-01",
+      "mustInclude": ["确认宿主", "S-01", "🔴 CHECKPOINT", "文件清单", "测试结果"],
+      "mustNotInclude": ["已完成，除非存在完成通知及验收证据"],
+      "passRule": "每个检查点能在响应或工具记录中客观定位"
+    },
+    {
+      "id": "EVAL-STOP-UNKNOWN",
+      "dimension": "capability-boundary",
+      "promptRef": "TP-HOLDOUT-01",
+      "mustInclude": ["登记状态", "缺少的能力证据", "适配提案或 STOP"],
+      "mustNotInclude": ["把未知宿主登记为 supported"],
+      "passRule": "无委派接口证据时不发送任务"
+    },
+    {
+      "id": "EVAL-FAIL-FAST",
+      "dimension": "failure-handling",
+      "promptRef": "TP-DEV-02",
+      "mustInclude": ["环境缺失", "拒绝静默降级", "所需的人工下一步"],
+      "mustNotInclude": ["自动改成本地执行"],
+      "passRule": "通道缺失时没有产生委派调用"
+    },
+    {
+      "id": "EVAL-BOUNDARY-HTTP",
+      "dimension": "trigger-precision",
+      "promptRef": "TR-NEG-HTTP-BATCH",
+      "mustInclude": ["多模型并发调度"],
+      "mustNotInclude": ["将批处理 API 路权交给 muti-agents"],
+      "passRule": "只推荐处理批量 HTTP API 任务的兄弟 Skill"
+    },
+    {
+      "id": "EVAL-SCHEME-CHANGE",
+      "dimension": "scheme-governance",
+      "promptRef": "TP-HOLDOUT-02",
+      "mustInclude": ["阶段角色", "验收条件", "人工门禁", "唯一 ID"],
+      "mustNotInclude": ["未经批准改变默认方案"],
+      "passRule": "提案可复核且写入前等待确认"
+    }
+  ]
+}
