@@ -1,0 +1,44 @@
+[
+  {
+    "id": "TR-POS-DEV-DELEGATION",
+    "polarity": "positive",
+    "prompt": "按已确认计划将菜单修复交给另一个 Agent 实现并运行单测。",
+    "expectedSkill": "muti-agents",
+    "reason": "研发阶段按角色委派，有计划、写入范围与验收。"
+  },
+  {
+    "id": "TR-POS-NEW-AGENT",
+    "polarity": "positive",
+    "prompt": "当前 Agent 未在支持列表中，请评估能否为它加一个委派适配器。",
+    "expectedSkill": "muti-agents",
+    "reason": "宿主适配 Loop 属于研发协作 Skill 的能力演进。"
+  },
+  {
+    "id": "TR-BOUNDARY-SINGLE-AGENT",
+    "polarity": "boundary",
+    "prompt": "当前 Agent 自己能完成这个小修复，不需要并行，也不需要独立审查。",
+    "expectedSkill": "none",
+    "reason": "没有多 Agent 角色分工需求时无需加载委派流程。"
+  },
+  {
+    "id": "TR-BOUNDARY-SINGLE-HTTP",
+    "polarity": "boundary",
+    "prompt": "只问一个模型 API 是否可用，不要求执行任务。",
+    "expectedSkill": "none",
+    "reason": "仅探测服务可用性既不是研发角色委派，也不是批量调度。"
+  },
+  {
+    "id": "TR-NEG-HTTP-BATCH",
+    "polarity": "negative",
+    "prompt": "把一批翻译 HTTP API 请求按多个模型的并发路权拆分并行发送。",
+    "expectedSkill": "多模型并发调度",
+    "reason": "这是批处理 HTTP API 路权调度，不是研发阶段多 Agent 角色委派。"
+  },
+  {
+    "id": "TR-NEG-BULK-REVIEW",
+    "polarity": "negative",
+    "prompt": "将 300 个互相独立的文件审查请求并发提交给多个模型 API。",
+    "expectedSkill": "多模型并发调度",
+    "reason": "独立请求批处理和模型 API 并发由兄弟 Skill 负责；muti-agents 用于研发过程的角色交接。"
+  }
+]
