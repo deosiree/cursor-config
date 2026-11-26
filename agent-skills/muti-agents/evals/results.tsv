@@ -1,2 +1,1 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
-2026-11-26T19:01	baseline	muti-agents	-	81.1	baseline	-	对裸跑2胜1平0负；检查项11/11；E0=0/0/0；最大短板dim5(7)与transcript绕路读9-10文件	e2-dev
