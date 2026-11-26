@@ -19,7 +19,7 @@ description: 当宿主和委派能力已经确认，需要展示登记方案、�
 ## 流程
 
 1. 只列出包含当前宿主且 forbidSilentDowngrade 不为 false 的方案。
-2. 用表格逐条呈现方案代码、各阶段角色与模型、isolation、mode、默认选项和人工门禁。
+2. 用表格逐条呈现方案代码、各阶段角色与模型/level、isolation、mode、默认选项和人工门禁。当前 S-01 固定由 Gemini 4 Neon 计划/验收并委派 Codex GPT-6 Luna 实现；S-02 的 Plan/验收继承当前模型与 level，Exec 固定为 Codex GPT-6 Luna max。
 3. 标明注册表的 defaultSchemeId 仅供展示，不表示用户已选择。
 4. 询问选择方案、当前 Agent 单独完成，或新增方案沉淀；新增需求路由到对应 feature。
 5. 记录选择结果并将任务交给“执行 T3 Code 分模型委派”或当前宿主适配的 feature。
@@ -42,7 +42,7 @@ openQuestions: 尚缺字段
 
 ## 示例
 
-当前宿主为 t3-code，注册表只含 S-01。展示其 Plan、Exec、Verify 三阶段、目标模型、共享工作区、async 执行和 Plan 确认门禁；随后问用户是否选择 S-01。用户还可以选择“暂不委派，由当前 Agent 执行”。
+当前宿主为 t3-code，注册表包含 S-01 和 S-02。并列展示两者的阶段模型、level、共享工作区、async 执行和 Plan 确认门禁；说明 S-02 在 Gemini 额度耗尽并手动切换当前线程到 Codex Luna 时无需改选方案，Exec 仍通过 `delegate_task` 独立派发。再询问用户选择一个方案或“暂不委派，由当前 Agent 执行”。
 
 ## 路由
 

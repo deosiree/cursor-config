@@ -14,10 +14,13 @@
 
 - code 与全局唯一 id，名称和简明适用条件。
 - supportedAgents，只列已登记且本任务能力可用的宿主。
-- stages[]：唯一阶段 ID、角色、宿主、模型、职责和客观 exitCondition。
+- stages[]：唯一阶段 ID、角色、宿主、模型、level、职责和客观 exitCondition。阶段的 `model` 或 `level` 可设为 `inherit-current`，表示运行时沿用当前主线程的模型或 level；这不会改变固定委派目标。
 - delegation：provider/model、role、interactionMode、isolation、mode 和经能力检查的 options。
+- sameModelPolicy：`always-delegate` 表示 Exec 始终通过 `delegate_task` 创建独立子线程，即使主线程与委派目标模型相同；该字段不允许在委派失败时本地执行或改派其他模型。
 - humanGates：启动、写入、对外传输等必须确认的边界。
 - forbidSilentDowngrade: true，以及可验证的失败处理。
+
+`sameModelPolicy: "always-delegate"` 是当前方案注册表使用的策略值。若固定 provider/model 不可用，仍按 `forbidSilentDowngrade` 停止并报告，不静默切换目标。
 
 ## 编写流程
 

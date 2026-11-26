@@ -18,6 +18,6 @@
 
 ## 示例
 
-展示 S-01 的 Plan → Exec → Verify 角色及模型、共享隔离和异步模式，并询问用户选择 S-01、单 Agent 处理还是新建方案。
+并列展示 S-01 与 S-02 的 Plan → Exec → Verify 角色、阶段模型/level、共享隔离和异步模式。说明 S-02 会继承当前线程模型与 level，且即使当前模型已是 Codex GPT-6 Luna max，Exec 仍独立委派；然后询问用户选择方案、单 Agent 处理还是新建方案。
 
 入口：[SKILL.md](SKILL.md)，下一步：[T3 委派](../../feature-skills/执行-T3Code分模型委派/SKILL.md)。

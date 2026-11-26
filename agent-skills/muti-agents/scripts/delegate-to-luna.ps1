@@ -4,7 +4,7 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]$Task,
     [string]$PlanPath,
-    [string]$Scheme = 'plan-exec-verify-neon-luna',
+    [string]$Scheme,
     [string]$Title,
     [string]$ReasoningEffort,
     [string]$ServiceTier,

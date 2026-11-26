@@ -11,6 +11,14 @@
       "passRule": "每个检查点能在响应或工具记录中客观定位"
     },
     {
+      "id": "EVAL-SCHEME-S02",
+      "dimension": "scheme-selection-and-delegation",
+      "promptRef": "TP-DEV-04",
+      "mustInclude": ["inherit-current", "always-delegate", "Codex", "GPT-6 Luna", "无需更换方案", "plan-exec-verify-current-to-luna"],
+      "mustNotInclude": ["同模型时改为本地执行", "静默降级到其他模型"],
+      "passRule": "手动切换当前线程后保留 S-02，并且 Exec 仍独立委派到固定目标"
+    },
+    {
       "id": "EVAL-STOP-UNKNOWN",
       "dimension": "capability-boundary",
       "promptRef": "TP-HOLDOUT-01",

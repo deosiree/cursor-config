@@ -15,12 +15,13 @@
 | 方案 | 阶段 | 状态 |
 |---|---|---|
 | S-01：Plan（Gemini 4 Neon）→ Exec（GPT-6 Luna）→ 验收（Gemini 4 Neon） | 研究与计划 → 实现 → 主线程审查 | 已登记，支持宿主见注册表 |
+| S-02：Plan（当前模型，当前 level）→ Exec（Codex, GPT-6 Luna, max）→ 验收（当前模型，当前 level） | 当前上下文计划 → 独立实现委派 → 当前上下文审查 | 已登记，默认方案 |
 
-方案详细参数见 [协作方案注册表](assets/schemes-registry.json)。新增宿主或方案时先读对应规范并经过人类门禁。
+S-02 在 Gemini 额度耗尽、用户手动将当前线程切换为 Codex Luna 时无需更换方案；Plan/验收继承当前模型与 level。`sameModelPolicy: always-delegate` 要求 Exec 始终以 `delegate_task` 创建独立子线程，即使当前线程已是 Codex GPT-6 Luna max；目标不可用时停止，禁止静默降级。方案详细参数见 [协作方案注册表](assets/schemes-registry.json)。新增宿主或方案时先读对应规范并经过人类门禁。
 
 ## 使用示例
 
-请求：“按 S-01 实现已确认的菜单修复计划；只允许修改 src/menu/，完成后运行 npm test -- src/menu。”
+请求：“按 S-02 实现已确认的菜单修复计划；只允许修改 src/menu/，完成后运行 npm test -- src/menu。”
 
 Agent 应先运行环境探测、展示当前宿主与能力，再让用户确认方案及任务简报。明确授权后才委派。验收报告应列出改动文件、测试命令与结果；若委派只启动但尚无完成通知，报告等待状态。
 

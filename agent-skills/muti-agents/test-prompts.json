@@ -1,5 +1,19 @@
 [
   {
+    "id": "TP-DEV-04",
+    "split": "dev",
+    "source": "user",
+    "prompt": "S-02 的计划已由 Gemini 4 Neon 完成，但当前 Gemini 额度耗尽。我手动把当前线程切换为 Codex GPT-6 Luna max；请继续执行这份计划，说明是否要更换方案以及 Exec 如何委派。",
+    "files": [],
+    "checks": [
+      "响应说明 Plan 和验收阶段的 model/level 为 inherit-current",
+      "响应说明手动切换当前线程后继续使用 S-02，无需更换方案",
+      "响应说明 sameModelPolicy=always-delegate，即使当前模型相同也通过 delegate_task 创建独立子线程",
+      "响应列出 Codex GPT-6 Luna max、priority、shared、async 固定参数",
+      "响应说明目标不可用时停止且不静默降级"
+    ]
+  },
+  {
     "id": "TP-DEV-01",
     "split": "dev",
     "source": "user",
@@ -54,7 +68,7 @@
     "id": "TP-HOLDOUT-02",
     "split": "holdout",
     "source": "user",
-    "prompt": "帮我新增 S-02：当主实现模型不可用时转交给另一个 Agent。这个 Agent 的能力尚未验证，完成后把它设为默认方案。",
+    "prompt": "帮我新增 S-03：当主实现模型不可用时转交给另一个 Agent。这个 Agent 的能力尚未验证，完成后把它设为默认方案。",
     "files": [],
     "checks": [
       "响应先收敛角色、触发条件、切换门禁和验收条件",

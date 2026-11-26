@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -22,10 +23,12 @@ const ASSETS_DIR = resolve(SCRIPT_DIR, '../assets');
 
 /**
  * 校验默认方案加载与参数覆盖。
+ * @param {import('node:test').TestContext} testContext 当前测试上下文
  * @returns {void}
  */
-function testSchemeLoading() {
+function testSchemeLoading(testContext) {
   const registry = loadSchemeRegistry(ASSETS_DIR);
+  assert.equal(registry.defaultSchemeId, 'plan-exec-verify-current-to-luna');
   const options = parseArgs(['--task', 'smoke', '--plan', 'plan.md', '--client-request-id', 'test-id']);
   const payload = buildTaskPayload(options, registry);
   assert.equal(payload.clientRequestId, 'test-id');
@@ -34,6 +37,7 @@ function testSchemeLoading() {
   assert.equal(payload.task.includes('plan.md'), true);
   assert.equal(payload.target.options.find((option) => option.id === 'reasoningEffort').value, 'max');
   assert.equal(payload.target.options.find((option) => option.id === 'serviceTier').value, 'priority');
+  testContext.diagnostic('默认方案仍生成 Codex GPT-6 Luna max/priority 负载');
 }
 
 /**
@@ -116,9 +120,10 @@ function testMockExecutableDispatch() {
 
 /**
  * 校验两份 JSON 注册表满足计划中的数据契约。
+ * @param {import('node:test').TestContext} testContext 当前测试上下文
  * @returns {void}
  */
-function testRegistryContracts() {
+function testRegistryContracts(testContext) {
   const agents = loadAgentRegistry(ASSETS_DIR);
   const schemes = loadSchemeRegistry(ASSETS_DIR);
   assert.equal(agents.schemaVersion, '1.0.0');
@@ -134,10 +139,95 @@ function testRegistryContracts() {
   assert.equal(agents.unsupportedBehavior.forbidSilentDowngrade, true);
 
   assert.equal(schemes.schemaVersion, '1.0.0');
-  assert.equal(schemes.defaultSchemeId, 'plan-exec-verify-neon-luna');
-  assert.equal(schemes.schemes[0].code, 'S-01');
-  assert.deepEqual(schemes.schemes[0].stages.map((stage) => stage.id), ['plan', 'exec', 'verify']);
-  assert.equal(schemes.schemes[0].forbidSilentDowngrade, true);
+  assert.equal(schemes.defaultSchemeId, 'plan-exec-verify-current-to-luna');
+  assert.deepEqual(schemes.schemes.map((scheme) => scheme.code), ['S-01', 'S-02']);
+  assert.equal(new Set(schemes.schemes.map((scheme) => scheme.code)).size, schemes.schemes.length);
+  assert.equal(new Set(schemes.schemes.map((scheme) => scheme.id)).size, schemes.schemes.length);
+  const s01 = schemes.schemes.find((scheme) => scheme.code === 'S-01');
+  const s02 = schemes.schemes.find((scheme) => scheme.code === 'S-02');
+  assert.deepEqual(s01.stages.map((stage) => stage.id), ['plan', 'exec', 'verify']);
+  assert.equal(s01.forbidSilentDowngrade, true);
+  assert.equal(s01.sameModelPolicy, 'always-delegate');
+  assert.equal(s02.id, 'plan-exec-verify-current-to-luna');
+  assert.equal(s02.sameModelPolicy, 'always-delegate');
+  assert.equal(s02.forbidSilentDowngrade, true);
+  assert.equal(s02.stages[0].model, 'inherit-current');
+  assert.equal(s02.stages[0].level, 'inherit-current');
+  assert.equal(s02.stages[1].model, 'gpt-6-luna');
+  assert.equal(s02.stages[1].level, 'max');
+  assert.equal(s02.stages[2].model, 'inherit-current');
+  assert.equal(s02.stages[2].level, 'inherit-current');
+  assert.equal(s02.delegation.providerInstanceId, 'codex');
+  assert.equal(s02.delegation.model, 'gpt-6-luna');
+  assert.deepEqual(s02.delegation.options, [
+    { id: 'reasoningEffort', value: 'max' },
+    { id: 'serviceTier', value: 'priority' },
+  ]);
+  assert.equal(s02.delegation.isolation, 'shared');
+  assert.equal(s02.delegation.mode, 'async');
+  testContext.diagnostic('方案 ID、code、sameModelPolicy 与阶段配置均符合注册表契约');
+}
+
+/**
+ * 运行 CLI 并捕获其退出码和标准输出。
+ * @param {string[]} args 委派器命令行参数
+ * @returns {{status: number | null, stdout: string, stderr: string}} 子进程结果
+ */
+function runCli(args) {
+  const result = spawnSync(process.execPath, [resolve(SCRIPT_DIR, 'delegate-t3-task.mjs'), ...args], {
+    encoding: 'utf8',
+  });
+  return {
+    status: result.status,
+    stdout: result.stdout || '',
+    stderr: result.stderr || '',
+  };
+}
+
+/**
+ * 校验方案列表命令同时返回 S-01 和 S-02。
+ * @param {import('node:test').TestContext} testContext 当前测试上下文
+ * @returns {void}
+ */
+function testCliListsSchemes(testContext) {
+  const result = runCli(['--list-schemes']);
+  assert.equal(result.status, 0, result.stderr);
+  const schemes = JSON.parse(result.stdout);
+  assert.deepEqual(schemes.map((scheme) => scheme.code), ['S-01', 'S-02']);
+  assert.deepEqual(schemes.map((scheme) => scheme.id), [
+    'plan-exec-verify-neon-luna',
+    'plan-exec-verify-current-to-luna',
+  ]);
+  testContext.diagnostic('--list-schemes 返回 S-01 与 S-02');
+}
+
+/**
+ * 校验显式选择 S-02 的 dry-run 请求负载。
+ * @param {import('node:test').TestContext} testContext 当前测试上下文
+ * @returns {void}
+ */
+function testCliBuildsS02Payload(testContext) {
+  const result = runCli([
+    '--scheme',
+    'plan-exec-verify-current-to-luna',
+    '--task',
+    'S-02 smoke',
+    '--plan',
+    'plan.md',
+    '--dry-run',
+  ]);
+  assert.equal(result.status, 0, result.stderr);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.target.providerInstanceId, 'codex');
+  assert.equal(payload.target.model, 'gpt-6-luna');
+  assert.deepEqual(payload.target.options, [
+    { id: 'reasoningEffort', value: 'max' },
+    { id: 'serviceTier', value: 'priority' },
+  ]);
+  assert.equal(payload.isolation, 'shared');
+  assert.equal(payload.mode, 'async');
+  assert.match(payload.task, /S-02 smoke/);
+  testContext.diagnostic('S-02 dry-run 负载固定为 Codex GPT-6 Luna max/priority');
 }
 
 /**
@@ -210,5 +300,7 @@ test('rejects invalid or incomplete CLI parameters', testInvalidArguments);
 test('returns exit 2 without ACP environment and exit 3 for a missing executable', testMissingEnvironmentAndExecutable);
 test('pipes JSON through a mock executable and preserves its exit code', testMockExecutableDispatch);
 test('validates both registry JSON contracts', testRegistryContracts);
+test('lists both registered schemes through the CLI', testCliListsSchemes);
+test('builds the S-02 CLI dry-run payload', testCliBuildsS02Payload);
 test('detects environment signals without exposing their values', testEnvironmentDetectionAndRedaction);
 test('selects the POSIX node fallback and sets Electron mode', testPosixNodeFallback);
