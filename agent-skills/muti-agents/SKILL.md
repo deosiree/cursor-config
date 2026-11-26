@@ -108,21 +108,19 @@ description: 当需要多 Agent 角色分工与研发阶段委派、跨机器复
 
 ### 1. 识别并确认宿主
 
-运行 scripts/detect-agent-env.mjs，读取 assets/agents-registry.json。报告探测到的宿主、平台、建议传输和信号布尔值；请用户确认“当前 Agent 是什么”。探测不到时让用户说明名称，不猜测。
+运行 `node scripts/detect-agent-env.mjs` 并读取 `assets/agents-registry.json`；若用户已明确报告远端/当前环境缺少全部委派通道，可直接停在阻塞状态，无需再做冲突的本机探测。报告宿主、平台、建议传输和信号布尔值，请用户确认“当前 Agent 是什么”，探测不到时不猜测。
 
 ### 2. 判定支持与能力
 
-在注册表中精确匹配 id 和 status: supported。再检查该宿主当前会话实际可用的委派工具、CLI/MCP 通道、参数选项和异步完成机制。只有登记状态与实时能力都满足本任务时才继续；否则转到 [新 Agent 适配 Loop](feature-skills/扩展-新Agent适配Loop/SKILL.md)。
-
-T3 Code 是 assets/agents-registry.json 中已登记的一个宿主适配器，当前注册传输为原生 MCP 与 ACP MCP 调用。能力检查须依据当前会话提供的 orchestrator_capabilities 及实际工具；适配器存在不等于本次调用一定可用。
+在注册表中精确匹配 `id` 和 `status: supported`。再检查当前会话实际可用的委派工具、CLI/MCP 通道、参数选项和异步完成机制。以已登记的 `t3-code` 适配器为例，先查 `orchestrator_capabilities`；原生 `delegate_task` 可用则直连，原生工具不可见但 ACP 通道可用则走封装脚本。未登记或通道不可用时停在 `blocked`，由用户选择恢复通道、进入 [新 Agent 适配 Loop](feature-skills/扩展-新Agent适配Loop/SKILL.md)，或显式放弃委派改为单 Agent 执行。
 
 ### 3. 展示并选择方案
 
-读取 assets/schemes-registry.json，按代码、角色阶段、目标模型、隔离和异步策略展示全部有效方案。首版 S-01 为 Plan（Gemini 4 Neon）→ Exec（GPT-6 Luna）→ 验收（Gemini 4 Neon）。询问用户选择一个方案、只执行单个 Agent，或进入 [新协作方案沉淀](feature-skills/沉淀-新协作方案/SKILL.md)；不得替用户选模型。
+读取 `assets/schemes-registry.json`，按 `code`、`id`、角色阶段、目标模型、隔离和异步策略展示全部有效方案。首版 `S-01`（`id: plan-exec-verify-neon-luna`）为 Plan（Gemini 4 Neon）→ Exec（GPT-6 Luna）→ 验收（Gemini 4 Neon）。询问用户选择一个方案、显式单 Agent 处理，或进入 [新协作方案沉淀](feature-skills/沉淀-新协作方案/SKILL.md)；不得替用户选模型。
 
 ### 4. 确认、委派与验收
 
-展示最终简报：任务、目标角色与模型、计划、写入范围、禁止事项、传输、隔离、执行模式、验收命令和风险。🔴 CHECKPOINT 等待对本次委派的明确授权。获得授权后按方案调用已验证通道；收到完成通知后由主 Agent 检查文件清单、差异、测试和静态检查，报告证据、失败项与未验证项。执行功能见 [T3 Code 分模型委派](feature-skills/执行-T3Code分模型委派/SKILL.md)。
+展示最终简报：任务、目标角色与模型、计划、写入范围、禁止事项、传输、隔离、执行模式、验收命令和风险。🔴 CHECKPOINT 等待对本次委派的明确授权。获批后按已验证通道派发：原生 MCP 调用 `delegate_task`，ACP 脚本调用 `node scripts/delegate-t3-task.mjs --scheme <schemeId> --plan "<planPath>" --task "<task>" [--dry-run]`（注意 `--scheme` 须传方案 `id` 如 `plan-exec-verify-neon-luna`，而非 `code` `S-01`）。收到完成通知后由主 Agent 核对文件清单、差异、测试和静态检查并按证据汇报；标准流程无需重复通读所有子 Skill，按需下钻 [T3 Code 分模型委派](feature-skills/执行-T3Code分模型委派/SKILL.md)。
 
 ### 状态转移摘要
 
