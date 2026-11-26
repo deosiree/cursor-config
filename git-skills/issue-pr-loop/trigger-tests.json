@@ -24,6 +24,14 @@
     "should_trigger": false
   },
   {
+    "query": "使用 $issue-pr-loop 处理这个函数空数组时抛错的问题，先给我 Issue 草稿和精简方案，等我确认后再开始。",
+    "should_trigger": true
+  },
+  {
+    "query": "使用 $issue-pr-loop 修复这个函数空数组异常，保留 Issue 记录后现在直接开始修，不等方案确认。",
+    "should_trigger": true
+  },
+  {
     "query": "GitHub Issue 的 blocked-by 依赖关系 API 怎么调用？",
     "should_trigger": false
   },
