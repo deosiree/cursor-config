@@ -116,11 +116,11 @@ description: 当需要多 Agent 角色分工与研发阶段委派、跨机器复
 
 ### 3. 展示并选择方案
 
-读取 `assets/schemes-registry.json`，按 `code`、`id`、角色阶段、目标模型、隔离和异步策略展示全部有效方案。首版 `S-01`（`id: plan-exec-verify-neon-luna`）为 Plan（Gemini 4 Neon）→ Exec（GPT-6 Luna）→ 验收（Gemini 4 Neon）。询问用户选择一个方案、显式单 Agent 处理，或进入 [新协作方案沉淀](feature-skills/沉淀-新协作方案/SKILL.md)；不得替用户选模型。
+读取 `assets/schemes-registry.json`，按 `code`、`id`、阶段模型与 level、隔离和异步策略展示全部有效方案：`S-01`（`plan-exec-verify-neon-luna`）由 Gemini 4 Neon 负责 Plan/验收，Exec 委派 Codex GPT-6 Luna；`S-02`（`plan-exec-verify-current-to-luna`）由当前模型和 level 负责 Plan/验收，Exec 固定委派 Codex GPT-6 Luna max。若 Gemini 额度耗尽，用户手动将当前线程切为 Codex Luna 后无需更换 S-02。`sameModelPolicy: always-delegate` 表示 Exec 始终通过 `delegate_task` 创建独立子线程，即使当前线程与 Exec 目标模型相同；目标模型不可用时仍停止，不得静默降级。询问用户选择一个方案、显式单 Agent 处理，或进入 [新协作方案沉淀](feature-skills/沉淀-新协作方案/SKILL.md)；不得替用户选模型。
 
 ### 4. 确认、委派与验收
 
-展示最终简报：任务、目标角色与模型、计划、写入范围、禁止事项、传输、隔离、执行模式、验收命令和风险。🔴 CHECKPOINT 等待对本次委派的明确授权。获批后按已验证通道派发：原生 MCP 调用 `delegate_task`，ACP 脚本调用 `node scripts/delegate-t3-task.mjs --scheme <schemeId> --plan "<planPath>" --task "<task>" [--dry-run]`（注意 `--scheme` 须传方案 `id` 如 `plan-exec-verify-neon-luna`，而非 `code` `S-01`）。收到完成通知后由主 Agent 核对文件清单、差异、测试和静态检查并按证据汇报；标准流程无需重复通读所有子 Skill，按需下钻 [T3 Code 分模型委派](feature-skills/执行-T3Code分模型委派/SKILL.md)。
+展示最终简报：任务、目标角色与模型、计划、写入范围、禁止事项、传输、隔离、执行模式、验收命令和风险。🔴 CHECKPOINT 等待对本次委派的明确授权。获批后按已验证通道派发：原生 MCP 调用 `delegate_task`，ACP 脚本调用 `node scripts/delegate-t3-task.mjs --scheme <schemeId> --plan "<planPath>" --task "<task>" [--dry-run]`（`--scheme` 必须传完整方案 `id`，如 `plan-exec-verify-current-to-luna`，不能传 `S-02`）。收到完成通知后由主 Agent 核对文件清单、差异、测试和静态检查并按证据汇报；标准流程无需重复通读所有子 Skill，按需下钻 [T3 Code 分模型委派](feature-skills/执行-T3Code分模型委派/SKILL.md)。
 
 ### 状态转移摘要
 
@@ -175,9 +175,9 @@ status: complete | waiting | blocked | failed
 
 ## 使用示例
 
-用户说：“请按 S-01 将当前修复拆给实现 Agent，计划文件已确认，允许只改 src/menu/ 并运行指定单测。”
+用户说：“请按 S-02 将当前修复拆给实现 Agent，计划文件已确认，允许只改 src/menu/ 并运行指定单测。”
 
-正确响应先运行探测并展示宿主；核实宿主和本会话有可用委派通道后，展示 S-01 的 Plan/Exec/Verify 角色、模型、src/menu/ 所有权和单测命令。得到本次授权后发送简报。完成后报告真实文件差异及单测输出；如果异步通知尚未到达，则报告 waiting，不声称完成。
+正确响应先运行探测并展示宿主；核实宿主和本会话有可用委派通道后，展示 S-02 的 Plan/Exec/Verify 角色、模型与 level、src/menu/ 所有权和单测命令。若用户已手动切换当前线程模型，不要求改选方案；得到本次授权后仍通过 `delegate_task` 独立派发 Exec。完成后报告真实文件差异及单测输出；如果异步通知尚未到达，则报告 waiting，不声称完成。
 
 ## 子 Skill 与资源索引
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "defaultSchemeId": "plan-exec-verify-neon-luna",
+  "defaultSchemeId": "plan-exec-verify-current-to-luna",
   "schemes": [
     {
       "code": "S-01",
@@ -47,6 +47,58 @@
         ]
       },
       "humanGates": ["Plan 确认后才启动 Exec（除非用户明确授予全自动推进）"],
+      "sameModelPolicy": "always-delegate",
+      "forbidSilentDowngrade": true
+    },
+    {
+      "code": "S-02",
+      "id": "plan-exec-verify-current-to-luna",
+      "name": "Plan（当前模型，当前 level）→ Exec（Codex, GPT-6 Luna, max）→ 验收（当前模型，当前 level）",
+      "summary": "Plan 与验收沿用当前主线程模型和 level，Exec 独立委派给 Codex（GPT-6 Luna，max + priority + shared + async）。Gemini 额度耗尽并手动将当前线程切为 Codex Luna 时，无需改选方案。",
+      "supportedAgents": ["t3-code"],
+      "stages": [
+        {
+          "id": "plan",
+          "role": "research",
+          "agent": "t3-code",
+          "model": "inherit-current",
+          "level": "inherit-current",
+          "responsibilities": ["调研需求与仓库现状", "编写并确认实施计划"],
+          "exitCondition": "计划范围、文件所有权、验收命令均已明确，并通过人工确认。"
+        },
+        {
+          "id": "exec",
+          "role": "implementation",
+          "agent": "t3-code",
+          "model": "gpt-6-luna",
+          "level": "max",
+          "responsibilities": ["按确认计划实现代码", "运行计划指定的测试"],
+          "exitCondition": "实现完成，计划指定的测试与静态检查均有实测结果。"
+        },
+        {
+          "id": "verify",
+          "role": "review",
+          "agent": "t3-code",
+          "model": "inherit-current",
+          "level": "inherit-current",
+          "responsibilities": ["核对实现与计划", "检查改动范围并复核验证证据"],
+          "exitCondition": "所有验收条件均有证据，偏差和未验证项已明确记录。"
+        }
+      ],
+      "delegation": {
+        "providerInstanceId": "codex",
+        "model": "gpt-6-luna",
+        "role": "implementation",
+        "interactionMode": "default",
+        "isolation": "shared",
+        "mode": "async",
+        "options": [
+          { "id": "reasoningEffort", "value": "max" },
+          { "id": "serviceTier", "value": "priority" }
+        ]
+      },
+      "humanGates": ["Plan 确认后才启动 Exec（除非用户明确授予全自动推进）"],
+      "sameModelPolicy": "always-delegate",
       "forbidSilentDowngrade": true
     }
   ]

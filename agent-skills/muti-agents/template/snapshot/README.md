@@ -21,4 +21,5 @@ I-01 记录展示 S-01 分配的计划、实现、验收角色，并引用当时
 样本：
 
 - [S-01 运行记录](s01-plan-exec-verify-run.md)
+- [S-02 运行样本](s02-plan-exec-verify-run.md)
 - [未支持宿主 Loop 样本](unsupported-agent-loop-sample.md)
