@@ -1,6 +1,6 @@
 # Issue 与 PR 开发闭环
 
-中文 Agent skill 套件：把零散建议收敛成可评审 backlog，再将项目目标、Issue 依赖和分阶段交付连起来。
+中文 Agent skill 套件：把零散建议收敛成可评审 Issue，再将项目目标、依赖关系和分阶段交付连起来。显式调用时默认先给方案并等待确认；只有用户明确要求立即开始修复，才跳过等待。
 
 ## 使用场景
 
@@ -51,6 +51,8 @@ issue-pr-loop/
 
 `request-inbox.md` 记录尚未决定是否发布的建议。`goal.md` 是需要项目级规划时的目标锚点；旧项目维护可沿用长期维护 Goal，单一维护 Issue 不强制生成全局 Goal。`issue-graph.md` 的依赖表是多 Issue 批次的事实源；Mermaid 只负责展示。每个 `develop.md` 只计划一个 Issue。
 
+显式调用 `$issue-pr-loop` 时，单点问题也会先记录或复用 Issue，再给出精简方案并等待确认。明确要求立即开始修复时，只跳过方案等待；本地问题记录、范围、验收和验证证据仍保留。GitHub Issue、推送、PR 和合并授权分别核对。
+
 ## 使用示例
 
 ```text
@@ -63,6 +65,14 @@ issue-pr-loop/
 
 ```text
 使用 $issue-pr-loop 按当前 Goal 和依赖图继续实现 #42；先读该 Issue 的 develop.md，验证完成后创建 PR，等待人工审查，不要自动合并。
+```
+
+```text
+使用 $issue-pr-loop 处理登录失效时重复弹窗的问题。先检查代码和现有 Issue，给我 Issue 草稿与精简修复方案并等待确认；不要开始改代码。
+```
+
+```text
+使用 $issue-pr-loop 处理登录失效时重复弹窗的问题。保留本地 Issue 记录后，现在直接开始修复，不等方案确认；不要创建 GitHub Issue 或 PR。
 ```
 
 ```text

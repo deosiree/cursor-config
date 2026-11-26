@@ -12,13 +12,17 @@
 
 ## 候选索引
 
-| Candidate ID | 来源/收到时间 | 摘要 | 分类 | 重复状态 | Readiness | 决定/Issue |
+| Candidate ID | 来源/收到时间 | 摘要 | 分类 | 重复状态 | Workflow status | 决定/Issue |
 | --- | --- | --- | --- | --- | --- | --- |
-| R-01 | `<来源 / 日期>` | `<可观察问题或期望结果>` | `needs-verification` | `unknown` | `needs-info` | `pending` |
+| R-01 | `<来源 / 日期>` | `<可观察问题或期望结果>` | `needs-verification` | `unknown` | `captured` | `pending` |
 
 分类：`bug`、`feature`、`maintenance`、`research`、`needs-verification`。只有现状违反已接受契约且有证据时才使用 `bug`。
 
-Readiness：`needs-info`、`ready-for-review`、`approved-to-publish`、`published`、`deferred`、`declined`。不要把 `ready-for-review` 当作实现授权。
+Issue readiness：`needs-info`、`ready-for-review`。`ready-for-review` 表示草稿信息完整，不代表用户已确认方案或授权实施。
+
+Workflow status：`captured`、`triaging`、`plan-pending-confirmation`、`approved-to-implement`、`in-progress`、`verified`、`blocked`、`deferred`、`declined`。
+
+Issue 发布状态单独记录：`draft`、`authorization-pending`、`not-authorized`、`published` 或已有 Issue URL。方案确认、实现授权和 GitHub 写入授权分别记录，不互相推断。
 
 ## 候选详情
 
@@ -34,10 +38,15 @@ Readiness：`needs-info`、`ready-for-review`、`approved-to-publish`、`publish
 - 重复检查：`<相似 Issue/PR URL 或检查范围和结果>`
 - 依赖/关系：`<blocked_by、related、候选合并/拆分>`
 - 待澄清：`<只列会改变范围、行为或验收的问题>`
-- readiness：`<needs-info / ready-for-review / approved-to-publish 等>`
+- Issue readiness：`<needs-info / ready-for-review>`
+- workflow status：`<captured / triaging / plan-pending-confirmation / approved-to-implement / in-progress / verified / blocked / deferred / declined>`
+- Issue 发布状态：`<draft / authorization-pending / not-authorized / published + URL / existing + URL>`
+- 方案与实施决定：`<pending / approved / declined；用户决定及时间>`
+- 直接开始指令：`<none 或用户明确要求立即开始修复的原话摘要>`
 - 决策：`<keep / merge / split / defer / duplicate / decline>`
 - 决策理由：`<由维护者确认的理由>`
 - Issue 映射：`<未发布 / #number + URL>`
+- 实施与验证：`<commit、改动摘要、命令及 pass/fail/not-run 证据；未开始时填 pending>`
 - owner/优先级/日期：`<confirmed value 或 unassigned / unranked / unscheduled>`
 
 ## 批次记录

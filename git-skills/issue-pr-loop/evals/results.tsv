@@ -12,3 +12,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-11-26	s3-current	issue-pr-loop	-	17/18	regression-gap	dev-1..dev-4	首轮功能回归按原 checks：4/4、4/4、6/6、3/4；dev-4 未明确列出 Issue 作者及 PR 作者角色分离	e2-functional-regression
 2026-11-26	s3-current-followup	issue-pr-loop	-	4/4	targeted-pass	dev-4	补充角色输出要求后的定向复验；dev-4 原始 checks 4/4，8 个附加角色/门禁断言通过；当前执行者自测，非独立盲评	e2-functional-followup
 2026-11-26	s3-current	issue-pr-loop	-	8/8	regression-pass	holdout-v2-1..2	两条已揭示刷新留出题回放各 4/4；仅当前版回归核对，不构成新的盲测或 s0→最终版终验	e2-holdout-regression
+2026-11-26	pre-mvp-branch	issue-pr-loop	-	-	baseline-gap	explicit-single-issue	无“显式调用 + 单点问题”流程用例；no-trigger 仅覆盖普通自动路由	dry_run
+2026-11-26	feat/issue-pr-loop-confirm-before-implement	issue-pr-loop	-	13/13	candidate	workflow-gates	dev-5 5/5、dev-6 4/4、holdout-4 4/4；主执行者手工推演，非独立 E2	dry_run

@@ -59,6 +59,31 @@
     ]
   },
   {
+    "id": "dev-5",
+    "split": "dev",
+    "source": "user",
+    "prompt": "使用 $issue-pr-loop 处理登录失效时重复弹窗的问题。你可以只读检查仓库代码和现有 Issue；先形成本地问题记录、Issue 草稿和精简修复方案，列明证据、范围、验收与验证计划并等我确认。此时不要改代码、建分支或写 GitHub。",
+    "checks": [
+      "显式调用时走 Issue 驱动路径，不因问题单点而跳过记录",
+      "分配本地候选 ID 或复用已存在的 GitHub Issue，并记录重复检查结果",
+      "区分观察事实、契约证据、推断和待确认项，不无证据定性为 bug",
+      "给出范围、非目标、验收条件和验证计划的精简方案",
+      "标记 plan-pending-confirmation，并在确认前不改代码、不建分支、不写 GitHub"
+    ]
+  },
+  {
+    "id": "dev-6",
+    "split": "dev",
+    "source": "user",
+    "prompt": "使用 $issue-pr-loop 修复登录失效时重复弹窗的问题。保留最小本地 Issue 记录后，现在直接开始修复，不等方案确认；只授权本地代码修改和对应验证，不授权创建 GitHub Issue、推送或 PR。",
+    "checks": [
+      "把‘现在直接开始修复’识别为跳过方案等待的明确授权",
+      "开始代码修改前先建立或复用本地/现有 Issue 记录，并记录用户直接开始指令",
+      "仍记录范围、验收条件、实际改动和验证结果，不扩展到其它问题",
+      "不创建 GitHub Issue、不推送、不创建 PR"
+    ]
+  },
+  {
     "id": "holdout-1",
     "split": "holdout",
     "source": "user",
@@ -97,9 +122,10 @@
     "id": "holdout-4",
     "split": "holdout",
     "source": "user",
-    "prompt": "修复这个纯函数传入空数组时抛异常的问题，只改这一处并运行对应单测。这是一个小修复，不需要 Issue 拆分或排期。",
+    "prompt": "我没有显式调用 $issue-pr-loop。修复这个纯函数传入空数组时抛异常的问题，只改这一处并运行对应单测；这是一个小修复，不需要 Issue、方案确认或排期。",
     "checks": [
-      "尊重用户要求立即处理单点修复，不强制生成 request-inbox、Goal 或 Issue 图",
+      "用户未显式调用 $issue-pr-loop 时不自动触发该 skill",
+      "不强制创建 request-inbox、Issue 草稿、Goal 或 Issue 图",
       "不增加未要求的 backlog/Issue/PR 流程",
       "将验证范围限制在对应函数和相关单测"
     ]
