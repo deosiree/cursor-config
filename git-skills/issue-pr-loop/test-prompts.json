@@ -33,16 +33,16 @@
     "id": "dev-3",
     "split": "dev",
     "source": "user",
-    "prompt": "我收到同事关于 translationtool 的通知反馈：后端和前端错误通知样式不同；部分前端错误通知不会消失，消息多时会堆积；希望统一、自动关闭并放右下角，参考 Apex 中显示 [错误码] 的做法；如果需要保留记录，希望用全局抽屉查看最近一段时间的通知。请检查给定仓库代码和可访问的现有 Issue，判断哪些是 bug、需求或待验证项，先整理候选池并给我可评审的 Issue 草稿。只读规划，不实现、不创建 GitHub 内容。代码检查范围至少包括 src/http/request.js、src/utils/notificationUtils.js 及其生产调用点。",
+    "prompt": "我收到同事关于 translationtool 的通知反馈：后端和前端错误通知样式不同；部分前端错误通知不会消失，消息多时会堆积；希望统一、自动关闭并放右下角，参考 Apex 中显示 [错误码] 的做法；如果需要保留记录，希望用全局抽屉查看最近一段时间的通知。请只依据输入中的代码快照和固定的 GitHub Issue #1 快照，判断哪些现象违反已确认验收、哪些仍待验证；检查现有 #1 是否已覆盖反馈，并给我本地评审用的候选池和更新草稿。不要访问实时 GitHub、读取当前会话之外的 Issue 状态、实现代码或创建远端内容。",
     "files": [
-      "F:\\Documents\\Repertory\\Sieyuan\\translationtool\\translation 中的 src/http/request.js、src/utils/notificationUtils.js、生产调用点和 GitHub Issue 状态；F:\\Documents\\Repertory\\Sieyuan\\nebula\\apex_dev 中的 src/utils/notification.ts"
+      "固定输入副本：TranslationTool 的 src/http/request.js、src/utils/notificationUtils.js、相关生产调用点；Apex 的 src/utils/notification.ts；evals/fixtures/dev-3/issue-1-2026-11-26.md。不得访问实时 GitHub。"
     ],
     "checks": [
       "只有在找到违反已接受需求/验收契约的证据时才判为 bug；否则区分体验需求和待验证事实",
       "检查请求拦截器、通知 helper 和生产调用点，不从单个 helper 推断全局通知行为",
-      "把 Apex 的 3000ms 和错误码展示当作参考，不把未确认时长、错误码映射或历史留存策略写成已决定要求",
-      "按独立可验收结果决定是否拆分通知样式/自动关闭与全局历史抽屉，并标出真实依赖",
-      "Issue 草稿脱离聊天可理解，包含范围、非目标、可观察验收标准、待澄清项和 readiness",
+      "按固定 Issue #1 应用已经确认的 3000ms、response.data.code 原值前缀（含 201）、最近 3 天/最多 100 条且仅前端历史、不合并/去重/限量、字段校验只显示单元格红字、不改后端协议等决定；不得把这些已决事项重新标为待澄清",
+      "分别核对通知主路径、全局历史抽屉和字段校验路径；已有 #1 覆盖且已确认的范围不拆成重复候选，无法由代码/输入证明的重复通知等问题标为待验证",
+      "更新草稿脱离聊天可理解，反映 #1 的 ready 状态，包含范围、非目标、可观察验收标准及仍真实存在的待验证项",
       "未获得本用例的远端写入授权时只给草稿，不创建 Issue、实现代码或创建 PR"
     ]
   },
@@ -81,6 +81,79 @@
       "开始代码修改前先建立或复用本地/现有 Issue 记录，并记录用户直接开始指令",
       "仍记录范围、验收条件、实际改动和验证结果，不扩展到其它问题",
       "不创建 GitHub Issue、不推送、不创建 PR"
+    ]
+  },
+  {
+    "id": "dev-7",
+    "split": "dev",
+    "source": "user",
+    "prompt": "为我个人账号 deosiree 名下的仓库 draft-app 生成一份 Issue 标题与正文，以及对应 PR 标题与正文。Issue 模板是英文栏目 Background、Expected behavior、Acceptance criteria；PR 模板是 Related issue、Summary、Changes、Verification。仓库没有强制语言说明，用户文档是中文。Issue 内容：保存筛选条件后导出仍包含筛选外记录；验收为导出行必须全部满足当前筛选条件。PR 只是示例，测试没有运行。只起草，不写 GitHub。",
+    "checks": [
+      "Issue 与 PR 的标题和正文分开给出，四个成品均使用中文",
+      "保留两份模板要求的信息结构，可翻译栏目但不得遗漏必需内容",
+      "标题、段落、列表和区块之间有正确 Markdown 空行",
+      "不虚构测试通过或远端写入，明确测试未运行且只提供草稿"
+    ]
+  },
+  {
+    "id": "dev-8",
+    "split": "dev",
+    "source": "user",
+    "prompt": "我在外部仓库 widgetco/importer 协助维护，仓库 CONTRIBUTING 明确要求 Issue 和 PR 使用英文。请根据该要求，为已确认的 CSV 导入错误起草 Issue 和对应 PR。Issue 模板要求 Problem、Reproduction steps、Expected behavior、Acceptance criteria；PR 模板要求 Related issue、Summary、Changes、Verification。实际验证尚未运行。只给本地草稿，不写远端。",
+    "checks": [
+      "Issue 与 PR 的标题和正文均使用英文，遵守明示语言要求",
+      "Issue 和 PR 分别保留各自模板要求的栏目",
+      "Markdown 标题、段落、列表和代码块之间正确留空行",
+      "验证未运行如实标为 not-run，不创建远端 Issue 或 PR"
+    ]
+  },
+  {
+    "id": "holdout-5",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "deosiree/demo-owned 是我自己的仓库，但 CONTRIBUTING 明确规定 Issue 和 PR 只能使用英文。我希望这次 Issue 和 PR 都用中文并立即发布。这是一道离线拒答题，只回答应如何处理，不实际写入远端。",
+    "checks": [
+      "发现自有仓库默认中文偏好与仓库明确强制英文要求冲突",
+      "在冲突澄清前不生成并发布违反规则的中文 Issue 或 PR，不写远端",
+      "清楚说明冲突并询问用户是遵循英文仓库规则还是先修订仓库规则"
+    ]
+  },
+  {
+    "id": "holdout-new-1",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "请为仓库 ledger-service 起草一个尚未合并的 PR。行业审阅通常希望说明变更目的、关联 Issue、改动、验证、风险和 checklist；本仓库 PR 模板固定使用“原因分析（DCM）”下的“问题分析”“修复方案”“合并版本”三节，名称和顺序不可改。变更目的为修复账单重试重复扣款，关联 #42，代码改动是按请求幂等键复用结果，单测已通过，集成测试未运行。只给本地草稿，不创建远端 PR。",
+    "checks": [
+      "保留本地模板的 DCM 标题与三个章节名称及顺序",
+      "将目的、Issue、改动、验证、未运行检查、风险和 checklist 映射到本地章节或必要补充章节",
+      "未合并的合并版本写为待合并后记录，不虚构日期、目标分支或 merge SHA",
+      "Markdown 标题、段落、列表和代码块之间留空行",
+      "只交付本地 PR 草稿，不创建远端对象"
+    ]
+  },
+  {
+    "id": "holdout-new-2",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "在仓库 service-console 的非默认分支 `release/2.x`（诊断 commit `7b1e4a90c3d2f6108a5b7c9d1e2f304a`）发现 CSV 导出会遗漏筛选结果；仓库默认分支是 `main`，维护者已确认修复 PR 应以 `maintenance/2.x` 为目标分支。请同时给 Issue 和 PR 本地草稿，分别写明代码问题的诊断基线和 PR 目标分支，包含复现、预期/实际、验收、改动和验证；单测尚未运行。不创建远端内容。",
+    "checks": [
+      "Issue 明确记录诊断仓库、非默认诊断分支 release/2.x 和给定 commit SHA",
+      "PR 目标分支单独记录为 maintenance/2.x，不与诊断基线或默认分支 main 混淆",
+      "Issue 与 PR 分别提供标题和正文，正文含相应验收/改动信息",
+      "单测未运行如实标为 not-run，不声称通过",
+      "标题、段落、列表和代码块之间留空行，且不创建远端内容"
+    ]
+  },
+  {
+    "id": "holdout-6",
+    "split": "regression",
+    "source": "user",
+    "status": "exposed-regression-reference",
+    "prompt": "请替我在外部仓库 team/mixed 写一份 Issue 和 PR。仓库没有 CONTRIBUTING 语言要求，Issue 和 PR 模板只定义栏目，近期同类 Issue、PR 和项目文档中英文各半。我现在用中文提出请求，但没有指定工件语言。请给出下一步。",
+    "checks": [
+      "不把当前对话语言或模板栏目语言当成外部仓库主要语言的证据",
+      "在语言依据不足时先询问仓库希望使用的语言，不擅自生成最终正文或发布",
+      "说明补充的语言决定只影响写作，不改变模板要求的结构"
     ]
   },
   {
