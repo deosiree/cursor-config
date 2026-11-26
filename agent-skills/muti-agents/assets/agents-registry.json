@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-11-26",
+  "agents": [
+    {
+      "id": "t3-code",
+      "displayName": "T3 Code",
+      "status": "supported",
+      "platforms": ["windows", "darwin", "linux"],
+      "detectSignals": {
+        "env": ["T3_ACP_MCP_CALL", "T3_ACP_MCP_NODE"],
+        "mcpTools": ["orchestrator_capabilities", "delegate_task"]
+      },
+      "transports": [
+        "native_mcp",
+        "acp_mcp_call_windows",
+        "acp_mcp_call_posix"
+      ],
+      "capabilitiesCheck": "orchestrator_capabilities",
+      "fallbackPolicy": "fail-fast-no-silent-downgrade",
+      "adapterScript": "scripts/delegate-t3-task.mjs"
+    }
+  ],
+  "unsupportedBehavior": {
+    "guide": "扩展-新Agent适配Loop",
+    "maxRoundsWithoutProgress": 2,
+    "requireHumanCheckpointBeforeSkillEdit": true,
+    "forbidSilentDowngrade": true
+  }
+}

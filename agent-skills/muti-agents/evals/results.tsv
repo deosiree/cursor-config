@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-11-26T19:01	baseline	muti-agents	-	81.1	baseline	-	对裸跑2胜1平0负；检查项11/11；E0=0/0/0；最大短板dim5(7)与transcript绕路读9-10文件	e2-dev
+2026-11-26T19:07	70ee725	muti-agents	-	1胜0平2负	revert	dim5/dim2 改	TP-DEV-01 3:0胜且抓出s0误用--scheme S-01事实错，但TP-DEV-02/03过度删减致小负，已revert	e2-dev
+2026-11-26T19:12	b9b43f6	muti-agents	-	1胜1平1负(事实胜)	keep	dim5 改	TP-DEV-01 3:0胜且核实s0误用--scheme S-01报错exit 1，s2改用schemeId通过DryRun，按事实大于票数保留	e2-dev
+2026-11-26T19:16	final	muti-agents	-	-	accept	trigger	命中2/2，误触0/4（含多模型并发调度邻居对照）	trigger
+2026-11-26T19:21	final	muti-agents	81.1	91.9	accept	-	留出集s0对s2 1胜1平0负、检查项8/8不倒退；终版对裸跑2胜1平0负、检查项11/11	e2-holdout
