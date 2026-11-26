@@ -3,3 +3,12 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-11-24	baseline	issue-pr-loop	-	-	baseline	1-7,9	早期 E1 快照：8 个静态维度已评分；当时第 8 维缺 E2 实跑，整体不可比	e1
 2026-11-24	baseline	issue-pr-loop	-	-	baseline	manual dry-run	早期记录：3 条手工推演通过；当时尚未运行独立 agent 对照	dry_run
 2026-11-24	baseline	issue-pr-loop	-	97	baseline	8	开发集 1 胜 1 平 0 负；检查项裸跑 6/8、带 skill 8/8；留出集未跑	e2-dev
+2026-11-25	working-tree	issue-pr-loop	-	-	checked	-	E0 复检：0 错误 / 0 警告 / 0 提示；主入口 136 行，description 130 字符	e0
+2026-11-25	s1-snapshot	issue-pr-loop	-	86.2	candidate	dim8=9/10	候选版对裸跑 3 胜 1 平 0 负；检查项 11/18 对 16/18；一位评委，分数待留出集门禁	e2-dev
+2026-11-25	s0-to-s1	issue-pr-loop	-	3胜1平0负	dev-pass	checks	三位评委；检查项 s0=14/18、s1=16/18；SKILL.md 8871→11539 字节（+30%）	e2-dev
+2026-11-25	s0-to-s1	issue-pr-loop	-	1胜2平1负	revert-recommended	checks	三位评委；检查项 s0=13/14、s1=12/14；未接受候选版，等待用户裁定	e2-holdout
+2026-11-25	working-tree	issue-pr-loop	-	命中5/5；误触0/5	observed	description	一位独立路由评估者；正例均含明显主题线索，不能代表无关键词请求	trigger
+2026-11-26	s1-to-s2-controlled	issue-pr-loop	-	2胜0平0负	keep	dim5	三位评委；两条刷新留出题检查项 s1=6/8、s2=8/8；仅改目标文档漂移规则；SKILL.md 11539→11755 字节（+2%）	e2-holdout
+2026-11-26	s3-current	issue-pr-loop	-	17/18	regression-gap	dev-1..dev-4	首轮功能回归按原 checks：4/4、4/4、6/6、3/4；dev-4 未明确列出 Issue 作者及 PR 作者角色分离	e2-functional-regression
+2026-11-26	s3-current-followup	issue-pr-loop	-	4/4	targeted-pass	dev-4	补充角色输出要求后的定向复验；dev-4 原始 checks 4/4，8 个附加角色/门禁断言通过；当前执行者自测，非独立盲评	e2-functional-followup
+2026-11-26	s3-current	issue-pr-loop	-	8/8	regression-pass	holdout-v2-1..2	两条已揭示刷新留出题回放各 4/4；仅当前版回归核对，不构成新的盲测或 s0→最终版终验	e2-holdout-regression
