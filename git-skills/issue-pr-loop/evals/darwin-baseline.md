@@ -159,3 +159,22 @@
 
 - 本轮仅证明新增规则与三类目标路径没有明显自相矛盾。没有运行独立 A/B E2；历史 97/100 基线来自两条规划任务，不作为本次行为的对照分数。
 - 新版保留为功能分支候选，待后续使用相同输入、仓库快照和授权约束做独立受控评估后再决定 `keep` 或 `revert`。
+
+## 2026-11-26 Exec-2 受控 E2 与 G-06 实跑
+
+### 受控 E2
+
+- 隔离目录：`F:\Documents\Repertory\PRs\_tmp\windows-user-temp\darwin-issue-pr-loop-e2-final-20261126`。s0 为 `d6bf56f` archive；s1 为候选工作树快照；两侧只读输入使用相同副本并校验 SHA256。dev-3 仅使用固定代码与 Issue fixture，未访问实时 GitHub。
+- 盲评包由 `darwin.py pair` 随机化；3 位独立评委分别提交匿名票据，复核 180 个文件无 transcript 文件、无绝对路径或技能快照路径。正文出现的 `transcript.md` 仅为文件名引用。两组票据均由 `darwin.py tally` 计票。
+- E2-dev（dev-1..8）：0 胜、6 平、2 负；checks 中位合计 s0=33/33、s1=33/33。逐题：dev-1 平 4/4 对 4/4；dev-2 平 4/4 对 4/4；dev-3 负 6/6 对 6/6；dev-4 平 2/2 对 2/2；dev-5 平 5/5 对 5/5；dev-6 平 4/4 对 4/4；dev-7 平 4/4 对 4/4；dev-8 负 4/4 对 4/4。Darwin 裁决 `revert`。
+- E2-holdout-new（holdout-5、holdout-new-1、holdout-new-2）：1 胜、1 平、1 负；checks 合计 s0=12/13、s1=13/13。逐题：holdout-5 胜 2/3 对 3/3；holdout-new-1 平 5/5 对 5/5；holdout-new-2 负 5/5 对 5/5。Darwin 裁决 `revert`；未混入已曝光回归参考题。holdout-new-2 的评委理由显示 1 票偏好明确提及默认分支 `main` 的一侧、2 票打平；对照草稿，s1 漏写默认分支名，checks 未因此拉开差异。
+- E2-regression：holdout-1..4、6 本轮 `not-run`，与新留出统计分开。
+
+### 事实核验与 G-06
+
+- tally 的 dev-4 事实指控经执行产物核对成立：s0、s1 均把 I-12 放在 I-10 合并之后；s1 虽写条件并行，仍未体现 I-12 可在满足隔离/契约条件时与 I-10 并行。holdout-new-1 的“answer 记 not-run、PR 草稿记单测通过”矛盾也经核对成立。两项已留档供后续单点决策；本轮不改写 skill。
+- G-06 全新对话在隔离线程中检查现状并建立候选记录、中文 Issue 草稿和精简方案，明确停在 `plan-pending-confirmation`，没有写目标仓库或远端；但产物没有明确分别记录诊断分支/commit 与 PR 目标分支，故断言 1 部分满足，断言 2、3 通过。审计表和完整 transcript 位于隔离目录 `g06-final/`。
+
+### 静态复检
+
+- 当前候选 skill Darwin E0：0 错误、0 警告、0 提示（主入口 155 行）。`test-prompts.json`、`evals/evals.json`、`trigger-tests.json`、`holdout-refresh-proposal.json` 均可解析；留出提案 `status=confirmed`，note 记录用户于 2026-11-26 确认；`results.tsv` 为 27 行、9 列、无坏行。`git diff --check` 退出码 0，仅有 holdout 提案 LF/CRLF 转换提示。本轮未执行 E2-regression。

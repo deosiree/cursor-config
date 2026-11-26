@@ -1,36 +1,32 @@
 {
-  "status": "completed",
-  "purpose": "替换已揭示的目标变更 holdout，并检查批准后的 develop.md 同步及未批准变更的阻塞行为。",
-  "evaluation": {
-    "comparison": "s1-to-s2-controlled",
-    "judges": 3,
-    "result": "2胜0平0负",
-    "checks": "s1 6/8; s2 8/8",
-    "decision": "keep"
-  },
+  "skill": "issue-pr-loop",
+  "status": "confirmed",
+  "note": "用户于 2026-11-26 确认 holdout-new-1 与 holdout-new-2；本轮 Exec-2 激活。",
   "cases": [
     {
-      "id": "holdout-v2-1",
-      "split": "holdout",
-      "source": "derived-from-observed-gap",
-      "prompt": "项目原已批准 G-17：导出链接保留 30 天。决策负责人刚在本次会议明确批准改为 90 天。I-22 和 I-25 的本地 develop.md、issue-graph.md、API 保留策略说明及相关测试仍写着 30 天。我只要一份同步计划，不修改文件、不实现、不写 GitHub。请列出变更记录、逐份需同步的材料、验证顺序和完成前的状态条件。",
+      "id": "holdout-new-1",
+      "split": "holdout-proposal",
+      "source": "user",
+      "prompt": "请为仓库 ledger-service 起草一个尚未合并的 PR。行业审阅通常希望说明变更目的、关联 Issue、改动、验证、风险和 checklist；本仓库 PR 模板固定使用“原因分析（DCM）”下的“问题分析”“修复方案”“合并版本”三节，名称和顺序不可改。变更目的为修复账单重试重复扣款，关联 #42，代码改动是按请求幂等键复用结果，单测已通过，集成测试未运行。只给本地草稿，不创建远端 PR。",
       "checks": [
-        "将 90 天视为本题已明确批准的 Goal 变更，不重复要求用户批准",
-        "点名同步 I-22 与 I-25 各自的 develop.md，并更新其中与保留时长有关的验收条件和验证步骤",
-        "覆盖 Goal 修订记录、issue-graph、API 说明、相关测试及验收证据映射，并说明不适用项需核实而非默默遗漏",
-        "仅提供计划，不修改文件、实现代码或写入 GitHub；同步后按 90 天门槛重跑相关验证，未取得证据前不标完成"
+        "保留本地模板的 DCM 标题与三个章节名称及顺序",
+        "将目的、Issue、改动、验证、未运行检查、风险和 checklist 映射到本地章节或必要补充章节",
+        "未合并的合并版本写为待合并后记录，不虚构日期、目标分支或 merge SHA",
+        "Markdown 标题、段落、列表和代码块之间留空行",
+        "只交付本地 PR 草稿，不创建远端对象"
       ]
     },
     {
-      "id": "holdout-v2-2",
-      "split": "holdout",
-      "source": "derived-from-observed-gap",
-      "prompt": "已批准的 G-08 要求审计日志保留 90 天。压测只证明当前实现能保留 60 天。有人建议把标准改成 60 天以便关闭 I-41；我没有给出任何 Goal 变更批准。I-41 和依赖它的 I-42 都有本地 develop.md。请说明当前状态，以及现在能准备哪些材料；不要修改文件或远端。",
+      "id": "holdout-new-2",
+      "split": "holdout-proposal",
+      "source": "user",
+      "prompt": "在仓库 service-console 的非默认分支 `release/2.x`（诊断 commit `7b1e4a90c3d2f6108a5b7c9d1e2f304a`）发现 CSV 导出会遗漏筛选结果；仓库默认分支是 `main`，维护者已确认修复 PR 应以 `maintenance/2.x` 为目标分支。请同时给 Issue 和 PR 本地草稿，分别写明代码问题的诊断基线和 PR 目标分支，包含复现、预期/实际、验收、改动和验证；单测尚未运行。不创建远端内容。",
       "checks": [
-        "继续把 90 天作为有效验收标准，不把 60 天建议当作已批准变更",
-        "在批准前不按 60 天修改 Goal、Issue、develop.md 或测试，不关闭 I-41，也不解锁 I-42",
-        "将 60 天方案列为待决变更，并点名批准后需检查同步 I-41/I-42 的 develop.md 及相关图谱、测试和文档",
-        "在原门槛通过或正式批准变更并完成同步、复验前保持 blocked/incomplete，不伪报完成"
+        "Issue 明确记录诊断仓库、非默认诊断分支 release/2.x 和给定 commit SHA",
+        "PR 目标分支单独记录为 maintenance/2.x，不与诊断基线或默认分支 main 混淆",
+        "Issue 与 PR 分别提供标题和正文，正文含相应验收/改动信息",
+        "单测未运行如实标为 not-run，不声称通过",
+        "标题、段落、列表和代码块之间留空行，且不创建远端内容"
       ]
     }
   ]

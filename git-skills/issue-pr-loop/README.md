@@ -34,7 +34,7 @@ issue-pr-loop/
 ├── feature-skills/项目验收与文档收敛/
 ├── template/mvp/
 ├── template/snapshot/
-├── assets/
+├── assets/few-shot-example/           # Issue / PR 输出 SOP 与格式样例
 ├── references/
 │   └── upstream/                      # 固定提交的来源快照与许可
 └── evals/
@@ -83,8 +83,10 @@ Issue #84 已由同事创建，我负责实现，另一位 reviewer 负责审查
 
 - Goal 到 Issue、代码、测试和文档之间存在双向可追溯关系。
 - 候选反馈先有现状/契约证据和重复检查；没有已接受要求作依据时，不会仅凭体验反馈标为 bug。
+- Issue 与 PR 的结构分别参考 few-shot；把通用审阅信息映射进本地模板和章节，按仓库语言规则生成，Markdown 块之间留空行；代码现状 Issue 记录诊断分支与 commit。
 - 发布 Issue 不自动开始实现；Issue 作者、实现者、PR 作者、reviewer 和合并者可分离。
 - Issue 依赖无环；并行项文件边界互斥且接口已冻结。
 - 性能、安全结论只基于实际执行的测试、明确范围和记录证据。
 - GitHub 外部写入、人审和合并遵守本次会话的授权。
 - Darwin 用例见 [[test-prompts.json]] 与 [[evals/evals.json]]；基线和结果见 [[evals/darwin-baseline.md]]、[[evals/results.tsv]]。
+- 写作规则和样例见 [[assets/few-shot-example/README.md]]，外部规范取舍见 [[references/调研与设计取舍.md]]。

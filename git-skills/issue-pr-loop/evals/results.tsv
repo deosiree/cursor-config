@@ -14,3 +14,15 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-11-26	s3-current	issue-pr-loop	-	8/8	regression-pass	holdout-v2-1..2	两条已揭示刷新留出题回放各 4/4；仅当前版回归核对，不构成新的盲测或 s0→最终版终验	e2-holdout-regression
 2026-11-26	pre-mvp-branch	issue-pr-loop	-	-	baseline-gap	explicit-single-issue	无“显式调用 + 单点问题”流程用例；no-trigger 仅覆盖普通自动路由	dry_run
 2026-11-26	feat/issue-pr-loop-confirm-before-implement	issue-pr-loop	-	13/13	candidate	workflow-gates	dev-5 5/5、dev-6 4/4、holdout-4 4/4；主执行者手工推演，非独立 E2	dry_run
+2026-11-26	working-tree	issue-pr-loop	-	-	checked	e0	格式与分支基线规则编辑后体检：0 错误 / 0 警告 / 0 提示；主入口 152 行；E2 等待用户更新并确认题集	e0
+2026-11-26	working-tree@77f90b3	issue-pr-loop	-	-	checked	branch-semantics	Issue 诊断基线、PR 目标分支和合并事实分开记录；TranslationTool 实现本轮 deferred；E0 0/0/0、主入口 151 行，JSON 与 diff 检查通过；E2 未运行，题集仍待用户确认	e0
+2026-11-26	working-tree@77f90b3	issue-pr-loop	-	2胜1平3负	invalid-comparison	dev-1..dev-6	三位评委原始 tally：checks s0=23/26、候选=23/26；SKILL.md 11962→14985 字节（+25%）。dev-3 两臂读取到不同版本的 GitHub #1 正文（needs-info 与用户确认后的决策版），输入不一致，整体胜负不能作为有效裁决	e2-dev
+2026-11-26	working-tree@77f90b3	issue-pr-loop	17/19	19/19	not-accepted	dev-1,2,4,5,6	排除输入漂移的 dev-3 后，逐题结果为 2胜1平2负；候选版仍有两条负向，不能据此接受	e2-dev-partial
+2026-11-26	working-tree@77f90b3	issue-pr-loop	14/17	16/17	revert-recommended	holdout-1..4,6	三位评委：1胜2平2负。holdout-1..4 已曝光，仅作回归；新留出 holdout-6 候选版胜出；holdout-5 涉及真实远端发布，未执行。Darwin tally 判多数负	e2-holdout
+2026-11-26	working-tree@77f90b3	issue-pr-loop	-	0/0/0	checked	e0	题集 JSON 解析 12 条；当前 skill E0 为 0 错误 / 0 警告 / 0 提示、151 行；git diff --check 通过	e0
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	0/0/0	checked	e0+static	E0 0 错误 / 0 警告 / 0 提示；SKILL.md 13779→15121 字节（+9.74%），149→158 行（+6.04%）；14 个题集 ID 唯一，dev-3 固定离线 fixture；holdout-1..5 保留、holdout-6 转回归参考；JSON/TSV、82 个内部链接、祖先关系和 diff 检查通过；E2 未运行，等待用户确认新留出题	e0+static
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	33/33	33/33	not-accepted	dev-1..dev-8	受控 E2，3 位独立盲评：0胜6平2负；逐题 dev-1平4/4、dev-2平4/4、dev-3负6/6、dev-4平2/2、dev-5平5/5、dev-6平4/4、dev-7平4/4、dev-8负4/4；SKILL.md 13779→15121 字节（+9.74%）；tally 裁决 revert。	e2-dev
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	12/13	13/13	not-accepted	holdout-5,new-1,new-2	受控新留出 E2，3 位独立盲评：1胜1平1负；holdout-5胜2/3、holdout-new-1平5/5、holdout-new-2负5/5；checks 合计12/13对13/13；holdout-new-2 的单票偏好指向分支字段表达更完整的一侧，checks 未区分；tally 裁决 revert。	e2-holdout-new
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	-	not-run	holdout-1..4,6	本轮未运行已曝光回归参考题；不并入新留出集统计。	e2-regression
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	2/3 assertions	partial	G-06 fresh conversation	隔离新对话产出 request-inbox/issue-draft/plan/transcript；确认门禁与未写目标仓库/远端通过；诊断分支和 PR 目标分支未明确区分，见隔离目录 g06-final/assertions.md。	e3-g06
+2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	0/0/0	checked	final-static	Darwin E0 0错误/0警告/0提示；四个 JSON 文件可解析，留出提案状态 confirmed 且 note 记录用户于2026-11-26确认；TSV 27行9列无坏行；git diff --check 退出码0（仅提示holdout proposal LF/CRLF转换）。	e0+static

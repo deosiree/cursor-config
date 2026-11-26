@@ -67,6 +67,14 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 - Issue 创建者、实现者、PR 作者、reviewer 和合并决策者可以分离。排期建议必须逐一列出这些角色；输入未给出的写 `unknown`，不得据此推断或分派。排期只使用已知的阻塞、优先级、团队名额和可用时间；未知工期和日期保持空缺。
 - 并行批次仅在依赖已满足、接口冻结、文件/测试数据隔离且每个执行者有独立工作区时解锁。只生成排程时不启动代理；执行者、PR reviewer 和合并决策者可由不同角色担任。
 
+## Issue 与 PR 写作规范
+
+- **模板与规范映射**：先读本地贡献规则和 Issue/PR 模板；将行业通用审阅要素映射到本地章节名、顺序和术语，本地格式优先，详例见 [[assets/few-shot-example/README.md]]。
+- **语言与停顿**：自有仓默认中文；外部仓先遵明示语言规则，再参考近期同类工件。强制规则冲突或语言证据打平/缺失时保持 `awaiting_clarification` 并先询问；不得用对话语言或模板占位文字补位，也不生成最终稿或发布。
+- **分支语义**：分别记录 Issue 诊断基线（仓库/分支/SHA）、预期 PR 目标分支和合并后的真实版本；创建前核实 PR 目标分支，未合并写 `待合并后记录`，合并事实只按远端读回填写。
+- **四件套与排版**：同时要求 Issue 和 PR 时分别交付 Issue 标题、Issue 正文、PR 标题、PR 正文；保留各自模板栏目，标题、段落、列表、代码块等块级内容之间留空行。
+- **事实边界**：Few-shot 只示范格式，不是项目事实来源；标签、依赖、代码现状、验证与风险须重新核实，细节、反例和边界见 [[assets/few-shot-example/README.md]]。
+
 ## RED：失败基线
 
 - 直接开始编码，没有冻结初始目标和可验证的成功条件。
@@ -87,7 +95,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 4. **准备 Issue 方案**：每个新候选都写清背景、范围、非目标、验收和验证方法；复杂 Issue 再生成 `develop.md`。单点 Issue 可用精简方案，但不能省略问题 ID 和可审阅方案。
 5. **等待方案确认**：新问题默认标为 `plan-pending-confirmation` 并停止在代码修改前。用户明确要求立即开始修复时，记录原话并跳过此等待；已有确认计划的继续任务按原范围执行。
 6. **按确认范围实现和核对**：每完成一个计划节点，核对实际改动是否符合 Goal ID、Issue 范围和验收标准。偏差先修正或提出变更，不把偏差伪装成完成。
-7. **验证并开 PR**：运行计划要求且仓库可运行的相关检查，记录命令、结果、环境和 commit；基于实际结果写 PR。未执行的检查明确写 `not-run`。
+7. **验证并开 PR**：运行计划要求且仓库可运行的相关检查，记录命令、结果、环境和 commit；按本节写作门禁准备 PR。未执行的检查明确写 `not-run`。Issue 发布与 PR 创建是独立阶段。
 8. **人工审查循环**：等待人工审查；对每条反馈修复并重跑受影响的检查，直到审查者接受。只有确认 Issue 已按约定合并后，才将其标记完成并推进下一个依赖已满足的 Issue。
 9. **项目终验**：所有 Issue 合并后，执行 [[feature-skills/项目验收与文档收敛/SKILL.md]]。目标门禁缺项或证据不足时，保持 `blocked` / `incomplete`。
 
@@ -147,3 +155,4 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 - 上游 skill 快照：[[references/upstream/plan-to-issues-converter/README.md]]
 - Issue triage 上游快照：[[references/upstream/mattpocock-triage/README.md]]
 - 触发与行为评估：[[trigger-tests.json]]、[[evals/evals.json]]、[[test-prompts.json]]、[[evals/results.tsv]]
+- Issue 与 PR 写作样例：[[assets/few-shot-example/README.md]]
