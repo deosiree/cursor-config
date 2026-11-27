@@ -202,5 +202,79 @@
       "不增加未要求的 backlog/Issue/PR 流程",
       "将验证范围限制在对应函数和相关单测"
     ]
+  },
+  {
+    "id": "explicit-bare-fix",
+    "split": "dev",
+    "source": "user",
+    "prompt": "用 $issue-pr-loop 修复登录失效时重复弹窗的问题。",
+    "checks": [
+      "第一条响应提供 Issue 草稿、范围/非目标、验收和验证计划，不只询问仓库或复现路径",
+      "标记 HITL-1 并列明待确认事实与创建 Issue、分支、推送、PR 的动作授权",
+      "确认前不修改代码或声称已创建远端 Issue",
+      "说明确认后按批准范围实现、验证并开 PR，停在人工审查且不合并"
+    ]
+  },
+  {
+    "id": "confirmed-to-pr",
+    "split": "dev",
+    "source": "user",
+    "prompt": "前一轮的登录问题草稿、范围、验收和验证计划已确认。授权创建/复用 GitHub Issue、建立功能分支、推送并创建目标为 main 的 PR；禁止合并。请给出本轮执行顺序和最终停止点。这是离线流程题，不访问 GitHub、不修改代码；不得声称已执行远端动作。",
+    "checks": [
+      "按 Issue 确认/创建与读回、实现、验证、PR 的顺序推进，不回到重新确认整份方案",
+      "实现限定在已批准范围并按验收执行测试",
+      "PR 关联 Issue 且 base 为 main",
+      "终点为 HITL-2，明确不合并",
+      "将预期步骤与实际执行区分，不伪称外部动作已完成"
+    ]
+  },
+  {
+    "id": "long-goal-command",
+    "split": "dev",
+    "source": "user",
+    "prompt": "跨三个服务的长期迁移目标和 Issue 依赖图已由我确认，验收锚点为 G-01、G-02、G-03。我已授权按确认范围实现、验证、推送并逐 Issue 开 PR，不授权合并。给我一条可直接复制的启动指令，不要自动创建新会话；这是离线流程题。",
+    "checks": [
+      "只输出一条可复制的 /goal 启动指令",
+      "指令引用 goal.md、issue-graph.md 和 G-01/G-02/G-03",
+      "指令限定动作在已批准范围并包含逐 Issue 验证和开 PR",
+      "指令明确停在 HITL-2、不合并，且不自动启动新会话"
+    ]
+  },
+  {
+    "id": "holdout-explicit-bare-fix",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "使用 $issue-pr-loop 处理批量导出重复生成报表的问题。",
+    "checks": [
+      "首条响应提供 Issue 草稿、范围/非目标、验收和验证计划",
+      "停在 HITL-1 并逐项列明远端动作授权，不把显式修复请求降为普通小修",
+      "确认前不修改代码或声称已创建远端内容",
+      "确认后默认按批准动作实现、验证并开 PR，最终停在人工审查"
+    ]
+  },
+  {
+    "id": "holdout-confirmed-to-pr",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "异常修复 Issue #314 的 HITL-1 草稿和验收已确认；我明确授权建立 fix/export-duplicates 分支、实现并验证、推送和创建以 release/2.x 为 base 的 PR；不授权合并。请说明如何继续。这是离线题，不访问仓库或网络，也不要声称已执行动作。",
+    "checks": [
+      "沿已批准 Issue #314 范围继续，不要求重复确认",
+      "先实现并按验收验证，再推送并创建关联 #314 的 PR",
+      "PR base 明确为 release/2.x",
+      "停在 HITL-2，不合并",
+      "明确这是计划说明，没有声称实际访问仓库或执行远端操作"
+    ]
+  },
+  {
+    "id": "holdout-long-goal-command",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "账户整合项目的 goal.md 和 issue-graph.md 已经通过 HITL-1，验收锚点 A-10、A-20 已锁定；只授权本地实现、验证和逐项创建 PR，不合并。输出下一位执行者可以直接粘贴的一条 /goal 指令，不启动新会话。",
+    "checks": [
+      "提供一条可复制的 /goal 指令",
+      "指令同时引用 goal.md、issue-graph.md 与 A-10/A-20",
+      "指令只授权本地实现、验证和逐项创建 PR，不扩大为合并授权",
+      "明确开 PR 后停在 HITL-2，且不尝试自动启动新会话"
+    ]
   }
 ]
