@@ -26,3 +26,8 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	-	not-run	holdout-1..4,6	本轮未运行已曝光回归参考题；不并入新留出集统计。	e2-regression
 2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	2/3 assertions	partial	G-06 fresh conversation	隔离新对话产出 request-inbox/issue-draft/plan/transcript；确认门禁与未写目标仓库/远端通过；诊断分支和 PR 目标分支未明确区分，见隔离目录 g06-final/assertions.md。	e3-g06
 2026-11-26	working-tree@d6bf56f	issue-pr-loop	-	0/0/0	checked	final-static	Darwin E0 0错误/0警告/0提示；四个 JSON 文件可解析，留出提案状态 confirmed 且 note 记录用户于2026-11-26确认；TSV 27行9列无坏行；git diff --check 退出码0（仅提示holdout proposal LF/CRLF转换）。	e0+static
+2026-11-27	r01-round1	issue-pr-loop	-	6胜2平3负	revert	explicit-closure	Round 1 受控 E2（3 评委）：dev 6胜2平3负（负 dev-1/2/6，平 dev-3/7），checks a=39 b=41；dev-6 倒退（4/4→3/4，未记录直接开始指令导致离线缺代码时误标 blocked）；SKILL.md 15121→7146B（-53%），tally 裁决 revert。	e2-dev
+2026-11-27	r01-round1	issue-pr-loop	-	3胜0平0负	observed	explicit-closure	Round 1 新留出集（3 评委）：3胜0平0负，checks 10/13→12/13；因 dev 存在检查项倒退未接受该候选，仅留作 Round 1 实测记录。	e2-holdout
+2026-11-27	r01-round2	issue-pr-loop	-	11胜0平0负	keep	explicit-closure	Round 2 受控 E2（3 评委，基于 a8879ed 与 W2 快照）：dev 11胜0平0负（全 3:0），checks a=36 b=47（dev-6 恢复 4/4）；SKILL.md 15121→7149B（158→96 行，-53%）；fact_claim 为空；tally 裁决 keep。	e2-dev
+2026-11-27	r01-round2	issue-pr-loop	-	3胜0平0负	accept	explicit-closure	Round 2 新留出集（3 评委）：3胜0平0负（全 3:0），checks 9/13→13/13；fact_claim 为空；多数胜通过留出集验收。	e2-holdout
+2026-11-27	working-tree	issue-pr-loop	-	0/0/0	checked	e0+static	R-01 终版 E0 体检：0 错误 / 0 警告 / 0 提示；SKILL.md 96 行（正文 93 行）/ 7149B，description 103 字符；JSON/TSV 与 git diff --check 校验通过。	e0
