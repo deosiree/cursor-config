@@ -13,7 +13,9 @@
 ├── nebula-skills/    # nebula 项目专有 skills（业务耦合）
 ├── plans/           # 项目计划和方案
 ├── review/          # 代码审查和知识库
-└── agents.md        # Agent 配置
+├── agents.md        # 共通 Agent 配置
+├── GEMINI.md        # Gemini 规则（Gemini CLI 项目上下文）
+└── CHATGPT.md       # ChatGPT 规则（项目资料与项目指令来源）
 ```
 
 ## 🚀 快速开始
