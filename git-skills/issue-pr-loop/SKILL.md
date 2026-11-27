@@ -28,7 +28,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 ### HITL-1：确认包
 
-修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。确认仅覆盖用户明确批准的内容。普通任务未命中协作阶段时只写 `协作 Skill 计划：无`，不罗列未用 Skill。
+修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。确认仅覆盖用户明确批准的内容。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。
 
 长程 Goal 获批后，用一条可复制指令承载锚点与边界，例如：
 
@@ -51,6 +51,18 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 | `finalize` | 已合并项目的终验与文档收敛 | [[feature-skills/项目验收与文档收敛/SKILL.md]] |
 
 只说“继续”时，核对 Goal、依赖图、当前 `develop.md`、Issue/PR 实时状态与 Git 状态，再选择唯一安全下一步；冲突、阻塞或未确认事项先报告。
+
+## 跨 Skill 协作
+
+| 协作域 | 触发信号 | 协作 Skill（禁用项） |
+| --- | --- | --- |
+| Spec 澄清与规格 | 影响验收的 `NEEDS CLARIFICATION` 或缺基线规格 | `$speckit-loop` / `speckit-*` + `specify-cli`（禁用 `speckit-taskstoissues`） |
+| 宪法修订 | 缺宪法或明确要求修订长期原则（Scope Guard） | `$speckit-constitution`（普通需求严禁修改 `.specify/memory/constitution.md`） |
+| Skill 改造与评测 | 改动命中 `SKILL.md` / `*-skills/` / `evals/` | 实现 → `$写skill`；验证 → `$darwin-skill` |
+
+- 单阶段只激活一个协作 Skill（不禁用同阶段内部独立工作区并行），进入阶段前披露 5 要素（拟调用 Skill/原因/阶段/预期产物/HITL 门禁）。
+- `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 或 CLI 不可用/失败时立即 STOP 报证据走 Human Loop。
+- 完整协议与正反例见 [[references/跨Skill协作协议.md]]。
 
 ## Issue 与项目约束
 
@@ -90,7 +102,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 - 反馈受理：[[intention-skills/需求收敛与Backlog排程/SKILL.md]]
 - 单 Issue：[[feature-skills/单Issue开发与PR闭环/SKILL.md]]
 - 项目验收：[[feature-skills/项目验收与文档收敛/SKILL.md]]
-- 模板、阶段清单、设计取舍：[[template/mvp/README.md]]、[[template/snapshot/README.md]]、[[assets/阶段交接检查清单.md]]、[[references/调研与设计取舍.md]]
+- 模板、阶段清单、设计取舍与协作协议：[[template/mvp/README.md]]、[[template/snapshot/README.md]]、[[assets/阶段交接检查清单.md]]、[[references/调研与设计取舍.md]]、[[references/跨Skill协作协议.md]]
 - 上游参考：[[references/upstream/plan-to-issues-converter/README.md]]、[[references/upstream/mattpocock-triage/README.md]]
 - 评估资产：[[trigger-tests.json]]、[[evals/evals.json]]、[[test-prompts.json]]、[[evals/results.tsv]]
 - Issue/PR 样例：[[assets/few-shot-example/README.md]]

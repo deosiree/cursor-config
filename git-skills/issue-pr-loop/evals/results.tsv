@@ -31,3 +31,6 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-11-27	r01-round2	issue-pr-loop	-	11胜0平0负	keep	explicit-closure	Round 2 受控 E2（3 评委，基于 a8879ed 与 W2 快照）：dev 11胜0平0负（全 3:0），checks a=36 b=47（dev-6 恢复 4/4）；SKILL.md 15121→7149B（158→96 行，-53%）；fact_claim 为空；tally 裁决 keep。	e2-dev
 2026-11-27	r01-round2	issue-pr-loop	-	3胜0平0负	accept	explicit-closure	Round 2 新留出集（3 评委）：3胜0平0负（全 3:0），checks 9/13→13/13；fact_claim 为空；多数胜通过留出集验收。	e2-holdout
 2026-11-27	working-tree	issue-pr-loop	-	0/0/0	checked	e0+static	R-01 终版 E0 体检：0 错误 / 0 警告 / 0 提示；SKILL.md 96 行（正文 93 行）/ 7149B，description 103 字符；JSON/TSV 与 git diff --check 校验通过。	e0
+2026-11-27	r02-collab	issue-pr-loop	-	4胜3平1负	keep	cross-skill-disclosure	R-02 受控 E2（3 评委，基于 20f9a07）：dev 4胜3平1负（3 条回归全平，4 条协作新题全胜，brainstorm 4/4 偏好负），checks a=27 b=34（34/34）；SKILL.md 7245→8323B（+15%，108 行）；j2 1 条 fact_claim 经核查为盲评目录按协议剥离 transcript.md 所致假阳性；tally 裁决 keep。	e2-dev
+2026-11-27	r02-collab	issue-pr-loop	-	2胜1平0负	accept	cross-skill-disclosure	R-02 新留出集（3 评委）：2胜1平0负（2 题 3:0 clear 胜，ordinary-no-list 3:0 平），checks 8/12→12/12；多数胜通过留出集验收。	e2-holdout
+2026-11-27	working-tree	issue-pr-loop	-	0/0/0	checked	e0+static	R-02 终版 E0 体检：0 错误 / 0 警告 / 0 提示；SKILL.md 108 行（正文 105 行）/ 8323B；新增 references/跨Skill协作协议.md 单层下沉可达；JSON/TSV 与 git diff --check 通过。	e0
