@@ -2,15 +2,10 @@
   "version": "1.4.5",
   "integration_state_schema": 1,
   "installed_integrations": [
-    "cursor-agent",
     "codex",
     "none"
   ],
   "integration_settings": {
-    "cursor-agent": {
-      "script": "ps",
-      "invoke_separator": "-"
-    },
     "codex": {
       "script": "ps",
       "invoke_separator": "-"
