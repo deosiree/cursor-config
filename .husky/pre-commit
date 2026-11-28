@@ -4,3 +4,7 @@
 node "vue-skills/表单校验-规则工厂formRules/scripts/pre-commit-skill-samples.js"
 # formRules-skill-samples END
 
+# tool-call-convergence-policy BEGIN
+node "scripts/check-tool-call-convergence-policy.mjs"
+# tool-call-convergence-policy END
+
