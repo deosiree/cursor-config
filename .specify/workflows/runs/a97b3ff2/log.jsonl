@@ -1,0 +1,6 @@
+{"event": "step_started", "step_id": "specify", "type": "command", "timestamp": "2026-11-28T04:18:13.991352+00:00"}
+{"event": "step_completed", "step_id": "specify", "status": "completed", "timestamp": "2026-11-28T04:23:36.461685+00:00"}
+{"event": "step_started", "step_id": "review-spec", "type": "gate", "timestamp": "2026-11-28T04:23:36.463039+00:00"}
+{"event": "step_completed", "step_id": "review-spec", "status": "failed", "timestamp": "2026-11-28T04:23:36.466793+00:00"}
+{"event": "workflow_aborted", "step_id": "review-spec", "error": "Gate rejected by user at step 'review-spec'", "timestamp": "2026-11-28T04:23:36.466940+00:00"}
+{"event": "workflow_finished", "status": "aborted", "timestamp": "2026-11-28T04:23:36.468403+00:00"}

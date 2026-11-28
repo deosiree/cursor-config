@@ -1,10 +1,10 @@
 {
-  "ai": "cursor-agent",
+  "ai": "none",
   "ai_skills": true,
   "allow_symlinks": false,
   "feature_numbering": "sequential",
   "here": true,
-  "integration": "cursor-agent",
+  "integration": "none",
   "script": "ps",
   "speckit_version": "1.4.5"
 }

@@ -10,17 +10,12 @@ requires:
   # Gate verdict inputs require CLI 0.15.1 or later.
   speckit_version: ">=0.15.1"
   integrations:
-    # The four commands below (specify, plan, tasks, implement) are core
-    # spec-kit commands provided by every integration. The list here is an
-    # advisory, non-exhaustive compatibility hint following the documented
-    # ``any: [...]`` schema -- it is NOT a closed set. The workflow runs
-    # against any integration the project was initialized with, including
-    # ones not listed below, as long as that integration provides the four
-    # core commands referenced in ``steps``.
+    # Advisory, non-exhaustive examples of integrations with CLI dispatch.
+    # Every run still requires an explicit installed integration input.
     any:
       - "alquimia"
       - "claude"
-      - "copilot"
+      - "codex"
       - "gemini"
       - "opencode"
 
@@ -31,8 +26,8 @@ inputs:
     prompt: "Describe what you want to build"
   integration:
     type: string
-    default: "auto"
-    prompt: "Integration to use (e.g. claude, copilot, gemini; 'auto' uses the project's initialized integration)"
+    required: true
+    prompt: "Choose an installed CLI-capable integration for this run (for example, codex, claude, or gemini). cursor-agent does not support CLI workflow dispatch."
   speckit_review_spec_verdict:
     type: string
     default: ""
