@@ -63,6 +63,7 @@ description: "当用户提出新需求设计、项目优化、源码学习，显
 | 宪法修订 | 缺宪法或明确要求修订长期原则（Scope Guard） | `$speckit-constitution`（普通需求严禁修改 `.specify/memory/constitution.md`） |
 | Skill 改造与评测 | 改动命中 `SKILL.md` / `*-skills/` / `evals/` | 实现 → `$写skill`；验证 → `$darwin-skill` |
 
+- 仅当本次流程需要写入 Spec Kit 项目产物时，才检查 `.specify` 初始化状态；需求分析与源码学习不要求预先初始化，也不自动全局安装 CLI。
 - 单阶段只激活一个协作 Skill（不禁用同阶段内部独立工作区并行），进入阶段前披露 5 要素（拟调用 Skill/原因/阶段/预期产物/HITL 门禁）。
 - `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 不可用/失败时立即 STOP 报证据走 Human Loop。
 - 完整协议与正反例见 [[references/跨Skill协作协议.md]]。

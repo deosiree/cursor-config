@@ -1,8 +1,0 @@
-{
-  "inputs": {
-    "spec": "在 issue-pr-loop 的 HITL-1 之前支持新需求设计、项目优化与源码学习分析。用户可以从原始需求或源码事实中得到独立且可验证的 FR、候选或现有 DP、带证据的设计矩阵、耦合分类与调整顺序。源码分析须区分已实现行为和推断的需求；矩阵使用 DP 行、FR 列，不能伪造方阵或三角形。耦合时尝试保留 FR 并调整 DP，无法解耦时展示约束。仅对满足独立性公理的候选应用信息公理，无足够概率或范围数据时标记无法量化。分析结果进入 Issue、Goal 和 HITL-1 确认包；单独源码学习只读。简单单点 bug 不强制进入该流程。",
-    "integration": "cursor-agent",
-    "speckit_review_spec_verdict": "",
-    "speckit_review_plan_verdict": ""
-  }
-}
