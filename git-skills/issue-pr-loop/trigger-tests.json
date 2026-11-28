@@ -46,5 +46,21 @@
   {
     "query": "在 changelog 里补一行本次发版说明，直接改这一处即可。",
     "should_trigger": false
+  },
+  {
+    "query": "我要设计一个支持离线编辑的新功能，先分析用户需求、候选设计和模块耦合，再给我方案。",
+    "should_trigger": true
+  },
+  {
+    "query": "现有项目要优化同步架构。请结合当前代码证据分析需求和模块关系，先给我重设计建议。",
+    "should_trigger": true
+  },
+  {
+    "query": "带我从应用入口开始学习这个项目的源码和调用链，只读分析，不要改文件。",
+    "should_trigger": true
+  },
+  {
+    "query": "这个函数空数组时抛错，帮我只修复这个单点问题并运行对应测试。",
+    "should_trigger": false
   }
 ]

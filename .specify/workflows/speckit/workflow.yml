@@ -11,7 +11,7 @@ requires:
   speckit_version: ">=0.15.1"
   integrations:
     # Advisory, non-exhaustive examples of integrations with CLI dispatch.
-    # Every run still requires an explicit installed integration input.
+    # CLI workflow runs require an explicit installed integration for the current stage.
     any:
       - "alquimia"
       - "claude"
@@ -27,7 +27,7 @@ inputs:
   integration:
     type: string
     required: true
-    prompt: "Choose an installed CLI-capable integration for this run (for example, codex, claude, or gemini). cursor-agent does not support CLI workflow dispatch."
+    prompt: "This input is only for CLI workflow dispatch. The project integration default remains `none` and does not choose an Agent. At each HITL gate, choose the Agent for the next stage. If continuing this CLI workflow, resume with that stage's installed CLI integration; otherwise use the selected Agent's native Spec Kit skills without resuming this workflow."
   speckit_review_spec_verdict:
     type: string
     default: ""
@@ -45,7 +45,7 @@ steps:
   - id: review-spec
     type: gate
     verdict_input: speckit_review_spec_verdict
-    message: "Review the generated spec before planning."
+    message: "Review the generated spec, then choose the Agent for the next stage. If resuming this CLI workflow, pass that stage's installed CLI integration with `--input integration=<name>`; otherwise continue with the selected Agent's native Spec Kit skills. The project default remains `none`."
     options: [approve, reject]
     on_reject: abort
 
@@ -58,7 +58,7 @@ steps:
   - id: review-plan
     type: gate
     verdict_input: speckit_review_plan_verdict
-    message: "Review the plan before generating tasks."
+    message: "Review the plan, then choose the Agent for the next stage. If resuming this CLI workflow, pass that stage's installed CLI integration with `--input integration=<name>`; otherwise continue with the selected Agent's native Spec Kit skills. The project default remains `none`."
     options: [approve, reject]
     on_reject: abort
 
