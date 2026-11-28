@@ -1,20 +1,24 @@
-name: Issue PR Loop validation
+name: Issue PR Loop CI
+run-name: 'Issue PR Loop CI - PR #${{ github.event.pull_request.number }}'
 
 on:
   pull_request:
-    paths:
-      - ".specify/**"
-      - "git-skills/issue-pr-loop/**"
-      - "specs/002-axiomatic-design-analysis/**"
-      - ".github/workflows/issue-pr-loop-validation.yml"
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
   validate:
-    name: Skill and Spec Kit state
+    name: Issue PR Loop repository contract tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - name: Check out pull request
+        uses: actions/checkout@v7
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: node --test git-skills/issue-pr-loop/tests/specify-integration.test.mjs
+      - name: Run Spec Kit integration and Issue PR Loop metadata tests
+        run: node --test git-skills/issue-pr-loop/tests/specify-integration.test.mjs
