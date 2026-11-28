@@ -373,5 +373,113 @@
       "向用户给出明确可选路径请求裁定（Human Loop）",
       "不越权创建 GitHub Issue、推送或修改代码"
     ]
+  },
+  {
+    "id": "r03-dev-fanin-shared-entry",
+    "split": "dev",
+    "source": "user",
+    "prompt": "三个独立模块 A/B/C 各自修改 src/modules/{a,b,c}.ts，但都需要往共享入口 src/index.ts 注册导出，且要同步更新 README.md。用 $issue-pr-loop 规划拆解与执行拓扑并给 HITL-1 确认包（离线，不改代码不写 GitHub）。",
+    "checks": [
+      "识别 src/index.ts（及汇总文件）为共享入口重叠而非紧耦合冲突",
+      "默认自动剥离共享入口文件为后置单写者 Fan-in 汇聚节点",
+      "保持 A/B/C 三个模块写集隔离并可并发（share/worktree）",
+      "HITL-1 输出并发 Schema（含独立任务总数、写/读预期最大并发数、关键路径摘要与 Fan-in 清单）"
+    ]
+  },
+  {
+    "id": "r03-dev-dynamic-concurrency-cap",
+    "split": "dev",
+    "source": "user",
+    "prompt": "用 $issue-pr-loop 规划包含 4 个无文件冲突写任务（其中 T1 是后续 T5 的唯一前置关键路径，T2/T3/T4 仅依赖收敛）和 3 个只读核验任务的批次；先给出 HITL-1 并发 Schema，并按“我要求本次写入并发临时上限 K=2”给出实际调度顺序（离线）。",
+    "checks": [
+      "明确不设静态硬上限，HITL-1 显式列出独立任务总数并拆分展示写入并发数与只读并发数",
+      "接受用户临时上限 K=2，严格限制同一时刻写入并发 ≤ 2",
+      "关键路径优先调度：优先派发能解锁 T5 的 T1（关键路径权重最高），不让边缘任务挤占槽位",
+      "只读任务与写任务区分隔离模式（只读 inherit、写入独立工作区）"
+    ]
+  },
+  {
+    "id": "r03-dev-goal-embedded-swarm",
+    "split": "dev",
+    "source": "user",
+    "prompt": "大型重构项目 docs/goal.md 和 docs/issue-graph.md 已通过 HITL-1，含验收锚点 G-01~G-04，存在两组隔离并行波次；我只授权本地实现、验证并按 Issue 创建 PR（不合并），给我一条可直接复制的 /goal 启动指令，要求指令本身能让 AI 在推进中主动利用 Swarm 并发，不需要我中途手敲 /swarm（离线）。",
+    "checks": [
+      "输出一条可复制的 /goal 启动指令并引用 goal.md、issue-graph.md 与 G-01..G-04",
+      "指令内嵌主动调用运行时内置 Swarm/独立工作区并行子代理的明确指引（无需用户中途输入 /swarm）",
+      "限定写操作隔离（share/worktree）与外环 Coordinator 单写者合入/开 PR，不合并",
+      "不自动启动新会话"
+    ]
+  },
+  {
+    "id": "r03-dev-cross-skill-swarm-boundary",
+    "split": "dev",
+    "source": "user",
+    "prompt": "已获批用 $issue-pr-loop 推进一个包含 4 个 [P] 并行任务的功能阶段（调用 $speckit-implement），之后需对配套 Skill 做 6 题多评委盲评（调用 $darwin-skill）。请说明两个阶段的并发边界与外环收口方案（离线）。",
+    "checks": [
+      "明确纵向 Single Dispatch（一次只激活一个协作 Skill）与横向并发正交，不阉割 $speckit-implement [P] 任务和 $darwin-skill 多评委的阶段内并发",
+      "规定写操作子 Worker 必须独立工作区且不得直接修改同一文件",
+      "严禁子 Worker 越权写 GitHub（建 Issue/推分支/开 PR/合并），必须回流外环统一验证与开 PR",
+      "遵守阶段调用前 5 要素披露"
+    ]
+  },
+  {
+    "id": "r03-dev-slot-tight-adaptive",
+    "split": "dev",
+    "source": "user",
+    "prompt": "当前有 8 个隔离的评测任务待跑，后端是多账号池（单号并发=1，多账号可扇出），但运行环境当前只剩 2 个可用子代理槽位，且第 1 批中偶发 1 次 429 限流。请按 $issue-pr-loop 说明调度策略（离线）。",
+    "checks": [
+      "绝不停在准备阶段空等 8 个槽位凑齐，立刻按可用槽位主动扇出吃满并行消费多账号池",
+      "坚持即用即收（Slot Hygiene）：每完成一个任务立即关闭回收其槽位并从就绪队列补位下一个",
+      "遇 429 限流时不中止任务、不把多个独立任务揉进同一上下文，而是临时弹性缩窗（最低 ≥1）并在恢复后重新拉满",
+      "保持每个任务的独立上下文与独立输出目录隔离"
+    ]
+  },
+  {
+    "id": "r03-dev-tightly-coupled-serial",
+    "split": "dev",
+    "source": "user",
+    "prompt": "需要重构核心状态机 src/core/state-machine.ts，拆分出来的“状态枚举改造”和“状态流转校验重写”都深度修改该同一文件的核心数据结构且后者依赖前者的类型契约。用 $issue-pr-loop 判断能否并用 Swarm 并给 HITL-1 方案（离线）。",
+    "checks": [
+      "正确识别存在因果/契约依赖（RAW）和同一文件核心逻辑紧耦合写集重叠（WAW）",
+      "明确判定无法安全剥离 Fan-in，必须退回串行（不可强行并发）",
+      "HITL-1 并发 Schema 如实标注写入并发为 1（串行）",
+      "确认前不修改代码或写 GitHub"
+    ]
+  },
+  {
+    "id": "r03-holdout-fanin-and-cap",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "四个互不干扰的插件模块 plugins/{a,b,c,d}.ts 需要新增导出，并且都必须在共享注册表 plugins/registry.json 里登记。用 $issue-pr-loop 输出 HITL-1 拆解与并发方案，假设我顺便指定“本次写并发上限设为 2”（离线）。",
+    "checks": [
+      "自动将 plugins/registry.json 剥离为后置单写者 Fan-in 汇聚节点，解锁 4 个插件的并发",
+      "HITL-1 显式披露独立任务总数与预期最大并发数，并按用户临时上限 K=2 限流执行",
+      "4 个插件写入工作区隔离（share/worktree），注册表由单写者收口",
+      "确认前不改文件或写远端"
+    ]
+  },
+  {
+    "id": "r03-holdout-goal-swarm-no-tool",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "已经通过 HITL-1 的长程迁移 Goal（migration/goal.md、migration/issue-graph.md，锚点 M-01, M-02）即将交给一个只支持单线调用、未提供任何 Swarm 或并发子代理工具的旧客户端跑 /goal。请给出可复制 /goal 指令并说明运行期遇并发波次时如何正确处理（离线）。",
+    "checks": [
+      "输出含 migration/goal.md、migration/issue-graph.md 与 M-01, M-02 的可复制 /goal 指令，且内嵌“优先使用运行时 Swarm/隔离并发工具，不支持时按关键路径串行降级”",
+      "明确说明在未暴露并发工具的客户端里必须诚实降级为按关键路径优先串行推进",
+      "严禁伪造并发执行或假装启动了 Swarm",
+      "明确开 PR 后停在 HITL-2 且不自动合并"
+    ]
+  },
+  {
+    "id": "r03-holdout-slot-429-hygiene",
+    "split": "holdout",
+    "source": "user",
+    "prompt": "外环要并发跑 6 份独立代码审计任务（只读，后端挂了多账号池，但客户端最大活跃子代理槽位为 3，且审计中曾因瞬时限流报错一次）。按 $issue-pr-loop 给出执行与槽位管理方案（离线）。",
+    "checks": [
+      "只读任务采用 inherit（或免工作区复制）隔离上下文，不空等 6 个槽位，先立即并发扇出拉满 3 个槽位",
+      "严格执行 Slot Hygiene：单个审计完成交付后立刻销毁释放槽位并滑动补位下一任务，防止僵尸占槽",
+      "遇瞬时 429 限流时弹性退避分批（保底 ≥1），绝不把多份审计合并到同一子代理上下文以免互相污染",
+      "最终产物汇聚外环且不越权执行远端写入"
+    ]
   }
 ]

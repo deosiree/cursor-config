@@ -28,12 +28,12 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 ### HITL-1：确认包
 
-修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。确认仅覆盖用户明确批准的内容。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。
+修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。确认仅覆盖用户明确批准的内容。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。涉及多 Issue 或多阶段并发拆解时，追加并发 Schema（独立任务总数、预期最大并发数［写/读］、关键路径摘要、Fan-in 收口清单），不设静态上限，支持用户指定临时上限 K。
 
 长程 Goal 获批后，用一条可复制指令承载锚点与边界，例如：
 
 ```text
-/goal 按 <goal.md> 和 <issue-graph.md> 的验收锚点 <ID列表> 顺序推进；只执行 HITL-1 明确批准的本地修改、Issue、推送和 PR 动作；每项完成后验证并开 PR，停在 HITL-2 等待人工审查，不合并。
+/goal 按 <goal.md> 和 <issue-graph.md> 的验收锚点 <ID列表> 推进；遇到隔离条件满足的并发节点主动调用运行时内置 Swarm/独立工作区并行子代理（写操作 share/worktree 隔离，由外环单写者合入），无并发工具时按关键路径串行降级；只执行 HITL-1 明确批准的本地修改、Issue、推送和 PR 动作，每项验证并开 PR 后停在 HITL-2 等人工审查，不合并。
 ```
 
 ### HITL-2：集中审查
@@ -63,6 +63,12 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 - 单阶段只激活一个协作 Skill（不禁用同阶段内部独立工作区并行），进入阶段前披露 5 要素（拟调用 Skill/原因/阶段/预期产物/HITL 门禁）。
 - `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 或 CLI 不可用/失败时立即 STOP 报证据走 Human Loop。
 - 完整协议与正反例见 [[references/跨Skill协作协议.md]]。
+
+## DAG 拆解与 Swarm 调度
+
+- Issue 与 Stage/Task 共用 `deps`/`writes`/`mode` 同构节点协议；仅共享入口/汇总文件重叠时默认剥离为后置单写者 Fan-in 节点解锁并发，紧耦合冲突退回串行。
+- 主动扇出吃满 `K_eff = max(1, min(K_dag, K_user, K_slots))`，Worker 完结即回收槽位（Slot Hygiene），遇槽紧或 429 保持独立上下文弹性推进绝不空等；跨 Skill 透传阶段内并发但禁子 Worker 写 GitHub。
+- 详规、Schema 与正反例见 [[references/DAG与Swarm调度协议.md]]。
 
 ## Issue 与项目约束
 
@@ -102,7 +108,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 - 反馈受理：[[intention-skills/需求收敛与Backlog排程/SKILL.md]]
 - 单 Issue：[[feature-skills/单Issue开发与PR闭环/SKILL.md]]
 - 项目验收：[[feature-skills/项目验收与文档收敛/SKILL.md]]
-- 模板、阶段清单、设计取舍与协作协议：[[template/mvp/README.md]]、[[template/snapshot/README.md]]、[[assets/阶段交接检查清单.md]]、[[references/调研与设计取舍.md]]、[[references/跨Skill协作协议.md]]
+- 模板、阶段清单、设计取舍、协作与调度协议：[[template/mvp/README.md]]、[[template/snapshot/README.md]]、[[assets/阶段交接检查清单.md]]、[[references/调研与设计取舍.md]]、[[references/跨Skill协作协议.md]]、[[references/DAG与Swarm调度协议.md]]
 - 上游参考：[[references/upstream/plan-to-issues-converter/README.md]]、[[references/upstream/mattpocock-triage/README.md]]
 - 评估资产：[[trigger-tests.json]]、[[evals/evals.json]]、[[test-prompts.json]]、[[evals/results.tsv]]
 - Issue/PR 样例：[[assets/few-shot-example/README.md]]

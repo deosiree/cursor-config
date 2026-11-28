@@ -11,7 +11,7 @@
 ## 纵向 Single Dispatch 与横向 Swarm 正交边界
 
 - **纵向 Single Dispatch（严禁跨阶段嵌套）**：同一阶段内有且仅有一个协作 Skill 处于激活状态；严禁在被调 Skill 完成后未经外环交接直接自动链式触发下一阶段 Skill（例如不得由 `$speckit-clarify` 自动嵌套调用 `$speckit-plan` 或 `$写skill`）。
-- **横向 Swarm 正交并行（为 R-03 预留接口）**：纵向 Single Dispatch 不禁止被调协作 Skill 在其**同阶段内部**使用独立工作区并行或 Swarm 推进（例如 `$speckit-implement` 的 `[P]` 并行任务、`$darwin-skill` 的多题并发盲评）。
+- **横向 Swarm 正交并行（详规见 [[DAG与Swarm调度协议.md]]）**：纵向 Single Dispatch 不禁止被调协作 Skill 在其**同阶段内部**使用独立工作区并行或 Swarm 推进（例如 `$speckit-implement` 的 `[P]` 并行任务、`$darwin-skill` 的多题并发盲评）。
 - **并行约束**：同阶段内派生的子 worker 必须隔离各自编辑路径或使用独立工作区，且严禁越权写入 GitHub（Issue/分支/PR/合并）；所有并行产出必须先汇聚回该阶段执行器，再统一回流 `$issue-pr-loop` 外环。
 
 ## 三大协作域与硬触发信号
