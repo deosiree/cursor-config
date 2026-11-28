@@ -1,198 +1,39 @@
-# Cursor 配置仓库
+# 通用 AI Skills 库
 
-这是一个独立的 Git 仓库，包含 Cursor AI 的开发规则、技能（Skills）、待办清单（Todolist）和计划（Plans）。
+本仓库收录可复用的 AI 技能（Skills），覆盖通用协作、开发工具、项目领域与内容处理等场景。技能以各自目录中的 `SKILL.md` 为入口，可按当前 AI 工具的约定单独发现或安装；本仓库不依赖某一种编辑器。
 
-## 📁 目录结构
+## 目录
 
-```
-.cursor/
-├── skills/           # Cursor Skills（技能）
-│   ├── todolist/    # 待办清单和易错清单
-│   └── *.md         # 各种技能文档
-├── mySkills/         # 通用可复用 skills
-├── nebula-skills/    # nebula 项目专有 skills（业务耦合）
-├── plans/           # 项目计划和方案
-├── review/          # 代码审查和知识库
-├── agents.md        # 共通 Agent 配置
-├── GEMINI.md        # Gemini 规则（Gemini CLI 项目上下文）
-└── CHATGPT.md       # ChatGPT 规则（项目资料与项目指令来源）
-```
+| 分类 | 内容 |
+| --- | --- |
+| `agent-skills/`、`common-skills/` | 通用协作与跨项目复用技能 |
+| `debug-or-review-skills/`、`dev-skills/`、`git-skills/`、`test-skills/` | 调试、开发、Git 与测试工作流 |
+| `harness-skills/`、`html-skills/`、`IDE-skill/`、`md-skills/` | Harness、HTML、IDE 与 Markdown 工具技能 |
+| `go-skills/`、`nebula-skills/`、`proj-skills/`、`vue-skills/`、`translateTool-skills/` | 语言、框架、项目和业务领域技能 |
+| `role-skills/`、`system-skills/` | 角色视角与系统类技能 |
+| `darwin-skill/` | 技能质量评估与迭代 |
+| `docs/`、`scripts/`、`specs/` | 文档、维护脚本与规格资料 |
 
-## 🚀 快速开始
+各分类下可以包含 `intention-skills/`、`feature-skills/`、`references/`、`assets/`、`evals/` 等子目录；以每个技能自己的 `SKILL.md` 和目录说明为准。
 
-### 在新项目中使用
+## 使用
 
-**方式一：直接克隆（推荐）**
+1. 克隆仓库到本地目录：
 
-```bash
-# 在项目根目录执行
-git clone <cursor-repo-url> .cursor
-```
-
-**方式二：手动复制**
-
-```bash
-# 复制 .cursor 目录到新项目
-cp -r <source-project>/.cursor <new-project>/.cursor
-
-# 在新项目中重新设置远端（如果需要）
-cd <new-project>/.cursor
-git remote set-url origin <cursor-repo-url>
-```
-
-**方式三：使用脚本自动化**
-
-```bash
-# scripts/setup-cursor.sh
-if [ ! -d .cursor ]; then
-  git clone <cursor-repo-url> .cursor
-fi
-```
-
-### 确保主项目不追踪 .cursor
-
-确保主项目的 `.gitignore` 中包含：
-
-```
-.cursor
-```
-
-这样主项目就不会追踪 `.cursor` 目录，`.cursor` 可以独立管理。
-
-## 📝 日常维护
-
-### 更新规则
-
-```bash
-cd .cursor
-git add .
-git commit -m "Update: 描述你的更新内容"
-git push
-```
-
-### 在其他项目中同步更新
-
-```bash
-cd .cursor
-git pull origin main
-```
-
-### 查看提交历史
-
-```bash
-cd .cursor
-git log --oneline
-```
-
-## 📚 可用 Skills
-
-### 1. Plan模式测试报错分析 (`plan-test-analysis.md`)
-
-结构化分析测试报错原因，生成修复方案（不改代码）。
-
-**触发方式：**
-- `@plan [错误信息]`
-- `plan模式分析`
-- `[PLAN]`
-
-### 2. 生产环境风险检查 (`prod-risk-check.md`)
-
-检查生产环境异常是否与循环依赖/初始化顺序有关。
-
-**触发方式：**
-- `@prod-risk [问题描述]`
-
-### 3. DOM 工具函数检查 (`dom-utils-check.md`)
-
-排查和改造 DOM 相关工具函数，处理位置越界、存储异常等问题。
-
-**触发方式：**
-- `@dom-utils-check [问题描述]`
-
-### 4. 生成调试技能 (`gen-debugskills.md`)
-
-将对话沉淀为 todolist + 易错清单 + skills。
-
-**触发方式：**
-- `@gen-skills [对话内容]`
-
-## 📋 Todolist 清单
-
-- **生产环境易错问题检查清单** - 按问题类型分组的检查清单
-- **高风险问题-currentDepartment-循环依赖** - 循环依赖问题的详细说明
-- **dom问题排查清单** - DOM 问题排查步骤
-- **dom问题易错清单** - DOM 问题常见易错点
-
-## 🔧 配置说明
-
-### 独立 Git 仓库
-
-`.cursor` 目录是一个独立的 Git 仓库，拥有自己的版本历史。这样做的好处：
-
-- ✅ 可以在多个项目中复用同一套规则
-- ✅ 独立版本管理，更新规则时不影响主项目
-- ✅ 便于团队协作和规则同步
-
-### 主项目配置
-
-主项目的 `.gitignore` 中应包含 `.cursor`，确保主项目不会追踪 `.cursor` 目录。
-
-## 🤝 团队协作
-
-### 新成员设置
-
-1. 克隆主项目
-2. 初始化 `.cursor` 仓库：
    ```bash
-   git clone <cursor-repo-url> .cursor
+   git clone https://github.com/deosiree/cursor-config.git skills-library
    ```
 
-### 规则更新流程
+2. 搜索技能入口：
 
-1. 在 `.cursor` 目录中更新规则
-2. 提交并推送到远端：
    ```bash
-   cd .cursor
-   git add .
-   git commit -m "Update: 更新内容描述"
-   git push
-   ```
-3. 通知团队成员同步更新：
-   ```bash
-   cd .cursor
-   git pull origin main
+   rg --files skills-library -g SKILL.md
    ```
 
-## 🎯 skill 使用优先级（nebula）
+3. 阅读目标技能的 `SKILL.md`，并按其中的路由加载相关子技能、参考资料或评估资产。若要安装到某个 AI 工具，请将所需技能目录放入该工具支持的 Skills 发现路径；具体路径由工具决定。
 
-1. 业务耦合问题优先使用 `.cursor/nebula-skills`。
-2. 通用能力与跨项目能力使用 `.cursor/mySkills`。
-3. 若两者存在同名或近似 skill，以 `.cursor/nebula-skills` 为准。
-4. **强制**：nebula 项目级（业务耦合）skill 只能放在 `.cursor/nebula-skills`，不得放入 `.cursor/mySkills`。
-5. **强制**：nebula 项目级 skill 统一使用中文版（`SKILL.md` 与 `agents/openai.yaml`）。
+## 维护与贡献
 
-## 📝 版本管理
-
-建议使用语义化版本或日期标签管理规则更新：
-
-```bash
-git tag -a v1.0.0 -m "Initial release"
-git push origin v1.0.0
-```
-
-## 🔗 相关资源
-
-- **Skills 详细文档**：`skills/README.md`
-- **项目计划**：`plans/`
-- **代码审查记录**：`review/`
-
-## 📞 反馈和建议
-
-如果发现使用中的问题或有改进建议，请：
-
-1. 在 `.cursor` 仓库中创建 Issue
-2. 或直接修改对应的 skill 文件并提交 PR
-
----
-
-**最后更新**：2024-01-XX
+- 在对应分类中维护技能及其配套资料，避免复制同一技能到多个分类。
+- 新增或调整路由时，同步检查相关入口、子技能和索引说明。
+- 通过 GitHub Issues 讨论问题和建议，通过 Pull Requests 提交修改。
