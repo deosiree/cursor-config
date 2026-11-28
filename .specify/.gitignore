@@ -1,4 +1,4 @@
-# Machine-local Spec Kit state — not meant to be shared.
+# Machine-local or generated state under the shared project configuration.
 # Managed by the Specify CLI; safe to edit (your changes are preserved on refresh).
 
 # Local pointer to the current feature directory. Rewritten every time you
@@ -12,3 +12,8 @@ extensions/*/local-config.yml
 # Execution consent is stored separately in the user's local trust registry.
 integrations/packages/
 integrations/packages.json
+
+# Generated catalog caches and per-run workflow state.
+integrations/.cache/
+workflows/.cache/
+workflows/runs/

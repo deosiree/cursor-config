@@ -60,6 +60,26 @@
       "id": "no-trigger-single-doc-edit",
       "should_trigger": false,
       "prompt": "在 changelog 里补一行本次发版说明，直接改这一处即可。"
+    },
+    {
+      "id": "trigger-new-feature-design-analysis",
+      "should_trigger": true,
+      "prompt": "我要设计一个支持离线编辑的新功能，先分析用户需求、候选设计和模块耦合，再给我方案。"
+    },
+    {
+      "id": "trigger-project-optimization-analysis",
+      "should_trigger": true,
+      "prompt": "现有项目要优化同步架构。请结合当前代码证据分析需求和模块关系，先给我重设计建议。"
+    },
+    {
+      "id": "trigger-source-learning",
+      "should_trigger": true,
+      "prompt": "带我从应用入口开始学习这个项目的源码和调用链，只读分析，不要改文件。"
+    },
+    {
+      "id": "no-trigger-single-bug-axiomatic-analysis",
+      "should_trigger": false,
+      "prompt": "这个函数空数组时抛错，帮我只修复这个单点问题并运行对应测试。"
     }
   ]
 }

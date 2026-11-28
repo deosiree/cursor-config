@@ -1,6 +1,6 @@
 ---
 name: issue-pr-loop
-description: "当用户显式调用、整理维护反馈、规划 Issue 或推进 Issue 交付时使用。默认先给 Issue 与方案草稿并等待确认；只有用户明确要求立即开始修复，才跳过方案确认。单点问题可走精简 Issue 流程。"
+description: "当用户提出新需求设计、项目优化、源码学习，显式调用、整理维护反馈、规划 Issue 或推进 Issue 交付时使用。默认先给 Issue 与方案草稿并等待确认；只有用户明确要求立即开始修复，才跳过方案确认。单点问题可走精简 Issue 流程。"
 ---
 
 # Issue 与 PR 开发闭环
@@ -19,6 +19,8 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 | 请求类型 | 默认路径与停止点 |
 | --- | --- |
+| 新需求设计或既有项目优化 | 在 HITL-1 前路由到 [[feature-skills/公理设计需求分析/SKILL.md]]；将 FR、DP、设计矩阵、耦合判断和可量化的信息量分析纳入方案。获批后才按外环授权创建/更新 Issue、实现、推送和开 PR。 |
+| 单独学习项目源码 | 路由到 [[feature-skills/公理设计需求分析/SKILL.md]] 的源码学习模式；只读输出现状证据、FR 候选、DP 和矩阵，不创建/更新 Issue，不改源码、不推送或开 PR。 |
 | 显式调用并要求修复/实现，包括单点问题 | 先核实证据、重复 Issue、范围、非目标、验收和验证；输出 HITL-1 确认包。用户确认包内列明的动作后，按授权创建或复用 Issue、实现、验证并开 PR；停在 HITL-2，绝不自动合并。 |
 | 只规划、只起草或只排期 | 交付对应草稿/建议并等待确认；不得推断用户授权了实现或远端写入。 |
 | 只要求发布已评审 Issue | 仅在本次明确授权后创建/更新并读回核对；完成后停止，不实现、不提 PR。 |
@@ -28,7 +30,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 ### HITL-1：确认包
 
-修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。确认仅覆盖用户明确批准的内容。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。涉及多 Issue 或多阶段并发拆解时，追加并发 Schema（独立任务总数、预期最大并发数［写/读］、关键路径摘要、Fan-in 收口清单），不设静态上限，支持用户指定临时上限 K。
+修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。新需求设计和既有项目优化还必须先提供公理设计分析，源码学习单独请求保持只读；简单单点 Bug 和只发布 Issue 不增加该分析。用户确认 HITL-1 确认包后，按已批准范围和动作连续推进至 HITL-2，不重复询问已确认事项；只有需求、范围、验收、风险或授权变化时才重新确认。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。涉及多 Issue 或多阶段并发拆解时，追加并发 Schema（独立任务总数、预期最大并发数［写/读］、关键路径摘要、Fan-in 收口清单），不设静态上限，支持用户指定临时上限 K。
 
 长程 Goal 获批后，用一条可复制指令承载锚点与边界，例如：
 
@@ -44,6 +46,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 | 阶段 | 职责 | 路由 |
 | --- | --- | --- |
+| `design-analysis` | 新需求设计、项目优化或源码学习的 FR/DP 关系分析 | [[feature-skills/公理设计需求分析/SKILL.md]] |
 | `plan` | 建立项目 Goal 与多 Issue 依赖图 | [[intention-skills/项目规划与Issue图谱/SKILL.md]] |
 | `intake` | 登记反馈、核实证据/重复并整理候选 | [[intention-skills/需求收敛与Backlog排程/SKILL.md]] |
 | `publish` | 发布已确认 Issue 并读回 | [[intention-skills/项目规划与Issue图谱/SKILL.md]] |
@@ -56,12 +59,13 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 | 协作域 | 触发信号 | 协作 Skill（禁用项） |
 | --- | --- | --- |
-| Spec 澄清与规格 | 影响验收的 `NEEDS CLARIFICATION` 或缺基线规格 | `$speckit-loop` / `speckit-*` + `specify-cli`（禁用 `speckit-taskstoissues`） |
+| Spec 澄清与规格 | 影响验收的 `NEEDS CLARIFICATION` 或缺基线规格 | `$speckit-loop` / `speckit-*`（禁用 `speckit-taskstoissues`） |
 | 宪法修订 | 缺宪法或明确要求修订长期原则（Scope Guard） | `$speckit-constitution`（普通需求严禁修改 `.specify/memory/constitution.md`） |
 | Skill 改造与评测 | 改动命中 `SKILL.md` / `*-skills/` / `evals/` | 实现 → `$写skill`；验证 → `$darwin-skill` |
 
+- 仅当本次流程需要写入 Spec Kit 项目产物时，才检查 `.specify` 初始化状态；需求分析与源码学习不要求预先初始化，也不自动全局安装 CLI。
 - 单阶段只激活一个协作 Skill（不禁用同阶段内部独立工作区并行），进入阶段前披露 5 要素（拟调用 Skill/原因/阶段/预期产物/HITL 门禁）。
-- `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 或 CLI 不可用/失败时立即 STOP 报证据走 Human Loop。
+- `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 不可用/失败时立即 STOP 报证据走 Human Loop。
 - 完整协议与正反例见 [[references/跨Skill协作协议.md]]。
 
 ## DAG 拆解与 Swarm 调度
@@ -106,6 +110,7 @@ description: "当用户显式调用、整理维护反馈、规划 Issue 或推�
 
 - 项目规划：[[intention-skills/项目规划与Issue图谱/SKILL.md]]
 - 反馈受理：[[intention-skills/需求收敛与Backlog排程/SKILL.md]]
+- 公理设计分析：[[feature-skills/公理设计需求分析/SKILL.md]]
 - 单 Issue：[[feature-skills/单Issue开发与PR闭环/SKILL.md]]
 - 项目验收：[[feature-skills/项目验收与文档收敛/SKILL.md]]
 - 模板、阶段清单、设计取舍、协作与调度协议：[[template/mvp/README.md]]、[[template/snapshot/README.md]]、[[assets/阶段交接检查清单.md]]、[[references/调研与设计取舍.md]]、[[references/跨Skill协作协议.md]]、[[references/DAG与Swarm调度协议.md]]

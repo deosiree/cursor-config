@@ -16,12 +16,12 @@
 
 ## 三大协作域与硬触发信号
 
-### 1. Spec Kit 套件（`$speckit-loop` + 原子 Skill + `specify-cli`）
+### 1. Spec Kit 套件（`$speckit-loop` + 原子 Skill）
 
 - **硬触发信号**：存在影响验收标准、数据/安全边界或接口契约的 `NEEDS CLARIFICATION`，或存在跨多阶段规格缺口、缺失基线规格。
 - **路由规则**：
   - 存在多阶段规格缺口或复杂需求需端到端收敛时，触发 `$speckit-loop` 进行阶段编排。
-  - 只需单点规格动作时，按需单点披露并调用对应原子 Skill：`$speckit-baseline`、`$speckit-specify`、`$speckit-clarify`、`$speckit-plan`、`$speckit-tasks`、`$speckit-checklist`、`$speckit-implement`、`$speckit-analyze`、`$speckit-converge`（具体可用性以运行时与 `specify-cli` 探测结果为准）。
+  - 只需单点规格动作时，按需单点披露并调用对应原子 Skill：`$speckit-baseline`、`$speckit-specify`、`$speckit-clarify`、`$speckit-plan`、`$speckit-tasks`、`$speckit-checklist`、`$speckit-implement`、`$speckit-analyze`、`$speckit-converge`。
 - **硬禁用项**：**明令禁止调用已废弃的 `speckit-taskstoissues`**。所有 Issue 规划、发布与同步一律由 `$issue-pr-loop` 外环执行。
 
 ### 2. 项目宪法修订（`$speckit-constitution`）
@@ -53,7 +53,7 @@
 
 ## 失败回退（Human Loop）
 
-- **STOP 条件**：协作 Skill 缺失/未加载、`specify-cli` 探测失败、`darwin.py` 或相关校验脚本报错退出、或缺少必需运行权限（如子代理权限不足）。
+- **STOP 条件**：协作 Skill 缺失/未加载、`darwin.py` 或相关校验脚本报错退出、或缺少必需运行权限（如子代理权限不足）。
 - **强制动作**：立即 **STOP**，向用户完整报告真实失败证据（执行命令、错误输出、缺失产物或权限项），并给出可选处理路径供用户裁定（Human Loop）。
 - **严禁事项**：严禁静默切换至未授权的替代 Skill 或手工流程；严禁用人工推演或口头检查冒充 `darwin.py` E2 实测通过；严禁隐瞒阻塞继续创建 Issue 或 PR。
 
@@ -75,6 +75,6 @@
 1. **Scope Guard 失守（借业务改宪法）**：
    - 为导出模块增加分页参数时，顺手调用 `$speckit-constitution` 或直接修改 `.specify/memory/constitution.md` 放宽规则，并将业务改动与修宪混在同一步骤交付。
 2. **失败静默替代与调用废弃 Skill**：
-   - 运行 `darwin.py` 因缺少子代理权限报错退出，或 `specify-cli` 与 `$speckit-clarify` 不可用时，不 STOP 报告证据，而是擅自以手工口头检查冒充 E2 通过继续开 PR，或调用已废弃的 `speckit-taskstoissues`。
+   - 运行 `darwin.py` 因缺少子代理权限报错退出，或 `$speckit-clarify` 不可用时，不 STOP 报告证据，而是擅自以手工口头检查冒充 E2 通过继续开 PR，或调用已废弃的 `speckit-taskstoissues`。
 3. **报菜名与越权嵌套**：
    - 在普通单点业务 Bug 修复的 `HITL-1` 确认包中，把 `$speckit-loop`、`$speckit-constitution`、`$写skill`、`$darwin-skill` 逐个列出来声明“均不使用”；或令被调协作 Skill 越权直接创建 GitHub Issue / 开 PR，或在同阶段内链式自动套娃调用多个协作 Skill。
