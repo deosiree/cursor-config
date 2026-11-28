@@ -78,7 +78,7 @@ issue-pr-loop/
 ```
 
 ```text
-使用 $issue-pr-loop 设计一个支持离线编辑和冲突恢复的新功能。先提取可验收 FR 和同层级 DP，给出 DP 为行、FR 为列的矩阵与调整顺序，分析完成后停在 HITL-1；项目默认 Agent 用 none，每个 HITL 再选择下一阶段 Agent。
+使用 $issue-pr-loop 设计一个支持离线编辑和冲突恢复的新功能。先提取可验收 FR 和同层级 DP，给出 DP 为行、FR 为列的矩阵与调整顺序，分析完成后停在 HITL-1。
 ```
 
 ```text
@@ -98,7 +98,6 @@ Issue #84 已由同事创建，我负责实现，另一位 reviewer 负责审查
 - Issue 依赖无环；并行项文件边界互斥且接口已冻结。
 - 性能、安全结论只基于实际执行的测试、明确范围和记录证据。
 - 新需求与项目优化先用公理设计分析；源码学习只读；简单单点 Bug 和只发布 Issue 沿用精简路径。
-- 每个 HITL 交接显式选择下一阶段 Agent；`none` 只表示项目不固定 Agent。
 - GitHub 外部写入、人审和合并遵守本次会话的授权。
 - Darwin 用例见 [[test-prompts.json]] 与 [[evals/evals.json]]；基线和结果见 [[evals/darwin-baseline.md]]、[[evals/results.tsv]]。
 - 写作规则和样例见 [[assets/few-shot-example/README.md]]，外部规范取舍见 [[references/调研与设计取舍.md]]。

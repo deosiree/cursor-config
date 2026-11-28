@@ -30,7 +30,7 @@ description: "当用户提出新需求设计、项目优化、源码学习，显
 
 ### HITL-1：确认包
 
-修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。新需求设计和既有项目优化还必须先提供公理设计分析，源码学习单独请求保持只读；简单单点 Bug 和只发布 Issue 不增加该分析。每个 HITL 交接都明确下一阶段 Agent；项目默认 Agent 为 `none`，不得从仓库配置推断。确认仅覆盖用户明确批准的内容。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。涉及多 Issue 或多阶段并发拆解时，追加并发 Schema（独立任务总数、预期最大并发数［写/读］、关键路径摘要、Fan-in 收口清单），不设静态上限，支持用户指定临时上限 K。
+修复/实现请求先集中提供：问题证据与待核实项、Issue 草稿、范围和非目标、验收与验证计划、预计阶段及停止点、外部动作授权清单（创建/更新 Issue、建分支、推送、开 PR 各自列明，合并默认禁止）。新需求设计和既有项目优化还必须先提供公理设计分析，源码学习单独请求保持只读；简单单点 Bug 和只发布 Issue 不增加该分析。用户确认 HITL-1 确认包后，按已批准范围和动作连续推进至 HITL-2，不重复询问已确认事项；只有需求、范围、验收、风险或授权变化时才重新确认。`协作 Skill 计划` 埋点：命中协作条件时一行写明阶段映射，普通任务未命中只写 `协作 Skill 计划：无` 且不罗列未用 Skill；用户明确说“头脑风暴”要求自行判断时免除固定埋点。涉及多 Issue 或多阶段并发拆解时，追加并发 Schema（独立任务总数、预期最大并发数［写/读］、关键路径摘要、Fan-in 收口清单），不设静态上限，支持用户指定临时上限 K。
 
 长程 Goal 获批后，用一条可复制指令承载锚点与边界，例如：
 
@@ -59,12 +59,12 @@ description: "当用户提出新需求设计、项目优化、源码学习，显
 
 | 协作域 | 触发信号 | 协作 Skill（禁用项） |
 | --- | --- | --- |
-| Spec 澄清与规格 | 影响验收的 `NEEDS CLARIFICATION` 或缺基线规格 | `$speckit-loop` / `speckit-*` + `specify-cli`（禁用 `speckit-taskstoissues`） |
+| Spec 澄清与规格 | 影响验收的 `NEEDS CLARIFICATION` 或缺基线规格 | `$speckit-loop` / `speckit-*`（禁用 `speckit-taskstoissues`） |
 | 宪法修订 | 缺宪法或明确要求修订长期原则（Scope Guard） | `$speckit-constitution`（普通需求严禁修改 `.specify/memory/constitution.md`） |
 | Skill 改造与评测 | 改动命中 `SKILL.md` / `*-skills/` / `evals/` | 实现 → `$写skill`；验证 → `$darwin-skill` |
 
 - 单阶段只激活一个协作 Skill（不禁用同阶段内部独立工作区并行），进入阶段前披露 5 要素（拟调用 Skill/原因/阶段/预期产物/HITL 门禁）。
-- `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 或 CLI 不可用/失败时立即 STOP 报证据走 Human Loop。
+- `$issue-pr-loop` 独占 GitHub Issue/分支/PR 与 HITL-1/2 外环；协作 Skill 不可用/失败时立即 STOP 报证据走 Human Loop。
 - 完整协议与正反例见 [[references/跨Skill协作协议.md]]。
 
 ## DAG 拆解与 Swarm 调度
