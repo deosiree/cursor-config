@@ -45,8 +45,8 @@
     "passCondition": "报告错误原因，给出次选建议，让用户决策"
   },
   {
-    "testCase": "连续 20+ 工具调用仍未完成",
-    "expectedBehavior": "触发 Token 止损 → 停止并报告中间结论",
-    "passCondition": "输出中间结论，不再继续自动尝试"
+    "testCase": "超过 20 次工具调用但仍有有效进展",
+    "expectedBehavior": "不因调用次数停止；沿当前可行路径继续，只有遇到真实阻塞、无可行进展或需要用户决策时才报告",
+    "passCondition": "继续推进当前任务；如遇阻塞，报告已完成内容、证据和阻塞点"
   }
 ]

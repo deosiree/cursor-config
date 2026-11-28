@@ -52,7 +52,7 @@ obsidian-skills/
 | **Single Dispatch** | 每次只 dispatch 一个子 skill，不链式 fallback |
 | **Max 1 Auto-Fallback** | 仅可行性检查失败时自动回退一次 |
 | **Fail → Human Loop** | 运行时失败不自动尝试其他 skill，报告用户决策 |
-| **Token 止损** | >20 个工具调用未解决 → 停止并报告 |
+| **按进展收敛** | 工具调用次数不设固定硬上限；依据有效进展、可行路径和真实阻塞决定是否继续或请求用户决策 |
 
 ### 3. 路由表速查
 

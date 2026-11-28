@@ -15,7 +15,7 @@ route-obsidian 是 `obsidian-skills` 套件的编排器（intention-skill）。�
 | **Single Dispatch** | 每次只派发一个 skill，不链式 fallback |
 | **Max 1 Auto-Fallback** | 仅可行性检查失败时自动试次选 |
 | **Fail → Human Loop** | 运行时失败不自动尝试，报告用户决策 |
-| **Token 止损** | >20 工具调用未解决 → 停止并报告 |
+| **按进展收敛** | 工具调用次数不设固定硬上限；依据有效进展、可行路径和真实阻塞决定是否继续或请求用户决策 |
 
 ## 路由表
 

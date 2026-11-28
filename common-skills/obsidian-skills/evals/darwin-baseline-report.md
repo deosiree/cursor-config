@@ -1,12 +1,14 @@
 # Darwin 基线评估 — obsidian-skills
 
+本文件保留旧版评估结果，仅作历史基线；当前路由规则以 `intention-skills/route-obsidian/SKILL.md` 为准。
+
 ## route-obsidian/SKILL.md
 
 | 维度 | 权重 | 得分 | 加权 | 评语 |
 |------|:---:|:----:|:----:|------|
 | Frontmatter 质量 | 8 | 7 | 56 | name/description/trigger 完备，但缺少中文触发词 |
 | 工作流清晰度 | 15 | 14 | 210 | 流程图上佳，步骤线性可执行 |
-| 边界条件覆盖 | 10 | 10 | 100 | Max 1 Fallback + Human Loop + Token 止损，非常完整 |
+| 边界条件覆盖 | 10 | 10 | 100 | 旧版基于 Max 1 Fallback、Human Loop 和当时的收敛规则评分 |
 | 检查点设计 | 7 | 6 | 42 | Human Loop 设计得当，但缺少"skill 加载超时"的检查点 |
 | 指令具体性 | 15 | 12 | 180 | 有失败模板，但缺少\"分类存疑时\"的仲裁规则 |
 | 资源整合度 | 5 | 4 | 20 | 路径指向正确，但 llm-wiki 的特殊路径需额外注释 |
